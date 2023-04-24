@@ -1,0 +1,5 @@
+export const menuConstants = {
+    MENU_GET_REQUEST: 'MENU_GET_REQUEST',
+    MENU_GET_SUCCESS: 'MENU_GET_SUCCESS',
+    MENU_GET_FAILURE: 'MENU_GET_FAILURE'
+};

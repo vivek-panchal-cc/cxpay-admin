@@ -1,0 +1,5 @@
+export const siteConstants = {
+    SITE_GET_REQUEST: 'SITE_GET_REQUEST',
+    SITE_GET_SUCCESS: 'SITE_GET_SUCCESS',
+    SITE_GET_FAILURE: 'SITE_GET_FAILURE'
+};
