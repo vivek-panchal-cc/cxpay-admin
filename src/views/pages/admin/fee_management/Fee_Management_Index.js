@@ -80,7 +80,13 @@ class Fee_Management_Index extends React.Component {
   componentDidMount() {
     this.getCmsPageList();
   }
-
+  handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      this.getCmsPageList();
+    }
+  };
   getCmsPageList() {
     feeManagementService.getFeeStructures(this.state.fields).then((res) => {
       if (res.status === false) {
@@ -288,6 +294,7 @@ class Fee_Management_Index extends React.Component {
                           name="fee_type"
                           value={this.state.fields.fee_type}
                           onChange={this.handleChange}
+                          onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
                     </CFormGroup>
@@ -302,6 +309,7 @@ class Fee_Management_Index extends React.Component {
                           name="fee_label"
                           value={this.state.fields.fee_label}
                           onChange={this.handleChange}
+                          onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
                     </CFormGroup>

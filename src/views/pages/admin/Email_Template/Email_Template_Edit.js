@@ -350,19 +350,6 @@ class Email_Template_Edit extends Component {
           </CFormGroup>
 
           <CFormGroup>
-            <CLabel htmlFor="nf-name">Meta Description</CLabel>
-            <CInput
-              type="text"
-              id="meta_desc"
-              name="meta_desc"
-              placeholder="Enter Meta Description"
-              autoComplete="meta_desc"
-              onChange={this.handleChange}
-              value={this.state.meta_desc}
-            />
-          </CFormGroup>
-
-          <CFormGroup>
             <CLabel htmlFor="nf-name"> Description</CLabel>
             <div id="myModal" className="modal1">
               <div className="modal-content1">

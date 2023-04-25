@@ -160,7 +160,13 @@ class Customers_Management_Index extends React.Component {
     const { name, value } = e.target;
     this.setState({ fields: { ...this.state.fields, [name]: value } });
   }
-
+  handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      this.getUserGroupsList();
+    }
+  };
   handleSearch(type) {
     this.resetCheckedBox();
     if (type === "reset") {
@@ -318,6 +324,7 @@ class Customers_Management_Index extends React.Component {
                           name="search_name"
                           value={this.state.fields.search_name}
                           onChange={this.handleChange}
+                          onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
                     </CFormGroup>

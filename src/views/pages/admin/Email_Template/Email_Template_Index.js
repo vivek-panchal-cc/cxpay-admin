@@ -146,7 +146,13 @@ class Email_list extends React.Component {
     const { name, value } = e.target;
     this.setState({ fields: { ...this.state.fields, [name]: value } });
   }
-
+  handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      this.getCmsPageList();
+    }
+  };
   handleSearch(type) {
     if (type === "reset") {
       this.setState(
@@ -202,7 +208,7 @@ class Email_list extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    //console.log(multiactions);
+    console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }
@@ -298,6 +304,7 @@ class Email_list extends React.Component {
                           name="search_name"
                           value={this.state.fields.search_name}
                           onChange={this.handleChange}
+                          onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
                     </CFormGroup>
@@ -376,25 +383,18 @@ class Email_list extends React.Component {
                           />
                         </th>
                         <th>#</th>
-                        <th
-                          onClick={() =>
-                            this.handleColumnSort("user_title_name")
-                          }
-                        >
+                        <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">Title</span>
-                            {this.state.fields.sort_field !==
-                              "user_title_name" && (
+                            {this.state.fields.sort_field !== "name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field ===
-                                "user_title_name" && (
+                              this.state.fields.sort_field === "name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field ===
-                                "user_title_name" && (
+                              this.state.fields.sort_field === "name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -441,16 +441,7 @@ class Email_list extends React.Component {
                             </td>
 
                             <td>{index + 1}</td>
-                            <td>
-                              {" "}
-                              {_canAccess("email_templates", "view") && (
-                                <CLink
-                                  to={`/admin/email_templates/detailview/${u._id}`}
-                                >
-                                  {u.name}
-                                </CLink>
-                              )}
-                            </td>
+                            <td>{u.name}</td>
                             <td>
                               {_canAccess("email_templates", "update") && (
                                 <CLink
@@ -461,12 +452,16 @@ class Email_list extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status == false ? "Active" : "Deactive"}
+                                  {u.status == false
+                                    ? "Activate"
+                                    : "Deactivate"}
                                 </CLink>
                               )}
                               {_canAccess("email_templates", "update") ===
                                 false && (
-                                <>{u.status == true ? "Active" : "Deactive"}</>
+                                <>
+                                  {u.status == true ? "Activate" : "Deactivate"}
+                                </>
                               )}
                             </td>
                             {(_canAccess("email_templates", "update") ||

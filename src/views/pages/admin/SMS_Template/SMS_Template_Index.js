@@ -147,7 +147,13 @@ class SMS_list extends React.Component {
     const { name, value } = e.target;
     this.setState({ fields: { ...this.state.fields, [name]: value } });
   }
-
+  handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      this.getCmsPageList();
+    }
+  };
   handleSearch(type) {
     if (type === "reset") {
       this.setState(
@@ -291,13 +297,14 @@ class SMS_list extends React.Component {
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
-                        <CLabel htmlFor="name">Title</CLabel>
+                        <CLabel htmlFor="name">Name</CLabel>
                         <CInput
                           id="name"
-                          placeholder="Search Title"
+                          placeholder="Search Name"
                           name="search_name"
                           value={this.state.fields.search_name}
                           onChange={this.handleChange}
+                          onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
                     </CFormGroup>
