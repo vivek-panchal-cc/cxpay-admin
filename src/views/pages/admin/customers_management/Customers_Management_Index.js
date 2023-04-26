@@ -160,7 +160,13 @@ class Customers_Management_Index extends React.Component {
     const { name, value } = e.target;
     this.setState({ fields: { ...this.state.fields, [name]: value } });
   }
-
+  handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      this.getUserGroupsList();
+    }
+  };
   handleSearch(type) {
     this.resetCheckedBox();
     if (type === "reset") {
@@ -318,6 +324,7 @@ class Customers_Management_Index extends React.Component {
                           name="search_name"
                           value={this.state.fields.search_name}
                           onChange={this.handleChange}
+                          onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
                     </CFormGroup>
@@ -588,7 +595,8 @@ class Customers_Management_Index extends React.Component {
           </CModalHeader>
           <CModalBody>
             {/* If you are delete the customer, then associate users will be delete.<br /> */}
-            Are you sure you want to delete this record?
+            Are you sure you want to delete your account? This will permanently
+            erase all your details.
           </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>

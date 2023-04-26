@@ -249,9 +249,14 @@ class Fee_Management_Edit extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("amount", this.state.amount, "required", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "amount",
+                this.state.amount,
+                "required|numeric|min:0,num",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
