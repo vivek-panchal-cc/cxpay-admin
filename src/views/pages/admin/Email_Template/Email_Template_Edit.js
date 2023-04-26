@@ -249,6 +249,7 @@ class Email_Template_Edit extends Component {
                 initialValue: res.result.template,
                 status: res.result.status,
                 slug: slug,
+                subject: res.result.subject,
               });
             }
           }
@@ -272,6 +273,7 @@ class Email_Template_Edit extends Component {
           slug: slug,
           status: this.state.status === false ? 0 : 1,
           id: this.state.id,
+          subject: this.state.subject,
         })
         .then((res) => {
           if (res.status === "error") {
@@ -319,7 +321,7 @@ class Email_Template_Edit extends Component {
         </CCardHeader>
         <CCardBody>
           <CFormGroup>
-            <CLabel htmlFor="nf-name">Title</CLabel>
+            <CLabel htmlFor="nf-name">Name</CLabel>
             <CInput
               type="text"
               id="name"
@@ -348,7 +350,28 @@ class Email_Template_Edit extends Component {
             />
             <CFormText className="help-block"></CFormText>
           </CFormGroup>
-
+          <CFormGroup>
+            <CLabel htmlFor="nf-name">Subject</CLabel>
+            <CInput
+              type="text"
+              id="subject"
+              name="subject"
+              placeholder="Enter Subject"
+              autoComplete="subject"
+              onChange={this.handleChange}
+              value={this.state.subject}
+            />
+            <CFormText className="help-block">
+              {this.validator.message(
+                "subject",
+                this.state.subject,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
+            </CFormText>
+          </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name"> Description</CLabel>
             <div id="myModal" className="modal1">

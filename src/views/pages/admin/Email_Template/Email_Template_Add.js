@@ -245,6 +245,7 @@ class Email_Template_Add extends Component {
           slug: slug,
           name: this.state.name,
           status: this.state.status == false ? 0 : 1,
+          subject: this.state.subject,
         })
         .then((res) => {
           if (res.status === "error") {
@@ -322,7 +323,27 @@ class Email_Template_Add extends Component {
             />
             <CFormText className="help-block"></CFormText>
           </CFormGroup>
-
+          <CFormGroup>
+            <CLabel htmlFor="nf-name">Subject</CLabel>
+            <CInput
+              type="text"
+              id="subject"
+              name="subject"
+              placeholder="Enter Subject"
+              autoComplete="subject"
+              onChange={this.handleChange}
+            />
+            <CFormText className="help-block">
+              {this.validator.message(
+                "subject",
+                this.state.subject,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
+            </CFormText>
+          </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name"> Description</CLabel>
             <div id="myModal" className="modal1">

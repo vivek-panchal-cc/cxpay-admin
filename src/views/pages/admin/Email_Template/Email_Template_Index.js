@@ -297,10 +297,10 @@ class Email_list extends React.Component {
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
-                        <CLabel htmlFor="name">Title</CLabel>
+                        <CLabel htmlFor="name">Name</CLabel>
                         <CInput
                           id="name"
-                          placeholder="Search Title"
+                          placeholder="Search Name"
                           name="search_name"
                           value={this.state.fields.search_name}
                           onChange={this.handleChange}
@@ -385,7 +385,7 @@ class Email_list extends React.Component {
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
-                            <span className="table-header-text-mrg">Title</span>
+                            <span className="table-header-text-mrg">Name</span>
                             {this.state.fields.sort_field !== "name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
@@ -395,6 +395,24 @@ class Email_list extends React.Component {
                               )}
                             {this.state.fields.sort_dir === "desc" &&
                               this.state.fields.sort_field === "name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+                        <th onClick={() => this.handleColumnSort("subject")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Subject
+                            </span>
+                            {this.state.fields.sort_field !== "subject" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field === "subject" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field === "subject" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -442,6 +460,7 @@ class Email_list extends React.Component {
 
                             <td>{index + 1}</td>
                             <td>{u.name}</td>
+                            <td>{u.subject}</td>
                             <td>
                               {_canAccess("email_templates", "update") && (
                                 <CLink
