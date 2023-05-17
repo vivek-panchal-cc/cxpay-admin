@@ -137,6 +137,11 @@ const Fee_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/fee_management/Fee_Management_Edit")
 );
 
+//Import File Settings (system options)
+const Settings_Update = React.lazy(() =>
+  import("./views/pages/admin/settings/Settings_Update")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -459,6 +464,16 @@ const routes = [
     name: "Edit",
     component: Fee_Management_Edit,
     module_name: "fee_management",
+    action: "update",
+  },
+
+  //  module_name and action parameter used for ACL mechanisam its required column Fee  management
+  {
+    path: "/admin/settings",
+    exact: true,
+    name: "Settings",
+    component: Settings_Update,
+    module_name: "settings",
     action: "update",
   },
 ];

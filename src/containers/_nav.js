@@ -19,6 +19,14 @@ const _nav = [
     module_name: "dashboard",
     id: "dashboard_sidebar_id",
   },
+  // {
+  //   _tag: "CSidebarNavItem",
+  //   name: "Settings",
+  //   to: "/admin/settings",
+  //   icon: <FontAwesomeIcon icon={faCogs} className="c-sidebar-nav-icon" />,
+  //   module_name: "settings",
+  //   id: "settings_sidebar_id",
+  // },
   {
     _tag: "CSidebarNavTitle",
     _children: ["Access"],
