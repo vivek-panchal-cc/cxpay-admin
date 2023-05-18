@@ -111,6 +111,42 @@ const _nav = [
     module_name: "sms_templates",
     id: "sms_templates_sidebar_id",
   },
+  {
+    _tag: "CSidebarNavItem",
+    name: "CMS Pages",
+    to: "/admin/cms_pages",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "cms_templates",
+    id: "cms_templates_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Push Notification",
+    to: "/admin/notifications",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "push_notification",
+    id: "push_notification_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavTitle",
+    _children: ["Reports"],
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Customers Report",
+    to: "/admin/customer_reports",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "customer_reports",
+    id: "customer_reports_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Transaction Report",
+    to: "/admin/transaction_reports",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "transaction_reports",
+    id: "transaction_reports_sidebar_id",
+  },
 ];
 
 export default _nav;

@@ -142,6 +142,30 @@ const Settings_Update = React.lazy(() =>
   import("./views/pages/admin/settings/Settings_Update")
 );
 
+// Import File Push Notification
+
+const Push_Notifications_Index = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notifications_Index")
+);
+const Push_Notification_Add = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notification_Add")
+);
+const Push_Notification_Edit = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notification_Edit")
+);
+
+// Reports
+
+const Customer_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/customer_reports/Customer_Reports_Index")
+);
+const Customer_Detail = React.lazy(() =>
+  import("./views/pages/admin/customer_reports/Customer_Detail")
+);
+const Transaction_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -475,6 +499,56 @@ const routes = [
     component: Settings_Update,
     module_name: "settings",
     action: "update",
+  },
+  // Push Notifications
+  {
+    path: "/admin/notifications",
+    exact: true,
+    name: "Push Notifications",
+    component: Push_Notifications_Index,
+    module_name: "notifications",
+    action: "view",
+  },
+  {
+    path: "/admin/notifications/add",
+    exact: true,
+    name: "Add",
+    component: Push_Notification_Add,
+    module_name: "notifications",
+    action: "create",
+  },
+  {
+    path: "/admin/notifications/edit/:id",
+    exact: true,
+    name: "Edit",
+    component: Push_Notification_Edit,
+    module_name: "notifications",
+    action: "update",
+  },
+  // report
+  {
+    path: "/admin/customer_reports",
+    exact: true,
+    name: "Customer Reports",
+    component: Customer_Reports_Index,
+    module_name: "reports",
+    action: "view",
+  },
+  {
+    path: "/admin/customer_reports/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Customer_Detail,
+    module_name: "customer_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/transaction_reports",
+    exact: true,
+    name: "Transaction Reports",
+    component: Transaction_Reports_Index,
+    module_name: "reports",
+    action: "view",
   },
 ];
 
