@@ -51,7 +51,7 @@ class Customer_Reports_Index extends React.Component {
       fields: {
         page: 1,
         direction: "desc",
-        sort: "name",
+        sort: "account_number",
         name: "",
         filter_user_type: "",
         totalPage: 1,
@@ -77,7 +77,7 @@ class Customer_Reports_Index extends React.Component {
       console.log(res);
       if (res.success === false) {
         this.setState({
-          totalRecords: res.data.pagination.total,
+          totalRecords: res.data?.pagination?.total,
           fields: {
             ...this.state.fields,
           },
@@ -87,7 +87,7 @@ class Customer_Reports_Index extends React.Component {
       } else {
         console.log("res.data", res.data);
         this.setState({
-          totalRecords: res.data.pagination.total,
+          totalRecords: res.data?.pagination?.total,
           fields: {
             ...this.state.fields,
             totalPage: res?.data?.pagination?.last_page,
@@ -166,7 +166,7 @@ class Customer_Reports_Index extends React.Component {
           fields: {
             page: 1,
             direction: "desc",
-            sort: "name",
+            sort: "account_number",
             search: "",
             filter_user_type: "",
             totalPage: 1,
@@ -341,18 +341,18 @@ class Customer_Reports_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th onClick={() => this.handleColumnSort("name")}>
+                        <th onClick={() => this.handleColumnSort("first_name")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">Name</span>
-                            {this.state.fields.sort !== "name" && (
+                            {this.state.fields.sort !== "first_name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "name" && (
+                              this.state.fields.sort === "first_name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "name" && (
+                              this.state.fields.sort === "first_name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -375,20 +375,20 @@ class Customer_Reports_Index extends React.Component {
                           </span>
                         </th>
 
-                        <th onClick={() => this.handleColumnSort("mobile")}>
+                        <th onClick={() => this.handleColumnSort("mobile_number")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
                               Mobile
                             </span>
-                            {this.state.fields.sort !== "mobile" && (
+                            {this.state.fields.sort !== "mobile_number" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "mobile" && (
+                              this.state.fields.sort === "mobile_number" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "mobile" && (
+                              this.state.fields.sort === "mobile_number" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
