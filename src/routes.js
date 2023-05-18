@@ -539,7 +539,7 @@ const routes = [
     exact: true,
     name: "DetailView",
     component: Customer_Detail,
-    module_name: "customer_reports",
+    module_name: "reports",
     action: "view",
   },
   {
