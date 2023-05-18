@@ -137,6 +137,18 @@ const Fee_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/fee_management/Fee_Management_Edit")
 );
 
+// Import File Push Notification
+
+const Push_Notifications_Index = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notifications_Index")
+);
+const Push_Notification_Add = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notification_Add")
+);
+const Push_Notification_Edit = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notification_Edit")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -459,6 +471,32 @@ const routes = [
     name: "Edit",
     component: Fee_Management_Edit,
     module_name: "fee_management",
+    action: "update",
+  },
+
+  // Push Notifications
+  {
+    path: "/admin/notifications",
+    exact: true,
+    name: "Push Notifications",
+    component: Push_Notifications_Index,
+    module_name: "notifications",
+    action: "view",
+  },
+  {
+    path: "/admin/notifications/add",
+    exact: true,
+    name: "Add",
+    component: Push_Notification_Add,
+    module_name: "notifications",
+    action: "create",
+  },
+  {
+    path: "/admin/notifications/edit/:id",
+    exact: true,
+    name: "Edit",
+    component: Push_Notification_Edit,
+    module_name: "notifications",
     action: "update",
   },
 ];
