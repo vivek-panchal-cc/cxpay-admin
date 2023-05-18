@@ -103,6 +103,15 @@ const _nav = [
     module_name: "sms_templates",
     id: "sms_templates_sidebar_id",
   },
+  {
+    _tag: "CSidebarNavItem",
+    name: "CMS Pages",
+    to: "/admin/cms_pages",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "cms_templates",
+    id: "cms_templates_sidebar_id",
+  },
+  
 ];
 
 export default _nav;
