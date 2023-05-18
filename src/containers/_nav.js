@@ -119,6 +119,26 @@ const _nav = [
     module_name: "push_notification",
     id: "push_notification_sidebar_id",
   },
+  {
+    _tag: "CSidebarNavTitle",
+    _children: ["Reports"],
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Customers Report",
+    to: "/admin/customer_reports",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "customer_reports",
+    id: "customer_reports_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Transaction Report",
+    to: "/admin/transaction_reports",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "transaction_reports",
+    id: "transaction_reports_sidebar_id",
+  },
 ];
 
 export default _nav;

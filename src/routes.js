@@ -149,6 +149,18 @@ const Push_Notification_Edit = React.lazy(() =>
   import("./views/pages/admin/push_notifications/Push_Notification_Edit")
 );
 
+// Reports
+
+const Customer_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/customer_reports/Customer_Reports_Index")
+);
+const Customer_Detail = React.lazy(() =>
+  import("./views/pages/admin/customer_reports/Customer_Detail")
+);
+const Transaction_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -498,6 +510,31 @@ const routes = [
     component: Push_Notification_Edit,
     module_name: "notifications",
     action: "update",
+  },
+  // report
+  {
+    path: "/admin/customer_reports",
+    exact: true,
+    name: "Customer Reports",
+    component: Customer_Reports_Index,
+    module_name: "reports",
+    action: "view",
+  },
+  {
+    path: "/admin/customer_reports/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Customer_Detail,
+    module_name: "customer_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/transaction_reports",
+    exact: true,
+    name: "Transaction Reports",
+    component: Transaction_Reports_Index,
+    module_name: "reports",
+    action: "view",
   },
 ];
 
