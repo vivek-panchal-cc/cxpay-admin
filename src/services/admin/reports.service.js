@@ -57,13 +57,11 @@ async function downloadCustomerCSV() {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customer", "view"),
-    body: {},
   };
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}export-customer-report`
+      `${process.env.REACT_APP_API_URL}export-customer-report`,requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");
@@ -97,19 +95,17 @@ async function downloadTransactionCSV() {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customer", "view"),
-    body: {},
   };
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}export-transaction-report`
+      `${process.env.REACT_APP_API_URL}export-transaction-report`,requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
   }
- 
+  console.log('responseresponse',response)
   return handleResponse(response);
 }
 
