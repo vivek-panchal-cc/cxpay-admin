@@ -21,7 +21,12 @@ import {
   CSelect,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { faEye, faFileDownload, faFileExport, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faFileDownload,
+  faFileExport,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 // import { agentService } from "../../../../services/admin/agent.service";
 import { reportsService } from "../../../../services/admin/reports.service";
 import {
@@ -202,11 +207,11 @@ class Customer_Reports_Index extends React.Component {
 
   downloadFile = async () => {
     reportsService.downloadCustomerCSV().then((res) => {
-      if(res.success){
+      if (res.success) {
         notify.success(res.message);
       }
     });
-}
+  };
 
   render() {
     const current_user = _loginUsersDetails();
@@ -375,7 +380,9 @@ class Customer_Reports_Index extends React.Component {
                           </span>
                         </th>
 
-                        <th onClick={() => this.handleColumnSort("mobile_number")}>
+                        <th
+                          onClick={() => this.handleColumnSort("mobile_number")}
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
                               Mobile
@@ -473,7 +480,11 @@ class Customer_Reports_Index extends React.Component {
                               {"+"}
                               {u.country_code} {u.mobile}
                             </td>
-                            <td>{u.available_balance}</td>
+                            <td>
+                              {typeof parseFloat(u.available_balance) === "number"
+                                ? parseFloat(u.available_balance).toFixed(2)
+                                : u.available_balance}
+                            </td>
                             <td>{u.user_type}</td>
                             <td>{u.country}</td>
                             <td>

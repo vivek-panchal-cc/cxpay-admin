@@ -54,6 +54,7 @@ async function customerDetails(postData) {
 }
 
 async function downloadCustomerCSV() {
+  console.log(345345)
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -67,6 +68,7 @@ async function downloadCustomerCSV() {
     notify.error("Something went wrong");
     setLoading(false);
   }
+  console.log('responseresponse',response)
  
   return handleResponse(response);
 }
