@@ -22,7 +22,7 @@ async function getCustomersList(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}generate-customer-report`,
+      `${process.env.REACT_APP_API_URL}api/generate-customer-report`,
       requestOptions
     );
   } catch (error) {
@@ -43,7 +43,7 @@ async function customerDetails(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}get-customer`,
+      `${process.env.REACT_APP_API_URL}api/get-customer`,
       requestOptions
     );
   } catch (error) {
@@ -54,15 +54,15 @@ async function customerDetails(postData) {
 }
 
 async function downloadCustomerCSV() {
-  console.log(345345)
   setLoading(true);
   const requestOptions = {
     method: "POST",
+    headers: authHeader("transaction", "view"),
   };
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}export-customer-report`,requestOptions
+      `${process.env.REACT_APP_API_URL}api/export-customer-report`,requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");
@@ -83,7 +83,7 @@ async function getTransactionList(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}generate-transaction-report`,requestOptions
+      `${process.env.REACT_APP_API_URL}api/generate-transaction-report`,requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");
@@ -97,11 +97,12 @@ async function downloadTransactionCSV() {
   setLoading(true);
   const requestOptions = {
     method: "POST",
+    headers: authHeader("transaction", "view"),
   };
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}export-transaction-report`,requestOptions
+      `${process.env.REACT_APP_API_URL}api/export-transaction-report`,requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");

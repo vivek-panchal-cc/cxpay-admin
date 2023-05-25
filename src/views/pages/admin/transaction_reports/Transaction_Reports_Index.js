@@ -21,7 +21,12 @@ import {
   CSelect,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { faEye, faFileDownload, faFileExport, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faFileDownload,
+  faFileExport,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 // import { agentService } from "../../../../services/admin/agent.service";
 import { reportsService } from "../../../../services/admin/reports.service";
 import {
@@ -55,7 +60,7 @@ class Transaction_Reports_Index extends React.Component {
         sort: "ref_id",
         name: "",
         txn_type: "",
-        type:"",
+        type: "",
         totalPage: 1,
       },
       transactions_list: [],
@@ -93,7 +98,6 @@ class Transaction_Reports_Index extends React.Component {
           },
           transactions_list: res.data.transaction,
         });
-
       }
     });
   }
@@ -145,7 +149,7 @@ class Transaction_Reports_Index extends React.Component {
             sort: "ref_id",
             search: "",
             txn_type: "",
-            type:"",
+            type: "",
             totalPage: 1,
           },
         },
@@ -179,9 +183,13 @@ class Transaction_Reports_Index extends React.Component {
 
   downloadFile = async () => {
     reportsService.downloadTransactionCSV().then((res) => {
-      notify.success(res.message);
+      if (res.success) {
+        notify.success(res.message);
+      } else {
+        notify.error(res.message);
+      }
     });
-}
+  };
 
   render() {
     const current_user = _loginUsersDetails();
@@ -229,33 +237,10 @@ class Transaction_Reports_Index extends React.Component {
                             }
                           }}
                         >
-                          <option value="">-- Select Type --</option>
-                          <option value="WW">Wallet to Wallet </option>
-                          <option value="PL">Add Fund (Depoite)</option>
-                        </CSelect>
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol xl={3}>
-                    <CFormGroup row>
-                      <CCol xs="12">
-                        <CLabel htmlFor="type">Type</CLabel>
-                        <CSelect
-                          id="type"
-                          placeholder="Type"
-                          name="type"
-                          value={this.state.fields.type}
-                          onChange={this.handleChange}
-                          style={{ cursor: "pointer" }}
-                          onKeyPress={(event) => {
-                            if (event.key === "Enter") {
-                              this.handleSearch("search");
-                            }
-                          }}
-                        >
-                          <option value="">-- Select Type --</option>
-                          <option value="C">Credit</option>
-                          <option value="D">Debit</option>
+                           <option value="">-- Select Type --</option>
+                          <option value="REQ">Request</option>
+                          <option value="PL">Deposite</option>
+                          <option value="WW">Wallet to Wallet</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -345,11 +330,7 @@ class Transaction_Reports_Index extends React.Component {
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th
-                          onClick={() =>
-                            this.handleColumnSort("ref_id")
-                          }
-                        >
+                        <th onClick={() => this.handleColumnSort("ref_id")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
                               Transaction ID
@@ -367,136 +348,64 @@ class Transaction_Reports_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th onClick={() => this.handleColumnSort("institution")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">Institution</span>
-                            {this.state.fields.sort !== "institution" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "institution" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "institution" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-
-                        <th onClick={() => this.handleColumnSort("receiver_account_number")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">Receiver account number</span>
-                            {this.state.fields.sort !== "receiver_account_number" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "receiver_account_number" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "receiver_account_number" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-
-                        <th onClick={() => this.handleColumnSort("receiver_name")}>
+                        
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("receiver_account_number")
+                          }
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                            Receiver name
+                              Receiver account number
                             </span>
-                            {this.state.fields.sort !== "receiver_name" && (
+                            {this.state.fields.sort !==
+                              "receiver_account_number" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "receiver_name" && (
+                              this.state.fields.sort ===
+                                "receiver_account_number" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "receiver_name" && (
+                              this.state.fields.sort ===
+                                "receiver_account_number" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
 
                         
-                        <th onClick={() => this.handleColumnSort("receiver_mobile_number")}>
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("sender_account_number")
+                          }
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                            Receiver mobile number
+                              Sender account number
                             </span>
-                            {this.state.fields.sort !== "receiver_mobile_number" && (
+                            {this.state.fields.sort !==
+                              "sender_account_number" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "receiver_mobile_number" && (
+                              this.state.fields.sort ===
+                                "sender_account_number" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "receiver_mobile_number" && (
+                              this.state.fields.sort ===
+                                "sender_account_number" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
-                        <th onClick={() => this.handleColumnSort("sender_account_number")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                            Sender account number
-                            </span>
-                            {this.state.fields.sort !== "sender_account_number" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "sender_account_number" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "sender_account_number" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-                        <th onClick={() => this.handleColumnSort("sender_name")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                            Sender name
-                            </span>
-                            {this.state.fields.sort !== "sender_name" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "sender_name" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "sender_name" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-                        <th onClick={() => this.handleColumnSort("sender_mobile_number")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                            Sender mobile number
-                            </span>
-                            {this.state.fields.sort !== "sender_mobile_number" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "sender_mobile_number" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "sender_mobile_number" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
+                       
                         <th onClick={() => this.handleColumnSort("amount")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                            Amount
+                              Amount
                             </span>
                             {this.state.fields.sort !== "amount" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -513,9 +422,7 @@ class Transaction_Reports_Index extends React.Component {
                         </th>
                         <th onClick={() => this.handleColumnSort("fees")}>
                           <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                            Fees
-                            </span>
+                            <span className="table-header-text-mrg">Fees</span>
                             {this.state.fields.sort !== "fees" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
@@ -531,9 +438,7 @@ class Transaction_Reports_Index extends React.Component {
                         </th>
                         <th onClick={() => this.handleColumnSort("type")}>
                           <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                            Type
-                            </span>
+                            <span className="table-header-text-mrg">Type</span>
                             {this.state.fields.sort !== "type" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
@@ -550,7 +455,7 @@ class Transaction_Reports_Index extends React.Component {
                         <th onClick={() => this.handleColumnSort("txn_type")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                            Transaction type
+                              Transaction type
                             </span>
                             {this.state.fields.sort !== "txn_type" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -568,7 +473,7 @@ class Transaction_Reports_Index extends React.Component {
                         <th onClick={() => this.handleColumnSort("narration")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                            Narration
+                              Narration
                             </span>
                             {this.state.fields.sort !== "narration" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -586,7 +491,7 @@ class Transaction_Reports_Index extends React.Component {
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                            Status
+                              Status
                             </span>
                             {this.state.fields.sort !== "status" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -601,10 +506,12 @@ class Transaction_Reports_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th onClick={() => this.handleColumnSort("error_reason")}>
+                        <th
+                          onClick={() => this.handleColumnSort("error_reason")}
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                            Error reason
+                              Error reason
                             </span>
                             {this.state.fields.sort !== "error_reason" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -642,16 +549,13 @@ class Transaction_Reports_Index extends React.Component {
                     <tbody>
                       {this.state?.transactions_list?.length > 0 ? (
                         this.state.transactions_list.map((u, index) => (
-                          <tr key={index+1}>
+                          <tr key={index + 1}>
                             <td>{index + 1}</td>
-                            <td>{u.institution}</td>
                             <td>{u.ref_id}</td>
                             <td>{u.receiver_account_number}</td>
-                            <td>{u.receiver_name}</td>
-                            <td>{u.receiver_mobile_number}</td>
+                            
                             <td>{u.sender_account_number}</td>
-                            <td>{u.sender_name}</td>
-                            <td>{u.sender_mobile_number}</td>
+                            
                             <td>{u.amount}</td>
                             <td>{u.fees}</td>
                             <td>{u.type}</td>
@@ -659,7 +563,7 @@ class Transaction_Reports_Index extends React.Component {
                             <td>{u.narration}</td>
                             <td>{u.status}</td>
                             <td>{u.error_reason}</td>
-                            <td>{moment(u.created_at).format('LL')}</td>
+                            <td>{moment(u.created_at).format("LL")}</td>
                           </tr>
                         ))
                       ) : (

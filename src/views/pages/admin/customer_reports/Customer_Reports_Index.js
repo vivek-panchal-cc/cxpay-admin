@@ -209,6 +209,8 @@ class Customer_Reports_Index extends React.Component {
     reportsService.downloadCustomerCSV().then((res) => {
       if (res.success) {
         notify.success(res.message);
+      } else {
+        notify.error(res.message);
       }
     });
   };
