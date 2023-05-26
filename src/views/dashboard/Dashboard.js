@@ -8,7 +8,7 @@ import {
 } from "@coreui/react";
 import React from "react";
 import { dashboardService } from "../../services/admin/dashboard.service";
-import { notify} from "../../_helpers/index";
+import { notify } from "../../_helpers/index";
 import "./dashboard.css";
 
 class Dashboard extends React.Component {
@@ -25,6 +25,7 @@ class Dashboard extends React.Component {
       total_credit_amount: 0,
       total_debit_amount: 0,
       total_customers: 0,
+      currentMonth: null,
     };
   }
 
@@ -38,7 +39,12 @@ class Dashboard extends React.Component {
         window.location.reload();
       }, 700);
     }
+    var today = new Date();
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
 
+    today = mm + "/" + yyyy;
+    this.setState({ currentMonth: today });
     this.getDashboardDetails();
   }
 
@@ -86,17 +92,24 @@ class Dashboard extends React.Component {
           <CCol sm={4}>
             <CCard color="info" className="dashboard-card">
               <CCardBody>
-                <CCardTitle className="dashboard-card-title">Personal Customers</CCardTitle>
+                <CCardTitle className="dashboard-card-title">
+                  Personal Customers
+                </CCardTitle>
                 <CCardText>
                   <h4 className="dashboard-card-number">
-                    {this.state.total_individuals ? this.state.total_individuals : "0"}
+                    {this.state.total_individuals
+                      ? this.state.total_individuals
+                      : "0"}
                   </h4>
                 </CCardText>
               </CCardBody>
             </CCard>
           </CCol>
           <CCol sm={4}>
-            <CCard style={{backgroundColor: 'rgb(61, 28, 189, 0.61) !important'}} className="transaparent-card">
+            <CCard
+              style={{ backgroundColor: "rgb(61, 28, 189, 0.61) !important" }}
+              className="transaparent-card"
+            >
               <CCardBody>
                 <CCardTitle className="dashboard-card-title">
                   Business Customers
@@ -116,12 +129,18 @@ class Dashboard extends React.Component {
           <CCol sm={4}>
             <CCard color="warning" className="dashboard-card">
               <CCardBody>
+                <span className="float-right">
+                  <h5>{this.state.currentMonth}</h5>
+                </span>
                 <CCardTitle className="dashboard-card-title">
-                Monthly Credited Amount
+                  Monthly Credited Amount
                 </CCardTitle>
                 <CCardText>
                   <h4 className="dashboard-card-number">
-                    {this.state.total_credit_amount ? this.state.total_credit_amount : "N/A"}
+                    ANG{" "}
+                    {this.state.total_credit_amount
+                      ? this.state.total_credit_amount
+                      : "N/A"}
                   </h4>
                 </CCardText>
               </CCardBody>
@@ -130,12 +149,18 @@ class Dashboard extends React.Component {
           <CCol sm={4}>
             <CCard color="danger" className="dashboard-card">
               <CCardBody>
+                <span className="float-right">
+                  <h5>{this.state.currentMonth}</h5>
+                </span>
                 <CCardTitle className="dashboard-card-title">
-                Monthly Debited Amount 
+                  Monthly Debited Amount
                 </CCardTitle>
                 <CCardText>
                   <h4 className="dashboard-card-number">
-                    {this.state.total_debit_amount ? this.state.total_debit_amount : "0"}
+                    ANG{" "}
+                    {this.state.total_debit_amount
+                      ? this.state.total_debit_amount
+                      : "0"}
                   </h4>
                 </CCardText>
               </CCardBody>

@@ -407,7 +407,7 @@ class SMS_Template_Add extends Component {
 
             <Editor
               apiKey="kb557exdqag66gcq1mmiq3hfeki32ge6lkoj8giccxlcrie0"
-              initialValue=''
+              //initialValue=''
               value={this.state.initialValue}
 
               init={{

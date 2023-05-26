@@ -26,20 +26,15 @@ const Fullpage = (props) => {
                     props.customer.profile_image !== undefined && (
                       <>
                         {
-                          <img
+                          <img width={200} height={200}
                             src={
                               props.customer.profile_image
-                                ? `${
-                                    process.env.REACT_APP_API_URL +
-                                    "uploads/user/" +
-                                    props.customer.profile_image
-                                  }`
+                                ? props.customer.profile_image
                                 : props.customer.user_type === "business"
                                 ? "/assets/Business-account.png"
                                 : "/assets/Personal.png"
                             }
                             alt="Profile Image"
-                            
                           />
                         }
                       </>

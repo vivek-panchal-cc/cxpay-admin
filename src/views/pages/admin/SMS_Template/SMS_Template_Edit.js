@@ -432,7 +432,7 @@ class SMS_Template_Edit extends Component {
             <input id="my-file" type="file" name="my-file" style={{ display: "none" }} />
             <Editor
               apiKey="kb557exdqag66gcq1mmiq3hfeki32ge6lkoj8giccxlcrie0"
-              initialValue={this.state.initialValue}
+             // initialValue={this.state.initialValue}
               value={this.state.initialValue}
               init={{
                 placeholder: "Enter Description",

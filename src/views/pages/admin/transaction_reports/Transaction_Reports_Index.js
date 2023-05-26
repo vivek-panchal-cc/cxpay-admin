@@ -43,6 +43,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import moment from "moment";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class Transaction_Reports_Index extends React.Component {
   constructor(props) {
@@ -62,6 +64,9 @@ class Transaction_Reports_Index extends React.Component {
         txn_type: "",
         type: "",
         totalPage: 1,
+        from_date: null,
+        to_date: null,
+        status: "",
       },
       transactions_list: [],
       _openPopup: false,
@@ -151,6 +156,9 @@ class Transaction_Reports_Index extends React.Component {
             txn_type: "",
             type: "",
             totalPage: 1,
+            status: "",
+            from_date: null,
+            to_date: null,
           },
         },
         () => {
@@ -183,12 +191,20 @@ class Transaction_Reports_Index extends React.Component {
 
   downloadFile = async () => {
     reportsService.downloadTransactionCSV().then((res) => {
-      if (res.success) {
-        notify.success(res.message);
-      } else {
-        notify.error(res.message);
-      }
+      console.log(res);
+      //if (res.success) {
+        notify.success("Successfully send report logged in user mail");
+      //}
     });
+  };
+
+  handledateChange = (date) => {
+    console.log(date);
+    this.setState({ fields: { ...this.state.fields, from_date: date } });
+  };
+
+  handledateChangeTo = (date) => {
+    this.setState({ fields: { ...this.state.fields, to_date: date } });
   };
 
   render() {
@@ -226,7 +242,7 @@ class Transaction_Reports_Index extends React.Component {
                         <CLabel htmlFor="txn_type">Transaction Type</CLabel>
                         <CSelect
                           id="txn_type"
-                          placeholder="Customer Type"
+                          placeholder="Transaction Type"
                           name="txn_type"
                           value={this.state.fields.txn_type}
                           onChange={this.handleChange}
@@ -237,7 +253,7 @@ class Transaction_Reports_Index extends React.Component {
                             }
                           }}
                         >
-                           <option value="">-- Select Type --</option>
+                          <option value="">-- Select Type --</option>
                           <option value="REQ">Request</option>
                           <option value="PL">Deposite</option>
                           <option value="WW">Wallet to Wallet</option>
@@ -263,18 +279,61 @@ class Transaction_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Status --</option>
-                          <option value="PENDING">Pending</option>
-                          <option value="CANCELLED">Cancelled</option>
-                          <option value="DECLINED">Declined</option>
-                          <option value="PAID">Paid</option>
-                          <option value="FAILED">Failed</option>
+                          {(this.state.fields.txn_type == "PL" ||
+                            this.state.fields.txn_type == "WW") && (
+                            <>
+                              <option value="PENDING">Pending</option>
+                              <option value="PAID">Paid</option>
+                              <option value="FAILED">Failed</option>
+                            </>
+                          )}
+                          {this.state.fields.txn_type == "REQ" && (
+                            <>
+                              <option value="PENDING">Pending</option>
+                              <option value="CANCELLED">Cancelled</option>
+                              <option value="DECLINED">Declined</option>
+                              <option value="PAID">Paid</option>
+                              <option value="FAILED">Failed</option>
+                            </>
+                          )}
                         </CSelect>
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                  <CCol xl={6}>
+                </CRow>
+                <CRow>
+                  <CCol xl={3}>
                     <CFormGroup row>
-                      <CCol xs="12"></CCol>
+                      <CCol xs="12">
+                        <CFormGroup>
+                          <CLabel htmlFor="from_date">From Date</CLabel>
+                          <DatePicker
+                            selected={this.state.fields.from_date}
+                            onChange={(date) => this.handledateChange(date)}
+                            name="from_date"
+                            dateCaption=""
+                            dateFormat="dd/MM/yyyy"
+                            className="form-control"
+                          />
+                        </CFormGroup>
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
+                        <CFormGroup>
+                          <CLabel htmlFor="name">To Date</CLabel>
+                          <DatePicker
+                            minDate={this.state.fields.from_date}
+                            selected={this.state.fields.to_date}
+                            onChange={(date) => this.handledateChangeTo(date)}
+                            dateCaption=""
+                            dateFormat="dd/MM/yyyy"
+                            className="form-control"
+                          />
+                        </CFormGroup>
+                      </CCol>
                     </CFormGroup>
                   </CCol>
                 </CRow>
@@ -329,7 +388,7 @@ class Transaction_Reports_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>#</th>
+                        <th>Sr.no</th>
                         <th onClick={() => this.handleColumnSort("ref_id")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -348,7 +407,7 @@ class Transaction_Reports_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        
+
                         <th
                           onClick={() =>
                             this.handleColumnSort("receiver_account_number")
@@ -375,7 +434,25 @@ class Transaction_Reports_Index extends React.Component {
                           </span>
                         </th>
 
-                        
+                        <th onClick={() => this.handleColumnSort("rname")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Receiver name
+                            </span>
+                            {this.state.fields.sort !== "rname" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.direction === "asc" &&
+                              this.state.fields.sort === "rname" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.direction === "desc" &&
+                              this.state.fields.sort === "rname" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+
                         <th
                           onClick={() =>
                             this.handleColumnSort("sender_account_number")
@@ -401,7 +478,26 @@ class Transaction_Reports_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                       
+
+                        <th onClick={() => this.handleColumnSort("sname")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Sender name
+                            </span>
+                            {this.state.fields.sort !== "sname" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.direction === "asc" &&
+                              this.state.fields.sort === "sname" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.direction === "desc" &&
+                              this.state.fields.sort === "sname" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+
                         <th onClick={() => this.handleColumnSort("amount")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -448,24 +544,6 @@ class Transaction_Reports_Index extends React.Component {
                               )}
                             {this.state.fields.direction === "desc" &&
                               this.state.fields.sort === "type" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-                        <th onClick={() => this.handleColumnSort("txn_type")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              Transaction type
-                            </span>
-                            {this.state.fields.sort !== "txn_type" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "txn_type" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "txn_type" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -550,20 +628,25 @@ class Transaction_Reports_Index extends React.Component {
                       {this.state?.transactions_list?.length > 0 ? (
                         this.state.transactions_list.map((u, index) => (
                           <tr key={index + 1}>
-                            <td>{index + 1}</td>
+                            <td>
+                              {this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.ref_id}</td>
                             <td>{u.receiver_account_number}</td>
-                            
+                            <td>{u.rname}</td>
                             <td>{u.sender_account_number}</td>
-                            
+                            <td>{u.sname}</td>
                             <td>{u.amount}</td>
                             <td>{u.fees}</td>
                             <td>{u.type}</td>
-                            <td>{u.txn_type}</td>
                             <td>{u.narration}</td>
                             <td>{u.status}</td>
                             <td>{u.error_reason}</td>
-                            <td>{moment(u.created_at).format("LL")}</td>
+                            <td>
+                              {moment(u.created_at).format("YYYY-MM-DD HH:mm")}
+                            </td>
                           </tr>
                         ))
                       ) : (

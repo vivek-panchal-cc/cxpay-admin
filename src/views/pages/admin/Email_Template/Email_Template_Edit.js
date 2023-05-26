@@ -578,7 +578,7 @@ class Email_Template_Edit extends Component {
             />
             <Editor
               apiKey="kb557exdqag66gcq1mmiq3hfeki32ge6lkoj8giccxlcrie0"
-              initialValue={this.state.initialValue}
+             // initialValue={this.state.initialValue}
               value={this.state.initialValue}
               init={{
                 placeholder: "Enter Description",
