@@ -645,7 +645,7 @@ class Transaction_Reports_Index extends React.Component {
                             <td>{u.status}</td>
                             <td>{u.error_reason}</td>
                             <td>
-                              {moment(u.created_at).format("YYYY-MM-DD HH:mm")}
+                              {moment(u.created_at).format("DD-MM-YYYY HH:mm")}
                             </td>
                           </tr>
                         ))

@@ -26,7 +26,9 @@ const Fullpage = (props) => {
                     props.customer.profile_image !== undefined && (
                       <>
                         {
-                          <img width={200} height={200}
+                          <img
+                            width={200}
+                            height={200}
                             src={
                               props.customer.profile_image
                                 ? props.customer.profile_image
@@ -54,7 +56,11 @@ const Fullpage = (props) => {
                   <tr>
                     <th>Name:</th>
                     <td>
-                      {props.customer.first_name} {props.customer.last_name}
+                      {props.customer.user_type == "personal"
+                        ? props.customer.first_name +
+                          " " +
+                          props.customer.last_name
+                        : props.customer.company_name}
                     </td>
                   </tr>
                   <tr>
