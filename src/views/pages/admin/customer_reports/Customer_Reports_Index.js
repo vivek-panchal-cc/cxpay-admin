@@ -11,23 +11,10 @@ import {
   CFormGroup,
   CInput,
   CLabel,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CButton,
   CTooltip,
   CSelect,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import {
-  faEye,
-  faFileDownload,
-  faFileExport,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
-// import { agentService } from "../../../../services/admin/agent.service";
+import { faEye, faFileExport } from "@fortawesome/free-solid-svg-icons";
 import { reportsService } from "../../../../services/admin/reports.service";
 import {
   notify,
@@ -99,30 +86,6 @@ class Customer_Reports_Index extends React.Component {
           },
           customers_list: res.data.customers,
         });
-
-        /* Multi delete checkbox code */
-        if (res?.data?.customers?.length > 0) {
-          let users = res.data.customers;
-          let multiaction = [];
-          const current_user = _loginUsersDetails();
-          for (var key in users) {
-            if (
-              globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
-                users[key].id
-              ) > -1
-            ) {
-              continue;
-            }
-            if (current_user.user_group_id === users[key].id) {
-              continue;
-            }
-            multiaction[users[key].id] = false;
-          }
-
-          this.setState({ multiaction: multiaction });
-        } else if (res?.data?.customers?.length === 0) {
-          this.setState({ multiaction: [] });
-        }
       }
     });
   }
@@ -207,11 +170,9 @@ class Customer_Reports_Index extends React.Component {
 
   downloadFile = async () => {
     reportsService.downloadCustomerCSV().then((res) => {
-      if (res.success) {
-        notify.success(res.message);
-      } else {
-        notify.error(res.message);
-      }
+    //  if (res.success) {
+        notify.success("Successfully send report logged in user mail");
+     // }
     });
   };
 
@@ -250,6 +211,7 @@ class Customer_Reports_Index extends React.Component {
                         <CLabel htmlFor="name">Customer Type</CLabel>
                         <CSelect
                           id="name"
+                          className={""}
                           placeholder="Customer Type"
                           name="filter_user_type"
                           value={this.state.fields.filter_user_type}
@@ -325,7 +287,7 @@ class Customer_Reports_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>#</th>
+                        <th>Sr.no</th>
                         <th
                           onClick={() =>
                             this.handleColumnSort("account_number")
@@ -474,7 +436,11 @@ class Customer_Reports_Index extends React.Component {
                       {this.state?.customers_list?.length > 0 ? (
                         this.state.customers_list.map((u, index) => (
                           <tr key={u.account_number}>
-                            <td>{index + 1}</td>
+                            <td>
+                              {this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.account_number}</td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
@@ -483,7 +449,8 @@ class Customer_Reports_Index extends React.Component {
                               {u.country_code} {u.mobile}
                             </td>
                             <td>
-                              {typeof parseFloat(u.available_balance) === "number"
+                              {typeof parseFloat(u.available_balance) ===
+                              "number"
                                 ? parseFloat(u.available_balance).toFixed(2)
                                 : u.available_balance}
                             </td>

@@ -42,6 +42,7 @@ async function customerDetails(postData) {
 
   let response;
   try {
+    setLoading(true);
     response = await fetch(
       `${process.env.REACT_APP_API_URL}api/get-customer`,
       requestOptions
