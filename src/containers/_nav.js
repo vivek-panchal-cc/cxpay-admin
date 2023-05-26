@@ -54,7 +54,7 @@ const _nav = [
     name: "Fees Management",
     to: "/admin/fee_management",
     icon: <FontAwesomeIcon icon={faRupeeSign} className="c-sidebar-nav-icon" />,
-    module_name: "fees",
+    module_name: "fee_management",
     id: "fees_sidebar_id",
   },
   {
@@ -116,7 +116,7 @@ const _nav = [
     name: "CMS Pages",
     to: "/admin/cms_pages",
     icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
-    module_name: "cms_templates",
+    module_name: "cms_pages",
     id: "cms_templates_sidebar_id",
   },
   {
@@ -124,7 +124,7 @@ const _nav = [
     name: "Push Notification",
     to: "/admin/notifications",
     icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
-    module_name: "push_notification",
+    module_name: "notifications",
     id: "push_notification_sidebar_id",
   },
   {
