@@ -133,7 +133,7 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Customers Report",
+    name: "Customers Reports",
     to: "/admin/customer_reports",
     icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
     module_name: "customer_reports",
@@ -141,7 +141,7 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Transaction Report",
+    name: "Transaction Reports",
     to: "/admin/transaction_reports",
     icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
     module_name: "transaction_reports",

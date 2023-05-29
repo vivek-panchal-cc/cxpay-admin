@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { dashboardService } from "../../services/admin/dashboard.service";
 import { notify } from "../../_helpers/index";
+import { setLoading } from "../../_helpers/";
 import "./dashboard.css";
 
 class Dashboard extends React.Component {
@@ -49,9 +50,11 @@ class Dashboard extends React.Component {
   }
 
   getDashboardDetails() {
+    setLoading(true);
     dashboardService.getDetails().then((res) => {
       if (res.status === false) {
         notify.error(res.message);
+        setLoading(false);
       } else {
         this.setState({
           total_individuals: res.data.total_individuals,
@@ -65,6 +68,7 @@ class Dashboard extends React.Component {
           total_debit_amount: res.data.total_debit_amount,
           total_customers: res.data.total_customers,
         });
+        setLoading(false);
       }
     });
   }
