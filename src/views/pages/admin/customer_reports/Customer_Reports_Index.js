@@ -56,7 +56,7 @@ class Customer_Reports_Index extends React.Component {
 
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/customer_reports");
+      history.push("/admin/dashboard");
     }
   }
 

@@ -15,7 +15,7 @@ async function getCustomersList(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customer", "view"),
+    headers: authHeader("customer_reports", "view"),
     body: JSON.stringify(postData),
   };
 
@@ -36,7 +36,7 @@ async function customerDetails(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customer", "view"),
+    headers: authHeader("customer_reports", "view"),
     body: JSON.stringify(postData),
   };
 
@@ -58,7 +58,7 @@ async function downloadCustomerCSV() {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("transaction", "view"),
+    headers: authHeader("customer_reports", "view"),
   };
   let response;
   try {
@@ -70,7 +70,7 @@ async function downloadCustomerCSV() {
     setLoading(false);
   }
   console.log('responseresponse',response)
- 
+
   return handleResponse(response);
 }
 
@@ -78,7 +78,7 @@ async function getTransactionList(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("transaction", "view"),
+    headers: authHeader("transaction_reports", "view"),
     body: JSON.stringify(postData),
   };
   let response;
@@ -90,7 +90,7 @@ async function getTransactionList(postData) {
     notify.error("Something went wrong");
     setLoading(false);
   }
- 
+
   return handleResponse(response);
 }
 
@@ -98,7 +98,7 @@ async function downloadTransactionCSV() {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("transaction", "view"),
+    headers: authHeader("transaction_reports", "view"),
   };
   let response;
   try {

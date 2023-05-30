@@ -531,7 +531,7 @@ const routes = [
     exact: true,
     name: "Customer Reports",
     component: Customer_Reports_Index,
-    module_name: "reports",
+    module_name: "customer_reports",
     action: "view",
   },
   {
@@ -539,7 +539,7 @@ const routes = [
     exact: true,
     name: "DetailView",
     component: Customer_Detail,
-    module_name: "reports",
+    module_name: "customer_reports",
     action: "view",
   },
   {
@@ -547,7 +547,7 @@ const routes = [
     exact: true,
     name: "Transaction Reports",
     component: Transaction_Reports_Index,
-    module_name: "reports",
+    module_name: "transaction_reports",
     action: "view",
   },
 ];

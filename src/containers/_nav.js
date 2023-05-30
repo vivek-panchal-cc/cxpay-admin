@@ -28,10 +28,6 @@ const _nav = [
   //   id: "settings_sidebar_id",
   // },
   {
-    _tag: "CSidebarNavTitle",
-    _children: ["Access"],
-  },
-  {
     _tag: "CSidebarNavItem",
     name: "Modules Management",
     to: "/admin/system_modules",
@@ -56,10 +52,6 @@ const _nav = [
     icon: <FontAwesomeIcon icon={faRupeeSign} className="c-sidebar-nav-icon" />,
     module_name: "fee_management",
     id: "fees_sidebar_id",
-  },
-  {
-    _tag: "CSidebarNavTitle",
-    _children: ["Users Management"],
   },
   {
     _tag: "CSidebarNavItem",
@@ -92,10 +84,6 @@ const _nav = [
     id: "personal_customers_sidebar_id",
   },
   {
-    _tag: "CSidebarNavTitle",
-    _children: ["Content Management"],
-  },
-  {
     _tag: "CSidebarNavItem",
     name: "Email Templates",
     to: "/admin/email_templates",
@@ -126,10 +114,6 @@ const _nav = [
     icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
     module_name: "notifications",
     id: "push_notification_sidebar_id",
-  },
-  {
-    _tag: "CSidebarNavTitle",
-    _children: ["Reports"],
   },
   {
     _tag: "CSidebarNavItem",
