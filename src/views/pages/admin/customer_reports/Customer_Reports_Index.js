@@ -268,7 +268,7 @@ class Customer_Reports_Index extends React.Component {
               <CCardHeader>
                 <strong>Customer Reports</strong>
                 <div className="card-header-actions">
-                  {_canAccess("customer_reports", "download") && (
+                  {_canAccess("customer_reports", "view") && (
                     <CTooltip content={globalConstants.EXPORT_CUSTOMER_DATA}>
                       <CLink
                         className="btn btn-dark btn-block"
@@ -425,7 +425,7 @@ class Customer_Reports_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        {_canAccess("users", "view") && (
+                        {_canAccess("customer_reports", "view") && (
                           <>
                             <th>Action</th>
                           </>
@@ -457,7 +457,7 @@ class Customer_Reports_Index extends React.Component {
                             <td>{u.user_type}</td>
                             <td>{u.country}</td>
                             <td>
-                              {_canAccess("customers", "view") && (
+                              {_canAccess("customer_reports", "view") && (
                                 <CTooltip
                                   content={
                                     globalConstants.VIEW_CUSTOMER_DETAILS
