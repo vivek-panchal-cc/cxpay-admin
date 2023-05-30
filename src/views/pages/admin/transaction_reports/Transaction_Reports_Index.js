@@ -77,7 +77,7 @@ class Transaction_Reports_Index extends React.Component {
 
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/customer_reports");
+      history.push("/admin/dashboard");
     }
   }
 
@@ -391,7 +391,7 @@ class Transaction_Reports_Index extends React.Component {
               <CCardHeader>
                 <strong>Transaction Reports</strong>
                 <div className="card-header-actions">
-                  {_canAccess("customer_reports", "download") && (
+                  {_canAccess("transaction_reports", "view") && (
                     <CTooltip content={globalConstants.EXPORT_TRANSACTION_DATA}>
                       <CLink
                         className="btn btn-dark btn-block"
