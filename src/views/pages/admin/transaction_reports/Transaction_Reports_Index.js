@@ -193,7 +193,7 @@ class Transaction_Reports_Index extends React.Component {
     reportsService.downloadTransactionCSV().then((res) => {
       console.log(res);
       //if (res.success) {
-        notify.success("Successfully send report logged in user mail");
+      notify.success("Successfully send report logged in user mail");
       //}
     });
   };
@@ -314,6 +314,9 @@ class Transaction_Reports_Index extends React.Component {
                             dateCaption=""
                             dateFormat="dd/MM/yyyy"
                             className="form-control"
+                            onKeyDown={(e) => {
+                              e.preventDefault();
+                            }}
                           />
                         </CFormGroup>
                       </CCol>
@@ -331,6 +334,9 @@ class Transaction_Reports_Index extends React.Component {
                             dateCaption=""
                             dateFormat="dd/MM/yyyy"
                             className="form-control"
+                            onKeyDown={(e) => {
+                              e.preventDefault();
+                            }}
                           />
                         </CFormGroup>
                       </CCol>
