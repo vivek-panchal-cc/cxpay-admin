@@ -66,6 +66,8 @@ class Transaction_Reports_Index extends React.Component {
         totalPage: 1,
         from_date: null,
         to_date: null,
+        from_date1: null,
+        to_date1: null,
         status: "",
       },
       transactions_list: [],
@@ -159,6 +161,8 @@ class Transaction_Reports_Index extends React.Component {
             status: "",
             from_date: null,
             to_date: null,
+            from_date1: null,
+            to_date1: null,
           },
         },
         () => {
@@ -193,18 +197,30 @@ class Transaction_Reports_Index extends React.Component {
     reportsService.downloadTransactionCSV().then((res) => {
       console.log(res);
       //if (res.success) {
-        notify.success("Successfully send report logged in user mail");
+      notify.success("Successfully send report logged in user mail");
       //}
     });
   };
 
   handledateChange = (date) => {
     console.log(date);
-    this.setState({ fields: { ...this.state.fields, from_date: date } });
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        from_date1: date,
+        from_date: date.toLocaleDateString("en-US"),
+      },
+    });
   };
 
   handledateChangeTo = (date) => {
-    this.setState({ fields: { ...this.state.fields, to_date: date } });
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        to_date1: date,
+        to_date: date.toLocaleDateString("en-US"),
+      },
+    });
   };
 
   render() {
@@ -308,7 +324,7 @@ class Transaction_Reports_Index extends React.Component {
                         <CFormGroup>
                           <CLabel htmlFor="from_date">From Date</CLabel>
                           <DatePicker
-                            selected={this.state.fields.from_date}
+                            selected={this.state.fields.from_date1}
                             onChange={(date) => this.handledateChange(date)}
                             name="from_date"
                             dateCaption=""
@@ -325,8 +341,8 @@ class Transaction_Reports_Index extends React.Component {
                         <CFormGroup>
                           <CLabel htmlFor="name">To Date</CLabel>
                           <DatePicker
-                            minDate={this.state.fields.from_date}
-                            selected={this.state.fields.to_date}
+                            minDate={this.state.fields.from_date1}
+                            selected={this.state.fields.to_date1}
                             onChange={(date) => this.handledateChangeTo(date)}
                             dateCaption=""
                             dateFormat="dd/MM/yyyy"
