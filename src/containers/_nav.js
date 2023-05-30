@@ -109,7 +109,7 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Push Notification",
+    name: "Push Notifications",
     to: "/admin/notifications",
     icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
     module_name: "notifications",

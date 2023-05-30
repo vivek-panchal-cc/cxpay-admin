@@ -330,6 +330,9 @@ class Transaction_Reports_Index extends React.Component {
                             dateCaption=""
                             dateFormat="dd/MM/yyyy"
                             className="form-control"
+                            onKeyDown={(e) => {
+                              e.preventDefault();
+                            }}
                           />
                         </CFormGroup>
                       </CCol>
@@ -347,6 +350,9 @@ class Transaction_Reports_Index extends React.Component {
                             dateCaption=""
                             dateFormat="dd/MM/yyyy"
                             className="form-control"
+                            onKeyDown={(e) => {
+                              e.preventDefault();
+                            }}
                           />
                         </CFormGroup>
                       </CCol>
