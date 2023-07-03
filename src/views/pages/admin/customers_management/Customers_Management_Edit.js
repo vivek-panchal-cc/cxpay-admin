@@ -95,9 +95,8 @@ class Customers_Management_Edit extends React.Component {
                 (e) => e.iso === res.data.country
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
-
             this.setState({
-              cityData: [...this.state.countryData.city_list[iso]],
+              cityData: iso ? [...this.state.countryData.city_list[iso]] : [],
               city: res.data.city,
               country: country_index,
               status: statustmp,
@@ -105,7 +104,7 @@ class Customers_Management_Edit extends React.Component {
           }
         });
       }
-    }, 300);
+    }, 100);
 
     customersManagementService.getCountry().then((res) => {
       if (res.status === false) {
@@ -115,7 +114,6 @@ class Customers_Management_Edit extends React.Component {
           notify.error("Country Not Found");
           history.push("/admin/personal_customers");
         }
-
         this.setState({ countryData: res.data });
       }
     });
@@ -152,8 +150,6 @@ class Customers_Management_Edit extends React.Component {
   handleCountryChange(e) {
     const cityCode = this.state.countryData.country_list[e.target.value].iso;
     const tmp = [...this.state.countryData.city_list[cityCode]];
-    console.log(tmp);
-
     this.setState({ cityData: tmp, country: e.target.value });
   }
 
@@ -513,7 +509,11 @@ class Customers_Management_Edit extends React.Component {
                     {/* <option value="">-- Country --</option>; */}
                     {this.state.countryData &&
                       this.state.countryData?.country_list?.map((e, key) => {
-                        return <option value={key}>{e.country_name}</option>;
+                        return (
+                          <option key={key} value={key}>
+                            {e.country_name}
+                          </option>
+                        );
                       })}
                   </CSelect>
                 </CFormGroup>
@@ -529,7 +529,11 @@ class Customers_Management_Edit extends React.Component {
                   >
                     {/* <option value="">-- city --</option>; */}
                     {this.state.cityData?.map((e, key) => {
-                      return <option value={e.city_name}>{e.city_name}</option>;
+                      return (
+                        <option key={key} value={e.city_name}>
+                          {e.city_name}
+                        </option>
+                      );
                     })}
                   </CSelect>
                 </CFormGroup>

@@ -19,10 +19,14 @@ const _nav = [
     module_name: "dashboard",
     id: "dashboard_sidebar_id",
   },
-  {
-    _tag: "CSidebarNavTitle",
-    _children: ["Access"],
-  },
+  // {
+  //   _tag: "CSidebarNavItem",
+  //   name: "Settings",
+  //   to: "/admin/settings",
+  //   icon: <FontAwesomeIcon icon={faCogs} className="c-sidebar-nav-icon" />,
+  //   module_name: "settings",
+  //   id: "settings_sidebar_id",
+  // },
   {
     _tag: "CSidebarNavItem",
     name: "Modules Management",
@@ -46,12 +50,8 @@ const _nav = [
     name: "Fees Management",
     to: "/admin/fee_management",
     icon: <FontAwesomeIcon icon={faRupeeSign} className="c-sidebar-nav-icon" />,
-    module_name: "fees",
+    module_name: "fee_management",
     id: "fees_sidebar_id",
-  },
-  {
-    _tag: "CSidebarNavTitle",
-    _children: ["Users Management"],
   },
   {
     _tag: "CSidebarNavItem",
@@ -84,10 +84,6 @@ const _nav = [
     id: "personal_customers_sidebar_id",
   },
   {
-    _tag: "CSidebarNavTitle",
-    _children: ["Content Management"],
-  },
-  {
     _tag: "CSidebarNavItem",
     name: "Email Templates",
     to: "/admin/email_templates",
@@ -102,6 +98,38 @@ const _nav = [
     icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
     module_name: "sms_templates",
     id: "sms_templates_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "CMS Pages",
+    to: "/admin/cms_pages",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "cms_pages",
+    id: "cms_templates_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Push Notifications",
+    to: "/admin/notifications",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "notifications",
+    id: "push_notification_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Customers Reports",
+    to: "/admin/customer_reports",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "customer_reports",
+    id: "customer_reports_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Transaction Reports",
+    to: "/admin/transaction_reports",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "transaction_reports",
+    id: "transaction_reports_sidebar_id",
   },
 ];
 
