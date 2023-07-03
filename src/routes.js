@@ -166,6 +166,13 @@ const Transaction_Reports_Index = React.lazy(() =>
   import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
 );
 
+const Withdraw_Requests_Index = React.lazy(() =>
+  import("./views/pages/admin/withdraw_requests/Withdraw_Requests_Index")
+);
+
+const Withdraw_Detail = React.lazy(() =>
+  import("./views/pages/admin/withdraw_requests/Withdraw_Detail")
+);
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -548,6 +555,23 @@ const routes = [
     name: "Transaction Reports",
     component: Transaction_Reports_Index,
     module_name: "transaction_reports",
+    action: "view",
+  },
+  //withdraw requests
+  {
+    path: "/admin/withdraw_requests",
+    exact: true,
+    name: "Withdraw Requests",
+    component: Withdraw_Requests_Index,
+    module_name: "withdraw_requests",
+    action: "view",
+  },
+  {
+    path: "/admin/withdraw_requests/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Withdraw_Detail,
+    module_name: "withdraw_requests",
     action: "view",
   },
 ];

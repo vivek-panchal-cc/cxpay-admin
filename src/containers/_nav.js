@@ -131,6 +131,14 @@ const _nav = [
     module_name: "transaction_reports",
     id: "transaction_reports_sidebar_id",
   },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Withdraw Requests",
+    to: "/admin/withdraw_requests",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "withdraw_requests",
+    id: "withdraw_requests_sidebar_id",
+  },
 ];
 
 export default _nav;

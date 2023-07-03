@@ -6,6 +6,7 @@ import "./assets/admin/css/custom.css";
 import { PrivateRoute, LoginLessRoute } from "./components/PrivateRoute";
 import { ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 const loading = (
   <div className="pt-3 text-center">
