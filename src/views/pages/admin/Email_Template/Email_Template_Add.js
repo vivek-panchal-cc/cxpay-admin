@@ -550,7 +550,7 @@ class Email_Template_Add extends Component {
             />
 
             <Editor
-              apiKey="kb557exdqag66gcq1mmiq3hfeki32ge6lkoj8giccxlcrie0"
+              apiKey="ovyr2unz01dy6h1yzrkiga2ptd9z0nbuzwgpa8634x2k6z7j"
               //initialValue=""
               value={this.state.initialValue}
               init={{
