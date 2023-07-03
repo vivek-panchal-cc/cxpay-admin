@@ -223,3 +223,7 @@ img.mediaLibraryPreview {
   margin-left: auto;
   margin-right: auto;
 }
+.loader-container.loading + div select {
+  opacity: 0;
+  visibility: hidden;
+}

@@ -126,7 +126,7 @@ class User_Add extends React.Component {
                       className="mr-1"
                       color="primary"
                       defaultChecked={this.state.fields.status}
-                      onClick={this.handleInputChange}
+                      onClick={this.handleChange}
 
                     />
                   </CFormGroup>
