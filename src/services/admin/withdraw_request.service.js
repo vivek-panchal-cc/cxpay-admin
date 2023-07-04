@@ -1,4 +1,8 @@
-import { authHeader, authHeaderMutlipart } from "../../_helpers";
+import {
+  authHeader,
+  authHeaderMutlipart,
+  authHeaderMutlipartFormData,
+} from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
 
@@ -51,7 +55,7 @@ function withdrawRequestAction(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeaderMutlipart("withdraw_requests", "update"),
+    headers: authHeaderMutlipartFormData("withdraw_requests", "update"),
     body: postData,
   };
 
