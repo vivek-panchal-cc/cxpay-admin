@@ -141,10 +141,10 @@ class Withdraw_Requests_Index extends React.Component {
       ? filters.endDate?.toLocaleDateString()
       : "";
     this.setState({
-      search: name,
-      // }// fields: {
+      // fields: {
       //   ...this.state.fields,
-      // ,
+      //   search: name,
+      // },
       allFilters: {
         start_date: filStrDate,
         end_date: filEndDate,
