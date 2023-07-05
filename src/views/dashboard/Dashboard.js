@@ -144,7 +144,7 @@ class Dashboard extends React.Component {
                     ANG{" "}
                     {this.state.total_credit_amount
                       ? this.state.total_credit_amount
-                      : "N/A"}
+                      : "0"}
                   </h4>
                 </CCardText>
               </CCardBody>

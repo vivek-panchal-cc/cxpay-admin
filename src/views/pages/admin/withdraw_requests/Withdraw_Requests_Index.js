@@ -56,8 +56,8 @@ class Withdraw_Requests_Index extends React.Component {
       },
       fields: {
         page: 1,
-        startDate: "",
-        endDate: "",
+        start_date: "",
+        end_date: "",
         status: [],
         search: "",
         sort_field: "created_at",
@@ -130,9 +130,8 @@ class Withdraw_Requests_Index extends React.Component {
   }
 
   handleChange(e, id = "") {
-    const { name, value } = e.target;
-    console.log(e.target);
-    this.setState({ fields: { ...this.state.fields, [name]: value } });
+    // const { name, value } = e.target;
+    // this.setState({ fields: { ...this.state.fields, [name]: value } });
 
     const { filters, drawStatus } = this.state;
     const filStrDate = filters.startDate
@@ -142,6 +141,10 @@ class Withdraw_Requests_Index extends React.Component {
       ? filters.endDate?.toLocaleDateString()
       : "";
     this.setState({
+      search: name,
+      // }// fields: {
+      //   ...this.state.fields,
+      // ,
       allFilters: {
         start_date: filStrDate,
         end_date: filEndDate,
@@ -185,8 +188,8 @@ class Withdraw_Requests_Index extends React.Component {
           filtersChanged: false,
           fields: {
             page: 1,
-            startDate: "",
-            endDate: "",
+            start_date: "",
+            end_date: "",
             search: "",
             sort_field: "created_at",
             sort_dir: "DESC",
@@ -207,9 +210,15 @@ class Withdraw_Requests_Index extends React.Component {
   }
 
   //filter code
-  handleChangeDateFilter = ({ startDate, endDate }) => {
-    if (!startDate || !endDate) return;
+  handleChangeDateFilter = (params) => {
+    const [startDate, endDate] = params;
+    // if (!startDate || !endDate) return;
     this.setState({
+      fields: {
+        ...this.state.fields,
+        start_date: startDate,
+        end_date: endDate,
+      },
       filters: {
         startDate: startDate,
         endDate: endDate,
@@ -222,7 +231,12 @@ class Withdraw_Requests_Index extends React.Component {
 
   handleChangeStatusFilter = (statuses = []) => {
     if (!statuses) return;
+
     this.setState({
+      fields: {
+        ...this.state.fields,
+        status: statuses,
+      },
       drawStatus: statuses,
       filtersChanged: true,
     });
@@ -262,7 +276,7 @@ class Withdraw_Requests_Index extends React.Component {
                           title="Status"
                           valueList={this.state.drawStatus}
                           dropList={globalConstants.WITHDRAW_STATUS_FILTER_BANK}
-                          onChange={this.handleChange}
+                          onChange={this.handleChangeStatusFilter}
                         />
                       </CCol>
                     </CFormGroup>
@@ -272,11 +286,11 @@ class Withdraw_Requests_Index extends React.Component {
                       <CCol xs="12">
                         <CLabel htmlFor="name">Date</CLabel>
                         <ReactDatePicker
-                          selected={this.state.fields.startDate}
-                          startDate={this.state.fields.startDate}
-                          endDate={this.state.fields.endDate}
+                          selected={this.state.filters.startDate}
+                          startDate={this.state.filters.startDate}
+                          endDate={this.state.filters.endDate}
                           onChange={this.handleChangeDateFilter}
-                          selectsRange
+                          selectsRange={true}
                           inline
                         />
                       </CCol>

@@ -52,7 +52,6 @@ const InputDropdown = (props) => {
                     <input
                       id={item?.status}
                       type="checkbox"
-                      // name="status"
                       className="position-absolute"
                       value={item?.status}
                       onChange={handleChange}
