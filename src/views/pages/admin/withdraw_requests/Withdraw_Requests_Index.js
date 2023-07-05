@@ -32,6 +32,7 @@ import {
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import ReactDatePicker from "react-datepicker";
 import InputDropdown from "components/admin/InputDropdown";
+import InputDateRange from "components/admin/InputDateRange";
 
 class Withdraw_Requests_Index extends React.Component {
   constructor(props) {
@@ -98,7 +99,7 @@ class Withdraw_Requests_Index extends React.Component {
   }
 
   pageChange = (newPage) => {
-    newPage = newPage === 0 ? 1 : newPage;
+    newPage = newPage ? newPage : 1;
     this.setState(
       {
         fields: {
@@ -170,6 +171,16 @@ class Withdraw_Requests_Index extends React.Component {
       this.getWithdrawRequests();
     }
   };
+
+  handleChangeSearch = (e) => {
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        search: e?.target?.value,
+      },
+    });
+  };
+
   handleSearch(type) {
     this.resetCheckedBox();
     if (type === "reset") {
@@ -216,8 +227,8 @@ class Withdraw_Requests_Index extends React.Component {
     this.setState({
       fields: {
         ...this.state.fields,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: startDate?.toLocaleDateString(),
+        end_date: endDate?.toLocaleDateString(),
       },
       filters: {
         startDate: startDate,
@@ -231,7 +242,6 @@ class Withdraw_Requests_Index extends React.Component {
 
   handleChangeStatusFilter = (statuses = []) => {
     if (!statuses) return;
-
     this.setState({
       fields: {
         ...this.state.fields,
@@ -259,8 +269,8 @@ class Withdraw_Requests_Index extends React.Component {
                           placeholder="Search Name"
                           name="search"
                           value={this.state.fields.search}
-                          onChange={this.handleChange}
-                          onKeyDown={this.handleKeyDown}
+                          onChange={this.handleChangeSearch}
+                          // onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
                     </CFormGroup>
@@ -281,17 +291,15 @@ class Withdraw_Requests_Index extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                  <CCol xl={3}>
+                  <CCol xl={4}>
                     <CFormGroup row>
-                      <CCol xs="12">
+                      <CCol xs="10">
                         <CLabel htmlFor="name">Date</CLabel>
-                        <ReactDatePicker
-                          selected={this.state.filters.startDate}
+                        <InputDateRange
+                          className=""
                           startDate={this.state.filters.startDate}
                           endDate={this.state.filters.endDate}
                           onChange={this.handleChangeDateFilter}
-                          selectsRange={true}
-                          inline
                         />
                       </CCol>
                     </CFormGroup>

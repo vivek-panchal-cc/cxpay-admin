@@ -286,8 +286,8 @@ img.mediaLibraryPreview {
   border-radius: 0.25rem;
   box-shadow: none;
   /* position: absolute; */
+  /* top: 30px; */
   width: 100%;
-  top: 30px;
   border: 1px solid#d8dbe0;
   background-color: var(--white);
 }
@@ -301,6 +301,7 @@ ul.status-items {
   width: 100%;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
+  list-style-type: none;
 }
 .dropdown-check-list.visible ul.status-items {
   display: block;

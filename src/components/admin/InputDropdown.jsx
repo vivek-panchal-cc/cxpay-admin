@@ -38,21 +38,28 @@ const InputDropdown = (props) => {
   );
 
   return (
-    <div id={id || `drop${randomStr}`} className={`${className}`}>
+    <div
+      id={id || `drop${randomStr}`}
+      className={`position-relative ${className}`}
+      ref={dropRef}
+    >
       <span className="anchor" onClick={(e) => setToggle((cs) => !cs)}>
         {title}
       </span>
       {toggle ? (
-        <ul className="status-items" ref={dropRef}>
+        <ul
+          className="w-100 position-absolute bg-white border border-secondary status-items pl-3"
+          style={{ zIndex: "1" }}
+        >
           {dropList && dropList.length > 0
             ? dropList.map((item, index) => {
                 const isChecked = valueList?.includes(item?.status);
                 return (
-                  <li key={item?.status || index}>
+                  <li key={item?.status || index} className="m-1">
                     <input
                       id={item?.status}
                       type="checkbox"
-                      className="position-absolute"
+                      className="mr-2"
                       value={item?.status}
                       onChange={handleChange}
                       checked={isChecked}
