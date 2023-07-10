@@ -1,0 +1,477 @@
+/* List Style */
+:root {
+  --gray: #e0e0e0;
+
+  --white: #fff;
+}
+ul.refund-comn-ul .rcard-img-wrap {
+  padding-left: 10px;
+  width: 120px;
+  padding-right: 20px;
+}
+ul.refund-comn-ul .rcard-img-wrap > img,
+ul.refund-comn-ul .rcard-img-wrap > svg {
+  width: 100%;
+}
+ul.refund-comn-ul .rcard-details-wrap {
+  width: calc(100% - 120px);
+  display: flex;
+  align-items: center;
+}
+ul.refund-comn-ul .rcard-details-wrap > div {
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+}
+ul.card-refund-ul .card-details {
+  width: calc(60% - 115px);
+}
+ul.card-refund-ul .rcard-status-wrap {
+  width: 40%;
+}
+ul.refund-comn-ul .rcard-info {
+  max-width: 340px;
+  min-width: 180px;
+  margin-right: 15px;
+}
+ul.refund-comn-ul .rcard-status-wrap > div,
+ul.refund-comn-ul .card-details > div {
+  width: 50%;
+}
+ul.refund-comn-ul .btns-wrap {
+  margin-right: 0px;
+  width: 115px;
+  margin-left: auto;
+  justify-content: end;
+}
+button.wr-withdraw-btn {
+  border: 0px;
+  background-color: var(--dark_blue);
+  color: #fff;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 11px 15px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+button.wr-withdraw-btn:hover {
+  background-color: var(--blue);
+  color: var(--white);
+}
+/* Start Bank Refund Page */
+.wr-bank-fillter-wrap .rf-details-div {
+  width: calc(100% - 225px);
+}
+.wrb-req-btn {
+  width: 225px;
+  padding-left: 15px;
+  margin-top: 32px;
+}
+.wrb-req-btn .btn {
+  width: 100%;
+  max-width: 210px;
+  min-width: 0px;
+}
+.wrb-req-btn button.btn {
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px 15px;
+}
+.wrb-req-btn button.btn > svg {
+  margin-right: 15px;
+  width: 14px;
+}
+ul.bank-refund-ul .card-details {
+  width: 50%;
+}
+ul.bank-refund-ul .btns-wrap-bank.btns-wrap {
+  width: 10%;
+  padding: 0px 10px 0px 0px !important;
+  justify-content: end;
+}
+ul.bank-refund-ul .rcard-status-wrap {
+  width: 50%;
+}
+ul.bank-refund-ul li:hover .wrb-date-wrap p {
+  color: var(--dark_blue);
+}
+ul.bank-refund-ul .rcard-status-wrap .status-wrap {
+  text-align: end;
+}
+ul.bank-refund-ul .rcard-img-wrap {
+  width: 100px;
+}
+ul.bank-refund-ul .rcard-details-wrap {
+  width: calc(100% - 100px);
+}
+ul.bank-refund-ul .rcard-info {
+  margin-bottom: 0px !important;
+}
+.wr-bank-svg {
+  width: 60px;
+  height: 60px;
+  border-radius: 41px;
+  background-color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Start Wallet  Refund card Details Page */
+.wc-refund-main-wrap {
+  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.08);
+  margin-top: 15px;
+  max-width: 1000px;
+  width: 100%;
+}
+.wc-refund-main-wrap .pattern-wrap {
+  background-repeat: repeat-x;
+  background-size: auto;
+  background-color: transparent;
+  height: 11px;
+}
+/* .wc-refund-main-wrap .pattern-wrap-bottom{
+  background-image: url(../images/bottom_tringle.png);
+}
+.wc-refund-main-wrap .pattern-wrap-top{
+  background-image: url(../images/top_circle_half.png);
+} */
+.wc-refund-main-inner {
+  padding: 35px 25px;
+}
+.font-16-quick {
+  font-size: 16px;
+  line-height: 22px;
+  font-family: "Quicksand", sans-serif;
+}
+.wcr-innner-wrap-1 .wcr-img-wrap {
+  width: 100px;
+  padding-right: 20px;
+}
+.wcr-innner-wrap-1 .wcr-info-main {
+  width: calc(100% - 100px);
+}
+.wcr-innner-wrap-1 .wcr-info-main {
+  width: calc(100% - 100px);
+}
+.wcr-info-1 {
+  align-items: start;
+}
+.wcr-card-data {
+  width: calc(100% - 200px);
+  padding-bottom: 20px;
+}
+.wcr-info-1 h2 {
+  font-size: 28px;
+  line-height: 35px;
+  margin-bottom: 5px !important;
+}
+.wcr-card-data p {
+  font-size: 16px;
+  line-height: 22px;
+}
+.wcr-card-amt {
+  width: 200px;
+}
+.wcr-card-amt h2 {
+  color: var(--green);
+}
+.wcr-info-2 h4 {
+  font-weight: 600;
+}
+.font-600 {
+  font-weight: 600;
+}
+.wcr-info-2 p {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+  color: var(--dark_blue);
+  font-family: "Quicksand", sans-serif;
+}
+.wcr-divider-wrap {
+  height: 2px;
+  border-top: 2px solid var(--gray);
+  margin: 25px 0px;
+}
+.w-50-md {
+  width: 50%;
+}
+.wcr-innner-wrap table {
+  width: 100%;
+}
+.wcr-innner-wrap table td {
+  padding: 10px 10px 10px 0px;
+  font-size: 16px;
+  white-space: normal;
+  line-height: 20px;
+  word-break: break-word;
+}
+.wcr-transition-info-1 table td:first-child {
+  width: 140px;
+}
+.wcr-transition-info-2 table td:first-child {
+  width: 100px;
+}
+.wcr-innner-wrap td:last-child {
+  color: var(--dark_blue);
+}
+/* Wallet Card Refudd Eligible content */
+.wcr-eligible-msg {
+  width: calc(100% - 175px);
+  padding-right: 25px;
+}
+.wcr-eligible-msg p {
+  color: var(--dark_blue);
+  font-weight: 600;
+}
+.wcr-eligible-msg p span {
+  font-size: 18px;
+  line-height: 22px;
+  padding: 0px 5px;
+}
+.wcr-withdraw-btn {
+  width: 175px;
+}
+.wcr-withdraw-btn button.btn {
+  min-width: auto;
+  width: 100%;
+  font-size: 16px;
+  line-height: 18px;
+  padding: 12px 12px;
+}
+.wr-wh-title {
+  font-weight: 600;
+  color: var(--dark_blue);
+}
+.div-font-18 {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.div-font-14 {
+  font-size: 14px;
+  line-height: 20px;
+}
+.wh-status-icon span {
+  display: block !important;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  background-color: var(--dark_blue);
+  outline: 1px solid var(--dark_blue);
+  border: 3px solid #fff;
+  position: relative;
+  z-index: 9;
+}
+.wcr-img-wrap > img {
+  width: 100%;
+}
+.wr-withdraw-his-data ul li:not(:last-child) {
+  padding-bottom: 30px;
+}
+.wh-card-num,
+.wh-amt {
+  font-weight: bold;
+}
+.wr-withdraw-his-data ul li {
+  position: relative;
+}
+.wr-withdraw-his-data ul li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  width: 1px;
+  background-color: var(--dark_blue);
+  top: 0;
+  bottom: 0;
+  left: 6.5px;
+}
+.wr-withdraw-his-data .wh-status-icon {
+  width: 15px;
+}
+.wr-withdraw-his-data .wh-status-info {
+  width: calc(100% - 15px);
+  padding-left: 24px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.wr-withdraw-his-data .wh-status-info > div {
+  padding: 0px 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.wr-withdraw-his-data .wh-id-date-wrap > div,
+.wr-withdraw-his-data .wh-status-amt-wrap > div {
+  width: 50%;
+}
+.wh-card-num {
+  width: 26%;
+}
+.wh-id-date-wrap,
+.wh-status-amt-wrap {
+  width: 37%;
+}
+.wh-status-amt-wrap {
+  text-align: end;
+  justify-content: center;
+}
+.wh-status-div {
+  padding-right: 20px;
+}
+.wr-details-back-btn {
+  margin-top: 35px;
+}
+.wr-details-back-btn .btn {
+  background-color: transparent;
+  color: var(--blue);
+  font-size: 17px;
+  line-height: 19px;
+  box-shadow: none;
+  border: 1px solid var(--blue);
+  padding: 14px 20px;
+  min-width: auto;
+  max-width: 172px;
+  width: 100%;
+}
+.wr-details-back-btn .btn:hover {
+  background-color: var(--blue);
+  color: #fff;
+}
+.wcr-info-1 .wcr-card-amt {
+  text-align: end;
+}
+/* Wallet Refund Bank Transaction Details */
+.wr-dwld-wrap ul {
+  display: flex;
+}
+.wr-dwld-wrap ul li {
+  background-color: #d9d9d9;
+  margin: 0px 6px;
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wr-dwld-wrap ul li:first-child {
+  margin-left: 0px;
+}
+.wr-dwld-wrap ul li button {
+  width: 100%;
+  height: 100%;
+  border: 0px;
+  background-color: transparent;
+}
+.wbr-innner-wrap-3 > div {
+  width: 50%;
+}
+.wr-bdatail-dwld.border-start {
+  border-width: 2px !important;
+  border-color: var(--gray);
+}
+.wbr-innner-wrap-4 {
+  margin-bottom: 25px;
+}
+.wbr-innner-wrap-4 > p {
+  font-size: 12px;
+  line-height: 18px;
+  font-family: "Quicksand", sans-serif;
+}
+.wbr-card-amt p {
+  font-size: 18px;
+  line-height: 25px;
+  margin-bottom: 5px;
+  font-family: "Visby Round CF", sans-serif;
+}
+.wbr-img-wrap svg {
+  max-width: 35px;
+}
+.wbr-img-wrap span {
+  display: flex;
+  width: 80px;
+  height: 80px;
+  background-color: #eaf9fe;
+  border-radius: 41px;
+  align-items: center;
+  justify-content: center;
+}
+.wr-bank-details-wrapper .wcr-innner-wrap-1 {
+  padding-bottom: 25px;
+}
+.wr-bdatail-tbl table td:first-child {
+  width: 145px;
+}
+/* Wallet Refund FOrm */
+.wr-form-wrap .form-choose-act-wrap svg:first-child {
+  max-width: 24px;
+}
+.wr-form-wrap .wr-form-choose-act {
+  margin-bottom: 10px;
+}
+.wbr-final-amt-wrap {
+  padding-top: 30px;
+}
+.wbr-final-amt-wrap table {
+  width: 100%;
+  table-layout: fixed;
+}
+.wbr-final-amt-wrap table td {
+  padding-top: 0px;
+  padding-bottom: 30px;
+  width: 50%;
+}
+.wbr-final-amt-wrap table td:not(:first-child) {
+  padding-left: 10px;
+}
+.wbr-final-amt-wrap table td:not(:last-child) {
+  padding-right: 10px;
+}
+.wbr-final-amt-wrap td:first-child {
+  font-size: 16px;
+  line-height: 18px;
+  color: var(--dark_blue);
+}
+.wbr-final-amt-wrap td:last-child {
+  font-size: 24px;
+  line-height: 28px;
+  color: var(--dark_blue);
+  font-weight: bold;
+  font-family: "Visby Round CF", sans-serif;
+  text-align: right;
+}
+.wbr-final-amt-wrap table tr:last-child {
+  border-top: 2px solid var(--gray);
+}
+.wbr-final-amt-wrap table tr:last-child td {
+  padding-top: 20px;
+}
+.wr-form-wrap .btns-inline .btn,
+.wr-card-form-wrap .btns-inline .btn {
+  font-weight: 400;
+}
+.wr-card-form-wrap .wbr-final-amt-wrap {
+  background-color: #f3f3f3;
+  padding: 30px 30px 0px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+button.wr-bank-cancel-req {
+  margin-top: 10px;
+  font-size: 14px;
+  border: 1px solid var(--blue);
+  line-height: 16px;
+  background-color: transparent;
+  padding: 10px 15px;
+  border-radius: 16px;
+  color: var(--blue);
+  font-weight: 500;
+}
+button.wr-bank-cancel-req:hover {
+  background-color: var(--blue);
+  color: var(--white);
+}
+.bank-refund-ul li > .rcard-details-wrap {
+  flex-wrap: wrap;
+}

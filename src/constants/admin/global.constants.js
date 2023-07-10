@@ -18,6 +18,13 @@ export const globalConstants = {
   MULTI_DEACTIVE_MSG: "Are you sure you want to deactive these records?",
   MEDIA_LIBRARY: "Click to select media from library",
   VIEW_CUSTOMER_DETAILS: "View customer details",
-  EXPORT_CUSTOMER_DATA:"Export customer data",
-  EXPORT_TRANSACTION_DATA:"Export transaction data"
+  EXPORT_CUSTOMER_DATA: "Export customer data",
+  EXPORT_TRANSACTION_DATA: "Export transaction data",
+  VIEW_WITHDRAW_DETAILS: "View withdraw request detail",
+  // Withdraw status filters list for bank transactions
+  WITHDRAW_STATUS_FILTER_BANK: [
+    { title: "APPROVED", status: "APPROVED" },
+    { title: "PENDING", status: "PENDING" },
+    { title: "PROCESSING", status: "PROCESSING" },
+  ],
 };
