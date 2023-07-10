@@ -23,7 +23,7 @@ export const globalConstants = {
   VIEW_WITHDRAW_DETAILS: "View withdraw request detail",
   // Withdraw status filters list for bank transactions
   WITHDRAW_STATUS_FILTER_BANK: [
-    { title: "ACCEPTED", status: "ACCEPTED" },
+    { title: "APPROVED", status: "APPROVED" },
     { title: "PENDING", status: "PENDING" },
     { title: "PROCESSING", status: "PROCESSING" },
   ],

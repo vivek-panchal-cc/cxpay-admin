@@ -199,15 +199,15 @@ const Fullpage = (props) => {
                 </p>
               </CCardHeader>
               <CCardBody>
-                <div class="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper">
-                  <div class="wr-title-wrap">
+                <div className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper">
+                  <div className="wr-title-wrap">
                     <h2>Transaction Details</h2>
                   </div>
-                  <div class="wc-refund-main-wrap">
-                    <div class="pattern-wrap pattern-wrap-top"></div>
-                    <div class="wc-refund-main-inner">
-                      <div class="wcr-innner-wrap wcr-innner-wrap-1 d-flex flex-wrap w-100">
-                        <div class="wcr-img-wrap wbr-img-wrap">
+                  <div className="wc-refund-main-wrap">
+                    <div className="pattern-wrap pattern-wrap-top"></div>
+                    <div className="wc-refund-main-inner">
+                      <div className="wcr-innner-wrap wcr-innner-wrap-1 d-flex flex-wrap w-100">
+                        <div className="wcr-img-wrap wbr-img-wrap">
                           <span bg-color="#000">
                             <svg
                               width="41"
@@ -219,61 +219,61 @@ const Fullpage = (props) => {
                               <path
                                 d="M20.6042 1.5L3.62305 9.99057H37.5853L20.6042 1.5Z"
                                 stroke="#363853"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M20.6035 15.6509V32.632"
                                 stroke="#363853"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M7.86719 15.6509V32.632"
                                 stroke="#363853"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M33.3398 15.6509V32.632"
                                 stroke="#363853"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M1.5 39H39"
                                 stroke="#363853"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
                           </span>
                         </div>
-                        <div class="wcr-info-main">
-                          <div class="wcr-info-1 d-flex flex-wrap">
-                            <div class="wcr-card-data">
+                        <div className="wcr-info-main">
+                          <div className="wcr-info-1 d-flex flex-wrap">
+                            <div className="wcr-card-data">
                               <h2>{bank_name}</h2>
                               <p>xxxx xxxx xxxx {bank_account_number}</p>
                             </div>
-                            <div class="wcr-card-amt wbr-card-amt">
-                              <p class="green font-bold">{status}</p>
+                            <div className="wcr-card-amt wbr-card-amt">
+                              <p className="green font-bold">{status}</p>
                               <h2>{total_amount} NAFl</h2>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div class="wcr-info-2">
-                        <h4 class="font-16-quick">Specifications</h4>
+                      <div className="wcr-info-2">
+                        <h4 className="font-16-quick">Specifications</h4>
                         <p>{narration}</p>
                       </div>
-                      <div class="wcr-divider-wrap"></div>
-                      <div class="wcr-innner-wrap wcr-innner-wrap-2 d-flex flex-wrap w-100">
-                        <div class="w-50-md wcr-transition-info wcr-transition-info-1">
+                      <div className="wcr-divider-wrap"></div>
+                      <div className="wcr-innner-wrap wcr-innner-wrap-2 d-flex flex-wrap w-100">
+                        <div className="w-50-md wcr-transition-info wcr-transition-info-1">
                           <table>
                             <tr>
                               <td>Transaction ID</td>
@@ -289,7 +289,7 @@ const Fullpage = (props) => {
                             </tr>
                           </table>
                         </div>
-                        <div class="w-50-md wcr-transition-info wcr-transition-info-2">
+                        <div className="w-50-md wcr-transition-info wcr-transition-info-2">
                           <table>
                             <tr>
                               <td>Amount</td>
@@ -306,10 +306,10 @@ const Fullpage = (props) => {
                           </table>
                         </div>
                       </div>
-                      <div class="wcr-divider-wrap"></div>
-                      <div class="wcr-innner-wrap wbr-innner-wrap-3 d-flex flex-wrap w-100 align-items-center">
-                        <div class="wr-bdatail-tbl pe-md-4">
-                          <div class="font-16-quick  w-100 pb-2 dark_blue font-600">
+                      <div className="wcr-divider-wrap"></div>
+                      <div className="wcr-innner-wrap wbr-innner-wrap-3 d-flex flex-wrap w-100 align-items-center">
+                        <div className="wr-bdatail-tbl pe-md-4">
+                          <div className="font-16-quick  w-100 pb-2 dark_blue font-600">
                             Bank Details
                           </div>
                           <table>
@@ -328,11 +328,11 @@ const Fullpage = (props) => {
                           </table>
                         </div>
 
-                        <div class="wr-bdatail-dwld ps-xl-5 ps-md-4 border-start">
-                          <div class="font-16-quick  w-100 pb-md-4 pb-3 dark_blue font-600">
+                        <div className="wr-bdatail-dwld ps-xl-5 ps-md-4 border-start">
+                          <div className="font-16-quick  w-100 pb-md-4 pb-3 dark_blue font-600">
                             Transaction Reciept
                           </div>
-                          <div class="wr-dwld-wrap">
+                          <div className="wr-dwld-wrap">
                             {showEdits ? (
                               <>
                                 <ul className="pl-0">
@@ -368,23 +368,23 @@ const Fullpage = (props) => {
                                         <path
                                           d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
                                           stroke="black"
-                                          stroke-width="2"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
                                         />
                                         <path
                                           d="M7 10L12 15L17 10"
                                           stroke="black"
-                                          stroke-width="2"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
                                         />
                                         <path
                                           d="M12 15V3"
                                           stroke="black"
-                                          stroke-width="2"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
                                         />
                                       </svg>
                                     </label>
@@ -427,23 +427,23 @@ const Fullpage = (props) => {
                                             <path
                                               d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
                                               stroke="black"
-                                              stroke-width="2"
-                                              stroke-linecap="round"
-                                              stroke-linejoin="round"
+                                              strokeWidth="2"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
                                             />
                                             <path
                                               d="M7 10L12 15L17 10"
                                               stroke="black"
-                                              stroke-width="2"
-                                              stroke-linecap="round"
-                                              stroke-linejoin="round"
+                                              strokeWidth="2"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
                                             />
                                             <path
                                               d="M12 15V3"
                                               stroke="black"
-                                              stroke-width="2"
-                                              stroke-linecap="round"
-                                              stroke-linejoin="round"
+                                              strokeWidth="2"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
                                             />
                                           </svg>
                                         </button>
@@ -456,10 +456,10 @@ const Fullpage = (props) => {
                           </div>
                         </div>
                       </div>
-                      <div class="wcr-divider-wrap"></div>
-                      <div class="wcr-innner-wrap wbr-innner-wrap-3 d-flex flex-wrap w-100 align-items-center">
-                        <div class="wr-bdatail-tbl pe-md-4">
-                          <div class="font-16-quick  w-100 pb-2 dark_blue font-600">
+                      <div className="wcr-divider-wrap"></div>
+                      <div className="wcr-innner-wrap wbr-innner-wrap-3 d-flex flex-wrap w-100 align-items-center">
+                        <div className="wr-bdatail-tbl pe-md-4">
+                          <div className="font-16-quick  w-100 pb-2 dark_blue font-600">
                             Customer Details
                           </div>
                           <table>
@@ -478,13 +478,13 @@ const Fullpage = (props) => {
                           </table>
                         </div>
                       </div>
-                      <div class="wcr-divider-wrap"></div>
+                      <div className="wcr-divider-wrap"></div>
 
-                      <div class="wcr-innner-wrap wbr-innner-wrap-4">
-                        <div class="font-16-quick  w-100 pb-2 dark_blue font-600">
+                      <div className="wcr-innner-wrap wbr-innner-wrap-4">
+                        <div className="font-16-quick  w-100 pb-2 dark_blue font-600">
                           Admin Comments
                         </div>
-                        <p class="font-12 dark_blue">{comment}</p>
+                        <p className="font-12 dark_blue">{comment}</p>
                         {showEdits ? (
                           <>
                             <CTextarea
@@ -505,7 +505,7 @@ const Fullpage = (props) => {
                         ) : null}
                       </div>
                     </div>
-                    <div class="pattern-wrap pattern-wrap-bottom"></div>
+                    <div className="pattern-wrap pattern-wrap-bottom"></div>
                   </div>
                 </div>
               </CCardBody>
