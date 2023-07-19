@@ -26,5 +26,7 @@ export const globalConstants = {
     { title: "APPROVED", status: "APPROVED" },
     { title: "PENDING", status: "PENDING" },
     { title: "PROCESSING", status: "PROCESSING" },
+    { title: "REJECTED", status: "REJECTED" },
+    { title: "CANCELLED", status: "CANCELLED" },
   ],
 };

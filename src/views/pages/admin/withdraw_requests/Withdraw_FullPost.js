@@ -116,7 +116,7 @@ const Fullpage = (props) => {
   };
 
   const handleActionReject = async () => {
-    if (!isValidComment() || !isValidFiles()) {
+    if (!isValidComment()) {
       const inputField = document.getElementById(`cxp-admin-wd-comment`);
       if (!inputField) return;
       inputField.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -262,7 +262,7 @@ const Fullpage = (props) => {
                             </div>
                             <div className="wcr-card-amt wbr-card-amt">
                               <p className="green font-bold">{status}</p>
-                              <h2>{total_amount} NAFl</h2>
+                              <h2>{total_amount} ANG</h2>
                             </div>
                           </div>
                         </div>
@@ -293,11 +293,11 @@ const Fullpage = (props) => {
                           <table>
                             <tr>
                               <td>Amount</td>
-                              <td>{amount} NAFl</td>
+                              <td>{amount} ANG</td>
                             </tr>
                             <tr>
                               <td>Fees</td>
-                              <td>{fees} NAFl</td>
+                              <td>{fees} ANG</td>
                             </tr>
                             <tr>
                               <td>Status</td>

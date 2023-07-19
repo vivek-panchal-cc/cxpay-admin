@@ -25,6 +25,12 @@ class Detailview extends React.Component {
         if (res.status === false) {
           notify.error(res.message);
         } else {
+          let total_amount = res.data.total_amount;
+          res.data.total_amount = total_amount.toFixed(2);
+          let amount = res.data.amount;
+          res.data.amount = amount.toFixed(2);
+          let fees = res.data.fees;
+          res.data.fees = fees.toFixed(2);
           this.setState({
             withdraw: res.data,
           });
