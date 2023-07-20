@@ -403,14 +403,16 @@ const Fullpage = (props) => {
                               </>
                             ) : (
                               <ul className="pl-0">
-                                {[1, 2, 3, 4].map((item, index) => {
+                                {receipt_images.map((item, index) => {
                                   const file = receipt_images?.[index];
+                                  // const extension = file.receipt?.split(".")?.[1] || "";
+
                                   return (
-                                    <li key={item}>
+                                    <li key={item.id}>
                                       {file && (
                                         <button
                                           onClick={() =>
-                                            handleDownloadReciept(file)
+                                            handleDownloadReciept(file.id)
                                           }
                                         >
                                           <svg

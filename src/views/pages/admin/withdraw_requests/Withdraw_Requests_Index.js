@@ -492,7 +492,8 @@ class Withdraw_Requests_Index extends React.Component {
                             <td>{c.name}</td>
                             <td>{c.bank_name}</td>
                             <td>{c.date}</td>
-                            <td>{c.amount}</td>
+
+                            <td>{parseFloat(c.amount).toFixed(2)}</td>
                             <td>{c.status}</td>
                             <td>
                               {_canAccess("withdraw_requests", "update") && (
