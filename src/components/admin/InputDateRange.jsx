@@ -50,6 +50,7 @@ const InputDateRange = (props) => {
       {showCalendar && (
         <div className="position-absolute z-1" style={{ zIndex: "1" }}>
           <ReactDatePicker
+            className="common-dr-picker"
             selected={startDate}
             startDate={startDate}
             endDate={endDate}

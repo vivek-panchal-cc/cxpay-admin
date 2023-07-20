@@ -62,10 +62,10 @@ const Fullpage = (props) => {
     if (!adminComment) {
       setInputErrors((err) => ({ ...err, comment: "Please add comment." }));
       return;
-    } else if (adminComment.length > 55) {
+    } else if (adminComment.length > 150) {
       setInputErrors((err) => ({
         ...err,
-        comment: "Comment must not be greater than 55 characters.",
+        comment: "Comment must not be greater than 150 characters.",
       }));
       return;
     }
@@ -143,30 +143,26 @@ const Fullpage = (props) => {
     }
   };
 
-  const handleDownloadReciept = (fileUrl = "") => {
+  const handleDownloadReciept = async (reciptId = "") => {
     try {
-      const link = `https://cors-anywhere.herokuapp.com/${fileUrl}`;
-      fetch(link, {
-        headers: {
-          "Access-Control-Allow-Headers": "X-Requested-With",
-          "X-Requested-With": "XMLHttpRequest",
-        },
-      })
-        .then((response) => response.blob())
-        .then((blob) => {
-          const blobURL = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = blobURL;
-          a.style = "display: none";
-          a.download = "cwnecowencwe";
-          document.body.appendChild(a);
-          a.click();
-        })
-        .catch(() => {
-          console.log("ERROR");
-        });
+      const formData = new FormData();
+      formData.append("receipt_id", reciptId);
+      const { data, message, success } =
+        await withdrawRequestService.downloadReciept(formData);
+      if (!success) throw message;
+      const { encoded_file, file_name } = data;
+
+      const extension = file_name?.split(".")?.[1] || "";
+      const dtnow = new Date().toISOString();
+      const linkSource = `data:application/${extension};base64,${encoded_file}`;
+      const downloadLink = document.createElement("a");
+      const fileName = `${transaction_id}_${reciptId}_${dtnow}.${extension}`;
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
     } catch (error) {
       console.log(error);
+      notify.error(error);
     }
   };
 
