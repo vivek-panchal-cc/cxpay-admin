@@ -107,6 +107,13 @@ const Fullpage = (props) => {
       inputField.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
+    if (adminComment.length > 150) {
+      setInputErrors((err) => ({
+        ...err,
+        comment: "Comment must not be greater than 150 characters.",
+      }));
+      return;
+    }
     const formData = new FormData();
     formData.append("transaction_id", transaction_id);
     formData.append("type", "APPROVED");
@@ -121,6 +128,23 @@ const Fullpage = (props) => {
       if (!inputField) return;
       inputField.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
+    }
+    const allFiles = [...recieptFiles];
+    if (allFiles.length > 4) {
+      setInputErrors((err) => ({
+        ...err,
+        reciept: "At most 4 files are allowed.",
+      }));
+      return false;
+    }
+    for (const fil of allFiles) {
+      if (fil.size > FILE_SIZE) {
+        setInputErrors((err) => ({
+          ...err,
+          reciept: "A reciept must not exceed 5 MB size.",
+        }));
+        return false;
+      }
     }
     const formData = new FormData();
     formData.append("transaction_id", transaction_id);
