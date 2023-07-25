@@ -139,6 +139,14 @@ const _nav = [
     module_name: "withdraw_requests",
     id: "withdraw_requests_sidebar_id",
   },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Manual Topup Requests",
+    to: "/admin/manual_requests",
+    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    module_name: "manual_requests",
+    id: "manual_requests_sidebar_id",
+  },
 ];
 
 export default _nav;

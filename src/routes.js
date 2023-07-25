@@ -173,6 +173,11 @@ const Withdraw_Requests_Index = React.lazy(() =>
 const Withdraw_Detail = React.lazy(() =>
   import("./views/pages/admin/withdraw_requests/Withdraw_Detail")
 );
+
+const Manual_Topup_Requests = React.lazy(() =>
+  import("./views/pages/admin/manual_topup_requests/Manual_Topup_Requests")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -574,6 +579,23 @@ const routes = [
     module_name: "withdraw_requests",
     action: "view",
   },
+  // Manual Topup Requests
+  {
+    path: "/admin/manual_requests",
+    exact: true,
+    name: "Manual Topup Requests",
+    component: Manual_Topup_Requests,
+    module_name: "manual_requests",
+    action: "view",
+  },
+  // {
+  //   path: "/admin/manual_requests/detailview/:id",
+  //   exact: true,
+  //   name: "DetailView",
+  //   component: Withdraw_Detail,
+  //   module_name: "manual_requests",
+  //   action: "view",
+  // },
 ];
 
 export default routes;
