@@ -41,6 +41,7 @@ class Withdraw_Requests_Index extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.pageChange = this.pageChange.bind(this);
+    this.openConfirmPopup = this.openConfirmPopup.bind(this);
 
     this.state = {
       filters: {
@@ -77,6 +78,10 @@ class Withdraw_Requests_Index extends React.Component {
 
   componentDidMount() {
     this.getWithdrawRequests();
+  }
+
+  openConfirmPopup(id) {
+    this.setState({ _openPopup: true, transaction_id: id });
   }
 
   getWithdrawRequests() {
@@ -153,9 +158,12 @@ class Withdraw_Requests_Index extends React.Component {
       },
       filtersChanged: false,
     });
+  }
 
+  deleteUser() {
+    this.setState({ _openPopup: false, transaction_id: undefined });
     withdrawRequestService
-      .chnageWithdrawStatus({ transaction_id: id })
+      .chnageWithdrawStatus({ transaction_id: this.state.transaction_id })
       .then((res) => {
         if (res.status === false) {
           notify.error(res.message);
@@ -164,6 +172,7 @@ class Withdraw_Requests_Index extends React.Component {
         }
       });
   }
+
   handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -437,7 +446,7 @@ class Withdraw_Requests_Index extends React.Component {
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Status
+                              Withdraw Process
                             </span>
                             {this.state.fields.sort_field !== "status" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -483,7 +492,8 @@ class Withdraw_Requests_Index extends React.Component {
                             <td>{c.name}</td>
                             <td>{c.bank_name}</td>
                             <td>{c.date}</td>
-                            <td>{c.amount}</td>
+
+                            <td>{parseFloat(c.amount).toFixed(2)}</td>
                             <td>{c.status}</td>
                             <td>
                               {_canAccess("withdraw_requests", "update") && (
@@ -496,9 +506,6 @@ class Withdraw_Requests_Index extends React.Component {
                                       value={c.status}
                                       defaultChecked
                                       disabled
-                                      onChange={(e) => {
-                                        this.handleChange(e, c.transaction_id);
-                                      }}
                                     />
                                   )}
 
@@ -508,9 +515,12 @@ class Withdraw_Requests_Index extends React.Component {
                                       color="primary"
                                       name="status"
                                       value={c.status}
-                                      onChange={(e) => {
-                                        this.handleChange(e, c.transaction_id);
-                                      }}
+                                      onClick={() =>
+                                        this.openConfirmPopup(c.transaction_id)
+                                      }
+                                      // onChange={(e) => {
+                                      //   this.handleChange(e, c.transaction_id);
+                                      // }}
                                     />
                                   )}
                                 </CFormGroup>
@@ -562,6 +572,53 @@ class Withdraw_Requests_Index extends React.Component {
             </CCard>
           </CCol>
         </CRow>
+
+        <CModal
+          show={this.state._openPopup}
+          onClose={() => {
+            this.setState({ _openPopup: !this.state._openPopup });
+            this.setState({
+              totalRecords: null,
+              fields: {
+                ...this.state.fields,
+                totalPage: null,
+              },
+              withdraw_requests: [],
+            });
+            this.getWithdrawRequests();
+          }}
+          color="#636f83"
+        >
+          <CModalHeader closeButton>
+            <CModalTitle>Processing Withdraw Request</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            Are you sure want to start with withdraw process? Once it's started
+            then it will not revert back.
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="primary" onClick={() => this.deleteUser()}>
+              Confirm
+            </CButton>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                this.setState({ _openPopup: !this.state._openPopup });
+                this.setState({
+                  totalRecords: null,
+                  fields: {
+                    ...this.state.fields,
+                    totalPage: null,
+                  },
+                  withdraw_requests: [],
+                });
+                this.getWithdrawRequests();
+              }}
+            >
+              Cancel
+            </CButton>
+          </CModalFooter>
+        </CModal>
       </>
     );
   }

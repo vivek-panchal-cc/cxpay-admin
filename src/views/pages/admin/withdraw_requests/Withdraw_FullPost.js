@@ -62,10 +62,10 @@ const Fullpage = (props) => {
     if (!adminComment) {
       setInputErrors((err) => ({ ...err, comment: "Please add comment." }));
       return;
-    } else if (adminComment.length > 55) {
+    } else if (adminComment.length > 150) {
       setInputErrors((err) => ({
         ...err,
-        comment: "Comment must not be greater than 55 characters.",
+        comment: "Comment must not be greater than 150 characters.",
       }));
       return;
     }
@@ -107,6 +107,13 @@ const Fullpage = (props) => {
       inputField.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
+    if (adminComment.length > 150) {
+      setInputErrors((err) => ({
+        ...err,
+        comment: "Comment must not be greater than 150 characters.",
+      }));
+      return;
+    }
     const formData = new FormData();
     formData.append("transaction_id", transaction_id);
     formData.append("type", "APPROVED");
@@ -116,11 +123,28 @@ const Fullpage = (props) => {
   };
 
   const handleActionReject = async () => {
-    if (!isValidComment() || !isValidFiles()) {
+    if (!isValidComment()) {
       const inputField = document.getElementById(`cxp-admin-wd-comment`);
       if (!inputField) return;
       inputField.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
+    }
+    const allFiles = [...recieptFiles];
+    if (allFiles.length > 4) {
+      setInputErrors((err) => ({
+        ...err,
+        reciept: "At most 4 files are allowed.",
+      }));
+      return false;
+    }
+    for (const fil of allFiles) {
+      if (fil.size > FILE_SIZE) {
+        setInputErrors((err) => ({
+          ...err,
+          reciept: "A reciept must not exceed 5 MB size.",
+        }));
+        return false;
+      }
     }
     const formData = new FormData();
     formData.append("transaction_id", transaction_id);
@@ -143,30 +167,26 @@ const Fullpage = (props) => {
     }
   };
 
-  const handleDownloadReciept = (fileUrl = "") => {
+  const handleDownloadReciept = async (reciptId = "") => {
     try {
-      const link = `https://cors-anywhere.herokuapp.com/${fileUrl}`;
-      fetch(link, {
-        headers: {
-          "Access-Control-Allow-Headers": "X-Requested-With",
-          "X-Requested-With": "XMLHttpRequest",
-        },
-      })
-        .then((response) => response.blob())
-        .then((blob) => {
-          const blobURL = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = blobURL;
-          a.style = "display: none";
-          a.download = "cwnecowencwe";
-          document.body.appendChild(a);
-          a.click();
-        })
-        .catch(() => {
-          console.log("ERROR");
-        });
+      const formData = new FormData();
+      formData.append("receipt_id", reciptId);
+      const { data, message, success } =
+        await withdrawRequestService.downloadReciept(formData);
+      if (!success) throw message;
+      const { encoded_file, file_name } = data;
+
+      const extension = file_name?.split(".")?.[1] || "";
+      const dtnow = new Date().toISOString();
+      const linkSource = `data:application/${extension};base64,${encoded_file}`;
+      const downloadLink = document.createElement("a");
+      const fileName = `${transaction_id}_${reciptId}_${dtnow}.${extension}`;
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
     } catch (error) {
       console.log(error);
+      notify.error(error);
     }
   };
 
@@ -262,7 +282,7 @@ const Fullpage = (props) => {
                             </div>
                             <div className="wcr-card-amt wbr-card-amt">
                               <p className="green font-bold">{status}</p>
-                              <h2>{total_amount} NAFl</h2>
+                              <h2>{total_amount} ANG</h2>
                             </div>
                           </div>
                         </div>
@@ -293,11 +313,11 @@ const Fullpage = (props) => {
                           <table>
                             <tr>
                               <td>Amount</td>
-                              <td>{amount} NAFl</td>
+                              <td>{amount} ANG</td>
                             </tr>
                             <tr>
                               <td>Fees</td>
-                              <td>{fees} NAFl</td>
+                              <td>{fees} ANG</td>
                             </tr>
                             <tr>
                               <td>Status</td>
@@ -358,39 +378,41 @@ const Fullpage = (props) => {
                                         cursor: "pointer",
                                       }}
                                     >
-                                      <svg
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
-                                          stroke="black"
-                                          strokeWidth="2"
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                        />
-                                        <path
-                                          d="M7 10L12 15L17 10"
-                                          stroke="black"
-                                          strokeWidth="2"
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                        />
-                                        <path
-                                          d="M12 15V3"
-                                          stroke="black"
-                                          strokeWidth="2"
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                        />
-                                      </svg>
+                                      <p className="bg-extension">
+                                        <svg
+                                          width="24"
+                                          height="24"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                                            stroke="black"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          />
+                                          <path
+                                            d="M7 10L12 15L17 10"
+                                            stroke="black"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          />
+                                          <path
+                                            d="M12 15V3"
+                                            stroke="black"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          />
+                                        </svg>
+                                      </p>
                                     </label>
                                   </li>
                                   <li className="w-75">
-                                    <div className="w-100 h-100 d-flex flex-column align-items-start overflow-auto pl-3">
+                                    <div className="w-100 h-100 d-flex flex-column align-items-start overflow-auto pl-3 bg-extension">
                                       {[...recieptFiles].map((item) => {
                                         return (
                                           <p className="p-0 m-0">{item.name}</p>
@@ -407,45 +429,76 @@ const Fullpage = (props) => {
                               </>
                             ) : (
                               <ul className="pl-0">
-                                {[1, 2, 3, 4].map((item, index) => {
+                                {receipt_images.map((item, index) => {
                                   const file = receipt_images?.[index];
+                                  const extension =
+                                    file.receipt?.split(".")?.[1] || "";
+                                  const imgExtensions = [
+                                    "png",
+                                    "jpg",
+                                    "jpeg",
+                                    "heif",
+                                    "heic",
+                                  ];
+
                                   return (
-                                    <li key={item}>
+                                    <li key={item.id}>
                                       {file && (
                                         <button
                                           onClick={() =>
-                                            handleDownloadReciept(file)
+                                            handleDownloadReciept(file.id)
                                           }
                                         >
-                                          <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
-                                              stroke="black"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
+                                          {extension === "pdf" ? (
+                                            <img
+                                              src="/assets/ic_pdf.svg"
+                                              alt="pdf"
                                             />
-                                            <path
-                                              d="M7 10L12 15L17 10"
-                                              stroke="black"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
+                                          ) : extension === "doc" ? (
+                                            <img
+                                              src="/assets/ic_document.svg"
+                                              alt="doc"
                                             />
-                                            <path
-                                              d="M12 15V3"
-                                              stroke="black"
-                                              strokeWidth="2"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
+                                          ) : imgExtensions.includes(
+                                              extension
+                                            ) ? (
+                                            <img
+                                              src="/assets/ic_image_receipt.svg"
+                                              alt="image_type"
                                             />
-                                          </svg>
+                                          ) : (
+                                            <p className="bg-extension">
+                                              <svg
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                              >
+                                                <path
+                                                  d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                                                  stroke="black"
+                                                  strokeWidth="2"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                />
+                                                <path
+                                                  d="M7 10L12 15L17 10"
+                                                  stroke="black"
+                                                  strokeWidth="2"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                />
+                                                <path
+                                                  d="M12 15V3"
+                                                  stroke="black"
+                                                  strokeWidth="2"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                />
+                                              </svg>
+                                            </p>
+                                          )}
                                         </button>
                                       )}
                                     </li>
