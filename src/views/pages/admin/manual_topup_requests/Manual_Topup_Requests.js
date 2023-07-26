@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import FilterContainer from "components/admin/FilterContainer";
+import { fundRequestService } from "services/admin/fund_request.service";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   CCard,
   CCardHeader,
@@ -9,13 +12,10 @@ import {
   CTooltip,
   CLink,
 } from "@coreui/react";
-import { fundRequestService } from "services/admin/fund_request.service";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const REQUEST_ITEM_HEADERS = [
-  "Name",
   "Request From",
+  "Bank Name",
   "Date",
   "Amount",
   "Status",
@@ -29,9 +29,8 @@ const Manual_Topup_Request = () => {
       const response = await fundRequestService.getManualFundAddList();
       const { success, data, message = "" } = response || {};
       if (!success) throw message;
-      const { transactions = [], pagination = {} } = data || {};
-      console.log(transactions);
-      setManualRequests(transactions);
+      const { manual_funds = [], pagination = {} } = data || {};
+      setManualRequests(manual_funds);
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +71,6 @@ const Manual_Topup_Request = () => {
                     {manualRequests?.map((item, index) => {
                       const {
                         amount,
-                        bank_account_number,
                         bank_name,
                         date,
                         name,
@@ -83,7 +81,7 @@ const Manual_Topup_Request = () => {
                         <tr key={transaction_id || index}>
                           <td>{index + 1}</td>
                           <td>{name}</td>
-                          <td>{name}</td>
+                          <td>{bank_name}</td>
                           <td>{date}</td>
                           <td>{amount}</td>
                           <td>{status}</td>
@@ -91,8 +89,9 @@ const Manual_Topup_Request = () => {
                             <CTooltip content={""}>
                               <CLink
                                 className="btn btn-dark btn-block"
+                                style={{ width: "fit-content" }}
                                 aria-current="page"
-                                to={`/admin/manual_requests/view/${transaction_id}`}
+                                to={`/admin/manual_requests/detailview/${transaction_id}`}
                               >
                                 <FontAwesomeIcon icon={faEye} />
                               </CLink>

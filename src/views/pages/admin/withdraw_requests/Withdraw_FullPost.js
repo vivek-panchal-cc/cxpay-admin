@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./page.css";
-import "./responsive.css";
-
+import "assets/css/page.css";
+import "assets/css/responsive.css";
 import {
   CCard,
   CCardBody,

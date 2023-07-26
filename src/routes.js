@@ -178,6 +178,10 @@ const Manual_Topup_Requests = React.lazy(() =>
   import("./views/pages/admin/manual_topup_requests/Manual_Topup_Requests")
 );
 
+const Manual_Topup_Detail = React.lazy(() =>
+  import("./views/pages/admin/manual_topup_requests/Manual_Topup_Detail")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -588,14 +592,14 @@ const routes = [
     module_name: "manual_requests",
     action: "view",
   },
-  // {
-  //   path: "/admin/manual_requests/detailview/:id",
-  //   exact: true,
-  //   name: "DetailView",
-  //   component: Withdraw_Detail,
-  //   module_name: "manual_requests",
-  //   action: "view",
-  // },
+  {
+    path: "/admin/manual_requests/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Manual_Topup_Detail,
+    module_name: "manual_requests",
+    action: "view",
+  },
 ];
 
 export default routes;
