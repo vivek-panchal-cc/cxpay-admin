@@ -625,7 +625,6 @@ class Cms_Pages_Edit extends Component {
                       var file = input.files[0];
                       var reader = new FileReader();
                       reader.onload = function (e) {
-                        console.log("name", e.target.result);
                         callback(e.target.result, {
                           alt: file.name,
                         });

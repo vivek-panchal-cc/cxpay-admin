@@ -21,6 +21,7 @@ export const globalConstants = {
   EXPORT_CUSTOMER_DATA: "Export customer data",
   EXPORT_TRANSACTION_DATA: "Export transaction data",
   VIEW_WITHDRAW_DETAILS: "View withdraw request detail",
+  VIEW_MANUAL_TOPUP_DETAILS: "View manual top up details",
   // Withdraw status filters list for bank transactions
   WITHDRAW_STATUS_FILTER_BANK: [
     { title: "APPROVED", status: "APPROVED" },
@@ -28,5 +29,10 @@ export const globalConstants = {
     { title: "PROCESSING", status: "PROCESSING" },
     { title: "REJECTED", status: "REJECTED" },
     { title: "CANCELLED", status: "CANCELLED" },
+  ],
+  MANUAL_TOPUP_STATUS_FILTER: [
+    { title: "PENDING", status: "PENDING" },
+    { title: "APPROVED", status: "APPROVED" },
+    { title: "REJECTED", status: "REJECTED" },
   ],
 };

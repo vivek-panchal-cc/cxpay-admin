@@ -235,8 +235,6 @@ class Business_Customers_Edit extends React.Component {
       if (this.state.site_logo) {
         formData.append("profile_image", this.state.site_logo);
       }
-      // console.log(postVal)
-      // console.log(formData.get('profile_image'));
       // return
       businessCustomersService.updateCustomer(formData).then((res) => {
         if (res.status === false) {

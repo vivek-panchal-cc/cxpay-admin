@@ -19,10 +19,13 @@ import {
   CCardFooter,
   CLink,
   CButton,
+  CInput,
 } from "@coreui/react";
 
 const Manual_Topup_Detail = () => {
   const params = useParams();
+  const [adminTransactId, setAdminTransactId] = useState("");
+  const [isTransactId, setIsTrasactId] = useState(false);
   const [details, setDetails] = useState({
     id: "",
     amount: "",
@@ -70,12 +73,14 @@ const Manual_Topup_Detail = () => {
   /**
    * For Updating the status of manual fund request
    * @param {boolean} status
+   * @param {string} tid
    */
-  const handleManualFundUpdateStatus = async (status) => {
+  const handleManualFundUpdateStatus = async (status, tid) => {
     try {
       const values = {
         transaction_id: details?.transaction_id,
         status: status ? "APPROVED" : "REJECTED",
+        tid,
       };
       const response = await fundRequestService.updateManualFundStatus(values);
       const { success, message = "" } = response || {};
@@ -114,15 +119,18 @@ const Manual_Topup_Detail = () => {
 
   const handleConfirmation = (status) => {
     const statusAlias = status ? "approve" : "reject";
+    if (status && !adminTransactId) return setIsTrasactId(true);
+    setIsTrasactId(false);
     setCofirmationDetails({
       show: true,
       title: "Processing Fund Request",
-      description: `Are you sure want to ${statusAlias} this request ?`,
-      confirmCallback: () => handleManualFundUpdateStatus(status),
+      description: `Are you sure want to ${statusAlias} this request ? ${adminTransactId}`,
+      confirmCallback: () => handleManualFundUpdateStatus(status, ""),
     });
   };
 
   const handleCancelConfirmation = () => {
+    setIsTrasactId(false);
     setCofirmationDetails({
       show: false,
       title: "",
@@ -191,6 +199,31 @@ const Manual_Topup_Detail = () => {
                         receipts={details.receipt_images}
                         handleClickReceipt={handleViewManualFundReceipt}
                       />
+                    </div>
+                    <div className="wcr-divider-wrap"></div>
+                    <div className="wcr-innner-wrap wbr-innner-wrap-4">
+                      <div className="font-16-quick  w-100 pb-2 dark_blue font-600">
+                        Admin
+                      </div>
+                      <p className="font-12 dark_blue">{}</p>
+                      {showActions ? (
+                        <>
+                          <CInput
+                            id="cxp-admin-mf-tid"
+                            placeholder="Transaction Id"
+                            name="tid"
+                            value={adminTransactId}
+                            onChange={(e) =>
+                              setAdminTransactId(e?.target?.value || "")
+                            }
+                          ></CInput>
+                          {isTransactId && (
+                            <p className="pl-1 pt-2 text-danger">
+                              Please add Transaction Id
+                            </p>
+                          )}
+                        </>
+                      ) : null}
                     </div>
                   </div>
                 </div>

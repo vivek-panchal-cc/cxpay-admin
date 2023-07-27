@@ -13,7 +13,6 @@ import {
 } from "@coreui/react";
 
 const Fullpage = (props) => {
-  console.log(props);
   return (
     <>
       <CContainer fluid>

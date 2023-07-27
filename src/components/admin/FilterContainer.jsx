@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   CCard,
   CCardBody,
@@ -31,10 +31,20 @@ const FilterContainer = ({
   });
 
   const handleSearch = () => {
+    const startDate = dateFils.startDate
+      ? dateFils.startDate?.toLocaleDateString() || ""
+      : "";
+    const endDate = dateFils.endDate
+      ? dateFils.endDate?.toLocaleDateString() || ""
+      : startDate;
+    setDateFils({
+      startDate: startDate ? new Date(startDate) : "",
+      endDate: endDate ? new Date(endDate) : "",
+    });
     handleSearchCallback({
       ...(hideSearchFilter ? {} : { search }),
       ...(hideStatusFilter ? {} : { statuses }),
-      ...(hideDateFilter ? {} : { ...dateFils }),
+      ...(hideDateFilter ? {} : { startDate, endDate }),
     });
   };
 
@@ -48,7 +58,7 @@ const FilterContainer = ({
     handleSearchCallback({
       ...(hideSearchFilter ? {} : { search: "" }),
       ...(hideStatusFilter ? {} : { statuses: [] }),
-      ...(hideDateFilter ? {} : { ...{ startDate: "", endDate: "" } }),
+      ...(hideDateFilter ? {} : { startDate: "", endDate: "" }),
     });
   };
 

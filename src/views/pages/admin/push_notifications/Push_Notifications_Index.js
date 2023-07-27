@@ -91,7 +91,6 @@ class Push_Notifications_Index extends React.Component {
           });
           notify.error(res.message);
         } else {
-          console.log('res.data',res.data)
           this.setState({
             totalRecords: res.data.total,
             fields: {
@@ -214,7 +213,6 @@ class Push_Notifications_Index extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }

@@ -195,7 +195,6 @@ class Transaction_Reports_Index extends React.Component {
 
   downloadFile = async () => {
     reportsService.downloadTransactionCSV().then((res) => {
-      console.log(res);
       //if (res.success) {
       notify.success("Successfully send report logged in user mail");
       //}
@@ -203,7 +202,6 @@ class Transaction_Reports_Index extends React.Component {
   };
 
   handledateChange = (date) => {
-    console.log(date);
     this.setState({
       fields: {
         ...this.state.fields,

@@ -66,7 +66,6 @@ class Customer_Reports_Index extends React.Component {
 
   getCustomersList() {
     reportsService.getCustomersList(this.state.fields).then((res) => {
-      console.log(res);
       if (res.success === false) {
         this.setState({
           totalRecords: res.data?.pagination?.total,
@@ -77,7 +76,6 @@ class Customer_Reports_Index extends React.Component {
         });
         notify.error(res.message);
       } else {
-        console.log("res.data", res.data);
         this.setState({
           totalRecords: res.data?.pagination?.total,
           fields: {
@@ -170,9 +168,9 @@ class Customer_Reports_Index extends React.Component {
 
   downloadFile = async () => {
     reportsService.downloadCustomerCSV().then((res) => {
-    //  if (res.success) {
-        notify.success("Successfully send report logged in user mail");
-     // }
+      //  if (res.success) {
+      notify.success("Successfully send report logged in user mail");
+      // }
     });
   };
 

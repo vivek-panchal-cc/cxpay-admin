@@ -151,7 +151,6 @@ function updatepage(postData) {
 /********************** Retrieve Api for Detail view of Post from server   *****************************/
 
 function changePageStatus(postData) {
-  //console.log(postData);
   setLoading(true);
   const requestOptions = {
     method: "POST",

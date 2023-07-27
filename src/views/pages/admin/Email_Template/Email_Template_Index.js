@@ -208,7 +208,6 @@ class Email_list extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }

@@ -8,7 +8,7 @@ export const reportsService = {
   customerDetails,
   downloadCustomerCSV,
   getTransactionList,
-  downloadTransactionCSV
+  downloadTransactionCSV,
 };
 
 async function getCustomersList(postData) {
@@ -63,14 +63,13 @@ async function downloadCustomerCSV() {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/export-customer-report`,requestOptions
+      `${process.env.REACT_APP_API_URL}api/export-customer-report`,
+      requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
   }
-  console.log('responseresponse',response)
-
   return handleResponse(response);
 }
 
@@ -84,7 +83,8 @@ async function getTransactionList(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/generate-transaction-report`,requestOptions
+      `${process.env.REACT_APP_API_URL}api/generate-transaction-report`,
+      requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");
@@ -103,14 +103,12 @@ async function downloadTransactionCSV() {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/export-transaction-report`,requestOptions
+      `${process.env.REACT_APP_API_URL}api/export-transaction-report`,
+      requestOptions
     );
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
   }
-  console.log('responseresponse',response)
   return handleResponse(response);
 }
-
-

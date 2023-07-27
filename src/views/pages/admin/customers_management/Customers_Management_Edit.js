@@ -125,7 +125,6 @@ class Customers_Management_Edit extends React.Component {
   // setSystemModules() {
 
   //   var savedPermission = this.state.fields.permission;
-  //   console.log(savedPermission);
   //   systemModulesService.getSystemModulesList().then(res => {
   //     if (res.status === false) {
   //       notify.error(res.message);
@@ -289,8 +288,6 @@ class Customers_Management_Edit extends React.Component {
       if (this.state.site_logo) {
         formData.append("profile_image", this.state.site_logo);
       }
-      // console.log(postVal)
-      // console.log(formData.get('profile_image'));
       // return
       customersManagementService.updateCustomer(formData).then((res) => {
         if (res.status === false) {

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import FilterContainer from "components/admin/FilterContainer";
-import { fundRequestService } from "services/admin/fund_request.service";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { globalConstants } from "constants/admin/global.constants";
 import {
   CCard,
   CCardHeader,
@@ -11,7 +11,9 @@ import {
   CRow,
   CTooltip,
   CLink,
+  CPagination,
 } from "@coreui/react";
+import useGetManualRequests from "./useGetManualRequests";
 
 const REQUEST_ITEM_HEADERS = [
   "Request From",
@@ -22,28 +24,36 @@ const REQUEST_ITEM_HEADERS = [
 ];
 
 const Manual_Topup_Request = () => {
-  const [manualRequests, setManualRequests] = useState([]);
+  const [currentPage, setCurrentPage] = useState();
+  const [filters, setFilters] = useState({
+    search: "",
+    status: [],
+    start_date: "",
+    end_date: "",
+  });
+  const [pagination, manualRequests] = useGetManualRequests({
+    page: currentPage,
+    search: filters.search,
+    status: filters.status,
+    start_date: filters.start_date,
+    end_date: filters.end_date,
+  });
 
-  const retrieveManualRequests = async () => {
-    try {
-      const response = await fundRequestService.getManualFundAddList();
-      const { success, data, message = "" } = response || {};
-      if (!success) throw message;
-      const { manual_funds = [], pagination = {} } = data || {};
-      setManualRequests(manual_funds);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleApplyFilter = async (filters) => {
+    setCurrentPage(1);
+    setFilters({
+      search: filters?.search || "",
+      status: filters?.statuses || "",
+      start_date: filters?.startDate || "",
+      end_date: filters?.endDate || "",
+    });
   };
-
-  useEffect(() => {
-    retrieveManualRequests();
-  }, []);
 
   return (
     <div>
       <FilterContainer
-        handleSearchCallback={(filData) => console.log(filData)}
+        statusOptions={globalConstants.MANUAL_TOPUP_STATUS_FILTER}
+        handleSearchCallback={handleApplyFilter}
       />
       <CRow>
         <CCol xl={12}>
@@ -86,7 +96,11 @@ const Manual_Topup_Request = () => {
                           <td>{amount}</td>
                           <td>{status}</td>
                           <td>
-                            <CTooltip content={""}>
+                            <CTooltip
+                              content={
+                                globalConstants.VIEW_MANUAL_TOPUP_DETAILS
+                              }
+                            >
                               <CLink
                                 className="btn btn-dark btn-block"
                                 style={{ width: "fit-content" }}
@@ -103,6 +117,13 @@ const Manual_Topup_Request = () => {
                   </tbody>
                 </table>
               </div>
+              <CPagination
+                activePage={pagination?.current_page || 1}
+                pages={pagination?.last_page || 1}
+                onActivePageChange={(page) => setCurrentPage(page)}
+                doubleArrows={true}
+                align="end"
+              />
             </CCardBody>
           </CCard>
         </CCol>
