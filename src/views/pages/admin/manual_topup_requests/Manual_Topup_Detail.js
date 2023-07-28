@@ -24,6 +24,7 @@ import {
   CFormGroup,
   CFormText,
 } from "@coreui/react";
+import { notify } from "_helpers";
 
 const Manual_Topup_Detail = () => {
   const params = useParams();
@@ -102,8 +103,10 @@ const Manual_Topup_Detail = () => {
       const response = await fundRequestService.updateManualFundStatus(values);
       const { success, message = "" } = response || {};
       if (!success) throw message;
+      notify.success(message);
       await retrieveManualFundDetails(values?.transaction_id);
     } catch (error) {
+      if (typeof error === "string") notify.error(error);
       console.log(error);
     } finally {
       handleCancelConfirmation();
