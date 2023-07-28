@@ -12,18 +12,18 @@ const ModalConfirmation = (props) => {
   const {
     show = false,
     title = "",
-    description = "",
     labelConfirm = "Confirm",
     labelCancel = "Cancel",
     onCancelCallback = () => {},
     onConfirmCallback = () => {},
+    children = "",
   } = props;
   return (
     <CModal show={show} onClose={onCancelCallback} color="#636f83">
       <CModalHeader closeButton>
         <CModalTitle>{title}</CModalTitle>
       </CModalHeader>
-      <CModalBody>{description}</CModalBody>
+      <CModalBody>{children}</CModalBody>
       <CModalFooter>
         <CButton color="primary" onClick={onConfirmCallback}>
           {labelConfirm}

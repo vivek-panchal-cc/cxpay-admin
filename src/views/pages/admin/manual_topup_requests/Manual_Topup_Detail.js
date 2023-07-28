@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fundRequestService } from "services/admin/fund_request.service";
 import SectionHeader from "components/admin/sections/SectionHeader";
@@ -20,12 +20,19 @@ import {
   CLink,
   CButton,
   CInput,
+  CLabel,
+  CFormGroup,
+  CFormText,
 } from "@coreui/react";
 
 const Manual_Topup_Detail = () => {
   const params = useParams();
-  const [adminTransactId, setAdminTransactId] = useState("");
-  const [isTransactId, setIsTrasactId] = useState(false);
+  const [appTopupId, setAppTopupId] = useState("");
+  const [rejComment, setRejComment] = useState("");
+  const [isError, setIsError] = useState({
+    appTopupId: "",
+    rejComment: "",
+  });
   const [details, setDetails] = useState({
     id: "",
     amount: "",
@@ -43,14 +50,14 @@ const Manual_Topup_Detail = () => {
     mobile_number: "",
     name: "",
     image: "",
-
+    comment: "",
+    approved_topup_txn_id: "",
     receipt_images: [],
   });
   const [confirmationDetails, setCofirmationDetails] = useState({
     show: false,
+    status: null,
     title: "",
-    description: "",
-    confirmCallback: () => {},
   });
   const showActions = details?.status === "PENDING" ? true : false;
 
@@ -73,14 +80,24 @@ const Manual_Topup_Detail = () => {
   /**
    * For Updating the status of manual fund request
    * @param {boolean} status
-   * @param {string} tid
    */
-  const handleManualFundUpdateStatus = async (status, tid) => {
+  const handleManualFundUpdateStatus = async () => {
+    if (confirmationDetails.status === null) return;
+    const regexId = new RegExp(/^[a-zA-Z0-9-()]{5,25}$/);
+    const regexComment = new RegExp(/^[\s\S]{1,55}$/);
+    if (confirmationDetails.status && !regexId.test(appTopupId))
+      return setIsError({
+        appTopupId:
+          "Topup-id should be alpha numeric containing 5 - 25 characters",
+      });
+    if (!confirmationDetails.status && !regexComment.test(rejComment.trim()))
+      return setIsError({ rejComment: "Please add a comment" });
     try {
       const values = {
         transaction_id: details?.transaction_id,
-        status: status ? "APPROVED" : "REJECTED",
-        tid,
+        status: confirmationDetails.status ? "APPROVED" : "REJECTED",
+        approved_topup_txn_id: appTopupId,
+        comment: rejComment,
       };
       const response = await fundRequestService.updateManualFundStatus(values);
       const { success, message = "" } = response || {};
@@ -118,26 +135,37 @@ const Manual_Topup_Detail = () => {
   };
 
   const handleConfirmation = (status) => {
-    const statusAlias = status ? "approve" : "reject";
-    if (status && !adminTransactId) return setIsTrasactId(true);
-    setIsTrasactId(false);
     setCofirmationDetails({
       show: true,
-      title: "Processing Fund Request",
-      description: `Are you sure want to ${statusAlias} this request ? ${adminTransactId}`,
-      confirmCallback: () => handleManualFundUpdateStatus(status, ""),
+      status: status,
+      title: status
+        ? "Processing Fund Request Approve"
+        : "Processing Fund Request Reject",
     });
   };
 
   const handleCancelConfirmation = () => {
-    setIsTrasactId(false);
     setCofirmationDetails({
       show: false,
+      status: null,
       title: "",
-      description: "",
-      confirmCallback: () => {},
     });
+    setAppTopupId("");
+    setRejComment("");
+    setIsError({ appTopupId: "", rejComment: "" });
   };
+
+  const adminInputDetails = useMemo(() => {
+    const { approved_topup_txn_id, comment, status } = details || {};
+    switch (status) {
+      case "APPROVED":
+        return [{ key: "Topup-id", value: approved_topup_txn_id }];
+      case "REJECTED":
+        return [{ key: "Comment", value: comment }];
+      default:
+        return [];
+    }
+  }, [details]);
 
   useEffect(() => {
     const { id = "" } = params || {};
@@ -202,28 +230,10 @@ const Manual_Topup_Detail = () => {
                     </div>
                     <div className="wcr-divider-wrap"></div>
                     <div className="wcr-innner-wrap wbr-innner-wrap-4">
-                      <div className="font-16-quick  w-100 pb-2 dark_blue font-600">
-                        Admin
-                      </div>
-                      <p className="font-12 dark_blue">{}</p>
-                      {showActions ? (
-                        <>
-                          <CInput
-                            id="cxp-admin-mf-tid"
-                            placeholder="Transaction Id"
-                            name="tid"
-                            value={adminTransactId}
-                            onChange={(e) =>
-                              setAdminTransactId(e?.target?.value || "")
-                            }
-                          ></CInput>
-                          {isTransactId && (
-                            <p className="pl-1 pt-2 text-danger">
-                              Please add Transaction Id
-                            </p>
-                          )}
-                        </>
-                      ) : null}
+                      <SectionDetails
+                        detailsHeading="Admin Inputs"
+                        details={adminInputDetails}
+                      />
                     </div>
                   </div>
                 </div>
@@ -262,10 +272,41 @@ const Manual_Topup_Detail = () => {
       <ModalConfirmation
         show={confirmationDetails.show}
         title={confirmationDetails.title}
-        description={confirmationDetails.description}
-        onConfirmCallback={confirmationDetails.confirmCallback}
+        onConfirmCallback={handleManualFundUpdateStatus}
         onCancelCallback={handleCancelConfirmation}
-      />
+      >
+        <CFormGroup row>
+          {confirmationDetails.status ? (
+            <CCol xs="12">
+              <CLabel htmlFor="cxp-admin-mf-id">Add Topop Id</CLabel>
+              <CInput
+                id="cxp-admin-mf-id"
+                placeholder="Transaction Id"
+                name="appTopupId"
+                value={appTopupId}
+                onChange={(e) => setAppTopupId(e?.target?.value || "")}
+              ></CInput>
+              <CFormText color="red" className="text-danger">
+                {isError.appTopupId}
+              </CFormText>
+            </CCol>
+          ) : (
+            <CCol xs="12">
+              <CLabel htmlFor="cxp-admin-mf-comment">Add Comment</CLabel>
+              <CInput
+                id="cxp-admin-mf-comment"
+                placeholder="comment..."
+                name="rejComment"
+                value={rejComment}
+                onChange={(e) => setRejComment(e?.target?.value || "")}
+              ></CInput>
+              <CFormText color="red" className="text-danger">
+                {isError.rejComment}
+              </CFormText>
+            </CCol>
+          )}
+        </CFormGroup>
+      </ModalConfirmation>
     </CContainer>
   );
 };
