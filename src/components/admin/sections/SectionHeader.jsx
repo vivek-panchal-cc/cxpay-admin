@@ -9,6 +9,7 @@ const SectionHeader = (props) => {
     amount = "",
     specification = "",
   } = props || {};
+  const fixedAmount = amount !== null ? parseFloat(amount).toFixed(2) : "";
 
   return (
     <>
@@ -26,7 +27,7 @@ const SectionHeader = (props) => {
             </div>
             <div className="wcr-card-amt wbr-card-amt">
               <p className="font-bold">{status}</p>
-              <h2>{amount}</h2>
+              <h2>{fixedAmount}</h2>
             </div>
           </div>
         </div>

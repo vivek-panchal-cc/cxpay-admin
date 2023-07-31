@@ -10,6 +10,8 @@ const SectionTransactionDetails = (props) => {
   } = props || {};
 
   const [w_dt, w_tm] = date ? date.split("|") : [];
+  const fixedAmount = amount !== null ? parseFloat(amount).toFixed(2) : "";
+  const fixedFees = fees !== null ? parseFloat(fees).toFixed(2) : "";
 
   return (
     <div className="wcr-innner-wrap wcr-innner-wrap-2 d-flex flex-wrap w-100">
@@ -36,11 +38,11 @@ const SectionTransactionDetails = (props) => {
           <tbody>
             <tr>
               <td>Amount</td>
-              <td>{amount}</td>
+              <td>{fixedAmount}</td>
             </tr>
             <tr>
               <td>Fees</td>
-              <td>{fees}</td>
+              <td>{fixedFees}</td>
             </tr>
             <tr>
               <td>Status</td>

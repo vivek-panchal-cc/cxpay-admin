@@ -87,13 +87,15 @@ const Manual_Topup_Request = () => {
                         status,
                         transaction_id,
                       } = item || {};
+                      const fixedAmount =
+                        amount !== null ? parseFloat(amount).toFixed(2) : "";
                       return (
                         <tr key={transaction_id || index}>
                           <td>{index + 1}</td>
                           <td>{name}</td>
                           <td>{bank_name}</td>
                           <td>{date}</td>
-                          <td>{amount}</td>
+                          <td>{fixedAmount}</td>
                           <td>{status}</td>
                           <td>
                             <CTooltip

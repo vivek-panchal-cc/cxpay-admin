@@ -23,6 +23,7 @@ import {
   CLabel,
   CFormGroup,
   CFormText,
+  CTextarea,
 } from "@coreui/react";
 import { notify } from "_helpers";
 
@@ -84,15 +85,17 @@ const Manual_Topup_Detail = () => {
    */
   const handleManualFundUpdateStatus = async () => {
     if (confirmationDetails.status === null) return;
-    const regexId = new RegExp(/^[a-zA-Z0-9-()]{5,25}$/);
-    const regexComment = new RegExp(/^[\s\S]{1,55}$/);
-    if (confirmationDetails.status && !regexId.test(appTopupId))
+    const regexId = new RegExp(/^[a-zA-Z0-9-()_ ]{5,25}$/);
+    const regexComment = new RegExp(/^[\s\S]{1,150}$/);
+    if (confirmationDetails.status && !regexId.test(appTopupId.trim()))
       return setIsError({
         appTopupId:
           "Topup-id should be alpha numeric containing 5 - 25 characters",
       });
     if (!confirmationDetails.status && !regexComment.test(rejComment.trim()))
-      return setIsError({ rejComment: "Please add a comment" });
+      return setIsError({
+        rejComment: "Comment should be string containing 1 - 150 characters",
+      });
     try {
       const values = {
         transaction_id: details?.transaction_id,
@@ -170,6 +173,26 @@ const Manual_Topup_Detail = () => {
     }
   }, [details]);
 
+  const HeaderImage = useMemo(() => {
+    const { image, user_type } = details || {};
+    const styles = {
+      height: "100%",
+      width: "100%",
+      objectFit: "cover",
+      objectPosition: "center",
+    };
+    switch (user_type) {
+      case "business":
+        return (
+          <img src={image || "/assets/Business-account.png"} style={styles} />
+        );
+      case "personal":
+        return <img src={image || "/assets/Personal.png"} style={styles} />;
+      default:
+        return <img src="/avatars/default-avatar.png" style={styles} />;
+    }
+  }, [details?.image, details?.user_type]);
+
   useEffect(() => {
     const { id = "" } = params || {};
     if (!id) return;
@@ -190,20 +213,12 @@ const Manual_Topup_Detail = () => {
                   <div className="pattern-wrap pattern-wrap-top"></div>
                   <div className="wc-refund-main-inner">
                     <SectionHeader
-                      headerImage={
-                        <img
-                          src={details?.image}
-                          className="h-100 w-100"
-                          style={{
-                            objectFit: "cover",
-                            objectPosition: "center",
-                          }}
-                        />
-                      }
+                      headerImage={HeaderImage}
                       heading={details?.name}
                       subHeading={details?.user_type}
                       status={details?.status}
                       amount={details?.amount + " ANG"}
+                      specification={details?.specification}
                     />
                     <div className="wcr-divider-wrap"></div>
                     <SectionTransactionDetails
@@ -296,13 +311,14 @@ const Manual_Topup_Detail = () => {
           ) : (
             <CCol xs="12">
               <CLabel htmlFor="cxp-admin-mf-comment">Add Comment</CLabel>
-              <CInput
+              <CTextarea
                 id="cxp-admin-mf-comment"
                 placeholder="comment..."
                 name="rejComment"
                 value={rejComment}
+                rows={2}
                 onChange={(e) => setRejComment(e?.target?.value || "")}
-              ></CInput>
+              ></CTextarea>
               <CFormText color="red" className="text-danger">
                 {isError.rejComment}
               </CFormText>
