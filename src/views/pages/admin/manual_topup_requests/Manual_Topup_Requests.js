@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import FilterContainer from "components/admin/FilterContainer";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faSort,
+  faSortDown,
+  faSortUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { globalConstants } from "constants/admin/global.constants";
+import useGetManualRequests from "./useGetManualRequests";
+import WrapAmount from "components/wrapper/WrapAmount";
 import {
   CCard,
   CCardHeader,
@@ -13,14 +20,13 @@ import {
   CLink,
   CPagination,
 } from "@coreui/react";
-import useGetManualRequests from "./useGetManualRequests";
 
 const REQUEST_ITEM_HEADERS = [
-  "Request From",
-  "Bank Name",
-  "Date",
-  "Amount",
-  "Status",
+  { label: "Request From", field: "name" },
+  { label: "Bank Name", field: "bank_name" },
+  { label: "Date", field: "request_receive_date" },
+  { label: "Amount", field: "amount" },
+  { label: "Status", field: "status" },
 ];
 
 const Manual_Topup_Request = () => {
@@ -30,6 +36,8 @@ const Manual_Topup_Request = () => {
     status: [],
     start_date: "",
     end_date: "",
+    sort_field: "request_receive_date",
+    sort_dir: "desc",
   });
   const [pagination, manualRequests] = useGetManualRequests({
     page: currentPage,
@@ -37,16 +45,39 @@ const Manual_Topup_Request = () => {
     status: filters.status,
     start_date: filters.start_date,
     end_date: filters.end_date,
+    sort_field: filters.sort_field,
+    sort_dir: filters.sort_dir,
   });
 
-  const handleApplyFilter = async (filters) => {
+  const handleApplyFilter = async (upfilters) => {
     setCurrentPage(1);
     setFilters({
-      search: filters?.search || "",
-      status: filters?.statuses || "",
-      start_date: filters?.startDate || "",
-      end_date: filters?.endDate || "",
+      search: upfilters?.search || "",
+      status: upfilters?.statuses || "",
+      start_date: upfilters?.startDate || "",
+      end_date: upfilters?.endDate || "",
+      sort_field: filters?.sort_field || "request_receive_date",
+      sort_dir: filters?.sort_dir || "desc",
     });
+  };
+
+  const switchSortDirection = (sortDirect) => {
+    switch (sortDirect) {
+      case "asc":
+        return "desc";
+      case "desc":
+        return "asc";
+      default:
+        return "asc";
+    }
+  };
+
+  const handleApplySorting = async (sort_field = "request_receive_date") => {
+    setCurrentPage(1);
+    const isSortField = filters.sort_field === sort_field;
+    const sort_dir = switchSortDirection(isSortField ? filters.sort_dir : "");
+    const muFilters = Object.assign({ ...filters }, { sort_field, sort_dir });
+    setFilters(muFilters);
   };
 
   return (
@@ -65,15 +96,29 @@ const Manual_Topup_Request = () => {
                   <thead>
                     <tr>
                       <th>Sr.no</th>
-                      {REQUEST_ITEM_HEADERS?.map((header) => (
-                        <th key={header} onClick={() => {}}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              {header}
+                      {REQUEST_ITEM_HEADERS?.map((header, index) => {
+                        const isSort = filters.sort_field === header.field;
+                        const sortDirect = filters.sort_dir;
+                        return (
+                          <th key={header.field || index}>
+                            <span
+                              className="sortCls"
+                              onClick={() => handleApplySorting(header.field)}
+                            >
+                              <span className="table-header-text-mrg">
+                                {header?.label || ""}
+                              </span>
+                              {!isSort && <FontAwesomeIcon icon={faSort} />}
+                              {isSort && sortDirect === "desc" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                              {isSort && sortDirect === "asc" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
                             </span>
-                          </span>
-                        </th>
-                      ))}
+                          </th>
+                        );
+                      })}
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -87,15 +132,15 @@ const Manual_Topup_Request = () => {
                         status,
                         transaction_id,
                       } = item || {};
-                      const fixedAmount =
-                        amount !== null ? parseFloat(amount).toFixed(2) : "";
                       return (
                         <tr key={transaction_id || index}>
                           <td>{index + 1}</td>
                           <td>{name}</td>
                           <td>{bank_name}</td>
                           <td>{date}</td>
-                          <td>{fixedAmount}</td>
+                          <td>
+                            <WrapAmount value={amount} />
+                          </td>
                           <td>{status}</td>
                           <td>
                             <CTooltip
@@ -116,12 +161,17 @@ const Manual_Topup_Request = () => {
                         </tr>
                       );
                     })}
+                    {manualRequests.length === 0 && (
+                      <tr>
+                        <td colSpan="5">No records found</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
               <CPagination
-                activePage={pagination?.current_page || 1}
-                pages={pagination?.last_page || 1}
+                activePage={pagination?.current_page || 0}
+                pages={pagination?.last_page || 0}
                 onActivePageChange={(page) => setCurrentPage(page)}
                 doubleArrows={true}
                 align="end"

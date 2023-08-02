@@ -7,6 +7,8 @@ const useGetManualRequests = ({
   status = [],
   start_date = "",
   end_date = "",
+  sort_field = "",
+  sort_dir = "",
 }) => {
   const [listRequests, setListRequests] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -16,7 +18,9 @@ const useGetManualRequests = ({
     search = "",
     status = [],
     start_date = "",
-    end_date = ""
+    end_date = "",
+    sort_field = "",
+    sort_dir = ""
   ) => {
     try {
       const response = await fundRequestService.getManualFundAddList({
@@ -25,6 +29,8 @@ const useGetManualRequests = ({
         status,
         start_date,
         end_date,
+        sort_field,
+        sort_dir,
       });
       const { success, data, message = "" } = response || {};
       if (!success) throw message;
@@ -39,8 +45,24 @@ const useGetManualRequests = ({
   };
 
   useEffect(() => {
-    retrieveListActivities(page, search, status, start_date, end_date);
-  }, [page, search?.trim(), status, start_date, end_date]);
+    retrieveListActivities(
+      page,
+      search,
+      status,
+      start_date,
+      end_date,
+      sort_field,
+      sort_dir
+    );
+  }, [
+    page,
+    search?.trim(),
+    status,
+    start_date,
+    end_date,
+    sort_field,
+    sort_dir,
+  ]);
 
   return [pagination, listRequests];
 };

@@ -1,4 +1,5 @@
 export const globalConstants = {
+  CURRENCY_SYMBOL: "ANG",
   BACK_MSG: "Back to listing page.",
   BULK_APPLY_BTN: "Click to perform bulk action.",
   ADD_BTN: "Click to add new record.",

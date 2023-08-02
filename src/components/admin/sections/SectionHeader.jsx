@@ -1,3 +1,4 @@
+import WrapAmount from "components/wrapper/WrapAmount";
 import React from "react";
 
 const SectionHeader = (props) => {
@@ -9,7 +10,6 @@ const SectionHeader = (props) => {
     amount = "",
     specification = "",
   } = props || {};
-  const fixedAmount = amount !== null ? parseFloat(amount).toFixed(2) : "";
 
   return (
     <>
@@ -27,7 +27,9 @@ const SectionHeader = (props) => {
             </div>
             <div className="wcr-card-amt wbr-card-amt">
               <p className="font-bold">{status}</p>
-              <h2>{fixedAmount}</h2>
+              <h2>
+                <WrapAmount value={amount} affix="suffix" />
+              </h2>
             </div>
           </div>
         </div>
