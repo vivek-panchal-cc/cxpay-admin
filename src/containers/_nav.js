@@ -8,6 +8,19 @@ import {
   faCogs,
   faFileAlt,
   faRupeeSign,
+  faEnvelope,
+  faSms,
+  faBell,  
+  faUsers,
+  faBuilding,
+  faClipboardList,
+  faChartBar,
+  faBook,
+  faMoneyBill,
+  faReceipt,
+  faListAlt,
+  faHandHoldingUsd,
+  faWallet
 } from "@fortawesome/free-solid-svg-icons";
 
 const _nav = [
@@ -58,7 +71,7 @@ const _nav = [
     name: "Admin Users",
     to: "/admin/users",
     icon: (
-      <FontAwesomeIcon icon={faUserFriends} className="c-sidebar-nav-icon" />
+      <FontAwesomeIcon icon={faUsers} className="c-sidebar-nav-icon" />
     ),
     module_name: "users",
     id: "users_sidebar_id",
@@ -68,7 +81,7 @@ const _nav = [
     name: "Business Customers",
     to: "/admin/business_customers",
     icon: (
-      <FontAwesomeIcon icon={faUserFriends} className="c-sidebar-nav-icon" />
+      <FontAwesomeIcon icon={faBuilding} className="c-sidebar-nav-icon" />
     ),
     module_name: "business_customers",
     id: "business_customers_sidebar_id",
@@ -78,7 +91,7 @@ const _nav = [
     name: "Personal Customers",
     to: "/admin/personal_customers",
     icon: (
-      <FontAwesomeIcon icon={faUserFriends} className="c-sidebar-nav-icon" />
+      <FontAwesomeIcon icon={faUser} className="c-sidebar-nav-icon" />
     ),
     module_name: "personal_customers",
     id: "personal_customers_sidebar_id",
@@ -87,7 +100,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Email Templates",
     to: "/admin/email_templates",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faEnvelope} className="c-sidebar-nav-icon" />,
     module_name: "email_templates",
     id: "email_templates_sidebar_id",
   },
@@ -95,7 +108,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "SMS Templates",
     to: "/admin/sms_templates",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faSms} className="c-sidebar-nav-icon" />,
     module_name: "sms_templates",
     id: "sms_templates_sidebar_id",
   },
@@ -103,7 +116,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "CMS Pages",
     to: "/admin/cms_pages",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faBook} className="c-sidebar-nav-icon" />,
     module_name: "cms_pages",
     id: "cms_templates_sidebar_id",
   },
@@ -111,7 +124,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Push Notifications",
     to: "/admin/notifications",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faBell} className="c-sidebar-nav-icon" />,
     module_name: "notifications",
     id: "push_notification_sidebar_id",
   },
@@ -119,7 +132,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Customers Reports",
     to: "/admin/customer_reports",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faClipboardList} className="c-sidebar-nav-icon" />,
     module_name: "customer_reports",
     id: "customer_reports_sidebar_id",
   },
@@ -127,7 +140,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Transaction Reports",
     to: "/admin/transaction_reports",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faWallet} className="c-sidebar-nav-icon" />,
     module_name: "transaction_reports",
     id: "transaction_reports_sidebar_id",
   },
@@ -135,7 +148,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Withdraw Requests",
     to: "/admin/withdraw_requests",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faMoneyBill} className="c-sidebar-nav-icon" />,
     module_name: "withdraw_requests",
     id: "withdraw_requests_sidebar_id",
   },
@@ -143,7 +156,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Manual Topup Requests",
     to: "/admin/manual_requests",
-    icon: <FontAwesomeIcon icon={faFileAlt} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faHandHoldingUsd} className="c-sidebar-nav-icon" />,
     module_name: "manual_requests",
     id: "manual_requests_sidebar_id",
   },
