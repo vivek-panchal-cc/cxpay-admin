@@ -259,7 +259,6 @@ class Customers_Management_Index extends React.Component {
   };
 
   handleAllChecked = (event) => {
-    console.log(event);
     let multiactions = this.state.multiaction;
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;

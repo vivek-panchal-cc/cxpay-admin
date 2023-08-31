@@ -263,6 +263,7 @@ class Business_Customers_Edit extends React.Component {
         this.state.fields.monthly_withdraw_limit
       );
 
+      // return
       businessCustomersService.updateCustomer(formData).then((res) => {
         if (res.status === false) {
           notify.error(res.message);

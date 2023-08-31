@@ -2,9 +2,10 @@ import { notify, history } from './index';
 
 /* Handle all http resopnse from all API */
 export const handleResponse = (response) => {
+    setLoading(true);
     if (response !== undefined) {
         return response.text().then(text => {
-            setLoading(false);
+           
             const data = text && JSON.parse(text);
             if (data.type !== undefined && data.type === 'unauthorized' && data.status === false) {
                 const error = (data && data.message) || response.statusText;
@@ -20,6 +21,7 @@ export const handleResponse = (response) => {
                 state: { access_message: true }});
                 return Promise.reject(error);
             }
+            setLoading(false);
             return data;
         });
     } else {

@@ -137,6 +137,51 @@ const Fee_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/fee_management/Fee_Management_Edit")
 );
 
+//Import File Settings (system options)
+const Settings_Update = React.lazy(() =>
+  import("./views/pages/admin/settings/Settings_Update")
+);
+
+// Import File Push Notification
+
+const Push_Notifications_Index = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notifications_Index")
+);
+const Push_Notification_Add = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notification_Add")
+);
+const Push_Notification_Edit = React.lazy(() =>
+  import("./views/pages/admin/push_notifications/Push_Notification_Edit")
+);
+
+// Reports
+
+const Customer_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/customer_reports/Customer_Reports_Index")
+);
+const Customer_Detail = React.lazy(() =>
+  import("./views/pages/admin/customer_reports/Customer_Detail")
+);
+const Transaction_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
+);
+
+const Withdraw_Requests_Index = React.lazy(() =>
+  import("./views/pages/admin/withdraw_requests/Withdraw_Requests_Index")
+);
+
+const Withdraw_Detail = React.lazy(() =>
+  import("./views/pages/admin/withdraw_requests/Withdraw_Detail")
+);
+
+const Manual_Topup_Requests = React.lazy(() =>
+  import("./views/pages/admin/manual_topup_requests/Manual_Topup_Requests")
+);
+
+const Manual_Topup_Detail = React.lazy(() =>
+  import("./views/pages/admin/manual_topup_requests/Manual_Topup_Detail")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -460,6 +505,100 @@ const routes = [
     component: Fee_Management_Edit,
     module_name: "fee_management",
     action: "update",
+  },
+
+  //  module_name and action parameter used for ACL mechanisam its required column Fee  management
+  {
+    path: "/admin/settings",
+    exact: true,
+    name: "Settings",
+    component: Settings_Update,
+    module_name: "settings",
+    action: "update",
+  },
+  // Push Notifications
+  {
+    path: "/admin/notifications",
+    exact: true,
+    name: "Push Notifications",
+    component: Push_Notifications_Index,
+    module_name: "notifications",
+    action: "view",
+  },
+  {
+    path: "/admin/notifications/add",
+    exact: true,
+    name: "Add",
+    component: Push_Notification_Add,
+    module_name: "notifications",
+    action: "create",
+  },
+  {
+    path: "/admin/notifications/edit/:id",
+    exact: true,
+    name: "Edit",
+    component: Push_Notification_Edit,
+    module_name: "notifications",
+    action: "update",
+  },
+  // report
+  {
+    path: "/admin/customer_reports",
+    exact: true,
+    name: "Customer Reports",
+    component: Customer_Reports_Index,
+    module_name: "customer_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/customer_reports/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Customer_Detail,
+    module_name: "customer_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/transaction_reports",
+    exact: true,
+    name: "Transaction Reports",
+    component: Transaction_Reports_Index,
+    module_name: "transaction_reports",
+    action: "view",
+  },
+  //withdraw requests
+  {
+    path: "/admin/withdraw_requests",
+    exact: true,
+    name: "Withdraw Requests",
+    component: Withdraw_Requests_Index,
+    module_name: "withdraw_requests",
+    action: "view",
+  },
+  {
+    path: "/admin/withdraw_requests/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Withdraw_Detail,
+    module_name: "withdraw_requests",
+    action: "view",
+  },
+  // Manual Topup Requests
+  {
+    path: "/admin/manual_requests",
+    exact: true,
+    name: "Manual Topup Requests",
+    component: Manual_Topup_Requests,
+    module_name: "manual_requests",
+    action: "view",
+  },
+  {
+    path: "/admin/manual_requests/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Manual_Topup_Detail,
+    module_name: "manual_requests",
+    action: "view",
   },
 ];
 

@@ -275,3 +275,97 @@ img.mediaLibraryPreview {
     flex-direction: column;
   }
 }
+.loader-container.loading + div select {
+  opacity: 0;
+  visibility: hidden;
+}
+/* Multi select dropdown - 3/7 */
+.refund-sf-wrap .dropdown-check-list input {
+  visibility: hidden;
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+.refund-sf-wrap label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0px;
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+  color: var(--dark_blue);
+  font-weight: bold;
+  cursor: pointer;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.refund-sf-wrap label .checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--dark_blue);
+  margin-right: 10px;
+  position: relative;
+}
+.refund-sf-wrap input:checked ~ label .checkmark {
+  background-color: var(--dark_blue);
+}
+.refund-sf-wrap input:checked ~ label .checkmark:before {
+  visibility: visible;
+  opacity: 1;
+}
+.refund-sf-wrap label .checkmark:before {
+  content: "";
+  text-align: center;
+  margin: auto;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="13" height="11" viewBox="0 0 13 11" fill="none"><path d="M4.04759 8.24495L1.12144 5.31879L0.125 6.30821L4.04759 10.2308L12.4682 1.81022L11.4788 0.820801L4.04759 8.24495Z" fill="white"/></svg>');
+  width: 11px;
+  height: 9px;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  visibility: hidden;
+  opacity: 0;
+}
+.status-items > li:not(:last-child) {
+  margin-bottom: 20px;
+}
+.dropdown-check-list {
+  border-radius: 0.25rem;
+  box-shadow: none;
+  /* position: absolute; */
+  /* top: 30px; */
+  width: 100%;
+  border: 1px solid#d8dbe0;
+  background-color: var(--white);
+}
+.dropdown-check-list.visible {
+  border-color: transparent;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+}
+ul.status-items {
+  /* /display: none; */
+  /* /padding: 10px 18px 22px; */
+  width: 100%;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  list-style-type: none;
+}
+.dropdown-check-list.visible ul.status-items {
+  display: block;
+}
+.dropdown-check-list span.anchor {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='13' height='8' viewBox='0 0 13 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M0.999687 1L6.33969 6.34L11.6797 1' stroke='%230081C5' stroke-width='2' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e ");
+  background-position: center right 10px;
+  background-repeat: no-repeat;
+  background-size: 11px;
+  width: 100%;
+  border-radius: 15px;
+}

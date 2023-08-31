@@ -198,6 +198,9 @@ class Fee_Management_Edit extends Component {
               <option key="WD" value="WD">
                 Withdrawal
               </option>
+              <option key="MF" value="MF">
+              Manual Topup
+              </option>
               ;
             </CSelect>
             <CFormText className="help-block">

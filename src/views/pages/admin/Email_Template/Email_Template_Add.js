@@ -550,8 +550,8 @@ class Email_Template_Add extends Component {
             />
 
             <Editor
-              apiKey="kb557exdqag66gcq1mmiq3hfeki32ge6lkoj8giccxlcrie0"
-              initialValue=""
+              apiKey="ovyr2unz01dy6h1yzrkiga2ptd9z0nbuzwgpa8634x2k6z7j"
+              //initialValue=""
               value={this.state.initialValue}
               init={{
                 placeholder: "Enter Description",
@@ -578,7 +578,6 @@ class Email_Template_Add extends Component {
                       var file = input.files[0];
                       var reader = new FileReader();
                       reader.onload = function (e) {
-                        console.log("name", e.target.result);
                         callback(e.target.result, {
                           alt: file.name,
                         });

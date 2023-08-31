@@ -115,7 +115,6 @@ function updateFeeStructure(postData) {
 /********************** Retrieve Api for Detail view of Post from server   *****************************/
 
 function changeFeeStatus(postData) {
-  //console.log(postData);
   setLoading(true);
   const requestOptions = {
     method: "POST",

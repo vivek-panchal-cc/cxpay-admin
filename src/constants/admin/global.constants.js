@@ -1,4 +1,5 @@
 export const globalConstants = {
+  CURRENCY_SYMBOL: "ANG",
   BACK_MSG: "Back to listing page.",
   BULK_APPLY_BTN: "Click to perform bulk action.",
   ADD_BTN: "Click to add new record.",
@@ -17,4 +18,22 @@ export const globalConstants = {
   SINGLE_DEACTIVE_MSG: "Are you sure you want to deactive this record?",
   MULTI_DEACTIVE_MSG: "Are you sure you want to deactive these records?",
   MEDIA_LIBRARY: "Click to select media from library",
+  VIEW_CUSTOMER_DETAILS: "View customer details",
+  EXPORT_CUSTOMER_DATA: "Export customer data",
+  EXPORT_TRANSACTION_DATA: "Export transaction data",
+  VIEW_WITHDRAW_DETAILS: "View withdraw request detail",
+  VIEW_MANUAL_TOPUP_DETAILS: "View manual top up details",
+  // Withdraw status filters list for bank transactions
+  WITHDRAW_STATUS_FILTER_BANK: [
+    { title: "APPROVED", status: "APPROVED" },
+    { title: "PENDING", status: "PENDING" },
+    { title: "PROCESSING", status: "PROCESSING" },
+    { title: "REJECTED", status: "REJECTED" },
+    { title: "CANCELLED", status: "CANCELLED" },
+  ],
+  MANUAL_TOPUP_STATUS_FILTER: [
+    { title: "PENDING", status: "PENDING" },
+    { title: "APPROVED", status: "APPROVED" },
+    { title: "REJECTED", status: "REJECTED" },
+  ],
 };
