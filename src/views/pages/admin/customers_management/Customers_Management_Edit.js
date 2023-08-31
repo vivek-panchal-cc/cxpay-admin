@@ -254,22 +254,6 @@ class Customers_Management_Edit extends React.Component {
     }
 
     if (this.validator.allValid()) {
-      // var postVal = {
-      //   first_name: this.state.fields.first_name,
-      //   last_name: this.state.fields.last_name,
-      //   // status: this.state.fields.status,
-      //   status: this.state.status ,
-      //   email: this.state.fields.email,
-      //   city: this.state.city,
-      //   // country: this.state.country,
-      //   country: this.state.countryData.country_list[this.state.country].country_name,
-      //   personal_id: this.state.fields.personal_id,
-      //   personal_url: this.state.fields.personal_url,
-      //   country_code : this.state.fields.country_code,
-      //   mobile_number : this.state.fields.mobile_number,
-      //   profile_image : this.state.site_logo
-      // }
-
       let formData = new FormData();
 
       formData.append("first_name", this.state.fields.first_name);
@@ -288,6 +272,31 @@ class Customers_Management_Edit extends React.Component {
       if (this.state.site_logo) {
         formData.append("profile_image", this.state.site_logo);
       }
+      formData.append(
+        "daily_add_fund_limit",
+        this.state.fields.daily_add_fund_limit
+      );
+      formData.append(
+        "daily_wallet_transfer_limit",
+        this.state.fields.daily_wallet_transfer_limit
+      );
+      formData.append(
+        "daily_withdraw_limit",
+        this.state.fields.daily_withdraw_limit
+      );
+      formData.append(
+        "monthly_add_fund_limit",
+        this.state.fields.monthly_add_fund_limit
+      );
+      formData.append(
+        "monthly_wallet_transfer_limit",
+        this.state.fields.monthly_wallet_transfer_limit
+      );
+      formData.append(
+        "monthly_withdraw_limit",
+        this.state.fields.monthly_withdraw_limit
+      );
+
       // return
       customersManagementService.updateCustomer(formData).then((res) => {
         if (res.status === false) {
@@ -616,6 +625,187 @@ class Customers_Management_Edit extends React.Component {
                       )}
                     </CFormGroup>
                   </CCol>
+                </CFormGroup>
+
+                <CFormGroup className="limits-wrap">
+                  <div className="row mb-3 mb-lg-4 limits-heading">
+                    <div className="col-md-6 col">
+                      <p>Daily Limits</p>
+                    </div>
+                    <div className="col-sm-6 col">
+                      <p>Monthly Limits</p>
+                    </div>
+                  </div>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_add_fund"
+                        className="col-form-label"
+                      >
+                        Add Fund Limit
+                      </CLabel>
+
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_add_fund"
+                          name="daily_add_fund_limit"
+                          placeholder="Enter Add Fund Limit"
+                          value={this.state.fields.daily_add_fund_limit}
+                          onChange={this.handleChange}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_add_fund_limit",
+                            this.state.fields.daily_add_fund_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="monthly_add_fund"
+                        className="col-form-label"
+                      >
+                        Add Fund Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="monthly_add_fund"
+                          name="monthly_add_fund_limit"
+                          placeholder="Enter Add Fund Limit"
+                          value={this.state.fields.monthly_add_fund_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "monthly_add_fund_limit",
+                            this.state.fields.monthly_add_fund_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_wallet_transfer"
+                        className="col-form-label"
+                      >
+                        Wallet Transfer Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_wallet_transfer"
+                          name="daily_wallet_transfer_limit"
+                          placeholder="Enter Wallet Transfer Limit"
+                          value={this.state.fields.daily_wallet_transfer_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_wallet_transfer_limit",
+                            this.state.fields.daily_wallet_transfer_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="monthly_wallet_transfer"
+                        className="col-form-label"
+                      >
+                        Wallet Transfer Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="monthly_wallet_transfer_limit"
+                          name="monthly_wallet_transfer_limit"
+                          placeholder="Enter Wallet Transfer Limit"
+                          value={
+                            this.state.fields.monthly_wallet_transfer_limit
+                          }
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "monthly_wallet_transfer_limit",
+                            this.state.fields.monthly_wallet_transfer_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_withdraw_limit"
+                        className="col-form-label"
+                      >
+                        Withdraw Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_withdraw_limit"
+                          name="daily_withdraw_limit"
+                          placeholder="Enter Withdraw Limit"
+                          value={this.state.fields.daily_withdraw_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_withdraw_limit",
+                            this.state.fields.daily_withdraw_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="monthly_withdraw"
+                        className="col-form-label"
+                      >
+                        Withdraw Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="monthly_withdraw_limit"
+                          name="monthly_withdraw_limit"
+                          placeholder="Enter Withdraw Limit"
+                          value={this.state.fields.monthly_withdraw_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "monthly_withdraw_limit",
+                            this.state.fields.monthly_withdraw_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
                 </CFormGroup>
               </CCardBody>
               <CCardFooter>

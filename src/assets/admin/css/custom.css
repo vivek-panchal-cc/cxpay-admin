@@ -223,6 +223,58 @@ img.mediaLibraryPreview {
   margin-left: auto;
   margin-right: auto;
 }
+/* CSS for Limits design on 17-08-23 */
+.limits-wrap {
+  border-top: 2px solid #eee;
+  padding-top: 30px;
+  margin-top: 10px;
+}
+.limits-wrap .limit-ip-col,
+.limits-wrap .limit-ip-col.col {
+  max-width: 260px;
+}
+.limits-wrap label.col-form-label {
+  max-width: 160px;
+  width: 100%;
+}
+.limits-heading p {
+  margin-bottom: 0px;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-align: left;
+}
+@media all and (min-width: 992px) and (max-width: 1180px) {
+  .limits-wrap label.col-form-label {
+    max-width: 135px;
+  }
+}
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .limits-wrap label.col-form-label {
+    font-size: 14px;
+    max-width: 130px;
+  }
+}
+@media all and (min-width: 600px) and (max-width: 767px) {
+  .limits-wrap label.col-form-label {
+    font-size: 13.5px;
+    max-width: 100px;
+  }
+  .limits-wrap .limit-ip-col {
+    padding-right: 0px;
+  }
+}
+@media all and (max-width: 599px) {
+  .limits-wrap label.col-form-label,
+  .limits-wrap .limit-ip-col {
+    max-width: 100% !important;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .limits-wrap .d-flex.flex-wrap {
+    flex-direction: column;
+  }
+}
 .loader-container.loading + div select {
   opacity: 0;
   visibility: hidden;
