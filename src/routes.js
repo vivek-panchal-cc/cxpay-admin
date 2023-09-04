@@ -274,7 +274,7 @@ const routes = [
   {
     path: "/admin/cms_pages",
     exact: true,
-    name: "Pages ",
+    name: "CMS Pages ",
     component: CMS_Page_Index,
     module_name: "cms_pages",
     action: "view",

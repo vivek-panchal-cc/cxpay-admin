@@ -103,16 +103,16 @@ const Manual_Topup_Request = () => {
                           <th key={header.field || index}>
                             <span
                               className="sortCls"
-                              onClick={() => handleApplySorting(header.field)}
+                              onClick={header?.field != 'bank_name' ? () => handleApplySorting(header.field) : ''}
                             >
                               <span className="table-header-text-mrg">
                                 {header?.label || ""}
                               </span>
-                              {!isSort && <FontAwesomeIcon icon={faSort} />}
-                              {isSort && sortDirect === "desc" && (
+                              {!isSort && header?.field != 'bank_name' && <FontAwesomeIcon icon={faSort} />}
+                              {isSort && header?.field != 'bank_name' && sortDirect === "desc" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
-                              {isSort && sortDirect === "asc" && (
+                              {isSort && header?.field != 'bank_name' && sortDirect === "asc" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                             </span>
