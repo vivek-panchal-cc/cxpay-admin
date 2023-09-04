@@ -65,6 +65,8 @@ class ActionBar extends React.Component {
 
   render() {
     return (
+      (_canAccess(this.props.module_name, "delete") ||
+      _canAccess(this.props.module_name, "update")) && 
       <>
         <CFormGroup row className="mr-0 ">
           <CCol xs="2">

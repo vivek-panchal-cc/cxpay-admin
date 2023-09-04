@@ -221,6 +221,11 @@ class SMS_list extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   resetCheckedBox() {
