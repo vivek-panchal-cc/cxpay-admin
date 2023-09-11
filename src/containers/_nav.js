@@ -20,7 +20,8 @@ import {
   faReceipt,
   faListAlt,
   faHandHoldingUsd,
-  faWallet
+  faWallet,
+  faUserTie
 } from "@fortawesome/free-solid-svg-icons";
 
 const _nav = [
@@ -159,6 +160,14 @@ const _nav = [
     icon: <FontAwesomeIcon icon={faHandHoldingUsd} className="c-sidebar-nav-icon" />,
     module_name: "manual_requests",
     id: "manual_requests_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Agent Customers",
+    to: "/admin/agent_customers",
+    icon: <FontAwesomeIcon icon={faUserTie} className="c-sidebar-nav-icon" />,
+    module_name: "agent_customers",
+    id: "agent_customers_sidebar_id",
   },
 ];
 
