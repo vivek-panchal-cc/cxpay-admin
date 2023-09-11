@@ -182,6 +182,23 @@ const Manual_Topup_Detail = React.lazy(() =>
   import("./views/pages/admin/manual_topup_requests/Manual_Topup_Detail")
 );
 
+// Import Agent Customer
+const Agent_Customers_Index = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Customers_Index")
+);
+
+const Agent_Customers_Edit = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Customers_Edit")
+);
+
+const Agent_Customers_Add = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Customers_Add")
+);
+
+const Agent_Detail = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Detail")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -477,7 +494,7 @@ const routes = [
     exact: true,
     name: "Edit",
     component: Business_Customers_Edit,
-    module_name: "customers",
+    module_name: "business_customers",
     action: "update",
   },
 
@@ -600,6 +617,39 @@ const routes = [
     module_name: "manual_requests",
     action: "view",
   },
+    // module_name and action parameter used for ACL mechanisam its required column
+    {
+      path: "/admin/agent_customers",
+      exact: true,
+      name: "Agent Customers",
+      component: Agent_Customers_Index,
+      module_name: "agent_customers",
+      action: "view",
+    },
+    {
+      path: "/admin/agent_customers/edit/:id",
+      exact: true,
+      name: "  Edit",
+      component: Agent_Customers_Edit,
+      module_name: "agent_customers",
+      action: "update",
+    },
+    {
+      path: "/admin/agent_customers/add",
+      exact: true,
+      name: "Add ",
+      component: Agent_Customers_Add,
+      module_name: "agent_customers",
+      action: "create",
+    },
+    {
+      path: "/admin/agent_customers/detailview/:id",
+      exact: true,
+      name: "DetailView",
+      component: Agent_Detail,
+      module_name: "agent_customers",
+      action: "view",
+    },
 ];
 
 export default routes;
