@@ -207,6 +207,7 @@ class Agent_Customers_Add extends Component {
         profile_image: file,
       }
     });
+    console.log(file);
   }
   // Close  modal box method
   _handleCancelAction() {
@@ -530,7 +531,7 @@ class Agent_Customers_Add extends Component {
                   <CCol sm="2">
                     <img
                       src={
-                        this.state.fields.profile_image ||
+                        // this.state.fields.profile_image ||
                         "/avatars/default-avatar.png"
                       }
                       className=""
@@ -595,7 +596,7 @@ class Agent_Customers_Add extends Component {
                  onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'status')}}
                  
                  />
-                  <CLabel type="text" id={ele.id} for={`${'status'+ele.id}`} value={ele.collection_type}>{ele.collection_type}</CLabel>
+                  <CLabel type="text" id={ele.id} htmlFor={`${'status'+ele.id}`} value={ele.collection_type}>{ele.collection_type}</CLabel>
                 </CCol>
                 <CCol>
                   <CSelect
