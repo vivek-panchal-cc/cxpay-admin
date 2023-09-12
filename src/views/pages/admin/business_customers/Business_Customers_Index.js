@@ -18,6 +18,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
+  CSelect
 } from "@coreui/react";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
 import {
@@ -57,6 +58,7 @@ class Business_Customers_Index extends React.Component {
         search_company_name: "",
         sort_field: "created_at",
         sort_dir: "DESC",
+        status:""
       },
       _openPopup: false,
       customers_management_list: [],
@@ -170,6 +172,7 @@ class Business_Customers_Index extends React.Component {
             search_company_name: "",
             sort_field: "created_at",
             sort_dir: "DESC",
+            status: ""
           },
         },
         () => {
@@ -299,9 +302,9 @@ class Business_Customers_Index extends React.Component {
             <CCard>
               <CCardBody>
                 <CRow>
-                  <CCol xl={3}>
+                  <CCol xl={5}>
                     <CFormGroup row>
-                      <CCol xs="12">
+                      <CCol xs="6">
                         <CLabel htmlFor="name">Company Name</CLabel>
                         <CInput
                           id="name"
@@ -312,9 +315,23 @@ class Business_Customers_Index extends React.Component {
                           onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
+                      <CCol xs="6">
+                        <CLabel htmlFor="name">Status</CLabel>
+                        <CSelect
+                          custom
+                          name="status"
+                          id="status"
+                          onChange={this.handleChange}
+                          value={this.state?.fields?.status}
+                        >
+                          <option value={''}>{'Select Status'}</option>
+                          <option value={'1'}>{'Active'}</option>
+                          <option value={'0'}>{'Deactive'}</option>
+                        </CSelect>
+                      </CCol>
                     </CFormGroup>
                   </CCol>
-
+                  
                   <CCol xl={9}>
                     <CFormGroup row>
                       <CCol xs="12"></CCol>

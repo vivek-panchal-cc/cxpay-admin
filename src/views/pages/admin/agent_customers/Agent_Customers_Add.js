@@ -270,11 +270,19 @@ class Agent_Customers_Add extends Component {
       this.validator.showMessages();
     }
   }
+
+  handleKeyPress = (event) => {
+    // Check if the pressed key is the minus key (key code 45)
+    if (event.keyCode === 45 || event.which === 45) {
+      event.preventDefault(); // Prevent the minus key from being entered
+    }
+  }
   // addDefaultSrc(ev) {
   //   ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
   // }
   // Rendering Html To Dom
   render() {
+    console.log(this.state.fields);
     return (
       <CCard>
         <CCardHeader>
@@ -344,6 +352,7 @@ class Agent_Customers_Add extends Component {
           <CFormGroup>
             <CLabel htmlFor="nf-name">Mobile Number</CLabel>
             <div className="phone_with_ccode">
+              <div className="con_selectWrap">
             <CSelect
               custom
               name="country_code"
@@ -369,7 +378,8 @@ class Agent_Customers_Add extends Component {
                 { className: "text-danger" }
               )}
             </CFormText>
-            
+            </div>
+            <div className="phone_num_wrap">
             <CInput
               type="number"
               id="mobile_number"
@@ -378,6 +388,7 @@ class Agent_Customers_Add extends Component {
               autoComplete="name"
               value={this.state.fields.mobile_number}
               onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
               {this.validator.message(
@@ -387,6 +398,7 @@ class Agent_Customers_Add extends Component {
                 { className: "text-danger" }
               )}
             </CFormText>
+            </div>
             </div>
           </CFormGroup>
           <CFormGroup>
@@ -483,9 +495,10 @@ class Agent_Customers_Add extends Component {
               placeholder="Enter Commission Amount"
               autoComplete="commission_amount"
               onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("commission_amount", this.state.fields.commission_amount, "required|numeric", {
+              {this.validator.message("commission_amount", this.state.fields.commission_amount, "required|numeric|max:10", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -518,9 +531,10 @@ class Agent_Customers_Add extends Component {
               placeholder="Enter System Commission Amount"
               autoComplete="system_commission_amount"
               onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("system_commission_amount", this.state.fields.system_commission_amount, "required|numeric", {
+              {this.validator.message("system_commission_amount", this.state.fields.system_commission_amount, "required|numeric|max:10", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -630,6 +644,7 @@ class Agent_Customers_Add extends Component {
                     placeholder="Enter Amount"
                     autoComplete="amount"
                     onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'amount')}}
+                    onKeyPress={this.handleKeyPress}
                     disabled={
                       this.state.fields?.card_commission[index]?.status === 1 ? false : true
                     }
@@ -638,7 +653,7 @@ class Agent_Customers_Add extends Component {
                     {
                       this.state.fields?.card_commission[index]?.status == 1 && 
                       this.validator.message(
-                        "amount", this.state.fields?.card_commission[index]?.amount, "required|numeric", {
+                        "amount", this.state.fields?.card_commission[index]?.amount, "required|numeric|max:10", {
                       className: "text-danger",
                     })}
                   </CFormText>

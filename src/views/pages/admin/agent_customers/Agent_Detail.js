@@ -377,6 +377,7 @@ class Agent_Detail extends React.Component {
                             )}
                             </tbody>
                         </table>
+                        {this.state?.agent_recharges?.length > 0 && (
                         <CPagination
                             activePage={this.state.fields.page}
                             onActivePageChange={this.pageChange}
@@ -384,6 +385,7 @@ class Agent_Detail extends React.Component {
                             doubleArrows={true}
                             align="end"
                         />
+                        )}
                         </div>
                     </CCardBody>
                     </CCard>

@@ -18,6 +18,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
+  CSelect
 } from "@coreui/react";
 // import { userGroupsService } from "../../../../services/admin/user_groups.service";
 import { customersManagementService } from "../../../../services/admin/customers_management.service";
@@ -59,6 +60,7 @@ class Customers_Management_Index extends React.Component {
         search_name: "",
         sort_field: "created_at",
         sort_dir: "DESC",
+        status:''
         // pageNo: 1,
         // sort_dir: 'asc',
         // sort_field: "user_group_name",
@@ -177,6 +179,7 @@ class Customers_Management_Index extends React.Component {
             search_name: "",
             sort_field: "created_at",
             sort_dir: "DESC",
+            status: ''
             // pageNo: 1,
             // sort_dir: 'DESC',
             // sort_field: "created_at",
@@ -313,9 +316,9 @@ class Customers_Management_Index extends React.Component {
             <CCard>
               <CCardBody>
                 <CRow>
-                  <CCol xl={3}>
+                  <CCol xl={5}>
                     <CFormGroup row>
-                      <CCol xs="12">
+                      <CCol xs="6">
                         <CLabel htmlFor="name">Name</CLabel>
                         <CInput
                           id="name"
@@ -325,6 +328,20 @@ class Customers_Management_Index extends React.Component {
                           onChange={this.handleChange}
                           onKeyDown={this.handleKeyDown}
                         />
+                      </CCol>
+                      <CCol xs="6">
+                        <CLabel htmlFor="name">Status</CLabel>
+                        <CSelect
+                          custom
+                          name="status"
+                          id="status"
+                          onChange={this.handleChange}
+                          value={this.state?.fields?.status}
+                        >
+                          <option value={''}>{'Select Status'}</option>
+                          <option value={'1'}>{'Active'}</option>
+                          <option value={'0'}>{'Deactive'}</option>
+                        </CSelect>
                       </CCol>
                     </CFormGroup>
                   </CCol>

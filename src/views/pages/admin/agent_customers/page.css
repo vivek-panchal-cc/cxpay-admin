@@ -9,13 +9,13 @@
   display: flex;
   flex-wrap: wrap;
 }
-.phone_with_ccode select#select {
+/* .phone_with_ccode select#select {
   width: 200px;
 }
 .phone_with_ccode input#mobile_number {
   width: calc(100% - 220px);
   margin-left: 20px;
-}
+} */
 /* For checkbox */
 .customCBWrap input.form-control {
   width: 25px;
@@ -33,3 +33,14 @@
   display: flex;
   align-items: center;
 }
+.phone_with_ccode div.con_selectWrap {
+  width: 200px;
+}
+.phone_with_ccode div.phone_num_wrap {
+  width: calc(100% - 220px);
+  margin-left: 20px;
+}
+.phone_with_ccode div.phone_num_wrap input{
+  width: 100%;
+}
+

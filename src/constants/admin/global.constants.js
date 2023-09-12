@@ -23,6 +23,7 @@ export const globalConstants = {
   EXPORT_TRANSACTION_DATA: "Export transaction data",
   VIEW_WITHDRAW_DETAILS: "View withdraw request detail",
   VIEW_MANUAL_TOPUP_DETAILS: "View manual top up details",
+  VIEW_RECHARGE_DETAILS: "View recharge details",
   // Withdraw status filters list for bank transactions
   WITHDRAW_STATUS_FILTER_BANK: [
     { title: "APPROVED", status: "APPROVED" },

@@ -18,6 +18,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
+  CSelect
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -93,17 +94,18 @@ class Agent_list extends React.Component {
             totalPage: res.data?.pagination?.last_page,
           },
           agents: res.data?.agents,
+          // agents: res.data?.agents,
         });
 
         /*multi delete cms pages */
-        if (res.data?.agents.length > 0) {
+        if (res.data?.agents?.length > 0) {
           let pages = res.data?.agents;
           let multiaction = [];
           for (var key in pages) {
-            multiaction[pages[key].account_number] = false;
+            multiaction[pages[key].mobile_number] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.data?.agents.length === 0) {
+        } else if (res.data?.agents?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -300,9 +302,9 @@ class Agent_list extends React.Component {
             <CCard>
               <CCardBody>
                 <CRow>
-                  <CCol xl={3}>
+                  <CCol xl={5}>
                     <CFormGroup row>
-                      <CCol xs="12">
+                      <CCol xs="6">
                         <CLabel htmlFor="name">Title</CLabel>
                         <CInput
                           id="name"
@@ -316,6 +318,20 @@ class Agent_list extends React.Component {
                             }
                           }}
                         />
+                      </CCol>
+                      <CCol xs="6">
+                        <CLabel htmlFor="name">Status</CLabel>
+                        <CSelect
+                          custom
+                          name="status"
+                          id="status"
+                          onChange={this.handleChange}
+                          value={this.state?.fields?.status}
+                        >
+                          <option value={''}>{'Select Status'}</option>
+                          <option value={'1'}>{'Active'}</option>
+                          <option value={'0'}>{'Deactive'}</option>
+                        </CSelect>
                       </CCol>
                     </CFormGroup>
                   </CCol>
@@ -463,17 +479,19 @@ class Agent_list extends React.Component {
                     </thead>
 
                     <tbody>
-                      {this.state?.agents.length > 0 &&
+                      {this.state?.agents?.length > 0 &&
                         this.state.agents.map((u, index) => (
                           <tr key={u.email}>
                             <td>
+                            {this.state.multiaction[u.mobile_number] !==
+                                undefined && (
                               <CheckBoxes
                                 handleCheckChieldElement={
                                   this.handleCheckChieldElement
                                 }
                                 _id={u.mobile_number}
                                 _isChecked={this.state.multiaction[u.mobile_number]}
-                              />
+                              />)}
                             </td>
 
                             {/* <td>{index + 1}</td> */}
@@ -504,7 +522,7 @@ class Agent_list extends React.Component {
                                       )
                                     }
                                   >
-                                    {u.status == '1' ? "Active" : "Deactive"}
+                                    {u.status == '0' ? "Active" : "Deactive"}
                                   </CLink>
                                 )}
                               {current_user.id !== u._id &&
@@ -513,7 +531,8 @@ class Agent_list extends React.Component {
                                 )}
                             </td>
                             {(_canAccess("agent_customers", "update") ||
-                              _canAccess("agent_customers", "delete")) && (
+                              _canAccess("agent_customers", "delete") || 
+                              _canAccess("agent_customers", "view")) && (
                               <>
                                 <td className="d-flex">
                                   {_canAccess("agent_customers", "update") && (
@@ -548,7 +567,7 @@ class Agent_list extends React.Component {
                                   {_canAccess("agent_customers", "view") && (
                                     <CTooltip
                                       content={
-                                        globalConstants.VIEW_CUSTOMER_DETAILS
+                                        globalConstants.VIEW_RECHARGE_DETAILS
                                       }
                                     >
                                       <CLink
@@ -565,13 +584,14 @@ class Agent_list extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.agents.length === 0 && (
+                      {this.state.agents?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
                       )}
                     </tbody>
                   </table>
+                  {this.state?.agents?.length > 0 && (
                   <CPagination
                     activePage={this.state.fields.page}
                     onActivePageChange={this.pageChange}
@@ -579,6 +599,7 @@ class Agent_list extends React.Component {
                     doubleArrows={true}
                     align="end"
                   />
+                  )}
                 </div>
               </CCardBody>
             </CCard>
