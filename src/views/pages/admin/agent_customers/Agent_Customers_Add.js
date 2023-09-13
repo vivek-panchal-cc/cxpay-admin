@@ -320,7 +320,7 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("first_name", this.state.fields.first_name, "required", {
+              {this.validator.message("first_name", this.state.fields.first_name, "required|alpha_space", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -336,7 +336,7 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("last_name", this.state.fields.last_name, "required", {
+              {this.validator.message("last_name", this.state.fields.last_name, "required|alpha_space", {
                 className: "text-danger",
               })}
             </CFormText>
