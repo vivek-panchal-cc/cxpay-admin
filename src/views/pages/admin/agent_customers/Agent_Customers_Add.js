@@ -207,7 +207,6 @@ class Agent_Customers_Add extends Component {
         profile_image: file,
       }
     });
-    console.log(file);
   }
   // Close  modal box method
   _handleCancelAction() {
@@ -259,7 +258,17 @@ class Agent_Customers_Add extends Component {
       agentService.createAgent(formData)
       .then((res) => {
           if (!res.success) {
-          notify.error(res.message);
+            if (typeof res.message == "string") {
+              notify.error(res.message);
+            } else {
+              Object.keys(res.message).forEach((element) => {
+                if (res.message[element] && typeof res.message[element] != 'string') {
+                  res?.message[element].forEach((error) => {
+                    notify.error(error);
+                  })
+                }
+              });
+            }
           } else {
             notify.success(res.message);
             history.push("/admin/agent_customers");
@@ -282,7 +291,6 @@ class Agent_Customers_Add extends Component {
   // }
   // Rendering Html To Dom
   render() {
-    console.log(this.state.fields);
     return (
       <CCard>
         <CCardHeader>
@@ -312,7 +320,7 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("first_name", this.state.fields.first_name, "required", {
+              {this.validator.message("first_name", this.state.fields.first_name, "required|alpha_space", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -328,7 +336,7 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("last_name", this.state.fields.last_name, "required", {
+              {this.validator.message("last_name", this.state.fields.last_name, "required|alpha_space", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -498,7 +506,7 @@ class Agent_Customers_Add extends Component {
               onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("commission_amount", this.state.fields.commission_amount, "required|numeric|max:10", {
+              {this.validator.message("commission_amount", this.state.fields.commission_amount, "required|numeric|max:6", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -534,7 +542,7 @@ class Agent_Customers_Add extends Component {
               onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("system_commission_amount", this.state.fields.system_commission_amount, "required|numeric|max:10", {
+              {this.validator.message("system_commission_amount", this.state.fields.system_commission_amount, "required|numeric|max:6", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -653,7 +661,7 @@ class Agent_Customers_Add extends Component {
                     {
                       this.state.fields?.card_commission[index]?.status == 1 && 
                       this.validator.message(
-                        "amount", this.state.fields?.card_commission[index]?.amount, "required|numeric|max:10", {
+                        "amount", this.state.fields?.card_commission[index]?.amount, "required|numeric|max:6", {
                       className: "text-danger",
                     })}
                   </CFormText>
