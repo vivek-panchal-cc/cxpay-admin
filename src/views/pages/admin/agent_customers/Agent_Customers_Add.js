@@ -207,7 +207,6 @@ class Agent_Customers_Add extends Component {
         profile_image: file,
       }
     });
-    console.log(file);
   }
   // Close  modal box method
   _handleCancelAction() {
@@ -259,7 +258,17 @@ class Agent_Customers_Add extends Component {
       agentService.createAgent(formData)
       .then((res) => {
           if (!res.success) {
-          notify.error(res.message);
+            if (typeof res.message == "string") {
+              notify.error(res.message);
+            } else {
+              Object.keys(res.message).forEach((element) => {
+                if (res.message[element] && typeof res.message[element] != 'string') {
+                  res?.message[element].forEach((error) => {
+                    notify.error(error);
+                  })
+                }
+              });
+            }
           } else {
             notify.success(res.message);
             history.push("/admin/agent_customers");
@@ -282,7 +291,6 @@ class Agent_Customers_Add extends Component {
   // }
   // Rendering Html To Dom
   render() {
-    console.log(this.state.fields);
     return (
       <CCard>
         <CCardHeader>
