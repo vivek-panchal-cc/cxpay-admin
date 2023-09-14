@@ -73,6 +73,44 @@ class Agent_Customers_Edit extends React.Component {
   }
 
   componentDidMount() {
+    agentService.getCountry().then((res) => {
+      if (res.status === false) {
+        notify.error(res.message);
+      } else {
+        if (res.data == null) {
+          notify.error("Country Not Found");
+          history.push("/admin/agent_customers");
+        }
+
+        this.setState({ countryData: res.data });
+      }
+    });
+
+    agentService.getCollectionType().then((res) => {
+      if (res.status === false) {
+        notify.error(res.message);
+      } else {
+        if (res.data == null) {
+          notify.error("Collection Types Not Found");
+          history.push("/admin/agent_customers");
+        }
+        
+        this.setState({ collectionData: res.data });
+        let arrayObj = [];
+        res?.data?.map((e,i) => {
+          let obj = {
+            'id': e.id,
+            'status': '',
+            'type': '',
+            'amount': '',
+            'collection_type':e.collection_type
+          };
+          arrayObj.push(obj);
+        })
+        this.setState({ collectionType: arrayObj });        
+      }
+    });
+
     setTimeout(() => {
       if (
         _canAccess(
@@ -121,51 +159,16 @@ class Agent_Customers_Edit extends React.Component {
           
         });
       }
-    }, 500);
+    }, 700);
 
-    agentService.getCountry().then((res) => {
-      if (res.status === false) {
-        notify.error(res.message);
-      } else {
-        if (res.data == null) {
-          notify.error("Country Not Found");
-          history.push("/admin/agent_customers");
-        }
 
-        this.setState({ countryData: res.data });
-      }
-    });
-
-    agentService.getCollectionType().then((res) => {
-      if (res.status === false) {
-        notify.error(res.message);
-      } else {
-        if (res.data == null) {
-          notify.error("Collection Types Not Found");
-          history.push("/admin/agent_customers");
-        }
-        
-        this.setState({ collectionData: res.data });
-        let arrayObj = [];
-        res?.data?.map((e,i) => {
-          let obj = {
-            'id': e.id,
-            'status': '',
-            'type': '',
-            'amount': '',
-            'collection_type':e.collection_type
-          };
-          arrayObj.push(obj);
-        })
-        this.setState({ collectionType: arrayObj });        
-      }
-    });
   }
   componentDidUpdate(prevProps, prevState){
-    if(this.state.collectionType !== prevState.collectionType){
+    if(this.state.fields.card_commission !== prevState.fields.card_commission){
+    // if(this.state.collectionType !== prevState.collectionType){
       setTimeout(() => {
         const abc = this.handleMergeArrays(this.state.collectionType);
-      }, 1000);
+      }, 1500);
     }
   }
   mergeArrays(arrayObj) {
@@ -197,9 +200,11 @@ class Agent_Customers_Edit extends React.Component {
     // if (e.target.value == '') {
     //   this.setState({ city: '', country: '' });
     // } else {
-      const cityCode = this.state.countryData.country_list[e.target.value].iso;
-      const tmp = [...this.state.countryData.city_list[cityCode]];
-      this.setState({ cityData: tmp, country: e.target.value });
+      setLoading(true)
+        const cityCode = this.state.countryData.country_list[e.target.value].iso;
+        const tmp = [...this.state.countryData.city_list[cityCode]];
+        this.setState({ cityData: tmp, country: e.target.value });
+      setLoading(false)
     // }
   }
 
@@ -313,6 +318,16 @@ class Agent_Customers_Edit extends React.Component {
     $(".module_permission").html("");
   }
 
+  checkIsCardSelected(selectedPaymentType) {
+    let $returnVal = false;
+    selectedPaymentType.forEach((ele) => {
+      if (ele.status == '1') {
+        $returnVal = true;
+      }
+    })
+    return $returnVal;
+  }
+
   handleSubmit() {
     if (
       this.state.fields.newProfileImage &&
@@ -334,8 +349,13 @@ class Agent_Customers_Edit extends React.Component {
       }
     })
     
-
     if (this.validator.allValid()) {
+
+      if (!this.checkIsCardSelected(this.state?.updatedCollectionType)) {
+        notify.error('Please select atleast one payment type')
+        return false;
+      }
+
       let formData = new FormData();
 
       formData.append("first_name", this.state.fields.first_name);
@@ -385,6 +405,13 @@ class Agent_Customers_Edit extends React.Component {
       
       this.validator.showMessages();
       
+    }
+  }
+
+  handleKeyPress = (event) => {
+    // Check if the pressed key is the minus key (key code 45)
+    if (event.keyCode === 45 || event.which === 45) {
+      event.preventDefault(); // Prevent the minus key from being entered
     }
   }
 
@@ -538,6 +565,7 @@ class Agent_Customers_Edit extends React.Component {
                     id="country"
                     onChange={this.handleCountryChange}
                     value={this.state.country}
+                    disabled={true}
                   >
                     <option value="">-- Country --</option>;
                     {
@@ -628,6 +656,7 @@ class Agent_Customers_Edit extends React.Component {
                     placeholder="Enter Commission Amount"
                     autoComplete="commission_amount"
                     onChange={this.handleChange}
+                    onKeyPress={this.handleKeyPress}
                     value={this.state?.fields?.commission_amount}
                   />
                   <CFormText className="help-block">
@@ -665,6 +694,7 @@ class Agent_Customers_Edit extends React.Component {
                     placeholder="Enter System Commission Amount"
                     autoComplete="system_commission_amount"
                     onChange={this.handleChange}
+                    onKeyPress={this.handleKeyPress}
                     value={this.state?.fields?.system_commission_amount}
                   />
                   <CFormText className="help-block">
@@ -825,6 +855,7 @@ class Agent_Customers_Edit extends React.Component {
                           autoComplete="amount"
                           value={ele.amount}
                           onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'amount')}}
+                          onKeyPress={this.handleKeyPress}
                           disabled={
                             ele.status === 1 ? false : true
                           }

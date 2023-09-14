@@ -148,12 +148,15 @@ class Agent_Customers_Add extends Component {
   // Method For Form Field
   handleCountryChange(e) {
     const { value } = e.target;
-    const city = value != '' ? this.state?.countryCityRes?.city_list[value] : []
+    const selectedOption = e.target.options[e.target.selectedIndex];    
+    const dataValue = selectedOption.getAttribute('data-iso');
+    const city = value != '' ? this.state?.countryCityRes?.city_list[dataValue] : []
     this.setState({ cityData: city });
     this.setState({
       fields : {
         ...this.state.fields,
-        country: value
+        country: dataValue,
+        country_code: value
       }
     });
   }
@@ -214,6 +217,15 @@ class Agent_Customers_Add extends Component {
   }
 
   // Validation Before submit
+  checkIsCardSelected(selectedPaymentType) {
+    let $returnVal = false;
+    selectedPaymentType.forEach((ele) => {
+      if (ele.status == '1') {
+        $returnVal = true;
+      }
+    })
+    return $returnVal;
+  }
 
   handleSubmit(event) {
     this.checkValidation(event);
@@ -232,9 +244,16 @@ class Agent_Customers_Add extends Component {
       this.setState({ imageSizeValidation: true });
       return false;
     } 
-
+    if (!this.checkIsCardSelected(this.state?.fields?.card_commission)) {
+      notify.error('Please select atleast one payment type')
+      return false;
+    }
     if (this.validator.allValid()) {
 
+      // if (!this.checkIsCardSelected(this.state?.fields?.card_commission)) {
+      //   notify.error('Please select atleast one payment type')
+      //   return false;
+      // }
       const fields = this.state.fields;
       let formData = new FormData()
       // Iterate through the fields in your state object
@@ -365,14 +384,14 @@ class Agent_Customers_Add extends Component {
               custom
               name="country_code"
               id="select"
-              onChange={this.handleChange} 
-              // onChange={this.handleCountryChange}
+              // onChange={this.handleChange} 
+              onChange={this.handleCountryChange}
               // value={this.state.fields.country}
             >
               <option value="">-- Country Code--</option>;
               {this.state?.countryData?.map((e, key) => {
                   return (
-                    <option key={key} value={e.phonecode}>
+                    <option key={key} value={e.phonecode} data-iso={e.iso}>
                       {e.phonecode} {e.country_name}
                     </option>
                   );
@@ -415,8 +434,9 @@ class Agent_Customers_Add extends Component {
               custom
               name="country"
               id="country"
-              onChange={this.handleCountryChange}
-              // value={this.state.fields.country}
+              // onChange={this.handleCountryChange}
+              value={this.state.fields.country}
+              disabled={true}
             >
               <option value="">-- Country --</option>;
               {this.state?.countryData?.map((e, key) => {
@@ -629,6 +649,7 @@ class Agent_Customers_Add extends Component {
                     disabled={
                       this.state.fields?.card_commission[index]?.status === 1 ? false : true
                     }
+                    value={this.state.fields?.card_commission[index]?.status === 1 ? this.state.fields.card_commission[index].type : ''}
                     // id="system_commission_type"
                   >
                     <option value={''}>{'Select Type'}</option>
@@ -656,6 +677,10 @@ class Agent_Customers_Add extends Component {
                     disabled={
                       this.state.fields?.card_commission[index]?.status === 1 ? false : true
                     }
+                    value={
+                      this.state.fields?.card_commission[index]?.status === 1 ?
+                      this.state?.fields?.card_commission[index]?.amount : ''}
+
                   />
                   <CFormText className="help-block">
                     {
