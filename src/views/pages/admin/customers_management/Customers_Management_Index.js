@@ -531,7 +531,7 @@ class Customers_Management_Index extends React.Component {
                                 </CLink>
                               )}
                               {_canAccess("customers", "update") === false && (
-                                <>{c.status ? "Active" : "Deactive"}</>
+                                <>{c.status == '0' ? "Active" : "Deactive"}</>
                               )}
                             </td>
                             {(_canAccess("customers", "update") ||

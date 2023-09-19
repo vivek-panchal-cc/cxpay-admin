@@ -743,7 +743,7 @@ class Agent_Customers_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                <CFormGroup row>
+                {/* <CFormGroup row>
                   <CCol md="2">QR Code</CCol>
 
                   <CCol sm="2">
@@ -753,7 +753,7 @@ class Agent_Customers_Edit extends React.Component {
                       width={100}
                     />
                   </CCol>
-                </CFormGroup>
+                </CFormGroup> */}
 
                 <CFormGroup row>
                   <CCol md="2">Status</CCol>
