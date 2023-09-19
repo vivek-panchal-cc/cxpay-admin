@@ -660,7 +660,7 @@ class Agent_Customers_Edit extends React.Component {
                     value={this.state?.fields?.commission_amount}
                   />
                   <CFormText className="help-block">
-                    {this.validator.message("commission_amount", this.state?.fields?.commission_amount?.toString(), "required|numeric|max:6", {
+                    {this.validator.message("commission_amount", this.state?.fields?.commission_amount?.toString(), "required|numeric|min:0,num|max:6", {
                       className: "text-danger",
                     })}
                   </CFormText>
@@ -698,7 +698,7 @@ class Agent_Customers_Edit extends React.Component {
                     value={this.state?.fields?.system_commission_amount}
                   />
                   <CFormText className="help-block">
-                    {this.validator.message("system_commission_amount", this.state?.fields?.system_commission_amount?.toString(), "required|numeric|max:6", {
+                    {this.validator.message("system_commission_amount", this.state?.fields?.system_commission_amount?.toString(), "required|numeric|min:0,num|max:6", {
                       className: "text-danger",
                     })}
                   </CFormText>
@@ -743,7 +743,7 @@ class Agent_Customers_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                <CFormGroup row>
+                {/* <CFormGroup row>
                   <CCol md="2">QR Code</CCol>
 
                   <CCol sm="2">
@@ -753,7 +753,7 @@ class Agent_Customers_Edit extends React.Component {
                       width={100}
                     />
                   </CCol>
-                </CFormGroup>
+                </CFormGroup> */}
 
                 <CFormGroup row>
                   <CCol md="2">Status</CCol>
@@ -864,7 +864,7 @@ class Agent_Customers_Edit extends React.Component {
                           {
                             ele.status == 1 && 
                             this.validator.message(
-                              "amount", ele.amount.toString(), "required|numeric|max:6", {
+                              "amount", ele.amount.toString(), "required|numeric|min:0,num|max:6", {
                             className: "text-danger",
                           })}
                         </CFormText>

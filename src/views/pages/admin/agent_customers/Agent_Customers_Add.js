@@ -421,7 +421,7 @@ class Agent_Customers_Add extends Component {
               {this.validator.message(
                 "mobile_number",
                 this.state.fields.mobile_number,
-                `required|numeric|min:6|max:7`,
+                `required|numeric|min:6|max:7|regex:^[0-9]*$`,
                 { className: "text-danger" }
               )}
             </CFormText>
@@ -526,7 +526,7 @@ class Agent_Customers_Add extends Component {
               onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("commission_amount", this.state.fields.commission_amount, "required|numeric|max:6", {
+              {this.validator.message("commission_amount", this.state.fields.commission_amount, "required|numeric|min:0,num|max:6", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -562,7 +562,7 @@ class Agent_Customers_Add extends Component {
               onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("system_commission_amount", this.state.fields.system_commission_amount, "required|numeric|max:6", {
+              {this.validator.message("system_commission_amount", this.state.fields.system_commission_amount, "required|numeric|min:0,num|max:6", {
                 className: "text-danger",
               })}
             </CFormText>
@@ -686,7 +686,7 @@ class Agent_Customers_Add extends Component {
                     {
                       this.state.fields?.card_commission[index]?.status == 1 && 
                       this.validator.message(
-                        "amount", this.state.fields?.card_commission[index]?.amount, "required|numeric|max:6", {
+                        "amount", this.state.fields?.card_commission[index]?.amount, "required|numeric|min:0,num|max:6", {
                       className: "text-danger",
                     })}
                   </CFormText>
