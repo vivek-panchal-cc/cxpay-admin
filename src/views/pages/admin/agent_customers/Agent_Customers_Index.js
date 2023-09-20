@@ -167,7 +167,13 @@ class Agent_list extends React.Component {
         }
       );
     } else {
-      this.getAgentList();
+      this.setState(
+        { fields: { ...this.state.fields, page: '' } },
+        () => {
+          this.getAgentList();
+        }
+      );
+      // this.getAgentList();
     }
   }
 
