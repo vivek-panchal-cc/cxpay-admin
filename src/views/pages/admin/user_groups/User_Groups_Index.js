@@ -501,7 +501,7 @@ class User_Groups_Index extends React.Component {
                                           </CTooltip>
                                         )}
                                       &nbsp;
-                                      {current_user.user_group_id !== u._id &&
+                                      {/* {current_user.user_group_id !== u._id &&
                                         _canAccess("user_groups", "delete") && (
                                           <CTooltip
                                             content={globalConstants.DELETE_BTN}
@@ -515,7 +515,7 @@ class User_Groups_Index extends React.Component {
                                               <CIcon name="cil-trash"></CIcon>
                                             </button>
                                           </CTooltip>
-                                        )}
+                                        )} */}
                                     </>
                                   )}
                                 </td>
