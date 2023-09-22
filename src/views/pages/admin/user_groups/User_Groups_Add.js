@@ -32,7 +32,8 @@ class User_Groups_Add extends React.Component {
     this.state = {
       fields: {
         user_group_name: '',
-        status: true
+        status: true,
+        slug:''
       },
       module_permission: {}
     }
@@ -71,6 +72,19 @@ class User_Groups_Add extends React.Component {
     if (name === 'status') {
       var fstatus = (value === 'true') ? false : true;
       this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
+    } else if (name === 'user_group_name'){
+      let newval = value;
+      newval = newval.replace(/\s{2,}/g, ' ');
+      newval = newval.replace(/\s+$/, '');
+      const words = newval.toLowerCase().split(" ");
+      const convertedString = words.join("_");
+      this.setState({
+        fields:
+          { ...this.state.fields,
+            [name]: value ,
+            slug:convertedString
+          } 
+      });
     } else {
       this.setState({ fields: { ...this.state.fields, [name]: value } });
     }
@@ -167,8 +181,24 @@ class User_Groups_Add extends React.Component {
             <CCardBody>
               <CFormGroup>
                 <CLabel htmlFor="nf-name">Group Name</CLabel>
-                <CInput type="text" id="user_group_name" name="user_group_name" placeholder="Enter Group Name " autoComplete="name" onChange={this.handleChange} />
+                <CInput 
+                type="text" 
+                id="user_group_name" 
+                name="user_group_name" 
+                placeholder="Enter Group Name " 
+                autoComplete="name" onChange={this.handleChange} />
                 <CFormText className="help-block">{this.validator.message('user_group_name', this.state.fields.user_group_name, 'required', { className: 'text-danger' })}</CFormText>
+              </CFormGroup>
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Slug</CLabel>
+                <CInput 
+                  type="text"
+                  id="slug"
+                  name="slug"
+                  placeholder="Enter slug"
+                  disabled={true}
+                  value={this.state.fields.slug}
+                  autoComplete="name" />
               </CFormGroup>
               {/* <CFormGroup row>
                 <CCol md="12">

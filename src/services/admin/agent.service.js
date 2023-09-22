@@ -16,8 +16,9 @@ export const agentService = {
     deleteMultipleAgent,
     changeBulkCustomerStatus,
     getCountry,
-    getCollectionType
-
+    getCollectionType,
+    getDeleteRequests,
+    rejectDeleteRequest
 
 };
 
@@ -250,4 +251,32 @@ function getCountry() {
         return Promise.reject();
       })
       .then(handleResponse);
+  }
+
+  function getDeleteRequests(postData) {
+    setLoading(true);
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader('agent_customers', 'view'),
+        body: JSON.stringify(postData)
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/delete-request-agent-list`, requestOptions).catch((error) => {
+        notify.error('Something went wrong');
+        setLoading(false);
+        return Promise.reject();
+    }).then(handleResponse);
+  }
+
+  function rejectDeleteRequest(postData) {
+    setLoading(true);
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader('agent_customers', 'view'),
+        body: JSON.stringify(postData)
+    };
+    return fetch(`${process.env.REACT_APP_API_URL}api/delete-request-status-change`, requestOptions).catch((error) => {
+        notify.error('Something went wrong');
+        setLoading(false);
+        return Promise.reject();
+    }).then(handleResponse);
   }

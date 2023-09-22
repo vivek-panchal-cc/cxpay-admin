@@ -27,7 +27,8 @@ import {
   faSortDown,
   faSortUp,
   faPlus,
-  faEye 
+  faEye,
+  faList
 } from "@fortawesome/free-solid-svg-icons";
 import { agentService } from "../../../../services/admin/agent.service";
 import {
@@ -381,7 +382,7 @@ class Agent_list extends React.Component {
             <CCard>
               <CCardHeader>
                 Agent
-                <div className="card-header-actions">
+                <div className="card-header-actions px-2">
                   {_canAccess("agent_customers", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
                       <CLink
@@ -393,6 +394,19 @@ class Agent_list extends React.Component {
                       </CLink>
                     </CTooltip>
                   )}
+                </div>
+                <div className="card-header-actions">
+                  {_canAccess("agent_customers", "delete") && (
+                  <CTooltip content={globalConstants.DELETE_REQ_BTN}>
+                    <CLink
+                      className="btn btn-dark btn-block"
+                      aria-current="page"
+                      to="/admin/agent_customers/delete_requests"
+                    >
+                      {/* <FontAwesomeIcon icon={faList} /> */}
+                      Delete Requests
+                    </CLink>
+                  </CTooltip>)}
                 </div>
               </CCardHeader>
               <CCardBody>
@@ -456,6 +470,25 @@ class Agent_list extends React.Component {
                               )}
                           </span>
                         </th>
+
+                        <th onClick={() => this.handleColumnSort("mobile_number")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Mobile Number
+                            </span>
+                            {this.state.fields.sort_field !== "mobile_number" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field === "mobile_number" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field === "mobile_number" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
                         
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
@@ -514,9 +547,9 @@ class Agent_list extends React.Component {
                             <td>
                               {u.email}
                             </td>
-                            {/* <td>
+                            <td>
                               {u.mobile_number}
-                            </td> */}
+                            </td>
                             <td>
                               {current_user.id !== u._id &&
                                 _canAccess("agent_customers", "update") && (

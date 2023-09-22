@@ -199,6 +199,10 @@ const Agent_Detail = React.lazy(() =>
   import("./views/pages/admin/agent_customers/Agent_Detail")
 );
 
+const Agent_Delete_Requests = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Delete_Requests")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
   { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
@@ -645,8 +649,16 @@ const routes = [
     {
       path: "/admin/agent_customers/detailview/:id",
       exact: true,
-      name: "DetailView",
+      name: "Detail View",
       component: Agent_Detail,
+      module_name: "agent_customers",
+      action: "view",
+    },
+    {
+      path: "/admin/agent_customers/delete_requests",
+      exact: true,
+      name: "Delete Requests",
+      component: Agent_Delete_Requests,
       module_name: "agent_customers",
       action: "view",
     },

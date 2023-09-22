@@ -22,6 +22,7 @@ import {
     CModalTitle,
     CButton,
     CTooltip,
+    faCheck
     } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -39,12 +40,20 @@ import {
     } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 
+const MultiActionBar = React.lazy(() =>
+  import("../../../../components/admin/MultiActionBar")
+);
 
-class Agent_Detail extends React.Component {
+class Agent_Delete_Requests extends React.Component {
 
     /*********** Define Initial Satte ****************/
     constructor(props) {
         super(props)
+    
+    this.openDeletePopup = this.openDeletePopup.bind(this);
+    this.openRejReqPopup = this.openRejReqPopup.bind(this);
+    this.rejectDelRequest = this.rejectDelRequest.bind(this);
+    
         this.state = {
             fields: {
                 sort_dir: 'desc',
@@ -52,43 +61,36 @@ class Agent_Detail extends React.Component {
                 search: '',
                 page: 1,
             },
-            id: this.props.match.params.id  // Getting Id From Url
+            // id: this.props.match.params.id  // Getting Id From Url
+            _openPopup: false,
+            _openRejReqPopup: false
         };
     }
-    // state = {
-    //     fields: {
-    //         sort_dir: 'desc',
-    //         sort_field: 'created_at',
-    //         search: '',
-    //         page: 1,
-    //     },
-    //     id: this.props.match.params.id  // Getting Id From Url
-    // };
+    
 
     /************ Retrieve Api very first time component render to Dom ******************/
     componentDidMount() {
 
-        this.getDetailview();
+        this.getDeleteRequests();
     }
 
     /************ Define Function for retrieving Record for display particular post  ******************/
-    getDetailview() {
+    getDeleteRequests() {
         let postData = {
-            account_number: this.state.id,
             sort_dir: this.state.fields.sort_dir,
             sort_field: this.state.fields.sort_field,
             search: this.state.fields.search,
         }
         
-        agentService.detailview(postData).then(res => {
+        agentService.getDeleteRequests(postData).then(res => {
             if (!res.success) {
                 this.setState({
-                    agent_recharges: []
+                    agents: []
                 })
                 notify.error(res.message);
             } else {
                 this.setState({
-                    agent_recharges: res.data.agent_recharges,
+                    agents: res.data.agents,
                     fields : {
                         ...this.state.fields ,
                         totalPage: res.data.pagination.last_page,
@@ -111,7 +113,7 @@ class Agent_Detail extends React.Component {
             },
           },
           () => {
-            this.getDetailview();
+            this.getDeleteRequests();
           }
         );
       };
@@ -128,7 +130,7 @@ class Agent_Detail extends React.Component {
             },
           },
           () => {
-            this.getDetailview();
+            this.getDeleteRequests();
           }
         );
       }
@@ -146,17 +148,50 @@ class Agent_Detail extends React.Component {
                 },
             },
             () => {
-                this.getDetailview();
+                this.getDeleteRequests();
             }
             );
         } else {
-            this.getDetailview();
+            this.getDeleteRequests();
         }
     }
 
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ fields: { ...this.state.fields, search: value } });        
+    }
+
+    openDeletePopup(id) {
+        this.setState({ _openPopup: true, deleteId: id });
+    }
+    deleteUser() {
+        let postData = { mobile_number: [this.state.deleteId] };
+        this.setState({ _openPopup: false, deleteId: undefined });
+        agentService.deleteAgent(postData).then((res) => {
+            if (res.status === "error") {
+            notify.error(res.message);
+            } else {
+            notify.success(res.message);
+            this.getDeleteRequests();
+            }
+        });
+    }
+
+    openRejReqPopup(id) {
+        this.setState({ _openRejReqPopup: true, deleteReqId: id });
+    }
+
+    rejectDelRequest() {
+        let postData = { mobile_number: this.state.deleteReqId };
+        this.setState({ _openRejReqPopup: false, deleteReqId: undefined });
+        agentService.rejectDeleteRequest(postData).then((res) => {
+            if (res.status === "error") {
+                notify.error(res.message);
+            } else {
+                notify.success(res.message);
+                this.getDeleteRequests();
+            }
+        });
     }
     /****************************** Render Data To Dom ***************************************/
 
@@ -247,11 +282,14 @@ class Agent_Detail extends React.Component {
                     </CCardHeader>
                     <CCardBody>
                         <div className="position-relative table-responsive">
-                        {/* <MultiActionBar
-                            onClick={this.handleApplyAction}
-                            checkBoxData={this.state.multiaction}
-                            module_name={"agent_customers"}
-                        /> */}
+
+                        {/* {(_canAccess("agent_customers", "delete")) && (
+                            <MultiActionBar
+                                onClick={this.handleApplyAction}
+                                checkBoxData={this.state.multiaction}
+                                module_name={"agent_customers"}
+                            />
+                        )} */}
                         <table className="table">
                             <thead>
                             <tr>
@@ -289,6 +327,25 @@ class Agent_Detail extends React.Component {
                                     </span>
                                 </th>
                                 
+                                <th onClick={() => this.handleColumnSort("email")}>
+                                    <span className="sortCls">
+                                        <span className="table-header-text-mrg">
+                                        Email
+                                        </span>
+                                        {this.state.fields.sort_field !== "email" && (
+                                        <FontAwesomeIcon icon={faSort} />
+                                        )}
+                                        {this.state.fields.sort_dir === "asc" &&
+                                        this.state.fields.sort_field === "email" && (
+                                            <FontAwesomeIcon icon={faSortUp} />
+                                        )}
+                                        {this.state.fields.sort_dir === "desc" &&
+                                        this.state.fields.sort_field === "email" && (
+                                            <FontAwesomeIcon icon={faSortDown} />
+                                        )}
+                                    </span>
+                                </th>
+
                                 <th onClick={() => this.handleColumnSort("mobile_number")}>
                                     <span className="sortCls">
                                         <span className="table-header-text-mrg">
@@ -307,77 +364,102 @@ class Agent_Detail extends React.Component {
                                         )}
                                     </span>
                                 </th>
-                                
                                 <th>
                                     <span className="sortCls">
-                                        <span className="table-header-text-mrg">Topup Amount</span>
+                                        <span className="table-header-text-mrg">Account Number</span>
                                     </span>
                                 </th>
-                                
                                 <th>
                                     <span className="sortCls">
-                                        <span className="table-header-text-mrg">Topup Type</span>
-                                    </span>
-                                </th>
-                                
-                                <th>
-                                    <span className="sortCls">
-                                        <span className="table-header-text-mrg">Agent Commission</span>
+                                        <span className="table-header-text-mrg">Agent Total Commission</span>
                                     </span>
                                 </th>
 
                                 <th>
                                     <span className="sortCls">
-                                        <span className="table-header-text-mrg">System Commission</span>
+                                        <span className="table-header-text-mrg">System Total Commission</span>
                                     </span>
                                 </th>
+                                {(_canAccess("agent_customers", "delete")) && (
+                                    <th>
+                                        <span className="sortCls">
+                                            <span className="table-header-text-mrg">Action</span>
+                                        </span>
+                                    </th>
+                                )}
 
-                                <th>
-                                    <span className="sortCls">
-                                        <span className="table-header-text-mrg">Card Commission</span>
-                                    </span>
-                                </th>
                             </tr>
                             </thead>
 
                             <tbody>
-                            {this.state?.agent_recharges?.length > 0 &&
-                                this.state.agent_recharges.map((u, index) => (
+                            {this.state?.agents?.length > 0 &&
+                                this.state.agents.map((u, index) => (
                                 <tr key={u.mobile_number}>
                                     <td>                                  
                                         {u.name}                                       
                                     </td>
-                                    
+                                    <td>
+                                        {u.email}
+                                    </td>
                                     <td>
                                         {u.mobile_number}
                                     </td>
                                     <td>
-                                        {u.topup_amount}
+                                        {u.account_number}
                                     </td>
                                     <td>
-                                        {u.topup_type}
+                                        {u.agent_total_commission}
                                     </td>
                                     <td>
-                                        {u.agent_commission}
-                                    </td>
-                                    <td>
-                                        {u.system_commission}
-                                    </td>
-                                    <td>
-                                        {u.card_commission}
-                                    </td>
-                                   
+                                        {u.system_total_commission}
+                                    </td>                                   
                                     
+                                    {(_canAccess("agent_customers", "delete")) && (
+                                    <>
+                                        <td className="d-flex">
+                                            {_canAccess("agent_customers", "delete") && (
+                                                <CTooltip
+                                                content={globalConstants.APPR_DEL_REQ}
+                                                >
+                                                <button
+                                                    className="btn  btn-md btn-primary "
+                                                    onClick={() =>
+                                                    this.openDeletePopup(u.mobile_number)
+                                                    }
+                                                >
+                                                    <CIcon name="cil-check"></CIcon>
+                                                </button>
+                                                </CTooltip>
+                                            )}
+                                            &nbsp;
+                                            {_canAccess("agent_customers", "delete") && (
+                                                <CTooltip
+                                                content={globalConstants.REJ_DEL_REQ}
+                                                >
+                                                <button
+                                                    className="btn  btn-md btn-danger "
+                                                    onClick={() =>
+                                                    this.openRejReqPopup(u.mobile_number)
+                                                    // this.rejectDelRequest(u.mobile_number)
+                                                    }
+                                                >
+                                                    <CIcon name="cil-x"></CIcon>
+                                                </button>
+                                                </CTooltip>
+                                            )}                              
+                                        </td>
+                                    </>
+                                    )}
                                 </tr>
                                 ))}
-                            {this.state?.agent_recharges?.length === 0 && (
+                            {this.state?.agents?.length === 0 && (
                                 <tr>
                                 <td colSpan="5">No records found</td>
                                 </tr>
                             )}
                             </tbody>
                         </table>
-                        {this.state?.agent_recharges?.length > 0 && (
+                        {this.state?.agents?.length > 0 && (
                         <CPagination
                             activePage={this.state.fields.page}
                             onActivePageChange={this.pageChange}
@@ -417,9 +499,35 @@ class Agent_Detail extends React.Component {
                     </CButton>
                 </CModalFooter>
                 </CModal>
+
+                <CModal
+                show={this.state._openRejReqPopup}
+                onClose={() => {
+                    this.setState({ _openRejReqPopup: !this.state._openRejReqPopup });
+                }}
+                color="danger"
+                >
+                <CModalHeader closeButton>
+                    <CModalTitle>Reject Delete Request</CModalTitle>
+                </CModalHeader>
+                <CModalBody>Are you sure you want to reject this request?</CModalBody>
+                <CModalFooter>
+                    <CButton color="danger" onClick={() => this.rejectDelRequest()}>
+                    Reject Request
+                    </CButton>
+                    <CButton
+                    color="secondary"
+                    onClick={() => {
+                        this.setState({ _openRejReqPopup: !this.state._openRejReqPopup });
+                    }}
+                    >
+                    Cancel
+                    </CButton>
+                </CModalFooter>
+                </CModal>
             </>
         )
 
     }
 }
-export default Agent_Detail;
+export default Agent_Delete_Requests;

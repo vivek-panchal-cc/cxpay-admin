@@ -84,7 +84,7 @@ class MultiActionBar extends React.Component {
                 -- Bulk Action --
               </option>
               ;
-              {_canAccess(this.props.module_name, "delete") && (
+              {_canAccess(this.props.module_name, "delete") && this.props.module_name != 'user_groups' && (
                 <option key="1" value="delete">
                   Delete
                 </option>
