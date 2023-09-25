@@ -333,6 +333,11 @@ class Cms_Pages_Add extends Component {
               autoComplete="meta_title"
               onChange={this.handleChange}
             />
+            <CFormText className="help-block">
+              {this.validator.message("meta_title", this.state.meta_title, "max:50", {
+                className: "text-danger",
+              })}
+            </CFormText>
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Meta Keywords</CLabel>
@@ -344,6 +349,11 @@ class Cms_Pages_Add extends Component {
               autoComplete="meta_keywords"
               onChange={this.handleChange}
             />
+            <CFormText className="help-block">
+              {this.validator.message("meta_keywords", this.state.meta_keywords, "max:50", {
+                className: "text-danger",
+              })}
+            </CFormText>
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Meta Description</CLabel>
@@ -355,6 +365,11 @@ class Cms_Pages_Add extends Component {
               autoComplete="meta_desc"
               onChange={this.handleChange}
             />
+            <CFormText className="help-block">
+              {this.validator.message("meta_desc", this.state.meta_desc, "max:160", {
+                className: "text-danger",
+              })}
+            </CFormText>
           </CFormGroup>
 
           <CFormGroup>
