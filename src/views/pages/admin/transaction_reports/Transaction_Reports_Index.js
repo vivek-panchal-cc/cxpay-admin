@@ -268,8 +268,8 @@ class Transaction_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Type --</option>
-                          <option value="REQ">Request</option>
                           <option value="PL">Deposite</option>
+                          <option value="REQ">Request</option>
                           <option value="WW">Wallet to Wallet</option>
                         </CSelect>
                       </CCol>
@@ -296,18 +296,18 @@ class Transaction_Reports_Index extends React.Component {
                           {(this.state.fields.txn_type == "PL" ||
                             this.state.fields.txn_type == "WW") && (
                             <>
-                              <option value="PENDING">Pending</option>
-                              <option value="PAID">Paid</option>
                               <option value="FAILED">Failed</option>
+                              <option value="PAID">Paid</option>
+                              <option value="PENDING">Pending</option>
                             </>
                           )}
                           {this.state.fields.txn_type == "REQ" && (
                             <>
-                              <option value="PENDING">Pending</option>
                               <option value="CANCELLED">Cancelled</option>
                               <option value="DECLINED">Declined</option>
-                              <option value="PAID">Paid</option>
                               <option value="FAILED">Failed</option>
+                              <option value="PAID">Paid</option>
+                              <option value="PENDING">Pending</option>
                             </>
                           )}
                         </CSelect>

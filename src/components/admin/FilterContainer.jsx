@@ -79,6 +79,11 @@ const FilterContainer = ({
                         name="search"
                         value={search}
                         onChange={(e) => setSearch(e?.target?.value || "")}
+                        onKeyPress={(event) => {
+                          if (event.key === "Enter") {
+                            handleSearch("search");
+                          }
+                        }}
                       />
                     </CCol>
                   </CFormGroup>

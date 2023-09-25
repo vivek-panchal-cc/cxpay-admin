@@ -65,7 +65,8 @@ const _nav = [
     to: "/admin/fee_management",
     icon: <FontAwesomeIcon icon={faRupeeSign} className="c-sidebar-nav-icon" />,
     module_name: "fee_management",
-    id: "fees_sidebar_id",
+    id: "fee_management_sidebar_id",
+    // id: "fees_sidebar_id",
   },
   {
     _tag: "CSidebarNavItem",
@@ -127,7 +128,8 @@ const _nav = [
     to: "/admin/cms_pages",
     icon: <FontAwesomeIcon icon={faBook} className="c-sidebar-nav-icon" />,
     module_name: "cms_pages",
-    id: "cms_templates_sidebar_id",
+    id: "cms_pages_sidebar_id",
+    // id: "cms_templates_sidebar_id",
   },
   {
     _tag: "CSidebarNavItem",
@@ -135,7 +137,8 @@ const _nav = [
     to: "/admin/notifications",
     icon: <FontAwesomeIcon icon={faBell} className="c-sidebar-nav-icon" />,
     module_name: "notifications",
-    id: "push_notification_sidebar_id",
+    id: "notifications_sidebar_id",
+    // id: "push_notification_sidebar_id",
   },
   {
     _tag: "CSidebarNavItem",

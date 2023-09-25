@@ -279,6 +279,11 @@ class Withdraw_Requests_Index extends React.Component {
                           name="search"
                           value={this.state.fields.search}
                           onChange={this.handleChangeSearch}
+                          onKeyPress={(event) => {
+                            if (event.key === "Enter") {
+                              this.handleSearch("search");
+                            }
+                          }}
                           // onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
