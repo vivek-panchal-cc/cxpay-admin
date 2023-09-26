@@ -132,7 +132,14 @@ class User_Index extends React.Component {
         }
       );
     } else {
-      this.props.getUsersList(this.state);
+      this.setState(
+        {
+          pageNo: 1
+        },
+        () => {
+          this.props.getUsersList(this.state);
+        }
+      );
     }
   }
 
@@ -546,7 +553,7 @@ class User_Index extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete User</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>Are you sure you want to delete this user?</CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

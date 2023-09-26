@@ -143,7 +143,17 @@ class Customer_Reports_Index extends React.Component {
         }
       );
     } else {
-      this.getCustomersList(this.state.fields);
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            page: 1            
+          },
+        },
+        () => {
+          this.getCustomersList(this.state.fields);
+        }
+      );
     }
   }
 

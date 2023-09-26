@@ -10,7 +10,9 @@ export const globalConstants = {
   REJ_DEL_REQ: "Reject delete request.",
   List_BTN: "Click to list menu items",
   SINGLE_DELETE_MSG: "Are you sure you want to delete this record?",
+  SINGLE_USER_DELETE_MSG: "Are you sure you want to delete this user?",
   MULTI_DELETE_MSG: "Are you sure you want to delete these records?",
+  MULTI_USER_DELETE_MSG: "Are you sure you want to delete these users?",
   SUPER_PERMISSION_USER_ID: [
     "5f892faf636e9014088cc3af",
     "60227751e2e5152364d34551",
