@@ -552,7 +552,7 @@ class SMS_list extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Page</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>Are you sure you want to delete this template?</CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

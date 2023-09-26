@@ -170,7 +170,17 @@ class Transaction_Reports_Index extends React.Component {
         }
       );
     } else {
-      this.getTransactionList(this.state.fields);
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            page: 1
+          },
+        },
+        () => {
+          this.getTransactionList(this.state.fields);
+        }
+      );
     }
   }
 

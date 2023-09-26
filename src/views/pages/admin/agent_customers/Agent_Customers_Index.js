@@ -110,6 +110,7 @@ class Agent_list extends React.Component {
           this.setState({ multiaction: [] });
         }
       }
+      this.resetCheckedBox();
     });
   }
 

@@ -185,7 +185,17 @@ class Push_Notifications_Index extends React.Component {
         }
       );
     } else {
-      this.getPushNotificationLists(this.state.fields);
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            page: 1
+          },
+        },
+        () => {
+          this.getPushNotificationLists(this.state.fields);
+        }
+      );
     }
   }
 
@@ -553,7 +563,7 @@ class Push_Notifications_Index extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Notification</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>Are you sure you want to delete this notification?</CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteNotification()}>
               Delete
