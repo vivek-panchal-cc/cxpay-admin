@@ -489,8 +489,8 @@ class Customers_Management_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        {(_canAccess("customers", "update") ||
-                          _canAccess("customers", "delete")) && (
+                        {(_canAccess("personal_customers", "update") ||
+                          _canAccess("personal_customers", "delete")) && (
                           <>
                             <th>Action</th>
                           </>
@@ -518,7 +518,7 @@ class Customers_Management_Index extends React.Component {
                             <td>{c.email}</td>
                             <td>{c.mobile}</td>
                             <td>
-                              {_canAccess("customers", "update") && (
+                              {_canAccess("personal_customers", "update") && (
                                 <CLink
                                   onClick={() =>
                                     this.StatusChangedHandler(
@@ -530,12 +530,12 @@ class Customers_Management_Index extends React.Component {
                                   {c.status == 0 ? "Active" : "Deactive"}
                                 </CLink>
                               )}
-                              {_canAccess("customers", "update") === false && (
+                              {_canAccess("personal_customers", "update") === false && (
                                 <>{c.status == '0' ? "Active" : "Deactive"}</>
                               )}
                             </td>
-                            {(_canAccess("customers", "update") ||
-                              _canAccess("customers", "delete")) && (
+                            {(_canAccess("personal_customers", "update") ||
+                              _canAccess("personal_customers", "delete")) && (
                               <>
                                 <td>
                                   {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
@@ -543,7 +543,7 @@ class Customers_Management_Index extends React.Component {
                                   ) === -1 && (
                                     <>
                                       {current_user.user_group_id !== c._id &&
-                                        _canAccess("customers", "update") && (
+                                        _canAccess("personal_customers", "update") && (
                                           <CTooltip
                                             content={globalConstants.EDIT_BTN}
                                           >
@@ -558,7 +558,7 @@ class Customers_Management_Index extends React.Component {
                                         )}
                                       &nbsp;
                                       {current_user.user_group_id !== c._id &&
-                                        _canAccess("customers", "delete") && (
+                                        _canAccess("personal_customers", "delete") && (
                                           <CTooltip
                                             content={globalConstants.DELETE_BTN}
                                           >

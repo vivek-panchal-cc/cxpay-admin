@@ -427,8 +427,9 @@ class User_Groups_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        {(_canAccess("user_groups", "update") ||
-                          _canAccess("user_groups", "delete")) && (
+                        {(_canAccess("user_groups", "update") 
+                        // || _canAccess("user_groups", "delete")
+                        ) && (
                           <>
                             <th>Action</th>
                           </>
