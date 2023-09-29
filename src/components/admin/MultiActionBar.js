@@ -61,7 +61,8 @@ class MultiActionBar extends React.Component {
         }
         this.setState({ _openPopup: true, _popupMessage: modelPoupMessage });
       } else {
-        notify.error("Select bulk action");
+        notify.error("Please select any option for bulk action");
+        // notify.error("Select bulk action");
       }
     } else {
       notify.error("Not found any selected records for bulk action");

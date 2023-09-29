@@ -59,7 +59,7 @@ class Transaction_Reports_Index extends React.Component {
       fields: {
         page: 1,
         direction: "desc",
-        sort: "ref_id",
+        sort: "created_at",
         name: "",
         txn_type: "",
         type: "",
@@ -153,7 +153,7 @@ class Transaction_Reports_Index extends React.Component {
           fields: {
             page: 1,
             direction: "desc",
-            sort: "ref_id",
+            sort: "created_at",
             search: "",
             txn_type: "",
             type: "",
