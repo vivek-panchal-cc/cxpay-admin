@@ -405,9 +405,7 @@ class SchedulePaymentsIndex extends React.Component {
                           </span>
                         </th>
 
-                        <th>
-                          Is Group?
-                        </th>
+                        <th>Is Group?</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -422,7 +420,12 @@ class SchedulePaymentsIndex extends React.Component {
                             <td>{u.sender_name}</td>
                             <td>{u.receiver_name}</td>
                             <td>{u.overall_specification}</td>
-                            <td>{u.amount}</td>
+                            <td>
+                              ANG&nbsp;
+                              {typeof parseFloat(u.amount) === "number"
+                                ? parseFloat(u.amount).toFixed(2)
+                                : u.amount}
+                            </td>
                             <td>{u.payment_schedule_date}</td>
                             <td>
                               {u.is_group.toString() === "1" ? "Yes" : "No"}
