@@ -2,6 +2,8 @@ import { authHeader } from '../../_helpers';
 import { notify, handleResponse, setLoading } from '../../_helpers/';
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const userGroupsService = {
     getUserGroupsList,
     createUsersGroups,
@@ -22,7 +24,7 @@ function getUserGroupsList(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/index`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/index`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -36,7 +38,7 @@ function createUsersGroups(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/add`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/add`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -49,7 +51,7 @@ function getUserGroup(id) {
         headers: authHeader('user_groups','view')
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -64,7 +66,7 @@ function updateUserGroup(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/edit/${postData.id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/edit/${postData.id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -77,7 +79,7 @@ function deleteUserGroup(id) {
         method: 'DELETE',
         headers: authHeader('user_groups','delete')
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -92,7 +94,7 @@ function deleteMultipleUserGroups(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/delete_multiple_user_groups`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/delete_multiple_user_groups`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -107,7 +109,7 @@ function changeUserGroupStatus(user_group_id,postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/${user_group_id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/${user_group_id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -122,7 +124,7 @@ function changeBulkUserGroupsStatus(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/user_groups/change_bulk_user_groups_status`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/user_groups/change_bulk_user_groups_status`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();

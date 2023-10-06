@@ -2,6 +2,8 @@ import { authHeader, authHeaderMutlipart } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const businessCustomersService = {
   getCustomersManagementList,
   getCustomer,
@@ -21,7 +23,7 @@ function getCustomersManagementList(postData) {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/business-customers`,
+    `${API_URL}api/customers/business-customers`,
     requestOptions
   )
     .catch((error) => {
@@ -40,7 +42,7 @@ function getCustomer(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/get-detail`,
+    `${API_URL}api/customers/get-detail`,
     requestOptions
   )
     .catch((error) => {
@@ -60,7 +62,7 @@ function updateCustomer(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/business-customer-update`,
+    `${API_URL}api/customers/business-customer-update`,
     requestOptions
   )
     .catch((error) => {
@@ -79,7 +81,7 @@ function deleteCustomer(postData) {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/delete-customers`,
+    `${API_URL}api/customers/delete-customers`,
     requestOptions
   )
     .catch((error) => {
@@ -99,7 +101,7 @@ function deleteMultipleCustomer(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/delete-customers`,
+    `${API_URL}api/customers/delete-customers`,
     requestOptions
   )
     .catch((error) => {
@@ -119,7 +121,7 @@ function changeCustomerStatus(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/change-status`,
+    `${API_URL}api/customers/change-status`,
     requestOptions
   )
     .catch((error) => {
@@ -139,7 +141,7 @@ function changeBulkCustomerStatus(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/change-status`,
+    `${API_URL}api/customers/change-status`,
     requestOptions
   )
     .catch((error) => {
@@ -158,7 +160,7 @@ function getCountry() {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/customers/get-country`,
+    `${API_URL}api/customers/get-country`,
     requestOptions
   )
     .catch((error) => {

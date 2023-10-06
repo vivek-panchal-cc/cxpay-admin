@@ -48,6 +48,7 @@ const Fullpage = (props) => {
     user_type = "",
   } = props.withdraw || {};
 
+  const lastFourDigits = bank_account_number?.slice(-4);
   const history = useHistory();
   const showEdits = status === "PROCESSING" ? true : false;
   const [adminComment, setAdminComment] = useState("");
@@ -277,11 +278,11 @@ const Fullpage = (props) => {
                           <div className="wcr-info-1 d-flex flex-wrap">
                             <div className="wcr-card-data">
                               <h2>{bank_name}</h2>
-                              <p>xxxx xxxx xxxx {bank_account_number}</p>
+                              <p>xxxx xxxx xxxx {lastFourDigits}</p>
                             </div>
                             <div className="wcr-card-amt wbr-card-amt">
                               <p className="green font-bold">{status}</p>
-                              <h2>{total_amount} ANG</h2>
+                              <h2>{amount} ANG</h2>
                             </div>
                           </div>
                         </div>
@@ -312,7 +313,7 @@ const Fullpage = (props) => {
                           <table>
                             <tr>
                               <td>Amount</td>
-                              <td>{amount} ANG</td>
+                              <td>{total_amount} ANG</td>
                             </tr>
                             <tr>
                               <td>Fees</td>
@@ -338,12 +339,12 @@ const Fullpage = (props) => {
                             </tr>
                             <tr>
                               <td>Account Number</td>
-                              <td>xxxx xxxx xxxx {bank_account_number}</td>
+                              <td>xxxx xxxx xxxx {lastFourDigits}</td>
                             </tr>
-                            <tr>
+                            {/* <tr>
                               <td>Swift Code</td>
                               <td>{swift_code}</td>
-                            </tr>
+                            </tr> */}
                           </table>
                         </div>
 

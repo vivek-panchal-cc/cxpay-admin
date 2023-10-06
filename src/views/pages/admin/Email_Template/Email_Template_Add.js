@@ -42,9 +42,9 @@ import Dropzone from "react-dropzone-uploader";
 import { mediaService } from "../../../../services/admin/media.service";
 import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
 import "react-dropzone-uploader/dist/styles.css";
-
 import "./Draft.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
 class Email_Template_Add extends Component {
   constructor(props) {
     super(props);
@@ -129,7 +129,7 @@ class Email_Template_Add extends Component {
 
   _handleApplyAction = (event, editor) => {
     const img_src = `${
-      process.env.REACT_APP_API_URL +
+      API_URL +
       "uploads/media/" +
       this.state.selectedMediaFile
     }`;
@@ -211,7 +211,7 @@ class Email_Template_Add extends Component {
     body.append("media_path", file);
     return {
       headers: authHeaderMutlipart("", ""),
-      url: `${process.env.REACT_APP_API_URL}api/media/upload`,
+      url: `${API_URL}api/media/upload`,
       body,
     };
   };
@@ -261,7 +261,7 @@ class Email_Template_Add extends Component {
     }
   }
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
+    ev.target.src = `${API_URL + "uploads/default.jpg"}`;
   }
   // Rendering Html To Dom
   render() {
@@ -406,7 +406,7 @@ class Email_Template_Add extends Component {
                                         id={u._id}
                                         onError={this.addDefaultSrc}
                                         src={`${
-                                          process.env.REACT_APP_API_URL +
+                                          API_URL +
                                           "uploads/media/" +
                                           u.media_path
                                         }`}
@@ -426,7 +426,7 @@ class Email_Template_Add extends Component {
                                 className="mt-4 mediaLibraryPreview"
                                 onError={this.addDefaultSrc}
                                 src={`${
-                                  process.env.REACT_APP_API_URL +
+                                  API_URL +
                                   "uploads/media/" +
                                   this.state.selectedMediaFile
                                 }`}
@@ -557,7 +557,7 @@ class Email_Template_Add extends Component {
                 placeholder: "Enter Description",
                 height: 500,
 
-                // tinydrive_upload_path: `${process.env.REACT_APP_API_URL}`,
+                // tinydrive_upload_path: `${API_URL}`,
 
                 plugins: [
                   "advlist autolink lists link  charmap print preview anchor preview",

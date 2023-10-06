@@ -2,6 +2,8 @@ import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 /** For getting the list of manual fund requests */
 const getManualFundAddList = async (postData) => {
   setLoading(true);
@@ -11,7 +13,7 @@ const getManualFundAddList = async (postData) => {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/manual-fund-add-list`,
+    `${API_URL}api/manual-fund-add-list`,
     requestOptions
   )
     .catch((error) => {
@@ -29,7 +31,7 @@ const getManualFundDetails = async (postData) => {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/manual-fund-details`,
+    `${API_URL}api/manual-fund-details`,
     requestOptions
   )
     .catch((error) => {
@@ -47,7 +49,7 @@ const updateManualFundStatus = async (postData) => {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/manual-fund-update-status`,
+    `${API_URL}api/manual-fund-update-status`,
     requestOptions
   )
     .catch((error) => {
@@ -65,7 +67,7 @@ const getManualFundReceipt = async (postData) => {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/view-manual-fund-receipt`,
+    `${API_URL}api/view-manual-fund-receipt`,
     requestOptions
   )
     .catch((error) => {

@@ -47,7 +47,7 @@ class Push_Notification_Add extends React.Component {
         { value: "strawberry", label: "Strawberry" },
         { value: "vanilla", label: "Vanilla" },
       ],
-      selectedCustomer:[]
+      selectedCustomer: [],
     };
     if (this.props._renderAccess === false) {
       history.push("/admin/notifications");
@@ -57,9 +57,24 @@ class Push_Notification_Add extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // handleChange(e) {
+  //   const { name, value } = e.target;
+  //   this.setState({ fields: { ...this.state.fields, [name]: value } });
+  // }
+
   handleChange(e) {
     const { name, value } = e.target;
-    this.setState({ fields: { ...this.state.fields, [name]: value } });
+    this.setState({ fields: { ...this.state.fields, [name]: value } }, () => {
+      if (name === "type" && value === "schedule") {
+        const currentDateTime = new Date();
+        const roundedMinutes =
+          Math.ceil(currentDateTime.getMinutes() / 15) * 15; // This rounds to the next 15 minute interval.
+        currentDateTime.setMinutes(roundedMinutes);
+        this.setState({
+          fields: { ...this.state.fields, schedule_time: currentDateTime },
+        });
+      }
+    });
   }
 
   handleSubmit() {
@@ -136,7 +151,7 @@ class Push_Notification_Add extends React.Component {
 
   selectedCustomerData(customer) {
     if (customer.filter((x) => x.value == "all").length > 0) {
-       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
+      this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];
       customer.forEach((x) => {
@@ -145,7 +160,7 @@ class Push_Notification_Add extends React.Component {
       this.setState({
         fields: { ...this.state.fields, account_numbers: selectedCustomer },
       });
-      this.setState({ selectedCustomer: customer});
+      this.setState({ selectedCustomer: customer });
     }
   }
 

@@ -45,6 +45,7 @@ import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
 import "react-dropzone-uploader/dist/styles.css";
 import "./Draft.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
 class SMS_Template_Edit extends Component {
   constructor(props) {
     super(props);
@@ -115,7 +116,7 @@ class SMS_Template_Edit extends Component {
   /******** media Modal gallery  ************/
   _handleApplyAction = (event) => {
     const img_src = `${
-      process.env.REACT_APP_API_URL +
+      API_URL +
       "uploads/media/" +
       this.state.selectedMediaFile
     }`;
@@ -201,7 +202,7 @@ class SMS_Template_Edit extends Component {
     body.append("media_path", file);
     return {
       headers: authHeaderMutlipart("", ""),
-      url: `${process.env.REACT_APP_API_URL}api/media/upload`,
+      url: `${API_URL}api/media/upload`,
       body,
     };
   };
@@ -220,7 +221,7 @@ class SMS_Template_Edit extends Component {
   };
 
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
+    ev.target.src = `${API_URL + "uploads/default.jpg"}`;
   }
 
   /********** Retrieve Data very first time render to dom  ************************/
@@ -411,7 +412,7 @@ class SMS_Template_Edit extends Component {
                                         id={u._id}
                                         onError={this.addDefaultSrc}
                                         src={`${
-                                          process.env.REACT_APP_API_URL +
+                                          API_URL +
                                           "uploads/media/" +
                                           u.media_path
                                         }`}
@@ -431,7 +432,7 @@ class SMS_Template_Edit extends Component {
                                 className="mt-4 mediaLibraryPreview"
                                 onError={this.addDefaultSrc}
                                 src={`${
-                                  process.env.REACT_APP_API_URL +
+                                  API_URL +
                                   "uploads/media/" +
                                   this.state.selectedMediaFile
                                 }`}

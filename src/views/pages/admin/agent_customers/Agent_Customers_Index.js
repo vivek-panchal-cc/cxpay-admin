@@ -18,7 +18,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  CSelect
+  CSelect,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,7 +28,7 @@ import {
   faSortUp,
   faPlus,
   faEye,
-  faList
+  faList,
 } from "@fortawesome/free-solid-svg-icons";
 import { agentService } from "../../../../services/admin/agent.service";
 import {
@@ -59,11 +59,11 @@ class Agent_list extends React.Component {
 
     this.state = {
       fields: {
-        page:1,
-        search:'',
-        status:'',
-        sort_field:'created_at',
-        sort_dir:'DESC'
+        page: 1,
+        search: "",
+        status: "",
+        sort_field: "created_at",
+        sort_dir: "DESC",
       },
       _openPopup: false,
       agents: [],
@@ -157,11 +157,11 @@ class Agent_list extends React.Component {
       this.setState(
         {
           fields: {
-            page:1,
-            search:'',
-            status:'',
-            sort_field:'created_at',
-            sort_dir:'DESC'
+            page: 1,
+            search: "",
+            status: "",
+            sort_field: "created_at",
+            sort_dir: "DESC",
           },
         },
         () => {
@@ -169,12 +169,9 @@ class Agent_list extends React.Component {
         }
       );
     } else {
-      this.setState(
-        { fields: { ...this.state.fields, page: '' } },
-        () => {
-          this.getAgentList();
-        }
-      );
+      this.setState({ fields: { ...this.state.fields, page: "" } }, () => {
+        this.getAgentList();
+      });
       // this.getAgentList();
     }
   }
@@ -199,7 +196,7 @@ class Agent_list extends React.Component {
     var postData = {
       mobile_number: [id],
       status: status == 0 ? 1 : 0,
-      user_type: 'agent'
+      user_type: "agent",
     };
     agentService.changeAgentStatus(postData).then((res) => {
       if (res.status === "error") {
@@ -222,11 +219,21 @@ class Agent_list extends React.Component {
     });
   };
 
+  // handleCheckChieldElement = (event) => {
+  //   let multiactions = this.state.multiaction;
+  //   multiactions[event.target.value] = event.target.checked;
+  //   this.setState({ multiaction: multiactions });
+
+  // };
+
   handleCheckChieldElement = (event) => {
-    let multiactions = this.state.multiaction;
-    multiactions[event.target.value] = event.target.checked;
-    this.setState({ multiaction: multiactions });
-    
+    const { multiaction } = this.state;
+    multiaction[event.target.value] = event.target.checked;
+    this.setState({ multiaction });
+
+    // Check if all checkboxes are checked
+    const allChecked = Object.values(multiaction).every((val) => val);
+    this.setState({ allCheckedbox: allChecked });
   };
 
   resetCheckedBox() {
@@ -336,9 +343,9 @@ class Agent_list extends React.Component {
                           onChange={this.handleChange}
                           value={this.state?.fields?.status}
                         >
-                          <option value={''}>{'Select Status'}</option>
-                          <option value={'1'}>{'Active'}</option>
-                          <option value={'0'}>{'Deactive'}</option>
+                          <option value={""}>{"Select Status"}</option>
+                          <option value={"1"}>{"Active"}</option>
+                          <option value={"0"}>{"Deactive"}</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -398,16 +405,17 @@ class Agent_list extends React.Component {
                 </div>
                 <div className="card-header-actions">
                   {_canAccess("agent_customers", "delete") && (
-                  <CTooltip content={globalConstants.DELETE_REQ_BTN}>
-                    <CLink
-                      className="btn btn-dark btn-block"
-                      aria-current="page"
-                      to="/admin/agent_customers/delete_requests"
-                    >
-                      {/* <FontAwesomeIcon icon={faList} /> */}
-                      Delete Requests
-                    </CLink>
-                  </CTooltip>)}
+                    <CTooltip content={globalConstants.DELETE_REQ_BTN}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to="/admin/agent_customers/delete_requests"
+                      >
+                        {/* <FontAwesomeIcon icon={faList} /> */}
+                        Delete Requests
+                      </CLink>
+                    </CTooltip>
+                  )}
                 </div>
               </CCardHeader>
               <CCardBody>
@@ -429,35 +437,26 @@ class Agent_list extends React.Component {
                             checked={this.state.allCheckedbox}
                           />
                         </th>
-                        {/* <th>#</th> */}
-                        <th
-                          onClick={() =>
-                            this.handleColumnSort("name")
-                          }
-                        >
+                        <th>#</th>
+                        <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">Name</span>
-                            {this.state.fields.sort_field !==
-                              "name" && (
+                            {this.state.fields.sort_field !== "name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field ===
-                                "name" && (
+                              this.state.fields.sort_field === "name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field ===
-                                "name" && (
+                              this.state.fields.sort_field === "name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
                         <th onClick={() => this.handleColumnSort("email")}>
                           <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              email
-                            </span>
+                            <span className="table-header-text-mrg">email</span>
                             {this.state.fields.sort_field !== "email" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
@@ -472,25 +471,30 @@ class Agent_list extends React.Component {
                           </span>
                         </th>
 
-                        <th onClick={() => this.handleColumnSort("mobile_number")}>
+                        <th
+                          onClick={() => this.handleColumnSort("mobile_number")}
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
                               Mobile Number
                             </span>
-                            {this.state.fields.sort_field !== "mobile_number" && (
+                            {this.state.fields.sort_field !==
+                              "mobile_number" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field === "mobile_number" && (
+                              this.state.fields.sort_field ===
+                                "mobile_number" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field === "mobile_number" && (
+                              this.state.fields.sort_field ===
+                                "mobile_number" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
-                        
+
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -523,34 +527,33 @@ class Agent_list extends React.Component {
                         this.state.agents.map((u, index) => (
                           <tr key={u.email}>
                             <td>
-                            {this.state.multiaction[u.mobile_number] !==
+                              {this.state.multiaction[u.mobile_number] !==
                                 undefined && (
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u.mobile_number}
-                                _isChecked={this.state.multiaction[u.mobile_number]}
-                              />)}
+                                <CheckBoxes
+                                  handleCheckChieldElement={
+                                    this.handleCheckChieldElement
+                                  }
+                                  _id={u.mobile_number}
+                                  _isChecked={
+                                    this.state.multiaction[u.mobile_number]
+                                  }
+                                />
+                              )}
                             </td>
 
-                            {/* <td>{index + 1}</td> */}
+                            <td>{index + 1}</td>
                             <td>
                               {" "}
                               {/* {_canAccess("agent_customers", "view") && (
                                 <CLink
                                   to={`/admin/agent_customers/detailview/${u._id}`}
                                 > */}
-                                  {u.name}
-                                {/* </CLink>
+                              {u.name}
+                              {/* </CLink>
                               )} */}
                             </td>
-                            <td>
-                              {u.email}
-                            </td>
-                            <td>
-                              {u.mobile_number}
-                            </td>
+                            <td>{u.email}</td>
+                            <td>{u.mobile_number}</td>
                             <td>
                               {current_user.id !== u._id &&
                                 _canAccess("agent_customers", "update") && (
@@ -562,16 +565,17 @@ class Agent_list extends React.Component {
                                       )
                                     }
                                   >
-                                    {u.status == '0' ? "Active" : "Deactive"}
+                                    {u.status == "0" ? "Active" : "Deactive"}
                                   </CLink>
                                 )}
                               {current_user.id !== u._id &&
-                                _canAccess("agent_customers", "update") === false && (
+                                _canAccess("agent_customers", "update") ===
+                                  false && (
                                   <>{u.status ? "Active" : "Deactive"}</>
                                 )}
                             </td>
                             {(_canAccess("agent_customers", "update") ||
-                              _canAccess("agent_customers", "delete") || 
+                              _canAccess("agent_customers", "delete") ||
                               _canAccess("agent_customers", "view")) && (
                               <>
                                 <td className="d-flex">
@@ -632,13 +636,13 @@ class Agent_list extends React.Component {
                     </tbody>
                   </table>
                   {this.state?.agents?.length > 0 && (
-                  <CPagination
-                    activePage={this.state.fields.page}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                    <CPagination
+                      activePage={this.state.fields.page}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
                   )}
                 </div>
               </CCardBody>

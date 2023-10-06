@@ -22,8 +22,7 @@ import { notify, history, _canAccess } from '../../../../_helpers/index';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {  faBan, faSave } from '@fortawesome/free-solid-svg-icons'
 
-
-
+const API_URL = process.env.REACT_APP_API_URL;
 class Site_Setting_Edit extends React.Component {
 
   constructor(props) {
@@ -154,7 +153,7 @@ class Site_Setting_Edit extends React.Component {
   }
 
   addDefaultSrc(ev){
-    ev.target.src = `${process.env.REACT_APP_API_URL + 'uploads/default.jpg'}`
+    ev.target.src = `${API_URL + 'uploads/default.jpg'}`
   }
 
 
@@ -173,7 +172,7 @@ class Site_Setting_Edit extends React.Component {
    }         
     
    else{
-     image =    <img onError={this.addDefaultSrc} src={`${ process.env.REACT_APP_API_URL+'uploads/'+this.state.site_logo}`} alt="Banner Image " style={styles}/>
+     image =    <img onError={this.addDefaultSrc} src={`${ API_URL+'uploads/'+this.state.site_logo}`} alt="Banner Image " style={styles}/>
      
    }
 
@@ -214,11 +213,11 @@ class Site_Setting_Edit extends React.Component {
                       <CLabel htmlFor="menu_category">Site Logo  </CLabel>
                    
                       {_canAccess('theme_setting', 'update') &&
-                         <CInputFile id="file-input" name="file-input"  id="site_logo" name="site_logo" placeholder="Browe Logo " autoComplete="site_logo " onChange={this.handleUpload} disabled={false} />
+                         <CInputFile id="file-input" name="file-input" placeholder="Browe Logo " autoComplete="site_logo " onChange={this.handleUpload} disabled={false} />
                      
                      }
                       {!_canAccess('theme_setting', 'update') &&
-                         <CInputFile id="file-input" name="file-input"  id="site_logo" name="site_logo" placeholder="Browe Logo " autoComplete="site_logo " onChange={this.handleUpload} disabled={true} />
+                         <CInputFile id="file-input" name="file-input"  placeholder="Browe Logo " autoComplete="site_logo " onChange={this.handleUpload} disabled={true} />
                      
                      }
                      <br/>

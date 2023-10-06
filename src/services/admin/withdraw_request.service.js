@@ -6,6 +6,8 @@ import {
 import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const withdrawRequestService = {
   getWithdrawRequestData,
   withdrawDetails,
@@ -22,7 +24,7 @@ function getWithdrawRequestData(postData) {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/withdraw-list`,
+    `${API_URL}api/withdraw-list`,
     requestOptions
   )
     .catch((error) => {
@@ -41,7 +43,7 @@ function withdrawDetails(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/withdraw-details`,
+    `${API_URL}api/withdraw-details`,
     requestOptions
   )
     .catch((error) => {
@@ -61,7 +63,7 @@ function withdrawRequestAction(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/withdraw-request-action`,
+    `${API_URL}api/withdraw-request-action`,
     requestOptions
   )
     .catch((error) => {
@@ -80,7 +82,7 @@ function chnageWithdrawStatus(postData) {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/request-status-change`,
+    `${API_URL}api/request-status-change`,
     requestOptions
   )
     .catch((error) => {
@@ -100,7 +102,7 @@ function downloadReciept(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/view-bank-withdraw-receipt`,
+    `${API_URL}api/view-bank-withdraw-receipt`,
     requestOptions
   )
     .catch((error) => {

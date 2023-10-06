@@ -21,7 +21,8 @@ import {
   faListAlt,
   faHandHoldingUsd,
   faWallet,
-  faUserTie
+  faUserTie,
+  faStopwatch
 } from "@fortawesome/free-solid-svg-icons";
 
 const _nav = [
@@ -130,6 +131,14 @@ const _nav = [
     module_name: "cms_pages",
     id: "cms_pages_sidebar_id",
     // id: "cms_templates_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Schedule Payments",
+    to: "/admin/schedule_payments",
+    icon: <FontAwesomeIcon icon={faStopwatch} className="c-sidebar-nav-icon" />,
+    module_name: "schedule_payments",
+    id: "schedule_payments_sidebar_id",
   },
   {
     _tag: "CSidebarNavItem",

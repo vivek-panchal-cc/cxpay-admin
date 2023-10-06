@@ -2,6 +2,8 @@ import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const userService = {
   login,
   logout,
@@ -34,7 +36,7 @@ function login(email, password) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/auth/signin`,
+    `${API_URL}api/auth/signin`,
     requestOptions
   )
     .catch((error) => {
@@ -61,7 +63,7 @@ function getUsersList(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/index`,
+    `${API_URL}api/users/index`,
     requestOptions
   )
     .catch((error) => {
@@ -79,7 +81,7 @@ function createUsers(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/users/add`, requestOptions)
+  return fetch(`${API_URL}api/users/add`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -95,7 +97,7 @@ function getUser(id) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/${id}`,
+    `${API_URL}api/users/${id}`,
     requestOptions
   )
     .catch((error) => {
@@ -114,7 +116,7 @@ function updateUser(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/users/edit`, requestOptions)
+  return fetch(`${API_URL}api/users/edit`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -130,7 +132,7 @@ function deleteUser(id) {
     headers: authHeader("users", "delete"),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/${id}`,
+    `${API_URL}api/users/${id}`,
     requestOptions
   )
     .catch((error) => {
@@ -150,7 +152,7 @@ function forgotPassword(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/forgot_password`,
+    `${API_URL}api/forgot_password`,
     requestOptions
   )
     .catch((error) => {
@@ -170,7 +172,7 @@ function resetPassword(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/reset_password`,
+    `${API_URL}api/reset_password`,
     requestOptions
   )
     .catch((error) => {
@@ -189,7 +191,7 @@ function getUserGroups() {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/user_groups/data/list`,
+    `${API_URL}api/user_groups/data/list`,
     requestOptions
   )
     .catch((error) => {
@@ -209,7 +211,7 @@ function getPermission() {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/permission/${user.id}`,
+    `${API_URL}api/users/permission/${user.id}`,
     requestOptions
   )
     .catch((error) => {
@@ -249,7 +251,7 @@ function changeUserStatus(id, postData) {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/${id}`,
+    `${API_URL}api/users/${id}`,
     requestOptions
   )
     .catch((error) => {
@@ -269,7 +271,7 @@ function updateMyProfile(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/update_my_profile`,
+    `${API_URL}api/update_my_profile`,
     requestOptions
   )
     .catch((error) => {
@@ -288,7 +290,7 @@ function getMyProfile(id) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/get_my_profile`,
+    `${API_URL}api/get_my_profile`,
     requestOptions
   )
     .catch((error) => {
@@ -308,7 +310,7 @@ function deleteMultipleUsers(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/delete_multiple_users`,
+    `${API_URL}api/delete_multiple_users`,
     requestOptions
   )
     .catch((error) => {
@@ -328,7 +330,7 @@ function changeBulkUsersStatus(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/change_bulk_users_status`,
+    `${API_URL}api/users/change_bulk_users_status`,
     requestOptions
   )
     .catch((error) => {

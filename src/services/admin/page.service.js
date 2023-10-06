@@ -2,6 +2,7 @@ import { authHeader } from '../../_helpers';
 import { notify, handleResponse, setLoading } from '../../_helpers/';
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
 
 /*************** Export Functions Defined For Services ******************************/
 
@@ -29,7 +30,7 @@ function getPageList(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/index`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/index`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(true);
     }).then(handleResponse);
@@ -47,7 +48,7 @@ function createPages(postData) {
     };
 
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/add`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/add`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(true);
     }).then(handleResponse);
@@ -60,7 +61,7 @@ function deletepage(id) {
         method: 'DELETE',
         headers: authHeader('cms_pages', 'view')
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -76,7 +77,7 @@ function getpage(id) {
         headers: authHeader('cms_pages', 'view')
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -94,7 +95,7 @@ function updatepage(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/edit`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/edit`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -108,7 +109,7 @@ function detailview(id) {
         method: 'GET',
         headers: authHeader('cms_pages', 'view')
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -123,7 +124,7 @@ function changePageStatus(id,postData) {
         headers: authHeader('cms_pages', 'edit'),
         body: JSON.stringify(postData)
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -138,7 +139,7 @@ function deleteMultiplePages(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/delete_multiple_pages`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/delete_multiple_pages`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -153,7 +154,7 @@ function changeBulkPageStatus(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/change_bulk_page_status`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/change_bulk_page_status`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();

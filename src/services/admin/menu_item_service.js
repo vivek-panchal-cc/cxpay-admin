@@ -2,6 +2,8 @@ import { authHeader } from '../../_helpers';
 import { notify, handleResponse, setLoading } from '../../_helpers/';
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const MenuitemServices = {
    
     createitem,
@@ -25,7 +27,7 @@ function createitem(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_items/add`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_items/add`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -39,7 +41,7 @@ function getMenuitems(postData) {
         headers: authHeader('menu_management', 'menumanage'),
         body: JSON.stringify(postData),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_items/index`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_items/index`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -53,7 +55,7 @@ function deletemenuitem(id) {
         method: 'DELETE',
         headers: authHeader('menu_management', 'menumanage')
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_items/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_items/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -70,7 +72,7 @@ function getsinglemenucategory(id) {
         headers: authHeader('menu_management', 'menumanage')
     };
    
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_items/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_items/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -91,7 +93,7 @@ function updatemenu_category(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_items/edit`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_items/edit`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -106,7 +108,7 @@ function changemenuitemStatus(id,postData) {
         headers: authHeader('menu_management', 'edit'),
         body: JSON.stringify(postData)
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_items/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_items/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -121,7 +123,7 @@ function deleteMultiplemenuitem(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/delete_multiplemenuitem`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/delete_multiplemenuitem`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -138,7 +140,7 @@ function changeBulkMenuitemStatus(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_items/change_bulk_menu_items_status`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_items/change_bulk_menu_items_status`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -153,7 +155,7 @@ function CmsListing(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/listing`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/cms_pages/listing`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();

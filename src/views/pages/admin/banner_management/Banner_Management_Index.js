@@ -38,6 +38,8 @@ const MultiActionBar = React.lazy(() =>
   import("../../../../components/admin/MultiActionBar")
 );
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 class Banner_list extends React.Component {
   constructor(props) {
     super(props);
@@ -273,7 +275,7 @@ class Banner_list extends React.Component {
   };
 
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
+    ev.target.src = `${API_URL + "uploads/default.jpg"}`;
   }
 
   /****************** * Render Data To Dom ************************/
@@ -483,7 +485,7 @@ class Banner_list extends React.Component {
                             <td>{index + 1}</td>
                             <td>{u.title}</td>
                             <td style={cursor}>
-                              {/* <img onError={this.addDefaultSrc} src={`${process.env.REACT_APP_API_URL + 'uploads/' + u.image_path}`} alt="Banner Image " style={styles} onClick={() => this.openimgpop(u.image_path)} /> */}
+                              {/* <img onError={this.addDefaultSrc} src={`${API_URL + 'uploads/' + u.image_path}`} alt="Banner Image " style={styles} onClick={() => this.openimgpop(u.image_path)} /> */}
                               {u.media_id !== null &&
                                 u.media_id !== undefined && (
                                   <>
@@ -491,7 +493,7 @@ class Banner_list extends React.Component {
                                       <img
                                         onError={this.addDefaultSrc}
                                         src={`${
-                                          process.env.REACT_APP_API_URL +
+                                          API_URL +
                                           "uploads/media/" +
                                           u.media_id.media_path
                                         }`}
@@ -513,7 +515,7 @@ class Banner_list extends React.Component {
                                     <img
                                       onError={this.addDefaultSrc}
                                       src={`${
-                                        process.env.REACT_APP_API_URL +
+                                        API_URL +
                                         "uploads/media/"
                                       }`}
                                       alt="Banner Image "
@@ -649,7 +651,7 @@ class Banner_list extends React.Component {
               style={responsive}
               onError={this.addDefaultSrc}
               src={`${
-                process.env.REACT_APP_API_URL +
+                API_URL +
                 "uploads/" +
                 this.state.image_path
               }`}

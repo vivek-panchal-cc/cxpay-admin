@@ -22,10 +22,18 @@ import { notify, history, _canAccess } from "../../../../_helpers/index";
 import $ from "jquery";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faBan, faSave, faSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faBan,
+  faSave,
+  faSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import { agentService } from "../../../../services/admin/agent.service";
 import { number } from "prop-types";
-import { addObjToFormData, setLoading } from "../../../../_helpers/common-utility";
+import {
+  addObjToFormData,
+  setLoading,
+} from "../../../../_helpers/common-utility";
 import "./page.css";
 // import { setLoading } from '../../_helpers';
 
@@ -37,20 +45,20 @@ class Agent_Customers_Edit extends React.Component {
     this.state = {
       fields: {
         _id: this.props.match.params.id,
-        user_type:'agent',
+        user_type: "agent",
         first_name: "",
         last_name: "",
         email: "",
         mobile_number: "",
         city: "",
         country_code: "",
-        country:"",
+        country: "",
         address: "",
         commission_type: "",
         commission_amount: "",
         system_commission_type: "",
         system_commission_amount: "",
-        card_commission: []
+        card_commission: [],
       },
       countryData: {},
       cityData: [],
@@ -72,107 +80,180 @@ class Agent_Customers_Edit extends React.Component {
     this.handleUpload = this.handleUpload.bind(this);
   }
 
-  componentDidMount() {
-    agentService.getCountry().then((res) => {
-      if (res.status === false) {
-        notify.error(res.message);
-      } else {
-        if (res.data == null) {
-          notify.error("Country Not Found");
-          history.push("/admin/agent_customers");
-        }
+  // componentDidMount() {
+  //   agentService.getCountry().then((res) => {
+  //     if (res.status === false) {
+  //       notify.error(res.message);
+  //     } else {
+  //       if (res.data == null) {
+  //         notify.error("Country Not Found");
+  //         history.push("/admin/agent_customers");
+  //       }
 
-        this.setState({ countryData: res.data });
-      }
-    });
+  //       this.setState({ countryData: res.data });
+  //     }
+  //   });
 
-    agentService.getCollectionType().then((res) => {
-      if (res.status === false) {
-        notify.error(res.message);
-      } else {
-        if (res.data == null) {
-          notify.error("Collection Types Not Found");
-          history.push("/admin/agent_customers");
-        }
-        
-        this.setState({ collectionData: res.data });
-        let arrayObj = [];
-        res?.data?.map((e,i) => {
-          let obj = {
-            'id': e.id,
-            'status': '',
-            'type': '',
-            'amount': '',
-            'collection_type':e.collection_type
-          };
-          arrayObj.push(obj);
-        })
-        this.setState({ collectionType: arrayObj });        
-      }
-    });
+  //   agentService.getCollectionType().then((res) => {
+  //     if (res.status === false) {
+  //       notify.error(res.message);
+  //     } else {
+  //       if (res.data == null) {
+  //         notify.error("Collection Types Not Found");
+  //         history.push("/admin/agent_customers");
+  //       }
 
-    setTimeout(() => {
+  //       this.setState({ collectionData: res.data });
+  //       let arrayObj = [];
+  //       res?.data?.map((e, i) => {
+  //         let obj = {
+  //           id: e.id,
+  //           status: "",
+  //           type: "",
+  //           amount: "",
+  //           collection_type: e.collection_type,
+  //         };
+  //         arrayObj.push(obj);
+  //       });
+  //       this.setState({ collectionType: arrayObj });
+  //     }
+  //   });
+
+  //   setTimeout(() => {
+  //     if (
+  //       _canAccess(
+  //         this.props.module_name,
+  //         this.props.action,
+  //         "/admin/agent_customers"
+  //       )
+  //     ) {
+  //       var postData = {
+  //         account_number: this.state.fields._id,
+  //       };
+
+  //       agentService.getAgentDetails(postData).then((res) => {
+  //         if (res.status === false) {
+  //           notify.error(res.message);
+  //         } else {
+  //           if (res.data == null) {
+  //             notify.error("Agent not found");
+  //             history.push("/admin/agent_customers");
+  //           }
+
+  //           this.setState({
+  //             ...this.state,
+  //             fields: res.data,
+  //           });
+
+  //           const country_index = this.state.countryData.country_list.findIndex(
+  //             (e) => e.iso === res.data.country
+  //           );
+
+  //           const { iso } =
+  //             this.state.countryData.country_list.find(
+  //               (e) => e.iso === res.data.country
+  //             ) || {};
+  //           const statustmp = res.data.status == 0 ? 0 : 1;
+
+  //           this.setState({
+  //             cityData: [...this.state.countryData.city_list[iso]],
+  //             city: res.data.city,
+  //             country: country_index,
+  //             status: statustmp,
+  //           });
+  //         }
+  //       });
+  //     }
+  //   }, 700);
+  // }
+
+  async componentDidMount() {
+    setTimeout(async () => {
+      // Check for permissions
       if (
-        _canAccess(
+        !_canAccess(
           this.props.module_name,
           this.props.action,
           "/admin/agent_customers"
         )
       ) {
-        var postData = {
-          account_number: this.state.fields._id,
-        };
+        notify.error("You don't have permission to view agent details.");
+        return;
+      }
+      try {
+        // Fetch country data
+        const countryRes = await agentService.getCountry();
+        if (countryRes.status === false) throw new Error(countryRes.message);
+        if (!countryRes.data) {
+          notify.error("Country Not Found");
+          history.push("/admin/agent_customers");
+          return;
+        }
+        this.setState({ countryData: countryRes.data });
 
-        agentService.getAgentDetails(postData).then((res) => {
-          
-          if (res.status === false) {
-            notify.error(res.message);
-          } else {
-            if (res.data == null) {
-              notify.error("Agent not found");
-              history.push("/admin/agent_customers");
-            }
-            
-            this.setState( {
-                ...this.state, 
-                fields: res.data 
-              }
-            );
-            
-            const country_index = this.state.countryData.country_list.findIndex(
-              (e) => e.iso === res.data.country
-            );
-
-            const { iso } =
-              this.state.countryData.country_list.find(
-                (e) => e.iso === res.data.country
-              ) || {};
-            const statustmp = res.data.status == 0 ? 0 : 1;
-                    
-            this.setState({
-              cityData: [...this.state.countryData.city_list[iso]],
-              city: res.data.city,
-              country: country_index,
-              status: statustmp,
-            });
-          }
-          
+        // Fetch collection type data
+        const collectionRes = await agentService.getCollectionType();
+        if (collectionRes.status === false)
+          throw new Error(collectionRes.message);
+        if (!collectionRes.data) {
+          notify.error("Collection Types Not Found");
+          history.push("/admin/agent_customers");
+          return;
+        }
+        const collectionArray = collectionRes.data.map((e) => ({
+          id: e.id,
+          status: "",
+          type: "",
+          amount: "",
+          collection_type: e.collection_type,
+        }));
+        this.setState({
+          collectionData: collectionRes.data,
+          collectionType: collectionArray,
         });
+
+        // Fetch agent details
+        const postData = { account_number: this.state.fields._id };
+        const agentRes = await agentService.getAgentDetails(postData);
+        if (agentRes.status === false) throw new Error(agentRes.message);
+        if (!agentRes.data) {
+          notify.error("Agent not found");
+          history.push("/admin/agent_customers");
+          return;
+        }
+        const countryIndex = this.state.countryData.country_list.findIndex(
+          (e) => e.iso === agentRes.data.country
+        );
+        const { iso } =
+          this.state.countryData.country_list.find(
+            (e) => e.iso === agentRes.data.country
+          ) || {};
+        this.setState({
+          fields: agentRes.data,
+          cityData: [...this.state.countryData.city_list[iso]],
+          city: agentRes.data.city,
+          country: countryIndex,
+          status: agentRes.data.status == 0 ? 0 : 1,
+        });
+      } catch (error) {
+        // Handle any unexpected error
+        notify.error(error.message || "An unexpected error occurred.");
       }
     }, 700);
-
-
   }
-  componentDidUpdate(prevProps, prevState){
-    if(this.state.fields.card_commission !== prevState.fields.card_commission){
-    // if(this.state.collectionType !== prevState.collectionType){
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.fields.card_commission !== prevState.fields.card_commission
+    ) {
+      // if(this.state.collectionType !== prevState.collectionType){
       setTimeout(() => {
         const abc = this.handleMergeArrays(this.state.collectionType);
       }, 1500);
     }
   }
   mergeArrays(arrayObj) {
-    const {  fields } = this.state;
+    const { fields } = this.state;
     const { card_commission } = fields;
     const arr2 = card_commission;
     // Create a mapping of arr2 by id for efficient lookup
@@ -187,34 +268,35 @@ class Agent_Customers_Edit extends React.Component {
           ...item,
           status: arr2Item.status,
           amount: arr2Item.amount,
-          type: arr2Item.type || '',
+          type: arr2Item.type || "",
         };
       }
       return item; // If no matching item, keep the original item from arr1
     });
     this.setState({ updatedCollectionType: mergedArray });
     return mergedArray;
-  };
+  }
 
   handleCountryChange(e) {
     // if (e.target.value == '') {
     //   this.setState({ city: '', country: '' });
     // } else {
-      setLoading(true)
-        const cityCode = this.state.countryData.country_list[e.target.value].iso;
-        const tmp = [...this.state.countryData.city_list[cityCode]];
-        this.setState({ cityData: tmp, country: e.target.value });
-      setLoading(false)
+    setLoading(true);
+    const cityCode = this.state.countryData.country_list[e.target.value].iso;
+    const tmp = [...this.state.countryData.city_list[cityCode]];
+    this.setState({ cityData: tmp, country: e.target.value });
+    setLoading(false);
     // }
   }
 
   handleCityChange(e) {
     this.setState({ city: e.target.value });
-    this.setState({ fields:{
-      ...this.state.fields,
-      city: e.target.value       
-    }
-  });
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        city: e.target.value,
+      },
+    });
   }
 
   handleCheckboxChange(event) {
@@ -222,10 +304,10 @@ class Agent_Customers_Edit extends React.Component {
     const tmp = target.checked ? 1 : 0;
 
     this.setState({
-      fields:{
+      fields: {
         ...this.state.fields,
-        status: tmp
-      }
+        status: tmp,
+      },
     });
   }
 
@@ -242,10 +324,10 @@ class Agent_Customers_Edit extends React.Component {
     }
 
     this.setState({
-      fields:{
+      fields: {
         ...this.state.fields,
         newProfileImage: file,
-      }
+      },
     });
     setLoading(false);
   }
@@ -262,19 +344,29 @@ class Agent_Customers_Edit extends React.Component {
 
   handlePaymentTypeChange(index, event, objField) {
     const target = event.target;
-    const value = target.type === "checkbox" ? (target.checked ? 1 : 0) : target.value;
-    
+    const value =
+      target.type === "checkbox" ? (target.checked ? 1 : 0) : target.value;
+
     const updatedCardCommission = [...this.state.updatedCollectionType];
-    
+
     if (target.type === "checkbox") {
-      updatedCardCommission[index] = {...updatedCardCommission[index],'id' : parseInt(target.value)};
+      updatedCardCommission[index] = {
+        ...updatedCardCommission[index],
+        id: parseInt(target.value),
+      };
     }
-    updatedCardCommission[index] = {...updatedCardCommission[index],[objField] : value};
+    updatedCardCommission[index] = {
+      ...updatedCardCommission[index],
+      [objField]: value,
+    };
     if (target.type === "checkbox" && value == 0) {
-      updatedCardCommission[index] = {...updatedCardCommission[index],'type' : '', 'amount' : ''};
+      updatedCardCommission[index] = {
+        ...updatedCardCommission[index],
+        type: "",
+        amount: "",
+      };
     }
     this.setState({ updatedCollectionType: updatedCardCommission });
-    
   }
 
   permssionChange(e) {
@@ -321,10 +413,10 @@ class Agent_Customers_Edit extends React.Component {
   checkIsCardSelected(selectedPaymentType) {
     let $returnVal = false;
     selectedPaymentType.forEach((ele) => {
-      if (ele.status == '1') {
+      if (ele.status == "1") {
         $returnVal = true;
       }
-    })
+    });
     return $returnVal;
   }
 
@@ -337,22 +429,26 @@ class Agent_Customers_Edit extends React.Component {
       return false;
     }
 
-    if (this.state.fields.newProfileImage && this.state.fields.newProfileImage.size > 5000000) {
+    if (
+      this.state.fields.newProfileImage &&
+      this.state.fields.newProfileImage.size > 5000000
+    ) {
       this.setState({ imageSizeValidation: true });
       return false;
-    }    
-    const newData = this.state.updatedCollectionType.map(({ collection_type, ...rest }) => rest);
+    }
+    const newData = this.state.updatedCollectionType.map(
+      ({ collection_type, ...rest }) => rest
+    );
     this.setState({
-      fields:{
+      fields: {
         ...this.state.fields,
-        card_commission: newData
-      }
-    })
-    
-    if (this.validator.allValid()) {
+        card_commission: newData,
+      },
+    });
 
+    if (this.validator.allValid()) {
       if (!this.checkIsCardSelected(this.state?.updatedCollectionType)) {
-        notify.error('Please select atleast one payment type')
+        notify.error("Please select atleast one payment type");
         return false;
       }
 
@@ -374,8 +470,14 @@ class Agent_Customers_Edit extends React.Component {
       formData.append("commission_amount", this.state.fields.commission_amount);
       formData.append("commission_type", this.state.fields.commission_type);
 
-      formData.append("system_commission_amount", this.state.fields.system_commission_amount);
-      formData.append("system_commission_type", this.state.fields.system_commission_type);
+      formData.append(
+        "system_commission_amount",
+        this.state.fields.system_commission_amount
+      );
+      formData.append(
+        "system_commission_type",
+        this.state.fields.system_commission_type
+      );
 
       formData.append("status", this.state.fields.status);
       formData.append("email", this.state.fields.email);
@@ -384,15 +486,14 @@ class Agent_Customers_Edit extends React.Component {
 
       if (this.state.fields.newProfileImage) {
         formData.append("profile_image", this.state.fields.newProfileImage);
-      }      
+      }
 
-      for (const key in newData) 
-      {
-        // if(key == 'card_commission') 
-        if (newData[key].type != '' && newData[key].amount != '')
+      for (const key in newData) {
+        // if(key == 'card_commission')
+        if (newData[key].type != "" && newData[key].amount != "")
           addObjToFormData(newData[key], `card_commission[${key}]`, formData);
       }
-      
+
       agentService.updateAgent(formData).then((res) => {
         if (res.success === false) {
           notify.error(res.message);
@@ -402,9 +503,7 @@ class Agent_Customers_Edit extends React.Component {
         }
       });
     } else {
-      
       this.validator.showMessages();
-      
     }
   }
 
@@ -413,7 +512,7 @@ class Agent_Customers_Edit extends React.Component {
     if (event.keyCode === 45 || event.which === 45) {
       event.preventDefault(); // Prevent the minus key from being entered
     }
-  }
+  };
 
   render() {
     var { module_permission } = this.state;
@@ -443,7 +542,7 @@ class Agent_Customers_Edit extends React.Component {
                 </div>
               </CCardHeader>
               <CCardBody>
-              <CFormGroup>
+                <CFormGroup>
                   <CLabel htmlFor="nf-name">First Name</CLabel>
                   <CInput
                     type="text"
@@ -504,7 +603,7 @@ class Agent_Customers_Edit extends React.Component {
                     )}
                   </CFormText>
                 </CFormGroup>
-                
+
                 <CFormGroup>
                   <CLabel htmlFor="nf-name">Mobile Number</CLabel>
                   <CInput
@@ -526,7 +625,7 @@ class Agent_Customers_Edit extends React.Component {
                     )}
                   </CFormText>
                 </CFormGroup>
-                
+
                 <CFormGroup>
                   <CLabel htmlFor="nf-name">Email</CLabel>
                   <CInput
@@ -568,21 +667,23 @@ class Agent_Customers_Edit extends React.Component {
                     disabled={true}
                   >
                     <option value="">-- Country --</option>;
-                    {
-                      
-                      this.state?.countryData?.country_list?.map((e, key) => {
-                        return (
-                          <option key={key} value={key}>
-                            {e.country_name}
-                          </option>
-                        );
-                      })
-                    }
+                    {this.state?.countryData?.country_list?.map((e, key) => {
+                      return (
+                        <option key={key} value={key}>
+                          {e.country_name}
+                        </option>
+                      );
+                    })}
                   </CSelect>
                   <CFormText className="help-block">
-                    {this.validator.message("country", this.state?.fields?.country, "required", {
-                      className: "text-danger",
-                    })}
+                    {this.validator.message(
+                      "country",
+                      this.state?.fields?.country,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
                   </CFormText>
                 </CFormGroup>
 
@@ -603,12 +704,16 @@ class Agent_Customers_Edit extends React.Component {
                         </option>
                       );
                     })}
-                   
                   </CSelect>
                   <CFormText className="help-block">
-                    {this.validator.message("city", this.state?.fields?.city, "required", {
-                      className: "text-danger",
-                    })}
+                    {this.validator.message(
+                      "city",
+                      this.state?.fields?.city,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
                   </CFormText>
                 </CFormGroup>
                 <CFormGroup>
@@ -623,9 +728,14 @@ class Agent_Customers_Edit extends React.Component {
                     value={this.state?.fields?.address}
                   />
                   <CFormText className="help-block">
-                    {this.validator.message("address", this.state?.fields?.address, "required", {
-                      className: "text-danger",
-                    })}
+                    {this.validator.message(
+                      "address",
+                      this.state?.fields?.address,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
                   </CFormText>
                 </CFormGroup>
                 <CFormGroup>
@@ -637,14 +747,19 @@ class Agent_Customers_Edit extends React.Component {
                     onChange={this.handleChange}
                     value={this.state?.fields?.commission_type}
                   >
-                    <option value={''}>{'Select Commission Type'}</option>
-                    <option value={'fixed'}>{'Fixed'}</option>
-                    <option value={'percentage'}>{'Percentage'}</option>
+                    <option value={""}>{"Select Commission Type"}</option>
+                    <option value={"fixed"}>{"Fixed"}</option>
+                    <option value={"percentage"}>{"Percentage"}</option>
                   </CSelect>
                   <CFormText className="help-block">
-                    {this.validator.message("commission_type", this.state?.fields?.commission_type, "required", {
-                      className: "text-danger",
-                    })}
+                    {this.validator.message(
+                      "commission_type",
+                      this.state?.fields?.commission_type,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
                   </CFormText>
                 </CFormGroup>
                 <CFormGroup>
@@ -660,9 +775,14 @@ class Agent_Customers_Edit extends React.Component {
                     value={this.state?.fields?.commission_amount}
                   />
                   <CFormText className="help-block">
-                    {this.validator.message("commission_amount", this.state?.fields?.commission_amount?.toString(), "required|numeric|min:0,num|max:6", {
-                      className: "text-danger",
-                    })}
+                    {this.validator.message(
+                      "commission_amount",
+                      this.state?.fields?.commission_amount?.toString(),
+                      "required|numeric|min:0,num|max:6",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
                   </CFormText>
                 </CFormGroup>
 
@@ -675,14 +795,19 @@ class Agent_Customers_Edit extends React.Component {
                     onChange={this.handleChange}
                     value={this.state?.fields?.system_commission_type}
                   >
-                    <option value={''}>{'Select Commission Type'}</option>
-                    <option value={'fixed'}>{'Fixed'}</option>
-                    <option value={'percentage'}>{'Percentage'}</option>
+                    <option value={""}>{"Select Commission Type"}</option>
+                    <option value={"fixed"}>{"Fixed"}</option>
+                    <option value={"percentage"}>{"Percentage"}</option>
                   </CSelect>
                   <CFormText className="help-block">
-                    {this.validator.message("system_commission_type", this.state?.fields?.system_commission_type, "required", {
-                      className: "text-danger",
-                    })}
+                    {this.validator.message(
+                      "system_commission_type",
+                      this.state?.fields?.system_commission_type,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
                   </CFormText>
                 </CFormGroup>
                 <CFormGroup>
@@ -698,9 +823,14 @@ class Agent_Customers_Edit extends React.Component {
                     value={this.state?.fields?.system_commission_amount}
                   />
                   <CFormText className="help-block">
-                    {this.validator.message("system_commission_amount", this.state?.fields?.system_commission_amount?.toString(), "required|numeric|min:0,num|max:6", {
-                      className: "text-danger",
-                    })}
+                    {this.validator.message(
+                      "system_commission_amount",
+                      this.state?.fields?.system_commission_amount?.toString(),
+                      "required|numeric|min:0,num|max:6",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
                   </CFormText>
                 </CFormGroup>
                 <CFormGroup row>
@@ -791,13 +921,11 @@ class Agent_Customers_Edit extends React.Component {
                     <div className="col-md-6 col">
                       <p>Payment Types</p>
                     </div>
-                    
                   </div>
                 </CFormGroup>
-                {this.state?.updatedCollectionType?.map((ele,index)=>{
+                {this.state?.updatedCollectionType?.map((ele, index) => {
                   return (
                     <CFormGroup row key={ele.id}>
-                    
                       {/* <CCol md="1" >
                       <CInput
                       type="checkbox"
@@ -811,66 +939,81 @@ class Agent_Customers_Edit extends React.Component {
                       </CCol> */}
 
                       <CCol className="customCBWrap">
-                      <CInput
-                      type="checkbox"
-                      name="status"
-                      id={`${'status'+ele.id}`}
-                      value={ele.id}
-                      onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'status')}}
-                      checked={ele.status}
-                      />
-                        <CLabel type="text" htmlFor={`${'status'+ele.id}`} id={ele.id} value={ele.collection_type}>{ele.collection_type}</CLabel>
+                        <CInput
+                          type="checkbox"
+                          name="status"
+                          id={`${"status" + ele.id}`}
+                          value={ele.id}
+                          onChange={(e) => {
+                            this.handlePaymentTypeChange(index, e, "status");
+                          }}
+                          checked={ele.status}
+                        />
+                        <CLabel
+                          type="text"
+                          htmlFor={`${"status" + ele.id}`}
+                          id={ele.id}
+                          value={ele.collection_type}
+                        >
+                          {ele.collection_type}
+                        </CLabel>
                       </CCol>
                       <CCol>
                         <CSelect
                           custom
                           name="type"
-                          id={`${'type'+ele.id}`}
+                          id={`${"type" + ele.id}`}
                           value={ele.type}
-                          onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'type')}}
-                          disabled={
-                            ele.status === 1 ? false : true
-                          }
+                          onChange={(e) => {
+                            this.handlePaymentTypeChange(index, e, "type");
+                          }}
+                          disabled={ele.status === 1 ? false : true}
                           // id="system_commission_type"
                         >
-                          <option value={''}>{'Select Type'}</option>
-                          <option value={'fixed'}>{'Fixed'}</option>
-                          <option value={'percentage'}>{'Percentage'}</option>
+                          <option value={""}>{"Select Type"}</option>
+                          <option value={"fixed"}>{"Fixed"}</option>
+                          <option value={"percentage"}>{"Percentage"}</option>
                         </CSelect>
                         <CFormText className="help-block">
-                          {
-                            ele.status == 1 && 
+                          {ele.status == 1 &&
                             this.validator.message(
-                              "type", ele.type, "required", {
-                            className: "text-danger",
-                          })}
+                              "type",
+                              ele.type,
+                              "required",
+                              {
+                                className: "text-danger",
+                              }
+                            )}
                         </CFormText>
-                        </CCol>
-                        <CCol>
+                      </CCol>
+                      <CCol>
                         <CInput
                           type="number"
-                          id={`${'amount'+ele.id}`}
+                          id={`${"amount" + ele.id}`}
                           name="amount"
                           placeholder="Enter Amount"
                           autoComplete="amount"
                           value={ele.amount}
-                          onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'amount')}}
+                          onChange={(e) => {
+                            this.handlePaymentTypeChange(index, e, "amount");
+                          }}
                           onKeyPress={this.handleKeyPress}
-                          disabled={
-                            ele.status === 1 ? false : true
-                          }
+                          disabled={ele.status === 1 ? false : true}
                         />
                         <CFormText className="help-block">
-                          {
-                            ele.status == 1 && 
+                          {ele.status == 1 &&
                             this.validator.message(
-                              "amount", ele.amount.toString(), "required|numeric|min:0,num|max:6", {
-                            className: "text-danger",
-                          })}
+                              "amount",
+                              ele.amount.toString(),
+                              "required|numeric|min:0,num|max:6",
+                              {
+                                className: "text-danger",
+                              }
+                            )}
                         </CFormText>
-                        </CCol>
+                      </CCol>
                     </CFormGroup>
-                  )
+                  );
                 })}
               </CCardBody>
               <CCardFooter>

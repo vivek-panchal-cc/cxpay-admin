@@ -18,7 +18,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  CSelect
+  CSelect,
 } from "@coreui/react";
 // import { userGroupsService } from "../../../../services/admin/user_groups.service";
 import { customersManagementService } from "../../../../services/admin/customers_management.service";
@@ -60,7 +60,7 @@ class Customers_Management_Index extends React.Component {
         search_name: "",
         sort_field: "created_at",
         sort_dir: "DESC",
-        status:''
+        status: "",
         // pageNo: 1,
         // sort_dir: 'asc',
         // sort_field: "user_group_name",
@@ -179,7 +179,7 @@ class Customers_Management_Index extends React.Component {
             search_name: "",
             sort_field: "created_at",
             sort_dir: "DESC",
-            status: ''
+            status: "",
             // pageNo: 1,
             // sort_dir: 'DESC',
             // sort_field: "created_at",
@@ -272,10 +272,20 @@ class Customers_Management_Index extends React.Component {
     });
   };
 
+  // handleCheckChieldElement = (event) => {
+  //   let multiactions = this.state.multiaction;
+  //   multiactions[event.target.value] = event.target.checked;
+  //   this.setState({ multiaction: multiactions });
+  // };
+
   handleCheckChieldElement = (event) => {
-    let multiactions = this.state.multiaction;
-    multiactions[event.target.value] = event.target.checked;
-    this.setState({ multiaction: multiactions });
+    const { multiaction } = this.state;
+    multiaction[event.target.value] = event.target.checked;
+    this.setState({ multiaction });
+
+    // Check if all checkboxes are checked
+    const allChecked = Object.values(multiaction).every((val) => val);
+    this.setState({ allCheckedbox: allChecked });
   };
 
   StatusChangedHandler(_id, status) {
@@ -338,9 +348,9 @@ class Customers_Management_Index extends React.Component {
                           onChange={this.handleChange}
                           value={this.state?.fields?.status}
                         >
-                          <option value={''}>{'Select Status'}</option>
-                          <option value={'1'}>{'Active'}</option>
-                          <option value={'0'}>{'Deactive'}</option>
+                          <option value={""}>{"Select Status"}</option>
+                          <option value={"1"}>{"Active"}</option>
+                          <option value={"0"}>{"Deactive"}</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -415,7 +425,7 @@ class Customers_Management_Index extends React.Component {
                             checked={this.state.allCheckedbox}
                           />
                         </th>
-                        {/* <th>#</th> */}
+                        <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">Name</span>
@@ -513,7 +523,7 @@ class Customers_Management_Index extends React.Component {
                                 />
                               )}
                             </td>
-                            {/* <td>{index + 1}</td> */}
+                            <td>{index + 1}</td>
                             <td>{c.name}</td>
                             <td>{c.email}</td>
                             <td>{c.mobile}</td>
@@ -530,8 +540,9 @@ class Customers_Management_Index extends React.Component {
                                   {c.status == 0 ? "Active" : "Deactive"}
                                 </CLink>
                               )}
-                              {_canAccess("personal_customers", "update") === false && (
-                                <>{c.status == '0' ? "Active" : "Deactive"}</>
+                              {_canAccess("personal_customers", "update") ===
+                                false && (
+                                <>{c.status == "0" ? "Active" : "Deactive"}</>
                               )}
                             </td>
                             {(_canAccess("personal_customers", "update") ||
@@ -543,7 +554,10 @@ class Customers_Management_Index extends React.Component {
                                   ) === -1 && (
                                     <>
                                       {current_user.user_group_id !== c._id &&
-                                        _canAccess("personal_customers", "update") && (
+                                        _canAccess(
+                                          "personal_customers",
+                                          "update"
+                                        ) && (
                                           <CTooltip
                                             content={globalConstants.EDIT_BTN}
                                           >
@@ -558,7 +572,10 @@ class Customers_Management_Index extends React.Component {
                                         )}
                                       &nbsp;
                                       {current_user.user_group_id !== c._id &&
-                                        _canAccess("personal_customers", "delete") && (
+                                        _canAccess(
+                                          "personal_customers",
+                                          "delete"
+                                        ) && (
                                           <CTooltip
                                             content={globalConstants.DELETE_BTN}
                                           >

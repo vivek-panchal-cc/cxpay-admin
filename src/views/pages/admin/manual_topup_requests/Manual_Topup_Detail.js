@@ -224,7 +224,7 @@ const Manual_Topup_Detail = () => {
                     <SectionTransactionDetails
                       transactionId={details?.transaction_id}
                       date={details?.date}
-                      amount={details?.amount}
+                      amount={details?.total_amount}
                       fees={details?.fees}
                       status={details?.status}
                     />

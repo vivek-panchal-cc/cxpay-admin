@@ -90,7 +90,7 @@ class PushNotificationEdit extends React.Component {
                   });
 
                   let selectedCustomer = [];
-                  this.state.options.filter((x) => {
+                  this.state.options?.filter((x) => {
                     if (userData.includes(x.value)) {
                       return selectedCustomer.push(x);
                     }
@@ -127,13 +127,34 @@ class PushNotificationEdit extends React.Component {
     });
   }
 
+  // handleChange(e) {
+  //   const { name, value } = e.target;
+  //   this.setState({ fields: { ...this.state.fields, [name]: value } });
+  // }
+
   handleChange(e) {
     const { name, value } = e.target;
-    this.setState({ fields: { ...this.state.fields, [name]: value } });
+    this.setState({ fields: { ...this.state.fields, [name]: value } }, () => {
+      if (name === "type" && value === "schedule") {
+        this.setDefaultScheduleTime();
+      }
+    });
+  }
+
+  setDefaultScheduleTime() {
+    const currentDateTime = new Date();
+    const roundedMinutes = Math.ceil(currentDateTime.getMinutes() / 15) * 15;
+    currentDateTime.setMinutes(roundedMinutes % 60);
+    if (roundedMinutes >= 60) {
+      currentDateTime.setHours(currentDateTime.getHours() + 1);
+    }
+    this.setState({
+      fields: { ...this.state.fields, schedule_time: currentDateTime },
+    });
   }
 
   selectedCustomerData(customer) {
-    if (customer.filter((x) => x.value == "all").length > 0) {
+    if (customer?.filter((x) => x.value == "all").length > 0) {
       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];
@@ -328,7 +349,12 @@ class PushNotificationEdit extends React.Component {
                     <CFormGroup>
                       <CLabel htmlFor="name">Schedule Time</CLabel>
                       <DatePicker
-                        selected={new Date(this.state.fields.schedule_time)}
+                        // selected={new Date(this.state.fields.schedule_time)}
+                        selected={
+                          this.state.fields.schedule_time
+                            ? new Date(this.state.fields.schedule_time)
+                            : new Date()
+                        }
                         onChange={(date) => this.handledateChange(date)}
                         showTimeSelect
                         timeFormat="HH:mm"

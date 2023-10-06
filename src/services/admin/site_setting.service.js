@@ -3,6 +3,8 @@ import { notify, handleResponse, setLoading } from "../../_helpers/";
 
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const site_setting_Service = {
   updatemysite,
   getmysite,
@@ -19,7 +21,7 @@ function create_site(postData) {
          body: postData
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/site/add`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/site/add`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -35,7 +37,7 @@ function getsite(postData) {
         headers: authHeader('site_setting', 'view'),
         body: JSON.stringify(postData),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/site/index`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/site/index`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -49,7 +51,7 @@ function delete_site(id) {
         method: 'DELETE',
         headers: authHeader('site_setting', 'delete'),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/site/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/site/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -69,7 +71,7 @@ function updatemysite(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/update_site`,
+    `${API_URL}api/update_site`,
     requestOptions
   )
     .catch((error) => {
@@ -87,7 +89,7 @@ function getmysite(id) {
     headers: authHeader("theme_setting", "view"),
   };
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/site`, requestOptions)
+  return fetch(`${API_URL}api/site`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -104,7 +106,7 @@ function get_site_single(id) {
         headers:authHeaderMutlipart('site_setting', 'view')
     };
    
-    return fetch(`${process.env.REACT_APP_API_URL}api/site/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/site/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();

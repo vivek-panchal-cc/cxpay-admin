@@ -3,6 +3,8 @@ import { notify, handleResponse, setLoading } from "../../_helpers";
 import moment from "moment";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const reportsService = {
   getCustomersList,
   customerDetails,
@@ -22,7 +24,7 @@ async function getCustomersList(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/generate-customer-report`,
+      `${API_URL}api/generate-customer-report`,
       requestOptions
     );
   } catch (error) {
@@ -44,7 +46,7 @@ async function customerDetails(postData) {
   try {
     setLoading(true);
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/get-customer`,
+      `${API_URL}api/get-customer`,
       requestOptions
     );
   } catch (error) {
@@ -63,7 +65,7 @@ async function downloadCustomerCSV() {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/export-customer-report`,
+      `${API_URL}api/export-customer-report`,
       requestOptions
     );
   } catch (error) {
@@ -83,7 +85,7 @@ async function getTransactionList(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/generate-transaction-report`,
+      `${API_URL}api/generate-transaction-report`,
       requestOptions
     );
   } catch (error) {
@@ -103,7 +105,7 @@ async function downloadTransactionCSV() {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/export-transaction-report`,
+      `${API_URL}api/export-transaction-report`,
       requestOptions
     );
   } catch (error) {

@@ -260,10 +260,20 @@ class Business_Customers_Index extends React.Component {
     });
   };
 
+  // handleCheckChieldElement = (event) => {
+  //   let multiactions = this.state.multiaction;
+  //   multiactions[event.target.value] = event.target.checked;
+  //   this.setState({ multiaction: multiactions });
+  // };
+
   handleCheckChieldElement = (event) => {
-    let multiactions = this.state.multiaction;
-    multiactions[event.target.value] = event.target.checked;
-    this.setState({ multiaction: multiactions });
+    const { multiaction } = this.state;
+    multiaction[event.target.value] = event.target.checked;
+    this.setState({ multiaction });
+
+    // Check if all checkboxes are checked
+    const allChecked = Object.values(multiaction).every((val) => val);
+    this.setState({ allCheckedbox: allChecked });
   };
 
   StatusChangedHandler(_id, status) {
@@ -401,7 +411,7 @@ class Business_Customers_Index extends React.Component {
                             checked={this.state.allCheckedbox}
                           />
                         </th>
-                        {/* <th>#</th> */}
+                        <th>#</th>
                         <th
                           onClick={() => this.handleColumnSort("company_name")}
                         >
@@ -506,7 +516,7 @@ class Business_Customers_Index extends React.Component {
                                 />
                               )}
                             </td>
-                            {/* <td>{index + 1}</td> */}
+                            <td>{index + 1}</td>
                             <td>{c.company_name}</td>
                             <td>{c.email}</td>
                             <td>{c.mobile}</td>

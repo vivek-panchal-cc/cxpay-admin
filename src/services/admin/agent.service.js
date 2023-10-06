@@ -2,6 +2,7 @@ import { authHeader, authHeaderTimezoneDevice, authHeaderMutlipart, authHeaderMu
 import { notify, handleResponse, setLoading } from '../../_helpers';
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
 
 /*************** Export Functions Defined For Services ******************************/
 
@@ -32,7 +33,7 @@ function getAgentList(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/agent-list`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/agent-list`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(true);
     }).then(handleResponse);
@@ -50,7 +51,7 @@ function getAgentList(postData) {
 //     };
 
 
-//     return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/add`, requestOptions).catch((error) => {
+//     return fetch(`${API_URL}api/cms_pages/add`, requestOptions).catch((error) => {
 //         notify.error('Something went wrong');
 //         setLoading(true);
 //     }).then(handleResponse);
@@ -64,7 +65,7 @@ function createAgent(postData) {
         body: postData
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/register-agent`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/register-agent`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(true);
     }).then(handleResponse);
@@ -79,7 +80,7 @@ function deleteAgent(postData) {
       body: JSON.stringify(postData),
     };
     return fetch(
-      `${process.env.REACT_APP_API_URL}api/customers/delete-customers`,
+      `${API_URL}api/customers/delete-customers`,
       requestOptions
     )
       .catch((error) => {
@@ -99,7 +100,7 @@ function deleteAgent(postData) {
 //         headers: authHeader('cms_pages', 'view')
 //     };
 
-//     return fetch(`${process.env.REACT_APP_API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
+//     return fetch(`${API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
 //         notify.error('Something went wrong');
 //         setLoading(false);
 //         return Promise.reject();
@@ -115,7 +116,7 @@ function getAgentDetails(postData) {
     };
   
     return fetch(
-      `${process.env.REACT_APP_API_URL}api/agent-details`,
+      `${API_URL}api/agent-details`,
       requestOptions
     )
       .catch((error) => {
@@ -138,7 +139,7 @@ function updateAgent(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/agent-update`,
+    `${API_URL}api/agent-update`,
     requestOptions
   )
     .catch((error) => {
@@ -157,7 +158,7 @@ function detailview(postData) {
         headers: authHeader('agent_customers', 'view'),
         body: JSON.stringify(postData)
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/agent-wise-recharge`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/agent-wise-recharge`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -173,7 +174,7 @@ function changeAgentStatus(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/customers/change-status`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/customers/change-status`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -188,7 +189,7 @@ function deleteMultipleAgent(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/delete_multiple_pages`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/delete_multiple_pages`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -204,7 +205,7 @@ function changeBulkCustomerStatus(postData) {
     };
   
     return fetch(
-      `${process.env.REACT_APP_API_URL}api/customers/change-status`,
+      `${API_URL}api/customers/change-status`,
       requestOptions
     )
       .catch((error) => {
@@ -223,7 +224,7 @@ function getCountry() {
     };
   
     return fetch(
-      `${process.env.REACT_APP_API_URL}api/customers/get-country`,
+      `${API_URL}api/customers/get-country`,
       requestOptions
     )
       .catch((error) => {
@@ -242,7 +243,7 @@ function getCountry() {
     };
   
     return fetch(
-      `${process.env.REACT_APP_API_URL}api/agent-collection-type-list`,
+      `${API_URL}api/agent-collection-type-list`,
       requestOptions
     )
       .catch((error) => {
@@ -260,7 +261,7 @@ function getCountry() {
         headers: authHeader('agent_customers', 'view'),
         body: JSON.stringify(postData)
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/delete-request-agent-list`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/delete-request-agent-list`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -274,7 +275,7 @@ function getCountry() {
         headers: authHeader('agent_customers', 'view'),
         body: JSON.stringify(postData)
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/delete-request-status-change`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/delete-request-status-change`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();

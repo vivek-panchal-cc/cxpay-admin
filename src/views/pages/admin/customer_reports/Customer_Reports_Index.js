@@ -232,6 +232,8 @@ class Customer_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Type --</option>
+                          <option value="all">All</option>
+                          <option value="agent">Agent</option>
                           <option value="business">Business</option>
                           <option value="personal">Personal</option>
                         </CSelect>

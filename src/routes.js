@@ -166,6 +166,10 @@ const Transaction_Reports_Index = React.lazy(() =>
   import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
 );
 
+const Schedule_Payments_Index = React.lazy(() =>
+  import("./views/pages/admin/schedule_payments/Schedule_Payments_Index")
+);
+
 const Withdraw_Requests_Index = React.lazy(() =>
   import("./views/pages/admin/withdraw_requests/Withdraw_Requests_Index")
 );
@@ -562,6 +566,14 @@ const routes = [
     module_name: "notifications",
     action: "update",
   },
+  {
+    path: "/admin/schedule_payments",
+    exact: true,
+    name: "Schedule Payments",
+    component: Schedule_Payments_Index,
+    module_name: "schedule_payments",
+    action: "view",
+  },
   // report
   {
     path: "/admin/customer_reports",
@@ -621,47 +633,47 @@ const routes = [
     module_name: "manual_requests",
     action: "view",
   },
-    // module_name and action parameter used for ACL mechanisam its required column
-    {
-      path: "/admin/agent_customers",
-      exact: true,
-      name: "Agent Customers",
-      component: Agent_Customers_Index,
-      module_name: "agent_customers",
-      action: "view",
-    },
-    {
-      path: "/admin/agent_customers/edit/:id",
-      exact: true,
-      name: "  Edit",
-      component: Agent_Customers_Edit,
-      module_name: "agent_customers",
-      action: "update",
-    },
-    {
-      path: "/admin/agent_customers/add",
-      exact: true,
-      name: "Add ",
-      component: Agent_Customers_Add,
-      module_name: "agent_customers",
-      action: "create",
-    },
-    {
-      path: "/admin/agent_customers/detailview/:id",
-      exact: true,
-      name: "Detail View",
-      component: Agent_Detail,
-      module_name: "agent_customers",
-      action: "view",
-    },
-    {
-      path: "/admin/agent_customers/delete_requests",
-      exact: true,
-      name: "Delete Requests",
-      component: Agent_Delete_Requests,
-      module_name: "agent_customers",
-      action: "view",
-    },
+  // module_name and action parameter used for ACL mechanisam its required column
+  {
+    path: "/admin/agent_customers",
+    exact: true,
+    name: "Agent Customers",
+    component: Agent_Customers_Index,
+    module_name: "agent_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/agent_customers/edit/:id",
+    exact: true,
+    name: "  Edit",
+    component: Agent_Customers_Edit,
+    module_name: "agent_customers",
+    action: "update",
+  },
+  {
+    path: "/admin/agent_customers/add",
+    exact: true,
+    name: "Add ",
+    component: Agent_Customers_Add,
+    module_name: "agent_customers",
+    action: "create",
+  },
+  {
+    path: "/admin/agent_customers/detailview/:id",
+    exact: true,
+    name: "Detail View",
+    component: Agent_Detail,
+    module_name: "agent_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/agent_customers/delete_requests",
+    exact: true,
+    name: "Delete Requests",
+    component: Agent_Delete_Requests,
+    module_name: "agent_customers",
+    action: "view",
+  },
 ];
 
 export default routes;
