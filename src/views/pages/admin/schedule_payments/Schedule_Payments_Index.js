@@ -405,23 +405,8 @@ class SchedulePaymentsIndex extends React.Component {
                           </span>
                         </th>
 
-                        <th onClick={() => this.handleColumnSort("is_group")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              Is Group?
-                            </span>
-                            {this.state.fields.sort_field !== "is_group" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field === "is_group" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field === "is_group" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
+                        <th>
+                          Is Group?
                         </th>
                       </tr>
                     </thead>
