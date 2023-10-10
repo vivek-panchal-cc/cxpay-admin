@@ -11,11 +11,16 @@ import {
 } from "@coreui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { formatDate } from "_helpers";
+import { formatDate, history } from "_helpers";
 import "./page.css";
 import "./details.css";
 
 const RecurringFullPost = (props) => {
+  if (!props.recurring_details) {
+    history.push("/admin/recurring_payments");
+    return null;
+  }
+
   const {
     sender_name,
     amount,
@@ -28,7 +33,7 @@ const RecurringFullPost = (props) => {
     recurring_end_date,
     recurring_start_date,
     recurring_dates,
-  } = props.recurring_details;
+  } = props?.recurring_details;
   return (
     <>
       <CContainer fluid className="recurring-details-container">
