@@ -189,7 +189,9 @@ class Agent_Customers_Edit extends React.Component {
           history.push("/admin/agent_customers");
           return;
         }
-        this.setState({ countryData: countryRes.data });
+        if (countryRes?.data) {
+          this.setState({ countryData: countryRes?.data });
+        }
 
         // Fetch collection type data
         const collectionRes = await agentService.getCollectionType();
@@ -200,7 +202,7 @@ class Agent_Customers_Edit extends React.Component {
           history.push("/admin/agent_customers");
           return;
         }
-        const collectionArray = collectionRes.data.map((e) => ({
+        const collectionArray = collectionRes.data?.map((e) => ({
           id: e.id,
           status: "",
           type: "",
@@ -221,16 +223,22 @@ class Agent_Customers_Edit extends React.Component {
           history.push("/admin/agent_customers");
           return;
         }
-        const countryIndex = this.state.countryData.country_list.findIndex(
-          (e) => e.iso === agentRes.data.country
+        const country = this.state.countryData.country_list?.find(
+          (e) =>
+            e.country_name.toLowerCase() === agentRes.data.country.toLowerCase()
         );
-        const { iso } =
-          this.state.countryData.country_list.find(
-            (e) => e.iso === agentRes.data.country
-          ) || {};
+        const iso = country?.iso;
+        const countryIndex = this.state.countryData.country_list?.findIndex(
+          (e) => e.iso === iso
+        );
         this.setState({
           fields: agentRes.data,
-          cityData: [...this.state.countryData.city_list[iso]],
+          // cityData: [...this.state.countryData.city_list[iso]],
+          cityData:
+            this.state.countryData.city_list &&
+            this.state.countryData.city_list[iso]
+              ? [...this.state.countryData.city_list[iso]]
+              : [],
           city: agentRes.data.city,
           country: countryIndex,
           status: agentRes.data.status == 0 ? 0 : 1,

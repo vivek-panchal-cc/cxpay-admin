@@ -153,14 +153,11 @@ class Business_Customers_Edit extends React.Component {
   }
 
   handleChange(e) {
-    console.log(e.target);
-    console.log(name);
     const { name, value } = e.target;
     if (name === "status") {
       var fstatus = value === "true" ? false : true;
       this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
     } else {
-      console.log(name);
       this.setState({ fields: { ...this.state.fields, [name]: value } });
     }
   }

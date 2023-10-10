@@ -217,14 +217,14 @@ const Manual_Topup_Detail = () => {
                       heading={details?.name}
                       subHeading={details?.user_type}
                       status={details?.status}
-                      amount={details?.amount + " ANG"}
+                      amount={(details?.amount - details?.fees) + " ANG"}
                       specification={details?.specification}
                     />
                     <div className="wcr-divider-wrap"></div>
                     <SectionTransactionDetails
                       transactionId={details?.transaction_id}
                       date={details?.date}
-                      amount={details?.total_amount}
+                      amount={details?.amount}
                       fees={details?.fees}
                       status={details?.status}
                     />

@@ -170,6 +170,14 @@ const Schedule_Payments_Index = React.lazy(() =>
   import("./views/pages/admin/schedule_payments/Schedule_Payments_Index")
 );
 
+const Recurring_Payments_Index = React.lazy(() =>
+  import("./views/pages/admin/recurring_payments/Recurring_Payments_Index")
+);
+
+const Recurring_Detail = React.lazy(() =>
+  import("./views/pages/admin/recurring_payments/Recurring_Detail")
+);
+
 const Withdraw_Requests_Index = React.lazy(() =>
   import("./views/pages/admin/withdraw_requests/Withdraw_Requests_Index")
 );
@@ -572,6 +580,22 @@ const routes = [
     name: "Schedule Payments",
     component: Schedule_Payments_Index,
     module_name: "schedule_payments",
+    action: "view",
+  },
+  {
+    path: "/admin/recurring_payments",
+    exact: true,
+    name: "Recurring Payments",
+    component: Recurring_Payments_Index,
+    module_name: "recurring_payments",
+    action: "view",
+  },
+  {
+    path: "/admin/recurring_payments/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Recurring_Detail,
+    module_name: "recurring_payments",
     action: "view",
   },
   // report

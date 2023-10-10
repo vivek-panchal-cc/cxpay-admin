@@ -142,6 +142,14 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavItem",
+    name: "Recurring Payments",
+    to: "/admin/recurring_payments",
+    icon: <FontAwesomeIcon icon={faStopwatch} className="c-sidebar-nav-icon" />,
+    module_name: "recurring_payments",
+    id: "recurring_payments_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
     name: "Push Notifications",
     to: "/admin/notifications",
     icon: <FontAwesomeIcon icon={faBell} className="c-sidebar-nav-icon" />,

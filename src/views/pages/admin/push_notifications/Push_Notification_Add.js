@@ -309,6 +309,7 @@ class Push_Notification_Add extends React.Component {
                         timeCaption="Time"
                         dateFormat="dd/MM/yyyy HH:mm"
                         className="form-control"
+                        minDate={new Date()}
                       />
                       <CFormText className="help-block">
                         {this.validator.message(
