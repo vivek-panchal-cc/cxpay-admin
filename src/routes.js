@@ -217,7 +217,7 @@ const Agent_Delete_Requests = React.lazy(() =>
 
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
-  { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
+  { path: "/admin/dashboard", exact: true, name: "Dashboard", component: Dashboard },
 
   // module_name and action parameter used for ACL mechanisam its required column
   {

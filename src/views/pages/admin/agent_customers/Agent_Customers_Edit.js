@@ -80,175 +80,175 @@ class Agent_Customers_Edit extends React.Component {
     this.handleUpload = this.handleUpload.bind(this);
   }
 
-  // componentDidMount() {
-  //   agentService.getCountry().then((res) => {
-  //     if (res.status === false) {
-  //       notify.error(res.message);
-  //     } else {
-  //       if (res.data == null) {
-  //         notify.error("Country Not Found");
-  //         history.push("/admin/agent_customers");
-  //       }
+  componentDidMount() {
+    agentService.getCountry().then((res) => {
+      if (res.status === false) {
+        notify.error(res.message);
+      } else {
+        if (res.data == null) {
+          notify.error("Country Not Found");
+          history.push("/admin/agent_customers");
+        }
 
-  //       this.setState({ countryData: res.data });
-  //     }
-  //   });
+        this.setState({ countryData: res.data });
+      }
+    });
 
-  //   agentService.getCollectionType().then((res) => {
-  //     if (res.status === false) {
-  //       notify.error(res.message);
-  //     } else {
-  //       if (res.data == null) {
-  //         notify.error("Collection Types Not Found");
-  //         history.push("/admin/agent_customers");
-  //       }
+    agentService.getCollectionType().then((res) => {
+      if (res.status === false) {
+        notify.error(res.message);
+      } else {
+        if (res.data == null) {
+          notify.error("Collection Types Not Found");
+          history.push("/admin/agent_customers");
+        }
 
-  //       this.setState({ collectionData: res.data });
-  //       let arrayObj = [];
-  //       res?.data?.map((e, i) => {
-  //         let obj = {
-  //           id: e.id,
-  //           status: "",
-  //           type: "",
-  //           amount: "",
-  //           collection_type: e.collection_type,
-  //         };
-  //         arrayObj.push(obj);
-  //       });
-  //       this.setState({ collectionType: arrayObj });
-  //     }
-  //   });
+        this.setState({ collectionData: res.data });
+        let arrayObj = [];
+        res?.data?.map((e, i) => {
+          let obj = {
+            id: e.id,
+            status: "",
+            type: "",
+            amount: "",
+            collection_type: e.collection_type,
+          };
+          arrayObj.push(obj);
+        });
+        this.setState({ collectionType: arrayObj });
+      }
+    });
 
-  //   setTimeout(() => {
-  //     if (
-  //       _canAccess(
-  //         this.props.module_name,
-  //         this.props.action,
-  //         "/admin/agent_customers"
-  //       )
-  //     ) {
-  //       var postData = {
-  //         account_number: this.state.fields._id,
-  //       };
-
-  //       agentService.getAgentDetails(postData).then((res) => {
-  //         if (res.status === false) {
-  //           notify.error(res.message);
-  //         } else {
-  //           if (res.data == null) {
-  //             notify.error("Agent not found");
-  //             history.push("/admin/agent_customers");
-  //           }
-
-  //           this.setState({
-  //             ...this.state,
-  //             fields: res.data,
-  //           });
-
-  //           const country_index = this.state.countryData.country_list.findIndex(
-  //             (e) => e.iso === res.data.country
-  //           );
-
-  //           const { iso } =
-  //             this.state.countryData.country_list.find(
-  //               (e) => e.iso === res.data.country
-  //             ) || {};
-  //           const statustmp = res.data.status == 0 ? 0 : 1;
-
-  //           this.setState({
-  //             cityData: [...this.state.countryData.city_list[iso]],
-  //             city: res.data.city,
-  //             country: country_index,
-  //             status: statustmp,
-  //           });
-  //         }
-  //       });
-  //     }
-  //   }, 700);
-  // }
-
-  async componentDidMount() {
-    setTimeout(async () => {
-      // Check for permissions
+    setTimeout(() => {
       if (
-        !_canAccess(
+        _canAccess(
           this.props.module_name,
           this.props.action,
           "/admin/agent_customers"
         )
       ) {
-        notify.error("You don't have permission to view agent details.");
-        return;
-      }
-      try {
-        // Fetch country data
-        const countryRes = await agentService.getCountry();
-        if (countryRes.status === false) throw new Error(countryRes.message);
-        if (!countryRes.data) {
-          notify.error("Country Not Found");
-          history.push("/admin/agent_customers");
-          return;
-        }
-        if (countryRes?.data) {
-          this.setState({ countryData: countryRes?.data });
-        }
+        var postData = {
+          account_number: this.state.fields._id,
+        };
 
-        // Fetch collection type data
-        const collectionRes = await agentService.getCollectionType();
-        if (collectionRes.status === false)
-          throw new Error(collectionRes.message);
-        if (!collectionRes.data) {
-          notify.error("Collection Types Not Found");
-          history.push("/admin/agent_customers");
-          return;
-        }
-        const collectionArray = collectionRes.data?.map((e) => ({
-          id: e.id,
-          status: "",
-          type: "",
-          amount: "",
-          collection_type: e.collection_type,
-        }));
-        this.setState({
-          collectionData: collectionRes.data,
-          collectionType: collectionArray,
-        });
+        agentService.getAgentDetails(postData).then((res) => {
+          if (res.status === false) {
+            notify.error(res.message);
+          } else {
+            if (res.data == null) {
+              notify.error("Agent not found");
+              history.push("/admin/agent_customers");
+            }
 
-        // Fetch agent details
-        const postData = { account_number: this.state.fields._id };
-        const agentRes = await agentService.getAgentDetails(postData);
-        if (agentRes.status === false) throw new Error(agentRes.message);
-        if (!agentRes.data) {
-          notify.error("Agent not found");
-          history.push("/admin/agent_customers");
-          return;
-        }
-        const country = this.state.countryData.country_list?.find(
-          (e) =>
-            e.country_name.toLowerCase() === agentRes.data.country.toLowerCase()
-        );
-        const iso = country?.iso;
-        const countryIndex = this.state.countryData.country_list?.findIndex(
-          (e) => e.iso === iso
-        );
-        this.setState({
-          fields: agentRes.data,
-          // cityData: [...this.state.countryData.city_list[iso]],
-          cityData:
-            this.state.countryData.city_list &&
-            this.state.countryData.city_list[iso]
-              ? [...this.state.countryData.city_list[iso]]
-              : [],
-          city: agentRes.data.city,
-          country: countryIndex,
-          status: agentRes.data.status == 0 ? 0 : 1,
+            this.setState({
+              ...this.state,
+              fields: res.data,
+            });
+
+            const country_index = this.state.countryData.country_list.findIndex(
+              (e) => e.iso === res.data.country
+            );
+
+            const { iso } =
+              this.state.countryData.country_list.find(
+                (e) => e.iso === res.data.country
+              ) || {};
+            const statustmp = res.data.status == 0 ? 0 : 1;
+
+            this.setState({
+              cityData: [...this.state.countryData.city_list[iso]],
+              city: res.data.city,
+              country: country_index,
+              status: statustmp,
+            });
+          }
         });
-      } catch (error) {
-        // Handle any unexpected error
-        notify.error(error.message || "An unexpected error occurred.");
       }
     }, 700);
   }
+
+  // async componentDidMount() {
+  //   setTimeout(async () => {
+  //     // Check for permissions
+  //     if (
+  //       !_canAccess(
+  //         this.props.module_name,
+  //         this.props.action,
+  //         "/admin/agent_customers"
+  //       )
+  //     ) {
+  //       notify.error("You don't have permission to view agent details.");
+  //       return;
+  //     }
+  //     try {
+  //       // Fetch country data
+  //       const countryRes = await agentService.getCountry();
+  //       if (countryRes.status === false) throw new Error(countryRes.message);
+  //       if (!countryRes.data) {
+  //         notify.error("Country Not Found");
+  //         history.push("/admin/agent_customers");
+  //         return;
+  //       }
+  //       if (countryRes?.data) {
+  //         this.setState({ countryData: countryRes?.data });
+  //       }
+
+  //       // Fetch collection type data
+  //       const collectionRes = await agentService.getCollectionType();
+  //       if (collectionRes.status === false)
+  //         throw new Error(collectionRes.message);
+  //       if (!collectionRes.data) {
+  //         notify.error("Collection Types Not Found");
+  //         history.push("/admin/agent_customers");
+  //         return;
+  //       }
+  //       const collectionArray = collectionRes.data?.map((e) => ({
+  //         id: e.id,
+  //         status: "",
+  //         type: "",
+  //         amount: "",
+  //         collection_type: e.collection_type,
+  //       }));
+  //       this.setState({
+  //         collectionData: collectionRes.data,
+  //         collectionType: collectionArray,
+  //       });
+
+  //       // Fetch agent details
+  //       const postData = { account_number: this.state.fields._id };
+  //       const agentRes = await agentService.getAgentDetails(postData);
+  //       if (agentRes.status === false) throw new Error(agentRes.message);
+  //       if (!agentRes.data) {
+  //         notify.error("Agent not found");
+  //         history.push("/admin/agent_customers");
+  //         return;
+  //       }
+  //       const country = this.state.countryData.country_list?.find(
+  //         (e) =>
+  //           e.country_name.toLowerCase() === agentRes.data.country.toLowerCase()
+  //       );
+  //       const iso = country?.iso;
+  //       const countryIndex = this.state.countryData.country_list?.findIndex(
+  //         (e) => e.iso === iso
+  //       );
+  //       this.setState({
+  //         fields: agentRes.data,
+  //         // cityData: [...this.state.countryData.city_list[iso]],
+  //         cityData:
+  //           this.state.countryData.city_list &&
+  //           this.state.countryData.city_list[iso]
+  //             ? [...this.state.countryData.city_list[iso]]
+  //             : [],
+  //         city: agentRes.data.city,
+  //         country: countryIndex,
+  //         status: agentRes.data.status == 0 ? 0 : 1,
+  //       });
+  //     } catch (error) {
+  //       // Handle any unexpected error
+  //       notify.error(error.message || "An unexpected error occurred.");
+  //     }
+  //   }, 700);
+  // }
 
   componentDidUpdate(prevProps, prevState) {
     if (

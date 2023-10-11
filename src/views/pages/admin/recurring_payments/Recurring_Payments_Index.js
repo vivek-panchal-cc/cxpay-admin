@@ -19,7 +19,12 @@ import {
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { paymentsService } from "services/admin/payments.service";
-import { notify, history, formatDate } from "../../../../_helpers/index";
+import {
+  notify,
+  history,
+  formatDate,
+  _canAccess,
+} from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -456,11 +461,11 @@ class RecurringPaymentsIndex extends React.Component {
 
                         <th>Is Group?</th>
 
-                        {/* {_canAccess("recurring_payments", "view") && ( */}
+                        {_canAccess("recurring_payments", "view") && (
                           <>
                             <th>Action</th>
                           </>
-                        {/* )} */}
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -486,26 +491,25 @@ class RecurringPaymentsIndex extends React.Component {
                             <td>{formatDate(u.created_at)}</td>
                             <td>
                               {u.is_group.toString() === "1" ? "Yes" : "No"}
-                            </td>                            
-                              <>
-                                <td className="d-flex">                                  
-                                  {/* {_canAccess("recurring_payments", "view") && ( */}
-                                    <CTooltip
-                                      content={
-                                        globalConstants.VIEW_RECURRING_DETAILS
-                                      }
-                                    >
-                                      <CLink
-                                        className="btn btn-dark btn-block w-auto"
-                                        aria-current="page"
-                                        to={`/admin/recurring_payments/detailview/${u.id}`}
-                                      >
-                                        <FontAwesomeIcon icon={faEye} />
-                                      </CLink>
-                                    </CTooltip>
-                                  {/* )} */}
-                                </td>
-                              </>                            
+                            </td>
+
+                            <td className="d-flex">
+                              {_canAccess("recurring_payments", "view") && (
+                                <CTooltip
+                                  content={
+                                    globalConstants.VIEW_RECURRING_DETAILS
+                                  }
+                                >
+                                  <CLink
+                                    className="btn btn-dark btn-block w-auto"
+                                    aria-current="page"
+                                    to={`/admin/recurring_payments/detailview/${u.id}`}
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </CLink>
+                                </CTooltip>
+                              )}
+                            </td>
                           </tr>
                         ))
                       ) : (
