@@ -147,7 +147,7 @@ class Customer_Reports_Index extends React.Component {
         {
           fields: {
             ...this.state.fields,
-            page: 1            
+            page: 1,
           },
         },
         () => {
@@ -455,8 +455,8 @@ class Customer_Reports_Index extends React.Component {
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>
-                              {"+"}
-                              {u.country_code} {u.mobile}
+                              {/* {"+"}{u.mobile} */}
+                              {`+${u.mobile}`}
                             </td>
                             <td>
                               {typeof parseFloat(u.available_balance) ===

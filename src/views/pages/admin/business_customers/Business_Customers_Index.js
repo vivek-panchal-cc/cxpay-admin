@@ -18,7 +18,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  CSelect
+  CSelect,
 } from "@coreui/react";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
 import {
@@ -35,6 +35,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
+import InputDateRange from "components/admin/InputDateRange";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -53,12 +54,25 @@ class Business_Customers_Index extends React.Component {
     this.pageChange = this.pageChange.bind(this);
 
     this.state = {
+      filters: {
+        startDate: "",
+        endDate: "",
+      },
+      showDateFilter: false,
+      filtersChanged: false,
+      allFilters: {
+        start_date: "",
+        end_date: "",
+        status: "",
+      },
       fields: {
         page: 1,
+        start_date: "",
+        end_date: "",
         search_company_name: "",
         sort_field: "created_at",
-        sort_dir: "DESC",
-        status:""
+        sort_dir: "desc",
+        status: "",
       },
       _openPopup: false,
       customers_management_list: [],
@@ -167,12 +181,24 @@ class Business_Customers_Index extends React.Component {
     if (type === "reset") {
       this.setState(
         {
+          allFilters: {
+            start_date: "",
+            end_date: "",
+            status: "",
+          },
+          filters: {
+            startDate: "",
+            endDate: "",
+          },
+          filtersChanged: false,
           fields: {
             page: 1,
+            start_date: "",
+            end_date: "",
             search_company_name: "",
             sort_field: "created_at",
-            sort_dir: "DESC",
-            status: ""
+            sort_dir: "desc",
+            status: "",
           },
         },
         () => {
@@ -276,6 +302,26 @@ class Business_Customers_Index extends React.Component {
     this.setState({ allCheckedbox: allChecked });
   };
 
+  //filter code
+  handleChangeDateFilter = (params) => {
+    const [startDate, endDate] = params;
+    // if (!startDate || !endDate) return;
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        start_date: startDate?.toLocaleDateString(),
+        end_date: endDate?.toLocaleDateString(),
+      },
+      filters: {
+        startDate: startDate,
+        endDate: endDate,
+      },
+      page: 1,
+      showDateFilter: false,
+      filtersChanged: true,
+    });
+  };
+
   StatusChangedHandler(_id, status) {
     var postData = {
       mobile_number: [_id],
@@ -312,9 +358,9 @@ class Business_Customers_Index extends React.Component {
             <CCard>
               <CCardBody>
                 <CRow>
-                  <CCol xl={5}>
+                  <CCol xl={3}>
                     <CFormGroup row>
-                      <CCol xs="6">
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Company Name</CLabel>
                         <CInput
                           id="name"
@@ -325,7 +371,11 @@ class Business_Customers_Index extends React.Component {
                           onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
-                      <CCol xs="6">
+                    </CFormGroup>
+                  </CCol>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Status</CLabel>
                         <CSelect
                           custom
@@ -334,14 +384,28 @@ class Business_Customers_Index extends React.Component {
                           onChange={this.handleChange}
                           value={this.state?.fields?.status}
                         >
-                          <option value={''}>{'Select Status'}</option>
-                          <option value={'1'}>{'Active'}</option>
-                          <option value={'0'}>{'Deactive'}</option>
+                          <option value={""}>{"Select Status"}</option>
+                          <option value={"1"}>{"Active"}</option>
+                          <option value={"0"}>{"Deactive"}</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                  
+
+                  <CCol xl={4}>
+                    <CFormGroup row>
+                      <CCol xs="10">
+                        <CLabel htmlFor="name">Date</CLabel>
+                        <InputDateRange
+                          className=""
+                          startDate={this.state.filters.startDate}
+                          endDate={this.state.filters.endDate}
+                          onChange={this.handleChangeDateFilter}
+                        />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+
                   <CCol xl={9}>
                     <CFormGroup row>
                       <CCol xs="12"></CCol>
@@ -474,6 +538,24 @@ class Business_Customers_Index extends React.Component {
                               )}
                           </span>
                         </th>
+                        <th onClick={() => this.handleColumnSort("created_at")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Created At
+                            </span>
+                            {this.state.fields.sort_field !== "created_at" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field === "created_at" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field === "created_at" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -520,6 +602,7 @@ class Business_Customers_Index extends React.Component {
                             <td>{c.company_name}</td>
                             <td>{c.email}</td>
                             <td>{c.mobile}</td>
+                            <td>{c.date}</td>
                             <td>
                               {_canAccess("business_customers", "update") && (
                                 <CLink
@@ -533,8 +616,9 @@ class Business_Customers_Index extends React.Component {
                                   {c.status == 0 ? "Active" : "Deactive"}
                                 </CLink>
                               )}
-                              {_canAccess("business_customers", "update") === false && (
-                                <>{c.status == '0' ? "Active" : "Deactive"}</>
+                              {_canAccess("business_customers", "update") ===
+                                false && (
+                                <>{c.status == "0" ? "Active" : "Deactive"}</>
                               )}
                             </td>
                             {(_canAccess("business_customers", "update") ||
@@ -546,7 +630,10 @@ class Business_Customers_Index extends React.Component {
                                   ) === -1 && (
                                     <>
                                       {current_user.user_group_id !== c._id &&
-                                        _canAccess("business_customers", "update") && (
+                                        _canAccess(
+                                          "business_customers",
+                                          "update"
+                                        ) && (
                                           <CTooltip
                                             content={globalConstants.EDIT_BTN}
                                           >
@@ -561,7 +648,10 @@ class Business_Customers_Index extends React.Component {
                                         )}
                                       &nbsp;
                                       {current_user.user_group_id !== c._id &&
-                                        _canAccess("business_customers", "delete") && (
+                                        _canAccess(
+                                          "business_customers",
+                                          "delete"
+                                        ) && (
                                           <CTooltip
                                             content={globalConstants.DELETE_BTN}
                                           >

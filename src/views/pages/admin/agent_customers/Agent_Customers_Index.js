@@ -20,6 +20,7 @@ import {
   CTooltip,
   CSelect,
 } from "@coreui/react";
+import InputDateRange from "components/admin/InputDateRange";
 import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -58,12 +59,25 @@ class Agent_list extends React.Component {
     this.deleteUser = this.deleteUser.bind(this);
 
     this.state = {
+      filters: {
+        startDate: "",
+        endDate: "",
+      },
+      showDateFilter: false,
+      filtersChanged: false,      
+      allFilters: {
+        start_date: "",
+        end_date: "",
+        status: "",
+      },
       fields: {
         page: 1,
+        start_date: "",
+        end_date: "",
         search: "",
         status: "",
         sort_field: "created_at",
-        sort_dir: "DESC",
+        sort_dir: "desc",
       },
       _openPopup: false,
       agents: [],
@@ -155,13 +169,25 @@ class Agent_list extends React.Component {
   handleSearch(type) {
     if (type === "reset") {
       this.setState(
-        {
+        {          
+          allFilters: {
+            start_date: "",
+            end_date: "",
+            status: "",
+          },
+          filters: {
+            startDate: "",
+            endDate: "",
+          },
+          filtersChanged: false,
           fields: {
             page: 1,
+            start_date: "",
+            end_date: "",
             search: "",
             status: "",
             sort_field: "created_at",
-            sort_dir: "DESC",
+            sort_dir: "desc",
           },
         },
         () => {
@@ -262,6 +288,26 @@ class Agent_list extends React.Component {
     });
   }
 
+  //filter code
+  handleChangeDateFilter = (params) => {
+    const [startDate, endDate] = params;
+    // if (!startDate || !endDate) return;
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        start_date: startDate?.toLocaleDateString(),
+        end_date: endDate?.toLocaleDateString(),
+      },
+      filters: {
+        startDate: startDate,
+        endDate: endDate,
+      },
+      page: 1,
+      showDateFilter: false,
+      filtersChanged: true,
+    });
+  };
+
   handleApplyAction = (actionValue = "") => {
     if (actionValue !== "") {
       let appliedActionId = [];
@@ -317,9 +363,9 @@ class Agent_list extends React.Component {
             <CCard>
               <CCardBody>
                 <CRow>
-                  <CCol xl={5}>
+                  <CCol xl={3}>
                     <CFormGroup row>
-                      <CCol xs="6">
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Title</CLabel>
                         <CInput
                           id="name"
@@ -334,7 +380,12 @@ class Agent_list extends React.Component {
                           }}
                         />
                       </CCol>
-                      <CCol xs="6">
+                    </CFormGroup>
+                  </CCol>
+
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Status</CLabel>
                         <CSelect
                           custom
@@ -350,8 +401,21 @@ class Agent_list extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                </CRow>
-                <CRow>
+
+                  <CCol xl={4}>
+                    <CFormGroup row>
+                      <CCol xs="10">
+                        <CLabel htmlFor="name">Date</CLabel>
+                        <InputDateRange
+                          className=""
+                          startDate={this.state.filters.startDate}
+                          endDate={this.state.filters.endDate}
+                          onChange={this.handleChangeDateFilter}
+                        />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+
                   <CCol xl={12}>
                     <CFormGroup row>
                       <CCol xs="1">
@@ -495,6 +559,25 @@ class Agent_list extends React.Component {
                           </span>
                         </th>
 
+                        <th onClick={() => this.handleColumnSort("created_at")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Created At
+                            </span>
+                            {this.state.fields.sort_field !== "created_at" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field === "created_at" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field === "created_at" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -554,6 +637,7 @@ class Agent_list extends React.Component {
                             </td>
                             <td>{u.email}</td>
                             <td>{u.mobile_number}</td>
+                            <td>{u.date}</td>
                             <td>
                               {current_user.id !== u._id &&
                                 _canAccess("agent_customers", "update") && (

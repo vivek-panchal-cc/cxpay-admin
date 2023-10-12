@@ -37,6 +37,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
+import InputDateRange from "components/admin/InputDateRange";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -55,11 +56,24 @@ class Customers_Management_Index extends React.Component {
     this.pageChange = this.pageChange.bind(this);
 
     this.state = {
+      filters: {
+        startDate: "",
+        endDate: "",
+      },
+      showDateFilter: false,
+      filtersChanged: false,
+      allFilters: {
+        start_date: "",
+        end_date: "",
+        status: "",
+      },
       fields: {
         page: 1,
+        start_date: "",
+        end_date: "",
         search_name: "",
         sort_field: "created_at",
-        sort_dir: "DESC",
+        sort_dir: "desc",
         status: "",
         // pageNo: 1,
         // sort_dir: 'asc',
@@ -174,11 +188,23 @@ class Customers_Management_Index extends React.Component {
     if (type === "reset") {
       this.setState(
         {
+          allFilters: {
+            start_date: "",
+            end_date: "",
+            status: "",
+          },
+          filters: {
+            startDate: "",
+            endDate: "",
+          },
+          filtersChanged: false,
           fields: {
             page: 1,
+            start_date: "",
+            end_date: "",
             search_name: "",
             sort_field: "created_at",
-            sort_dir: "DESC",
+            sort_dir: "desc",
             status: "",
             // pageNo: 1,
             // sort_dir: 'DESC',
@@ -304,6 +330,26 @@ class Customers_Management_Index extends React.Component {
     });
   }
 
+  //filter code
+  handleChangeDateFilter = (params) => {
+    const [startDate, endDate] = params;
+    // if (!startDate || !endDate) return;
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        start_date: startDate?.toLocaleDateString(),
+        end_date: endDate?.toLocaleDateString(),
+      },
+      filters: {
+        startDate: startDate,
+        endDate: endDate,
+      },
+      page: 1,
+      showDateFilter: false,
+      filtersChanged: true,
+    });
+  };
+
   bulkCustomerStatusChangeHandler(postData) {
     customersManagementService
       .changeBulkCustomerStatus(postData)
@@ -326,9 +372,9 @@ class Customers_Management_Index extends React.Component {
             <CCard>
               <CCardBody>
                 <CRow>
-                  <CCol xl={5}>
+                  <CCol xl={3}>
                     <CFormGroup row>
-                      <CCol xs="6">
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Name</CLabel>
                         <CInput
                           id="name"
@@ -339,7 +385,11 @@ class Customers_Management_Index extends React.Component {
                           onKeyDown={this.handleKeyDown}
                         />
                       </CCol>
-                      <CCol xs="6">
+                    </CFormGroup>
+                  </CCol>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Status</CLabel>
                         <CSelect
                           custom
@@ -352,6 +402,20 @@ class Customers_Management_Index extends React.Component {
                           <option value={"1"}>{"Active"}</option>
                           <option value={"0"}>{"Deactive"}</option>
                         </CSelect>
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+
+                  <CCol xl={4}>
+                    <CFormGroup row>
+                      <CCol xs="10">
+                        <CLabel htmlFor="name">Date</CLabel>
+                        <InputDateRange
+                          className=""
+                          startDate={this.state.filters.startDate}
+                          endDate={this.state.filters.endDate}
+                          onChange={this.handleChangeDateFilter}
+                        />
                       </CCol>
                     </CFormGroup>
                   </CCol>
@@ -481,6 +545,24 @@ class Customers_Management_Index extends React.Component {
                               )}
                           </span>
                         </th>
+                        <th onClick={() => this.handleColumnSort("created_at")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Created At
+                            </span>
+                            {this.state.fields.sort_field !== "created_at" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field === "created_at" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field === "created_at" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -527,6 +609,7 @@ class Customers_Management_Index extends React.Component {
                             <td>{c.name}</td>
                             <td>{c.email}</td>
                             <td>{c.mobile}</td>
+                            <td>{c.date}</td>
                             <td>
                               {_canAccess("personal_customers", "update") && (
                                 <CLink
