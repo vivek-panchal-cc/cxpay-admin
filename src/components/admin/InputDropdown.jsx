@@ -15,13 +15,13 @@ const InputDropdown = (props) => {
   const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
-    function handleclickOutside(event) {
+    function handleClickOutside(event) {
       if (!dropRef.current) return;
       if (!dropRef?.current?.contains(event.target)) setToggle(false);
     }
-    document.addEventListener("mousedown", handleclickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleclickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropRef]);
 
@@ -37,6 +37,18 @@ const InputDropdown = (props) => {
     [valueList]
   );
 
+  // Get the titles of the selected statuses
+  const selectedTitles = valueList
+    ?.map((val) => {
+      const matchedItem = dropList?.find((item) => item.status === val);
+      return matchedItem ? matchedItem.title : null;
+    })
+    ?.filter(Boolean); // This will remove any null values
+
+  // If there are any selected statuses, use them as the title. Otherwise, use the default title
+  const displayTitle =
+    selectedTitles?.length > 0 ? selectedTitles.join(", ") : title;
+
   return (
     <div
       id={id || `drop${randomStr}`}
@@ -44,7 +56,7 @@ const InputDropdown = (props) => {
       ref={dropRef}
     >
       <span className="anchor" onClick={(e) => setToggle((cs) => !cs)}>
-        {title}
+        {displayTitle}
       </span>
       {toggle ? (
         <ul

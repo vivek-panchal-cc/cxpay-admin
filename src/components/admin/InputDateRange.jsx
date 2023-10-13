@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import IconCalender from "assets/icons/IconCalendar";
 import ReactDatePicker from "react-datepicker";
+import "./RangePicker.css";
 
 const InputDateRange = (props) => {
   const { className = "", onChange = () => {}, startDate, endDate } = props;
@@ -19,15 +20,27 @@ const InputDateRange = (props) => {
   };
 
   useEffect(() => {
-    function handleclickOutside(event) {
+    function handleClickOutside(event) {
       if (!dropRef.current) return;
       if (!dropRef?.current?.contains(event.target)) setShowCalendar(false);
     }
-    document.addEventListener("mousedown", handleclickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleclickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropRef]);
+
+  const isToday = (date) => {
+    // If a date range is selected, don't highlight today
+    if (startDate || endDate) return false;
+
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
 
   return (
     <div className={`position-relative ${className}`} ref={dropRef}>
@@ -57,6 +70,9 @@ const InputDateRange = (props) => {
             onChange={handleChange}
             selectsRange={true}
             inline
+            dayClassName={(date) =>
+              isToday(date) ? "highlight-today" : undefined
+            }
           />
         </div>
       )}
