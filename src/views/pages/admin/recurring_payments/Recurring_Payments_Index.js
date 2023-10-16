@@ -30,6 +30,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./page.css";
 import { globalConstants } from "constants/admin/global.constants";
+import InputDateRange from "components/admin/InputDateRange";
 
 class RecurringPaymentsIndex extends React.Component {
   constructor(props) {
@@ -41,6 +42,17 @@ class RecurringPaymentsIndex extends React.Component {
     this.openDeletePopup = this.openDeletePopup.bind(this);
 
     this.state = {
+      filters: {
+        startDate: "",
+        endDate: "",
+      },
+      showDateFilter: false,
+      filtersChanged: false,
+      allFilters: {
+        start_date: "",
+        end_date: "",
+        status: "",
+      },
       fields: {
         page: 1,
         sort_dir: "desc",
@@ -131,6 +143,16 @@ class RecurringPaymentsIndex extends React.Component {
     if (type === "reset") {
       this.setState(
         {
+          allFilters: {
+            start_date: "",
+            end_date: "",
+            status: "",
+          },
+          filters: {
+            startDate: "",
+            endDate: "",
+          },
+          filtersChanged: false,
           fields: {
             page: 1,
             sort_dir: "desc",
@@ -183,6 +205,25 @@ class RecurringPaymentsIndex extends React.Component {
     });
   };
 
+  handleChangeDateFilter = (params) => {
+    const [startDate, endDate] = params;
+    // if (!startDate || !endDate) return;
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        start_date: startDate?.toLocaleDateString("en-US"),
+        end_date: endDate?.toLocaleDateString("en-US"),
+      },
+      filters: {
+        startDate: startDate,
+        endDate: endDate,
+      },
+      page: 1,
+      showDateFilter: false,
+      filtersChanged: true,
+    });
+  };
+
   render() {
     return (
       <>
@@ -211,7 +252,21 @@ class RecurringPaymentsIndex extends React.Component {
                     </CFormGroup>
                   </CCol>
 
-                  <CCol xl={3}>
+                  <CCol xl={4}>
+                    <CFormGroup row>
+                      <CCol xs="10">
+                        <CLabel htmlFor="name">Date</CLabel>
+                        <InputDateRange
+                          className=""
+                          startDate={this.state.filters.startDate}
+                          endDate={this.state.filters.endDate}
+                          onChange={this.handleChangeDateFilter}
+                        />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+
+                  {/* <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
                         <CLabel htmlFor="start_date">Start Date</CLabel>
@@ -256,7 +311,7 @@ class RecurringPaymentsIndex extends React.Component {
                         </div>
                       </CCol>
                     </CFormGroup>
-                  </CCol>
+                  </CCol> */}
                 </CRow>
                 <CRow>
                   <CCol xl={2}>

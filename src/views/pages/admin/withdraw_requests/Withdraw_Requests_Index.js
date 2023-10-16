@@ -141,10 +141,10 @@ class Withdraw_Requests_Index extends React.Component {
 
     const { filters, drawStatus } = this.state;
     const filStrDate = filters.startDate
-      ? filters.startDate?.toLocaleDateString()
+      ? filters.startDate?.toLocaleDateString("en-US")
       : "";
     const filEndDate = filters.endDate
-      ? filters.endDate?.toLocaleDateString()
+      ? filters.endDate?.toLocaleDateString("en-US")
       : "";
     this.setState({
       // fields: {
@@ -236,8 +236,8 @@ class Withdraw_Requests_Index extends React.Component {
     this.setState({
       fields: {
         ...this.state.fields,
-        start_date: startDate?.toLocaleDateString(),
-        end_date: endDate?.toLocaleDateString(),
+        start_date: startDate?.toLocaleDateString("en-US"),
+        end_date: endDate?.toLocaleDateString("en-US"),
       },
       filters: {
         startDate: startDate,

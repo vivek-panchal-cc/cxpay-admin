@@ -295,8 +295,8 @@ class Agent_list extends React.Component {
     this.setState({
       fields: {
         ...this.state.fields,
-        start_date: startDate?.toLocaleDateString(),
-        end_date: endDate?.toLocaleDateString(),
+        start_date: startDate?.toLocaleDateString("en-US"),
+        end_date: endDate?.toLocaleDateString("en-US"),
       },
       filters: {
         startDate: startDate,

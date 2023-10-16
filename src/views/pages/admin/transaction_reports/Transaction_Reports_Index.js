@@ -45,6 +45,7 @@ import { globalConstants } from "../../../../constants/admin/global.constants";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import InputDateRange from "components/admin/InputDateRange";
 
 class Transaction_Reports_Index extends React.Component {
   constructor(props) {
@@ -56,6 +57,17 @@ class Transaction_Reports_Index extends React.Component {
     this.openDeletePopup = this.openDeletePopup.bind(this);
 
     this.state = {
+      filters: {
+        fromDate: "",
+        toDate: "",
+      },
+      showDateFilter: false,
+      filtersChanged: false,
+      allFilters: {
+        from_date: "",
+        to_date: "",
+        status: "",
+      },
       fields: {
         page: 1,
         direction: "desc",
@@ -150,6 +162,16 @@ class Transaction_Reports_Index extends React.Component {
     if (type === "reset") {
       this.setState(
         {
+          allFilters: {
+            from_date: "",
+            to_date: "",
+            status: "",
+          },
+          filters: {
+            fromDate: "",
+            toDate: "",
+          },
+          filtersChanged: false,
           fields: {
             page: 1,
             direction: "desc",
@@ -174,7 +196,7 @@ class Transaction_Reports_Index extends React.Component {
         {
           fields: {
             ...this.state.fields,
-            page: 1
+            page: 1,
           },
         },
         () => {
@@ -228,6 +250,24 @@ class Transaction_Reports_Index extends React.Component {
         to_date1: date,
         to_date: date.toLocaleDateString("en-US"),
       },
+    });
+  };
+
+  handleChangeDateFilter = (params) => {
+    const [fromDate, toDate] = params;
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        from_date: fromDate?.toLocaleDateString("en-US"),
+        to_date: toDate?.toLocaleDateString("en-US"),
+      },
+      filters: {
+        fromDate: fromDate,
+        toDate: toDate,
+      },
+      page: 1,
+      showDateFilter: false,
+      filtersChanged: true,
     });
   };
 
@@ -324,8 +364,21 @@ class Transaction_Reports_Index extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="10">
+                        <CLabel htmlFor="name">Date</CLabel>
+                        <InputDateRange
+                          className=""
+                          startDate={this.state.filters.fromDate}
+                          endDate={this.state.filters.toDate}
+                          onChange={this.handleChangeDateFilter}
+                        />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
                 </CRow>
-                <CRow>
+                {/* <CRow>
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
@@ -366,7 +419,8 @@ class Transaction_Reports_Index extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                </CRow>
+                </CRow> */}
+
                 <CRow>
                   <CCol xl={12}>
                     <CFormGroup row>
