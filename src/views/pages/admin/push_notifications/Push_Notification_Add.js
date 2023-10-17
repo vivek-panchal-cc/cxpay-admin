@@ -335,7 +335,7 @@ class Push_Notification_Add extends React.Component {
                 {this.state.fields.type === "schedule" && (
                   <>
                     <CCol
-                      xl={3}
+                      xl={6}
                       style={{ paddingLeft: "0px", paddingRight: "0px" }}
                     >
                       <CFormGroup>

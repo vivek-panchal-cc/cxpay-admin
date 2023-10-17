@@ -29,7 +29,7 @@ import {
   faSortUp,
   faPlus,
   faEye,
-  faList,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 import { agentService } from "../../../../services/admin/agent.service";
 import {
@@ -64,7 +64,7 @@ class Agent_list extends React.Component {
         endDate: "",
       },
       showDateFilter: false,
-      filtersChanged: false,      
+      filtersChanged: false,
       allFilters: {
         start_date: "",
         end_date: "",
@@ -169,7 +169,7 @@ class Agent_list extends React.Component {
   handleSearch(type) {
     if (type === "reset") {
       this.setState(
-        {          
+        {
           allFilters: {
             start_date: "",
             end_date: "",
@@ -467,7 +467,7 @@ class Agent_list extends React.Component {
                     </CTooltip>
                   )}
                 </div>
-                <div className="card-header-actions">
+                <div className="card-header-actions px-2">
                   {_canAccess("agent_customers", "delete") && (
                     <CTooltip content={globalConstants.DELETE_REQ_BTN}>
                       <CLink
@@ -477,6 +477,19 @@ class Agent_list extends React.Component {
                       >
                         {/* <FontAwesomeIcon icon={faList} /> */}
                         Delete Requests
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
+                <div className="card-header-actions px-2">
+                  {_canAccess("agent_customers", "view") && (
+                    <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to={`/admin/blocked_requests/agent_customers/3`}
+                      >
+                        <FontAwesomeIcon icon={faBan} />
                       </CLink>
                     </CTooltip>
                   )}

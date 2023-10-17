@@ -29,6 +29,7 @@ import {
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBan,
   faSort,
   faSortDown,
   faSortUp,
@@ -455,6 +456,19 @@ class Business_Customers_Index extends React.Component {
                   </CTooltip>
                 }
               </div> */}
+              <div className="card-header-actions">
+                  {_canAccess("business_customers", "view") && (
+                    <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to={`/admin/blocked_requests/business_customers/1`}
+                      >
+                        <FontAwesomeIcon icon={faBan} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">

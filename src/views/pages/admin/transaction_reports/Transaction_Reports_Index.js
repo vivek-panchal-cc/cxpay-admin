@@ -364,9 +364,11 @@ class Transaction_Reports_Index extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
+                  </CRow>
+                  <CRow>
                   <CCol xl={3}>
                     <CFormGroup row>
-                      <CCol xs="10">
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Date</CLabel>
                         <InputDateRange
                           className=""

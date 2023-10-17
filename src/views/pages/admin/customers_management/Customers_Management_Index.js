@@ -34,6 +34,7 @@ import {
   faSortDown,
   faSortUp,
   faPlus,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
@@ -469,6 +470,19 @@ class Customers_Management_Index extends React.Component {
                   </CTooltip>
                 }
               </div> */}
+              <div className="card-header-actions">
+                  {_canAccess("personal_customers", "view") && (
+                    <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to={`/admin/blocked_requests/personal_customers/2`}
+                      >
+                        <FontAwesomeIcon icon={faBan} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">

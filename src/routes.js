@@ -215,9 +215,29 @@ const Agent_Delete_Requests = React.lazy(() =>
   import("./views/pages/admin/agent_customers/Agent_Delete_Requests")
 );
 
+const Blocked_Requests = React.lazy(() =>
+  import("./components/admin/Blocked_Requests")
+);
+
+function generateRouteForModule(module_name) {
+  return {
+    path: `/admin/blocked_requests/${module_name}/:value`,
+    exact: true,
+    name: "Blocked Requests",
+    component: Blocked_Requests,
+    module_name: module_name,
+    action: "view",
+  };
+}
+
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
-  { path: "/admin/dashboard", exact: true, name: "Dashboard", component: Dashboard },
+  {
+    path: "/admin/dashboard",
+    exact: true,
+    name: "Dashboard",
+    component: Dashboard,
+  },
 
   // module_name and action parameter used for ACL mechanisam its required column
   {
@@ -698,6 +718,16 @@ const routes = [
     module_name: "agent_customers",
     action: "view",
   },
+  // {
+  //   path: "/admin/blocked_requests/:module/:value",
+  //   exact: true,
+  //   name: "Blocked Requests",
+  //   component: Blocked_Requests,
+  //   action: "view",
+  // },
+  generateRouteForModule("agent_customers"),
+  generateRouteForModule("business_customers"),
+  generateRouteForModule("personal_customers"),
 ];
 
 export default routes;
