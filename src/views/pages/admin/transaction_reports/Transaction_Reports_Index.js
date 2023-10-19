@@ -318,7 +318,7 @@ class Transaction_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Type --</option>
-                          <option value="PL">Deposite</option>
+                          <option value="PL">Deposit</option>
                           <option value="REQ">Request</option>
                           <option value="WW">Wallet to Wallet</option>
                           <option value="AGENT TOPUP">Agent Topup</option>
