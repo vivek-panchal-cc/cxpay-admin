@@ -56,11 +56,12 @@ async function customerDetails(postData) {
   return handleResponse(response);
 }
 
-async function downloadCustomerCSV() {
+async function downloadCustomerCSV(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("customer_reports", "view"),
+    body: JSON.stringify(postData),
   };
   let response;
   try {
@@ -96,11 +97,12 @@ async function getTransactionList(postData) {
   return handleResponse(response);
 }
 
-async function downloadTransactionCSV() {
+async function downloadTransactionCSV(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("transaction_reports", "view"),
+    body: JSON.stringify(postData),
   };
   let response;
   try {

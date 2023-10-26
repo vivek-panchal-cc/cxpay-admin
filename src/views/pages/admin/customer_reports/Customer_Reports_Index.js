@@ -177,7 +177,8 @@ class Customer_Reports_Index extends React.Component {
   };
 
   downloadFile = async () => {
-    reportsService.downloadCustomerCSV().then((res) => {
+    const { search, filter_user_type } = this.state.fields;
+    reportsService.downloadCustomerCSV({ search, filter_user_type }).then((res) => {
       //  if (res.success) {
       notify.success("Successfully send report logged in user mail");
       // }
