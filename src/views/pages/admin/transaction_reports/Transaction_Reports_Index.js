@@ -348,7 +348,8 @@ class Transaction_Reports_Index extends React.Component {
                         >
                           <option value="">-- Select Status --</option>
                           {(this.state.fields.txn_type == "PL" ||
-                            this.state.fields.txn_type == "WW") && (
+                            this.state.fields.txn_type == "WW" ||
+                            this.state.fields.txn_type == "AGENT TOPUP") && (
                             <>
                               <option value="FAILED">Failed</option>
                               <option value="PAID">Paid</option>
