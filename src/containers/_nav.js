@@ -22,7 +22,8 @@ import {
   faHandHoldingUsd,
   faWallet,
   faUserTie,
-  faStopwatch
+  faStopwatch,
+  faSyncAlt
 } from "@fortawesome/free-solid-svg-icons";
 
 const _nav = [
@@ -144,7 +145,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Recurring Payments",
     to: "/admin/recurring_payments",
-    icon: <FontAwesomeIcon icon={faStopwatch} className="c-sidebar-nav-icon" />,
+    icon: <FontAwesomeIcon icon={faSyncAlt} className="c-sidebar-nav-icon" />,
     module_name: "recurring_payments",
     id: "recurring_payments_sidebar_id",
   },
