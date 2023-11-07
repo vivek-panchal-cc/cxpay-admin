@@ -30,7 +30,6 @@ import {
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
-import ReactDatePicker from "react-datepicker";
 import InputDropdown from "components/admin/InputDropdown";
 import InputDateRange from "components/admin/InputDateRange";
 

@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   CCard,
   CCardBody,
@@ -39,6 +38,7 @@ import {
   _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
+import "./notification.css";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -81,6 +81,7 @@ class Agent_list extends React.Component {
       },
       _openPopup: false,
       agents: [],
+      deleteAgents: [],
       multiaction: [],
       allCheckedbox: false,
     };
@@ -95,6 +96,7 @@ class Agent_list extends React.Component {
 
   componentDidMount() {
     this.getAgentList();
+    this.getDeleteRequests();
   }
 
   getAgentList() {
@@ -125,6 +127,26 @@ class Agent_list extends React.Component {
         }
       }
       this.resetCheckedBox();
+    });
+  }
+
+  getDeleteRequests() {
+    agentService.getDeleteRequests().then((res) => {
+      if (!res.success) {
+        this.setState({
+          deleteAgents: [],
+        });
+        notify.error(res.message);
+      } else {
+        this.setState({
+          deleteAgents: res.data.agents,
+          fields: {
+            ...this.state.fields,
+            totalPage: res.data.pagination.last_page,
+            totalRecords: res.data.pagination.total,
+          },
+        });
+      }
     });
   }
 
@@ -453,7 +475,7 @@ class Agent_list extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                Agent
+                Agent Customers
                 <div className="card-header-actions px-2">
                   {_canAccess("agent_customers", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
@@ -475,8 +497,15 @@ class Agent_list extends React.Component {
                         aria-current="page"
                         to="/admin/agent_customers/delete_requests"
                       >
-                        {/* <FontAwesomeIcon icon={faList} /> */}
-                        Delete Requests
+                        <span
+                          className={`${
+                            this.state.deleteAgents?.length > 0
+                              ? "notification-badge"
+                              : ""
+                          }`}
+                        >
+                          Delete Requests
+                        </span>{" "}
                       </CLink>
                     </CTooltip>
                   )}
@@ -487,7 +516,7 @@ class Agent_list extends React.Component {
                       <CLink
                         className="btn btn-dark btn-block"
                         aria-current="page"
-                        to={`/admin/blocked_requests/agent_customers/3`}
+                        to={`/admin/agent_customers/blocked_requests/3`}
                       >
                         <FontAwesomeIcon icon={faBan} />
                       </CLink>

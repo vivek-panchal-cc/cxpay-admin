@@ -23,7 +23,7 @@ import {
   faSort,
   faSortDown,
   faSortUp,
-  faArrowLeft,  
+  faArrowLeft,
   faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -48,6 +48,20 @@ class BlockedRequests extends React.Component {
       _openPopup: false,
       _openReleaseRequestPopup: false,
     };
+  }
+
+  formatModuleNameFromURL() {
+    const { pathname } = this.props.history.location;
+    const parts = pathname?.split("/")?.filter((part) => part !== ""); // Split the URL and remove empty parts
+    if (parts?.length > 1) {
+      const moduleName = parts[1]; // Get the second part from the URL
+      const words = moduleName?.split("_"); // Split by underscore
+      const formattedModuleName = words
+        ?.map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
+        ?.join(" ");
+      return formattedModuleName;
+    }
+    return "";
   }
 
   componentDidMount() {
@@ -140,7 +154,11 @@ class BlockedRequests extends React.Component {
   };
 
   openReleaseRequestPopup(id, userName) {
-    this.setState({ _openReleaseRequestPopup: true, releaseCustId: id, releaseUserName: userName });
+    this.setState({
+      _openReleaseRequestPopup: true,
+      releaseCustId: id,
+      releaseUserName: userName,
+    });
   }
 
   releaseCustomer() {
@@ -148,7 +166,7 @@ class BlockedRequests extends React.Component {
     this.setState({
       _openReleaseRequestPopup: false,
       releaseCustId: undefined,
-      releaseUserName: undefined
+      releaseUserName: undefined,
     });
     agentService.releaseCustomer(postData).then((res) => {
       if (res.status === "error") {
@@ -166,6 +184,8 @@ class BlockedRequests extends React.Component {
   /****************************** Render Data To Dom ***************************************/
 
   render() {
+    const moduleName = this.formatModuleNameFromURL();
+    const headerText = `${moduleName} Blocked Lists`;
     return (
       <>
         <CRow>
@@ -231,7 +251,7 @@ class BlockedRequests extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                Blocked Lists
+                <strong>{headerText}</strong>
                 <div className="card-header-actions">
                   <CTooltip content={globalConstants.BACK_MSG}>
                     <CLink
@@ -431,7 +451,8 @@ class BlockedRequests extends React.Component {
             <CModalTitle>Release Customer</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            Are you sure you want to release <strong>{this.state.releaseUserName}</strong>?
+            Are you sure you want to release{" "}
+            <strong>{this.state.releaseUserName}</strong>?
           </CModalBody>
           <CModalFooter>
             <CButton color="primary" onClick={() => this.releaseCustomer()}>

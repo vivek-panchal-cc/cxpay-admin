@@ -456,13 +456,13 @@ class Business_Customers_Index extends React.Component {
                   </CTooltip>
                 }
               </div> */}
-              <div className="card-header-actions">
+                <div className="card-header-actions">
                   {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
                       <CLink
                         className="btn btn-dark btn-block"
                         aria-current="page"
-                        to={`/admin/blocked_requests/business_customers/1`}
+                        to={`/admin/business_customers/blocked_requests/1`}
                       >
                         <FontAwesomeIcon icon={faBan} />
                       </CLink>

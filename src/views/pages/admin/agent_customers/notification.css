@@ -1,0 +1,29 @@
+.notification-badge {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-badge::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  right: -19px;
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white;
+  /* animation: blink 1.5s infinite; */
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Switch, Router, Redirect, Route } from "react-router-dom";
+import { Switch, Router, Redirect } from "react-router-dom";
 import { history } from "./_helpers";
 import "./scss/style.scss";
 import "./assets/admin/css/custom.css";
@@ -25,9 +25,9 @@ const Forgot_password = React.lazy(() =>
 const Reset_password = React.lazy(() =>
   import("./views/pages/admin/reset_password/Reset_password")
 );
-const TheFrontLayout = React.lazy(() =>
-  import("./views/pages/frontend/TheFrontLayout")
-);
+// const TheFrontLayout = React.lazy(() =>
+//   import("./views/pages/frontend/TheFrontLayout")
+// );
 
 class App extends Component {
   render() {

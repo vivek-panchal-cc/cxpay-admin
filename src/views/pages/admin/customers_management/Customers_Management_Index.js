@@ -470,13 +470,13 @@ class Customers_Management_Index extends React.Component {
                   </CTooltip>
                 }
               </div> */}
-              <div className="card-header-actions">
+                <div className="card-header-actions">
                   {_canAccess("personal_customers", "view") && (
                     <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
                       <CLink
                         className="btn btn-dark btn-block"
                         aria-current="page"
-                        to={`/admin/blocked_requests/personal_customers/2`}
+                        to={`/admin/personal_customers/blocked_requests/2`}
                       >
                         <FontAwesomeIcon icon={faBan} />
                       </CLink>

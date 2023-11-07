@@ -221,7 +221,7 @@ const Blocked_Requests = React.lazy(() =>
 
 function generateRouteForModule(module_name) {
   return {
-    path: `/admin/blocked_requests/${module_name}/:value`,
+    path: `/admin/${module_name}/blocked_requests/:value`,
     exact: true,
     name: "Blocked Requests",
     component: Blocked_Requests,
