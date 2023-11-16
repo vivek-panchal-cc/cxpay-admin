@@ -79,7 +79,7 @@ class Agent_Delete_Requests extends React.Component {
         this.setState({
           agents: [],
         });
-        notify.error(res.message);
+        // notify.error(res.message);
       } else {
         this.setState({
           agents: res.data.agents,

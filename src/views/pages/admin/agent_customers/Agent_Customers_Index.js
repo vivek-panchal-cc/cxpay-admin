@@ -136,7 +136,7 @@ class Agent_list extends React.Component {
         this.setState({
           deleteAgents: [],
         });
-        notify.error(res.message);
+        // notify.error(res.message);
       } else {
         this.setState({
           deleteAgents: res.data.agents,
