@@ -58,7 +58,9 @@ const InputDateRange = (props) => {
         className="position-absolute"
         style={{ top: "50%", transform: "translateY(-60%)", right: "15px" }}
       >
-        <IconCalender style={{ stroke: "#00000080" }} />
+        {!startDate && !endDate && (
+          <IconCalender style={{ stroke: "#00000080" }} />
+        )}
       </span>
       {showCalendar && (
         <div className="position-absolute z-1" style={{ zIndex: "1" }}>

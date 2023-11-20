@@ -279,6 +279,8 @@ class PushNotificationEdit extends React.Component {
   // }
 
   render() {
+    const { type } = this.state.fields;
+    const submitButton = type === "schedule" ? "Schedule" : "Send";
     return (
       <>
         <CRow>
@@ -462,7 +464,8 @@ class PushNotificationEdit extends React.Component {
                   color="primary"
                   onClick={this.handleSubmit}
                 >
-                  <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
+                  <FontAwesomeIcon icon={faSave} className="mr-1" />{" "}
+                  {submitButton}
                 </CButton>
                 &nbsp;
                 <CLink

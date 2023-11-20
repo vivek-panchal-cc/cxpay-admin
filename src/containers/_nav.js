@@ -25,6 +25,7 @@ import {
   faStopwatch,
   faSyncAlt
 } from "@fortawesome/free-solid-svg-icons";
+import IconFlorin from "assets/icons/IconFlorin";
 
 const _nav = [
   {
@@ -65,7 +66,8 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Fees Management",
     to: "/admin/fee_management",
-    icon: <FontAwesomeIcon icon={faRupeeSign} className="c-sidebar-nav-icon" />,
+    // icon: <FontAwesomeIcon icon={faRupeeSign} className="c-sidebar-nav-icon" />,    
+    icon: <IconFlorin className="c-sidebar-nav-icon" />,    
     module_name: "fee_management",
     id: "fee_management_sidebar_id",
     // id: "fees_sidebar_id",
