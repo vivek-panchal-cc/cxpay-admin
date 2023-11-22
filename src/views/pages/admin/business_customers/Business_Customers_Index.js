@@ -37,6 +37,7 @@ import {
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
 import InputDateRange from "components/admin/InputDateRange";
+import "./../agent_customers/notification.css"
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -77,6 +78,7 @@ class Business_Customers_Index extends React.Component {
       },
       _openPopup: false,
       customers_management_list: [],
+      deleteBusinessCustomers: [],
       multiaction: [],
       allCheckedbox: false,
     };
@@ -88,6 +90,7 @@ class Business_Customers_Index extends React.Component {
 
   componentDidMount() {
     this.getUserGroupsList();
+    this.getDeleteRequests();
   }
 
   getUserGroupsList() {
@@ -132,6 +135,25 @@ class Business_Customers_Index extends React.Component {
           }
         }
       });
+  }
+
+  getDeleteRequests() {
+    businessCustomersService.getDeleteRequests().then((res) => {
+      if (!res.success) {
+        this.setState({
+          deleteBusinessCustomers: [],
+        });
+      } else {
+        this.setState({
+          deleteBusinessCustomers: res.data.customers,
+          fields: {
+            ...this.state.fields,
+            totalPage: res.data.pagination.last_page,
+            totalRecords: res.data.pagination.total,
+          },
+        });
+      }
+    });
   }
 
   pageChange = (newPage) => {
@@ -456,7 +478,28 @@ class Business_Customers_Index extends React.Component {
                   </CTooltip>
                 }
               </div> */}
-                <div className="card-header-actions">
+                <div className="card-header-actions px-2">
+                  {_canAccess("business_customers", "delete") && (
+                    <CTooltip content={globalConstants.DELETE_REQ_BTN}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to="/admin/business_customers/delete_requests"
+                      >
+                        <span
+                          className={`${
+                            this.state.deleteBusinessCustomers?.length > 0
+                              ? "notification-badge"
+                              : ""
+                          }`}
+                        >
+                          Delete Requests
+                        </span>{" "}
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
+                <div className="card-header-actions px-2">
                   {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
                       <CLink
@@ -475,7 +518,7 @@ class Business_Customers_Index extends React.Component {
                   <MultiActionBar
                     onClick={this.handleApplyAction}
                     checkBoxData={this.state.multiaction}
-                    module_name={"customers"}
+                    module_name={"business_customers"}
                   />
                   <table className="table">
                     <thead>

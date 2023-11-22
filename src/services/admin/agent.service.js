@@ -35,7 +35,7 @@ function getAgentList(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("agent_customers", "view"),
     body: JSON.stringify(postData),
   };
 
@@ -84,7 +84,7 @@ function deleteAgent(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "delete"),
+    headers: authHeader("agent_customers", "delete"),
     body: JSON.stringify(postData),
   };
   return fetch(`${API_URL}api/customers/delete-customers`, requestOptions)
@@ -116,7 +116,7 @@ function getAgentDetails(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("agent_customers", "view"),
     body: JSON.stringify(postData),
   };
 
@@ -220,7 +220,7 @@ function getCountry() {
   setLoading(true);
   const requestOptions = {
     method: "GET",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("agent_customers", "update"),
   };
 
   return fetch(`${API_URL}api/customers/get-country`, requestOptions)
@@ -236,7 +236,7 @@ function getCollectionType() {
   setLoading(true);
   const requestOptions = {
     method: "GET",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("agent_customers", "update"),
   };
 
   return fetch(`${API_URL}api/agent-collection-type-list`, requestOptions)

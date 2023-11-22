@@ -489,7 +489,7 @@ class Customers_Management_Index extends React.Component {
                   <MultiActionBar
                     onClick={this.handleApplyAction}
                     checkBoxData={this.state.multiaction}
-                    module_name={"customers"}
+                    module_name={"personal_customers"}
                   />
                   <table className="table">
                     <thead>

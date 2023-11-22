@@ -124,6 +124,9 @@ const Business_Customers_Index = React.lazy(() =>
 const Business_Customers_Edit = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Edit")
 );
+const Business_Delete_Requests = React.lazy(() =>
+  import("./views/pages/admin/business_customers/Business_Delete_Requests")
+);
 
 // Import File Fee Management
 
@@ -480,7 +483,7 @@ const routes = [
     exact: true,
     name: "Personal Customers",
     component: Customers_Management_Index,
-    module_name: "customers",
+    module_name: "personal_customers",
     action: "view",
   },
   {
@@ -488,7 +491,7 @@ const routes = [
     exact: true,
     name: "Edit",
     component: Customers_Management_Edit,
-    module_name: "customers",
+    module_name: "personal_customers",
     action: "update",
   },
 
@@ -532,6 +535,14 @@ const routes = [
     component: Business_Customers_Edit,
     module_name: "business_customers",
     action: "update",
+  },
+  {
+    path: "/admin/business_customers/delete_requests",
+    exact: true,
+    name: "Delete Requests",
+    component: Business_Delete_Requests,
+    module_name: "business_customers",
+    action: "view",
   },
 
   //  module_name and action parameter used for ACL mechanisam its required column Fee  management

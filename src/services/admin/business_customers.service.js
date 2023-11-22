@@ -13,19 +13,19 @@ export const businessCustomersService = {
   changeCustomerStatus,
   changeBulkCustomerStatus,
   getCountry,
+  getDeleteRequests,
+  deleteBusinessCustomer,
+  rejectDeleteRequest,
 };
 
 function getCustomersManagementList(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("business_customers", "view"),
     body: JSON.stringify(postData),
   };
-  return fetch(
-    `${API_URL}api/customers/business-customers`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/customers/business-customers`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -37,14 +37,11 @@ function getCustomer(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("business_customers", "view"),
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/customers/get-detail`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/customers/get-detail`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -57,7 +54,7 @@ function updateCustomer(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeaderMutlipart("customers", "update"),
+    headers: authHeaderMutlipart("business_customers", "update"),
     body: postData,
   };
 
@@ -77,13 +74,10 @@ function deleteCustomer(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "delete"),
+    headers: authHeader("business_customers", "delete"),
     body: JSON.stringify(postData),
   };
-  return fetch(
-    `${API_URL}api/customers/delete-customers`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/customers/delete-customers`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -96,14 +90,11 @@ function deleteMultipleCustomer(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "delete"),
+    headers: authHeader("business_customers", "delete"),
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/customers/delete-customers`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/customers/delete-customers`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -116,14 +107,11 @@ function changeCustomerStatus(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("business_customers", "update"),
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/customers/change-status`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/customers/change-status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -136,14 +124,11 @@ function changeBulkCustomerStatus(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("business_customers", "update"),
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/customers/change-status`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/customers/change-status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -156,17 +141,72 @@ function getCountry() {
   setLoading(true);
   const requestOptions = {
     method: "GET",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("business_customers", "update"),
   };
 
-  return fetch(
-    `${API_URL}api/customers/get-country`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/customers/get-country`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
+}
+
+function getDeleteRequests(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  return fetch(`${API_URL}api/delete-request-business-list`, requestOptions)
+    .catch((error) => {
+      notify.error("Something went wrong");
+      setLoading(false);
+      return Promise.reject();
+    })
+    .then(handleResponse);
+}
+
+async function deleteBusinessCustomer(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "delete"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/business-customers/delete-customers`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function rejectDeleteRequest(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/business-delete-request-status-change`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
 }
