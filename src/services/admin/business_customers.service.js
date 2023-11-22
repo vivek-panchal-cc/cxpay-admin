@@ -179,7 +179,7 @@ async function deleteBusinessCustomer(postData) {
   let response;
   try {
     response = await fetch(
-      `${API_URL}api/business-customers/delete-customers`,
+      `${API_URL}api/customers/delete-customers`,
       requestOptions
     );
   } catch (error) {
@@ -200,7 +200,7 @@ async function rejectDeleteRequest(postData) {
   let response;
   try {
     response = await fetch(
-      `${API_URL}api/business-delete-request-status-change`,
+      `${API_URL}api/delete-request-status-change`,
       requestOptions
     );
   } catch (error) {
