@@ -145,7 +145,7 @@ class Business_Customers_Index extends React.Component {
         });
       } else {
         this.setState({
-          deleteBusinessCustomers: res.data.customers,
+          deleteBusinessCustomers: res.data.business,
           fields: {
             ...this.state.fields,
             totalPage: res.data.pagination.last_page,

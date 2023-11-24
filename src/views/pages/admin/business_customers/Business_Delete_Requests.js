@@ -141,7 +141,10 @@ class BusinessDeleteRequests extends React.Component {
     this.setState({ _openPopup: true, deleteId: id });
   }
   deleteUser() {
-    let postData = { mobile_number: [this.state.deleteId] };
+    let postData = {
+      mobile_number: [this.state.deleteId],
+      user_type: "business",
+    };
     this.setState({ _openPopup: false, deleteId: undefined });
     businessCustomersService.deleteBusinessCustomer(postData).then((res) => {
       if (res.status === "error") {
@@ -158,7 +161,9 @@ class BusinessDeleteRequests extends React.Component {
   }
 
   rejectDelRequest() {
-    let postData = { mobile_number: this.state.deleteReqId };
+    let postData = {
+      mobile_number: this.state.deleteReqId,
+    };
     this.setState({ _openRejReqPopup: false, deleteReqId: undefined });
     businessCustomersService.rejectDeleteRequest(postData).then((res) => {
       if (res.status === "error") {
@@ -184,7 +189,7 @@ class BusinessDeleteRequests extends React.Component {
                         <CLabel htmlFor="name">Search</CLabel>
                         <CInput
                           id="name"
-                          placeholder="Search Name or Mobile Number"
+                          placeholder="Search Company Name"
                           name="search"
                           value={this.state.fields.search}
                           onChange={this.handleChange}
@@ -354,7 +359,7 @@ class BusinessDeleteRequests extends React.Component {
                             <td>{u.email}</td>
                             <td>{u.mobile_number}</td>
                             <td>{u.account_number}</td>
-                            <td>{u.balance}</td>
+                            <td>{u.available_balance}</td>
 
                             {_canAccess("business_customers", "delete") && (
                               <>
