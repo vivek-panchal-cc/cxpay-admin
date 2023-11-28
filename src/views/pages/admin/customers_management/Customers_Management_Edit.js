@@ -296,7 +296,10 @@ class Customers_Management_Edit extends React.Component {
         "monthly_withdraw_limit",
         this.state.fields.monthly_withdraw_limit
       );
-
+      formData.append(
+        "daily_request_limit",
+        this.state.fields.daily_request_limit
+      );
       // return
       customersManagementService.updateCustomer(formData).then((res) => {
         if (res.status === false) {
@@ -806,6 +809,37 @@ class Customers_Management_Edit extends React.Component {
                       </CCol>
                     </CCol>
                   </CRow>
+
+                  <CRow className="mb-3">
+                    <CCol className="col-sm-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_request"
+                        className="col-form-label"
+                      >
+                        Request Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_request_limit"
+                          name="daily_request_limit"
+                          placeholder="Enter Request Limit"
+                          value={this.state.fields.daily_request_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_request_limit",
+                            this.state.fields.daily_request_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>                    
+                  </CRow>
+
                 </CFormGroup>
               </CCardBody>
               <CCardFooter>

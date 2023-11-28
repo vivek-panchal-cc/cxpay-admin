@@ -59,6 +59,7 @@ class Cms_Pages_Edit extends Component {
       id: this.props.match.params.id,
       initialValue: "",
       status: false,
+      is_display: false,
       media: [],
       activeTab: 1,
       _openPopup: false,
@@ -255,6 +256,7 @@ class Cms_Pages_Edit extends Component {
                 meta_keywords: res.result.meta_keywords,
                 initialValue: res.result.content,
                 status: res.result.status,
+                is_display: res.result.is_display,
                 slug: slug,
               });
             }
@@ -281,6 +283,7 @@ class Cms_Pages_Edit extends Component {
           meta_keywords: this.state.meta_keywords,
           meta_desc: this.state.meta_desc,
           status: this.state.status,
+          is_display: this.state.is_display,
           _id: this.state.id,
         })
         .then((res) => {
@@ -698,6 +701,37 @@ class Cms_Pages_Edit extends Component {
                     color="primary"
                     name="status"
                     value={this.state.status}
+                    onChange={this.handleChange}
+                  />
+                )}
+              </CFormGroup>
+            </CCol>
+          </CFormGroup>
+
+          <CFormGroup row>
+            <CCol tag="label" sm="1" className="col-form-label">
+              Display
+            </CCol>
+
+            <CCol sm="11">
+              <CFormGroup variant="custom-checkbox" inline>
+                {this.state.is_display && (
+                  <CSwitch
+                    className="mr-1"
+                    color="primary"
+                    name="is_display"
+                    value={this.state.is_display}
+                    defaultChecked
+                    onChange={this.handleChange}
+                  />
+                )}
+
+                {this.state.is_display === false && (
+                  <CSwitch
+                    className="mr-1"
+                    color="primary"
+                    name="is_display"
+                    value={this.state.is_display}
                     onChange={this.handleChange}
                   />
                 )}

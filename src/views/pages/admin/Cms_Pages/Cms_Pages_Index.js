@@ -154,7 +154,7 @@ class Page_list extends React.Component {
           fields: {
             pageNo: 1,
             sort_dir: "asc",
-            sort_field: "name",
+            sort_field: "title",
             search_page_title_name: "",
             totalPage: 1,
           },
@@ -289,9 +289,9 @@ class Page_list extends React.Component {
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
-                        <CLabel htmlFor="name">Title</CLabel>
+                        <CLabel htmlFor="title">Title</CLabel>
                         <CInput
-                          id="name"
+                          id="title"
                           placeholder="Search Title"
                           name="search_page_title_name"
                           value={this.state.fields.search_page_title_name}
@@ -381,23 +381,23 @@ class Page_list extends React.Component {
                         <th>#</th>
                         <th
                           onClick={() =>
-                            this.handleColumnSort("user_title_name")
+                            this.handleColumnSort("title")
                           }
                         >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">Title</span>
                             {this.state.fields.sort_field !==
-                              "user_title_name" && (
+                              "title" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
                               this.state.fields.sort_field ===
-                                "user_title_name" && (
+                                "title" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
                               this.state.fields.sort_field ===
-                                "user_title_name" && (
+                                "title" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>

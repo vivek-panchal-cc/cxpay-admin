@@ -58,6 +58,7 @@ class Cms_Pages_Add extends Component {
       meta_keywords: "",
       meta_desc: "",
       status: false,
+      is_display: false,
       media: [],
       activeTab: 1,
       _openPopup: false,
@@ -111,7 +112,7 @@ class Cms_Pages_Add extends Component {
   // Method For Form Field
   handleChange(event) {
     const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    const value = target.type === "checkbox" ? target.checked : target.value;    
     const name = target.name;
     this.setState({
       [name]: value,
@@ -246,6 +247,7 @@ class Cms_Pages_Add extends Component {
           meta_keywords: this.state.meta_keywords,
           meta_desc: this.state.meta_desc,
           status: this.state.status,
+          is_display: this.state.is_display,
         })
         .then((res) => {
           if (res.status === "error") {
@@ -666,6 +668,22 @@ class Cms_Pages_Add extends Component {
                   className="mr-1"
                   color="primary"
                   defaultChecked={this.state.status}
+                  onClick={this.handleChange}
+                />
+              </CFormGroup>
+            </CCol>
+          </CFormGroup>
+          <CFormGroup row>
+            <CCol tag="label" sm="1" className="col-form-label">
+              Display
+            </CCol>
+            <CCol sm="11">
+              <CFormGroup variant="custom-checkbox" inline>
+                <CSwitch
+                  name="is_display"
+                  className="mr-1"
+                  color="primary"
+                  defaultChecked={this.state.is_display}
                   onClick={this.handleChange}
                 />
               </CFormGroup>
