@@ -188,15 +188,43 @@ class Customers_Management_Edit extends React.Component {
     });
   }
 
-  handleChange(e) {
+  // handleChange(e) {
+  //   const { name, value } = e.target;
+  //   if (name === "status") {
+  //     var fstatus = value === "true" ? false : true;
+  //     this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
+  //   } else {
+  //     this.setState({ fields: { ...this.state.fields, [name]: value } });
+  //   }
+  // }
+
+  handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "status") {
-      var fstatus = value === "true" ? false : true;
-      this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
+
+    if (name === "daily_request_limit") {
+      // Remove any non-digit characters
+      const sanitizedValue = value.replace(/[^0-9]/g, "");
+
+      // Take only the first two digits
+      const firstTwoDigits = sanitizedValue.substring(0, 2);
+
+      this.setState({
+        fields: { ...this.state.fields, [name]: firstTwoDigits },
+      });
     } else {
-      this.setState({ fields: { ...this.state.fields, [name]: value } });
+      // For other fields, proceed with the generic handling
+      if (name === "status") {
+        const fstatus = value === "true" ? false : true;
+        this.setState({
+          fields: { ...this.state.fields, [name]: fstatus },
+        });
+      } else {
+        this.setState({
+          fields: { ...this.state.fields, [name]: value },
+        });
+      }
     }
-  }
+  };
 
   permssionChange(e) {
     const { name, value } = e.target;
@@ -837,9 +865,8 @@ class Customers_Management_Edit extends React.Component {
                           )}
                         </CFormText>
                       </CCol>
-                    </CCol>                    
+                    </CCol>
                   </CRow>
-
                 </CFormGroup>
               </CCardBody>
               <CCardFooter>
