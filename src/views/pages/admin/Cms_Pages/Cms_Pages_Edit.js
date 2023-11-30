@@ -120,9 +120,7 @@ class Cms_Pages_Edit extends Component {
   /******** media Modal gallery  ************/
   _handleApplyAction = (event) => {
     const img_src = `${
-      API_URL +
-      "uploads/media/" +
-      this.state.selectedMediaFile
+      API_URL + "uploads/media/" + this.state.selectedMediaFile
     }`;
     let content = this.state.initialValue;
     if (
@@ -732,6 +730,16 @@ class Cms_Pages_Edit extends Component {
                     color="primary"
                     name="is_display"
                     value={this.state.is_display}
+                    onChange={this.handleChange}
+                  />
+                )}
+
+                {this.state.is_display === null && (
+                  <CSwitch
+                    className="mr-1"
+                    color="primary"
+                    name="is_display"
+                    value={false}
                     onChange={this.handleChange}
                   />
                 )}
