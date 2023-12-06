@@ -729,8 +729,8 @@ class Transaction_Reports_Index extends React.Component {
                             <td>{u.rname}</td>
                             <td>{u.sender_account_number}</td>
                             <td>{u.sname}</td>
-                            <td>{u.amount}</td>
-                            <td>{u.fees}</td>
+                            <td>{parseFloat(u.amount).toFixed(2)}</td>
+                            <td>{parseFloat(u.fees).toFixed(2)}</td>
                             <td>{u.type}</td>
                             <td>{u.narration}</td>
                             <td>{u.status}</td>
