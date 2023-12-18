@@ -35,7 +35,7 @@ const TheSidebar = (props) => {
       show={show}
       onShowChange={(val) => dispatch({ type: "set", sidebarShow: val })}
     >
-      <CSidebarBrand className="d-md-down-none" to="/">
+      <CSidebarBrand className="d-md-down-none" to="admin/dashboard">
         <img
           src={require("assets/img/cxpay_me_logo.png").default}
           className="cc-logo-styles"

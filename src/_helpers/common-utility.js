@@ -1,4 +1,5 @@
 import { notify, history } from "./index";
+import { differenceInCalendarDays, differenceInMonths } from 'date-fns';
 
 /* Handle all http resopnse from all API */
 export const handleResponse = (response) => {
@@ -168,4 +169,48 @@ export const formatDateFull = (inputDate) => {
   }:${minutes} ${amPm}`;
 
   return formattedDate;
+};
+
+export const calculateDuration = (renewDate, expirationDate) => {
+  const renew = new Date(renewDate);
+  const expiration = new Date(expirationDate);
+
+  const yearDiff = expiration.getFullYear() - renew.getFullYear();
+  const monthDiff = expiration.getMonth() - renew.getMonth();
+
+  let duration = "";
+
+  if (yearDiff > 0) {
+    duration += `${yearDiff} ${yearDiff === 1 ? "year" : "years"}`;
+  }
+
+  if (monthDiff > 0) {
+    duration += ` ${monthDiff} ${monthDiff === 1 ? "month" : "months"}`;
+  }
+
+  return duration.trim();
+};
+
+export const calculateDurationLeft = (expirationDate) => {
+  const expiration = new Date(expirationDate);
+  const currentDate = new Date();
+
+  const daysLeft = differenceInCalendarDays(expiration, currentDate);
+  const monthsLeft = differenceInMonths(expiration, currentDate);
+
+  let durationLeft = "";
+
+  if (monthsLeft > 0) {
+    durationLeft += `${monthsLeft} ${monthsLeft === 1 ? 'month' : 'months'}`;
+  }
+
+  if (daysLeft > 0) {
+    const remainingDaysInMonth = daysLeft % 30;
+    if (monthsLeft > 0) {
+      durationLeft += ' ';
+    }
+    durationLeft += `${remainingDaysInMonth} ${remainingDaysInMonth === 1 ? 'day' : 'days'}`;
+  }
+
+  return durationLeft.trim();
 };

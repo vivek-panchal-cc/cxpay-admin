@@ -28,12 +28,16 @@ import {
   history,
   capitalize,
   _canAccess,
+  formatDateFull,
+  calculateDurationLeft,
+  calculateDuration,
 } from "../../../../_helpers/index";
 import $ from "jquery";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import { customersManagementService } from "../../../../services/admin/customers_management.service";
+import "../business_customers/kycTable.css";
 
 class Customers_Management_Edit extends React.Component {
   constructor(props) {
@@ -44,6 +48,7 @@ class Customers_Management_Edit extends React.Component {
       fields: {
         user_group_name: "",
         status: true,
+        is_kyc: true,
         _id: this.props.match.params.id,
       },
       module_permission: {},
@@ -60,6 +65,7 @@ class Customers_Management_Edit extends React.Component {
     this.handleCountryChange = this.handleCountryChange.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+    this.handleCheckboxChangeKYC = this.handleCheckboxChangeKYC.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
   }
 
@@ -95,11 +101,13 @@ class Customers_Management_Edit extends React.Component {
                 (e) => e.iso === res.data.country
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
+            const kyctmp = res.data.is_kyc === false ? false : true;
             this.setState({
               cityData: iso ? [...this.state.countryData.city_list[iso]] : [],
               city: res.data.city,
               country: country_index,
               status: statustmp,
+              is_kyc: kyctmp,
             });
           }
         });
@@ -169,6 +177,17 @@ class Customers_Management_Edit extends React.Component {
     this.setState({
       [name]: tmp,
       // fields:{[name]: tmp}
+    });
+  }
+
+  handleCheckboxChangeKYC(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    const tmpKyc = value ? true : false;
+
+    this.setState({
+      [name]: tmpKyc,
     });
   }
 
@@ -287,6 +306,7 @@ class Customers_Management_Edit extends React.Component {
       formData.append("first_name", this.state.fields.first_name);
       formData.append("last_name", this.state.fields.last_name);
       formData.append("status", this.state.status);
+      formData.append("kyc_status", this.state.is_kyc);
       formData.append("email", this.state.fields.email);
       formData.append("city", this.state.city);
       formData.append(
@@ -657,6 +677,96 @@ class Customers_Management_Edit extends React.Component {
                     </CFormGroup>
                   </CCol>
                 </CFormGroup>
+
+                <CFormGroup row>
+                  <CCol md="1">KYC</CCol>
+
+                  <CCol sm="11">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      {this.state.fields.is_kyc == true && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          defaultChecked
+                          disabled={
+                            new Date(this.state.fields.kyc_expiration_date) >
+                            new Date()
+                          }
+                          onChange={this.handleCheckboxChangeKYC}
+                        />
+                      )}
+
+                      {this.state.fields.is_kyc == false && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          onChange={this.handleCheckboxChangeKYC}
+                        />
+                      )}
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+
+                <table className="kyc-table">
+                  <thead>
+                    <tr>
+                      <th>KYC</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.fields.kyc_completion_date && (
+                      <tr>
+                        <td>Completion on</td>
+                        <td>
+                          {formatDateFull(
+                            this.state.fields.kyc_completion_date
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                    {this.state.fields.kyc_renew_date && (
+                      <tr>
+                        <td>Renewed on</td>
+                        <td>
+                          {formatDateFull(this.state.fields.kyc_renew_date)}
+                        </td>
+                      </tr>
+                    )}
+                    {this.state.fields.kyc_expiration_date && (
+                      <tr>
+                        <td>Expiration on</td>
+                        <td>
+                          {formatDateFull(
+                            this.state.fields.kyc_expiration_date
+                          )}
+                          {this.state.fields.kyc_renew_date && (
+                            <span>
+                              {" (Duration: "}
+                              {calculateDuration(
+                                this.state.fields.kyc_renew_date,
+                                this.state.fields.kyc_expiration_date
+                              )}
+                              {")"}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                    {this.state.fields.kyc_transaction_id && (
+                      <tr>
+                        <td>Transaction Id</td>
+                        <td>{this.state.fields.kyc_transaction_id}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
 
                 <CFormGroup className="limits-wrap">
                   <div className="row mb-3 mb-lg-4 limits-heading">
