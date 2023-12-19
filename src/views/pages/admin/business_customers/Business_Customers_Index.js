@@ -37,7 +37,7 @@ import {
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
 import InputDateRange from "components/admin/InputDateRange";
-import "./../agent_customers/notification.css"
+import "./../agent_customers/notification.css";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -101,16 +101,16 @@ class Business_Customers_Index extends React.Component {
           notify.error(res.message);
         } else {
           this.setState({
-            totalRecords: res.data?.pagination?.total || null,
+            totalRecords: res.data?.pagination?.total,
             fields: {
               ...this.state.fields,
-              totalPage: res.data?.pagination?.last_page || null,
+              totalPage: res.data?.pagination?.last_page,
             },
-            customers_management_list: res.data?.customers || [],
+            customers_management_list: res.data?.customers,
           });
           /* Multi delete checkbox code */
-          if (res.data && res.data.customers.length > 0) {
-            let customers_management = res.data.customers;
+          if (res?.data && res?.data?.customers?.length > 0) {
+            let customers_management = res?.data?.customers;
             let multiaction = [];
             const current_user = _loginUsersDetails();
             for (var key in customers_management) {
@@ -736,13 +736,15 @@ class Business_Customers_Index extends React.Component {
                       )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={this.state.fields.page}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {this.state?.customers_management_list?.length > 0 && (
+                    <CPagination
+                      activePage={this.state.fields.page}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>
