@@ -56,6 +56,7 @@ class Customers_Management_Edit extends React.Component {
       cityData: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
+      site_logo: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -366,7 +367,7 @@ class Customers_Management_Edit extends React.Component {
   }
 
   render() {
-    var { module_permission } = this.state;
+    var { module_permission, site_logo } = this.state;
 
     return (
       <>
@@ -601,8 +602,10 @@ class Customers_Management_Edit extends React.Component {
                   <CCol sm="2">
                     <img
                       src={
-                        this.state.fields.profile_image ||
-                        "/avatars/default-avatar.png"
+                        site_logo
+                          ? URL.createObjectURL(site_logo)
+                          : this.state.fields.profile_image ||
+                            "/avatars/default-avatar.png"
                       }
                       className=""
                       width={100}
@@ -613,9 +616,10 @@ class Customers_Management_Edit extends React.Component {
                       type="file"
                       id="site_logo"
                       name="site_logo"
-                      placeholder="Browe Logo "
+                      placeholder="Browse Logo "
                       autoComplete="site_logo "
                       onChange={this.handleUpload}
+                      style={{ border: "none" }}
                     />
                     {this.state.imageTypeValidation && (
                       <small className="form-text text-muted help-block">
@@ -627,7 +631,7 @@ class Customers_Management_Edit extends React.Component {
                     {this.state.imageSizeValidation && (
                       <small className="form-text text-muted help-block">
                         <div className="text-danger">
-                          Image size is grater then 5MB. Please upload image
+                          Image size is greater than 5MB. Please upload image
                           below 5MB.
                         </div>
                       </small>
@@ -713,60 +717,62 @@ class Customers_Management_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                <table className="kyc-table">
-                  <thead>
-                    <tr>
-                      <th>KYC</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.fields.kyc_completion_date && (
+                {this.state.fields.is_kyc && (
+                  <table className="kyc-table">
+                    <thead>
                       <tr>
-                        <td>Completion on</td>
-                        <td>
-                          {formatDateFull(
-                            this.state.fields.kyc_completion_date
-                          )}
-                        </td>
+                        <th>KYC</th>
+                        <th></th>
                       </tr>
-                    )}
-                    {this.state.fields.kyc_renew_date && (
-                      <tr>
-                        <td>Renewed on</td>
-                        <td>
-                          {formatDateFull(this.state.fields.kyc_renew_date)}
-                        </td>
-                      </tr>
-                    )}
-                    {this.state.fields.kyc_expiration_date && (
-                      <tr>
-                        <td>Expiration on</td>
-                        <td>
-                          {formatDateFull(
-                            this.state.fields.kyc_expiration_date
-                          )}
-                          {this.state.fields.kyc_renew_date && (
-                            <span>
-                              {" (Duration: "}
-                              {calculateDuration(
-                                this.state.fields.kyc_renew_date,
-                                this.state.fields.kyc_expiration_date
-                              )}
-                              {")"}
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    )}
-                    {this.state.fields.kyc_transaction_id && (
-                      <tr>
-                        <td>Transaction Id</td>
-                        <td>{this.state.fields.kyc_transaction_id}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {this.state.fields.kyc_completion_date && (
+                        <tr>
+                          <td>Completion on</td>
+                          <td>
+                            {formatDateFull(
+                              this.state.fields.kyc_completion_date
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                      {this.state.fields.kyc_renew_date && (
+                        <tr>
+                          <td>Renewed on</td>
+                          <td>
+                            {formatDateFull(this.state.fields.kyc_renew_date)}
+                          </td>
+                        </tr>
+                      )}
+                      {this.state.fields.kyc_expiration_date && (
+                        <tr>
+                          <td>Expiration on</td>
+                          <td>
+                            {formatDateFull(
+                              this.state.fields.kyc_expiration_date
+                            )}
+                            {this.state.fields.kyc_renew_date && (
+                              <span>
+                                {" (Duration: "}
+                                {calculateDuration(
+                                  this.state.fields.kyc_renew_date,
+                                  this.state.fields.kyc_expiration_date
+                                )}
+                                {")"}
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                      {this.state.fields.kyc_transaction_id && (
+                        <tr>
+                          <td>Transaction Id</td>
+                          <td>{this.state.fields.kyc_transaction_id}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                )}
 
                 <CFormGroup className="limits-wrap">
                   <div className="row mb-3 mb-lg-4 limits-heading">

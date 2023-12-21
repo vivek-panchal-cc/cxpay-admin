@@ -640,8 +640,8 @@ class Business_Customers_Index extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.customers_management_list.length > 0 &&
-                        this.state.customers_management_list.map((c, index) => (
+                      {this.state.customers_management_list?.length > 0 &&
+                        this.state.customers_management_list?.map((c, index) => (
                           <tr key={c.mobile}>
                             <td>
                               {this.state.multiaction[c.mobile] !==

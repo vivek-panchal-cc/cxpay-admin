@@ -113,7 +113,7 @@ class Customers_Management_Index extends React.Component {
             customers_management_list: res.data?.customers || [],
           });
           /* Multi delete checkbox code */
-          if (res.data && res.data.customers.length > 0) {
+          if (res.data && res.data.customers?.length > 0) {
             let customers_management = res.data.customers;
             let multiaction = [];
             const current_user = _loginUsersDetails();
@@ -604,8 +604,8 @@ class Customers_Management_Index extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.customers_management_list.length > 0 &&
-                        this.state.customers_management_list.map((c, index) => (
+                      {this.state.customers_management_list?.length > 0 &&
+                        this.state.customers_management_list?.map((c, index) => (
                           <tr key={c.mobile}>
                             <td>
                               {this.state.multiaction[c.mobile] !==
