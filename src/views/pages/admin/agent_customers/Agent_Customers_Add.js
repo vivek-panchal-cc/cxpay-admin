@@ -54,15 +54,15 @@ class Agent_Customers_Add extends Component {
 
     // Define State by vivek
     this.state = {
-      fields:{
-        user_type:'agent',
+      fields: {
+        user_type: "agent",
         first_name: "",
         last_name: "",
         email: "",
         mobile_number: "",
         city: "",
         country_code: "",
-        country:"",
+        country: "",
         address: "",
         commission_type: "",
         commission_amount: "",
@@ -70,12 +70,12 @@ class Agent_Customers_Add extends Component {
         system_commission_amount: "",
         card_commission: [
           // cash = {},
-        ]
+        ],
       },
-      countryCityRes:[],
-      countryData : [],
-      cityData : [],
-      collectionData : [],
+      countryCityRes: [],
+      countryData: [],
+      cityData: [],
+      collectionData: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
     };
@@ -93,9 +93,13 @@ class Agent_Customers_Add extends Component {
   componentDidMount() {
     this.getCountryCity();
     this.getCollectionTypes();
-    
+
     setTimeout(() => {
-      _canAccess(this.props.module_name, this.props.action, "/admin/agent_customers");
+      _canAccess(
+        this.props.module_name,
+        this.props.action,
+        "/admin/agent_customers"
+      );
     }, 300);
   }
 
@@ -111,7 +115,7 @@ class Agent_Customers_Add extends Component {
     });
   }
 
-  getCollectionTypes(){
+  getCollectionTypes() {
     agentService.getCollectionType().then((res) => {
       if (res.status === false) {
         notify.error(res.message);
@@ -123,7 +127,7 @@ class Agent_Customers_Add extends Component {
 
         this.setState({ collectionData: res.data });
 
-        res.data.map((ele,index) => {
+        res.data.map((ele, index) => {
           this.setState((prevState) => {
             const newState = [...prevState.fields.card_commission];
             newState[index] = {
@@ -132,15 +136,15 @@ class Agent_Customers_Add extends Component {
               type: "",
               amount: "",
             };
-            
+
             return {
               fields: {
                 ...prevState.fields,
                 card_commission: newState,
               },
             };
-          })
-        })
+          });
+        });
       }
     });
   }
@@ -148,16 +152,17 @@ class Agent_Customers_Add extends Component {
   // Method For Form Field
   handleCountryChange(e) {
     const { value } = e.target;
-    const selectedOption = e.target.options[e.target.selectedIndex];    
-    const dataValue = selectedOption.getAttribute('data-iso');
-    const city = value != '' ? this.state?.countryCityRes?.city_list[dataValue] : []
+    const selectedOption = e.target.options[e.target.selectedIndex];
+    const dataValue = selectedOption.getAttribute("data-iso");
+    const city =
+      value != "" ? this.state?.countryCityRes?.city_list[dataValue] : [];
     this.setState({ cityData: city });
     this.setState({
-      fields : {
+      fields: {
         ...this.state.fields,
         country: dataValue,
-        country_code: value
-      }
+        country_code: value,
+      },
     });
   }
 
@@ -167,30 +172,36 @@ class Agent_Customers_Add extends Component {
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
     this.setState({
-      fields : {
+      fields: {
         ...this.state.fields,
         [name]: value,
-      }
+      },
     });
   }
 
-  handlePaymentTypeChange(index, event, objField){
+  handlePaymentTypeChange(index, event, objField) {
     const target = event.target;
-    const value = target.type === "checkbox" ? (target.checked ? 1 : 0) : target.value;
-    
+    const value =
+      target.type === "checkbox" ? (target.checked ? 1 : 0) : target.value;
+
     const updatedCardCommission = [...this.state.fields.card_commission];
-    
+
     if (target.type === "checkbox") {
-      updatedCardCommission[index] = {...updatedCardCommission[index],'id' : parseInt(target.value)};
+      updatedCardCommission[index] = {
+        ...updatedCardCommission[index],
+        id: parseInt(target.value),
+      };
     }
-    updatedCardCommission[index] = {...updatedCardCommission[index],[objField] : value};
+    updatedCardCommission[index] = {
+      ...updatedCardCommission[index],
+      [objField]: value,
+    };
     this.setState({
-      fields : {
+      fields: {
         ...this.state.fields,
-        card_commission: updatedCardCommission
-      }
-    })
-    
+        card_commission: updatedCardCommission,
+      },
+    });
   }
 
   handleUpload(event) {
@@ -205,10 +216,10 @@ class Agent_Customers_Add extends Component {
     }
 
     this.setState({
-      fields:{
+      fields: {
         ...this.state.fields,
         profile_image: file,
-      }
+      },
     });
   }
   // Close  modal box method
@@ -220,10 +231,10 @@ class Agent_Customers_Add extends Component {
   checkIsCardSelected(selectedPaymentType) {
     let $returnVal = false;
     selectedPaymentType.forEach((ele) => {
-      if (ele.status == '1') {
+      if (ele.status == "1") {
         $returnVal = true;
       }
-    })
+    });
     return $returnVal;
   }
 
@@ -240,32 +251,32 @@ class Agent_Customers_Add extends Component {
       return false;
     }
 
-    if (this.state.fields.profile_image && this.state.fields.profile_image.size > 5000000) {
+    if (
+      this.state.fields.profile_image &&
+      this.state.fields.profile_image.size > 5000000
+    ) {
       this.setState({ imageSizeValidation: true });
       return false;
-    } 
+    }
     if (!this.checkIsCardSelected(this.state?.fields?.card_commission)) {
-      notify.error('Please select atleast one payment type')
+      notify.error("Please select atleast one payment type");
       return false;
     }
     if (this.validator.allValid()) {
-
       // if (!this.checkIsCardSelected(this.state?.fields?.card_commission)) {
       //   notify.error('Please select atleast one payment type')
       //   return false;
       // }
       const fields = this.state.fields;
-      let formData = new FormData()
+      let formData = new FormData();
       // Iterate through the fields in your state object
       for (const fieldName in fields) {
         if (fields.hasOwnProperty(fieldName)) {
           const fieldValue = fields[fieldName];
-          if (fieldName == 'card_commission') {
-            
-            for (const key in fields) 
-            {
-              if(key == 'card_commission') 
-              addObjToFormData(fields[fieldName], key, formData);
+          if (fieldName == "card_commission") {
+            for (const key in fields) {
+              if (key == "card_commission")
+                addObjToFormData(fields[fieldName], key, formData);
             }
           } else {
             // Append the field and its value to the FormData object
@@ -274,26 +285,28 @@ class Agent_Customers_Add extends Component {
         }
       }
 
-      agentService.createAgent(formData)
-      .then((res) => {
-          if (!res.success) {
-            if (typeof res.message == "string") {
-              notify.error(res.message);
-            } else {
-              Object.keys(res.message).forEach((element) => {
-                if (res.message[element] && typeof res.message[element] != 'string') {
-                  res?.message[element].forEach((error) => {
-                    notify.error(error);
-                  })
-                }
-              });
-            }
+      agentService.createAgent(formData).then((res) => {
+        if (!res.success) {
+          if (typeof res.message == "string") {
+            notify.error(res.message);
           } else {
-            notify.success(res.message);
-            history.push("/admin/agent_customers");
-            event.preventDefault();
+            Object.keys(res.message).forEach((element) => {
+              if (
+                res.message[element] &&
+                typeof res.message[element] != "string"
+              ) {
+                res?.message[element].forEach((error) => {
+                  notify.error(error);
+                });
+              }
+            });
           }
-        })
+        } else {
+          notify.success(res.message);
+          history.push("/admin/agent_customers");
+          event.preventDefault();
+        }
+      });
     } else {
       this.validator.showMessages();
     }
@@ -304,7 +317,7 @@ class Agent_Customers_Add extends Component {
     if (event.keyCode === 45 || event.which === 45) {
       event.preventDefault(); // Prevent the minus key from being entered
     }
-  }
+  };
   // addDefaultSrc(ev) {
   //   ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
   // }
@@ -339,9 +352,14 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("first_name", this.state.fields.first_name, "required|alpha_space", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "first_name",
+                this.state.fields.first_name,
+                "required|alpha_space",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
@@ -355,77 +373,87 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("last_name", this.state.fields.last_name, "required|alpha_space", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "last_name",
+                this.state.fields.last_name,
+                "required|alpha_space",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-email">Email</CLabel>
-            <CInput 
-              type="email" 
-              id="email" 
-              name="email" 
-              placeholder="Enter Email " 
-              autoComplete="email" 
-              onChange={this.handleChange} 
+            <CInput
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter Email "
+              autoComplete="email"
+              onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message('email', this.state.fields.email, 'required|email', { 
-                className: 'text-danger' 
-              })}
+              {this.validator.message(
+                "email",
+                this.state.fields.email,
+                "required|email",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Mobile Number</CLabel>
             <div className="phone_with_ccode">
               <div className="con_selectWrap">
-            <CSelect
-              custom
-              name="country_code"
-              id="select"
-              // onChange={this.handleChange} 
-              onChange={this.handleCountryChange}
-              // value={this.state.fields.country}
-            >
-              <option value="">-- Country Code--</option>;
-              {this.state?.countryData?.map((e, key) => {
-                  return (
-                    <option key={key} value={e.phonecode} data-iso={e.iso}>
-                      {e.phonecode} {e.country_name}
-                    </option>
-                  );
-                })}
-            </CSelect>
-            <CFormText className="help-block">
-              {this.validator.message(
-                "country_code",
-                this.state.fields.country_code,
-                `required`,
-                { className: "text-danger" }
-              )}
-            </CFormText>
-            </div>
-            <div className="phone_num_wrap">
-            <CInput
-              type="number"
-              id="mobile_number"
-              name="mobile_number"
-              placeholder="Enter Mobile Number "
-              autoComplete="name"
-              value={this.state.fields.mobile_number}
-              onChange={this.handleChange}
-              onKeyPress={this.handleKeyPress}
-            />
-            <CFormText className="help-block">
-              {this.validator.message(
-                "mobile_number",
-                this.state.fields.mobile_number,
-                `required|numeric|min:6|max:7|regex:^[0-9]*$`,
-                { className: "text-danger" }
-              )}
-            </CFormText>
-            </div>
+                <CSelect
+                  custom
+                  name="country_code"
+                  id="select"
+                  // onChange={this.handleChange}
+                  onChange={this.handleCountryChange}
+                  // value={this.state.fields.country}
+                >
+                  <option value="">-- Country Code--</option>;
+                  {this.state?.countryData?.map((e, key) => {
+                    return (
+                      <option key={key} value={e.phonecode} data-iso={e.iso}>
+                        {e.phonecode} {e.country_name}
+                      </option>
+                    );
+                  })}
+                </CSelect>
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "country_code",
+                    this.state.fields.country_code,
+                    `required`,
+                    { className: "text-danger" }
+                  )}
+                </CFormText>
+              </div>
+              <div className="phone_num_wrap">
+                <CInput
+                  type="number"
+                  id="mobile_number"
+                  name="mobile_number"
+                  placeholder="Enter Mobile Number "
+                  autoComplete="name"
+                  value={this.state.fields.mobile_number}
+                  onChange={this.handleChange}
+                  onKeyPress={this.handleKeyPress}
+                />
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "mobile_number",
+                    this.state.fields.mobile_number,
+                    `required|numeric|min:6|max:7|regex:^[0-9]*$`,
+                    { className: "text-danger" }
+                  )}
+                </CFormText>
+              </div>
             </div>
           </CFormGroup>
           <CFormGroup>
@@ -440,17 +468,22 @@ class Agent_Customers_Add extends Component {
             >
               <option value="">-- Country --</option>;
               {this.state?.countryData?.map((e, key) => {
-                  return (
-                    <option key={key} value={e.iso}>
-                      {e.country_name}
-                    </option>
-                  );
-                })}
+                return (
+                  <option key={key} value={e.iso}>
+                    {e.country_name}
+                  </option>
+                );
+              })}
             </CSelect>
             <CFormText className="help-block">
-              {this.validator.message("country", this.state.fields.country, "required", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "country",
+                this.state.fields.country,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
 
@@ -474,9 +507,14 @@ class Agent_Customers_Add extends Component {
               })}
             </CSelect>
             <CFormText className="help-block">
-              {this.validator.message("city", this.state.fields.city, "required", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "city",
+                this.state.fields.city,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
@@ -490,9 +528,14 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("address", this.state.fields.address, "required", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "address",
+                this.state.fields.address,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
@@ -504,14 +547,19 @@ class Agent_Customers_Add extends Component {
               onChange={this.handleChange}
               // value={this.state.fields.city}
             >
-              <option value={''}>{'Select Commission Type'}</option>
-              <option value={'fixed'}>{'Fixed'}</option>
-              <option value={'percentage'}>{'Percentage'}</option>
+              <option value={""}>{"Select Commission Type"}</option>
+              <option value={"fixed"}>{"Fixed"}</option>
+              <option value={"percentage"}>{"Percentage"}</option>
             </CSelect>
             <CFormText className="help-block">
-              {this.validator.message("commission_type", this.state.fields.commission_type, "required", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "commission_type",
+                this.state.fields.commission_type,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
@@ -526,9 +574,14 @@ class Agent_Customers_Add extends Component {
               onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("commission_amount", this.state.fields.commission_amount, "required|numeric|min:0,num|max:6", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "commission_amount",
+                this.state.fields.commission_amount,
+                "required|numeric|min:0,num|max:6",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
 
@@ -540,14 +593,19 @@ class Agent_Customers_Add extends Component {
               id="system_commission_type"
               onChange={this.handleChange}
             >
-              <option value={''}>{'Select Commission Type'}</option>
-              <option value={'fixed'}>{'Fixed'}</option>
-              <option value={'percentage'}>{'Percentage'}</option>
+              <option value={""}>{"Select Commission Type"}</option>
+              <option value={"fixed"}>{"Fixed"}</option>
+              <option value={"percentage"}>{"Percentage"}</option>
             </CSelect>
             <CFormText className="help-block">
-              {this.validator.message("system_commission_type", this.state.fields.system_commission_type, "required", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "system_commission_type",
+                this.state.fields.system_commission_type,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup>
@@ -562,62 +620,67 @@ class Agent_Customers_Add extends Component {
               onKeyPress={this.handleKeyPress}
             />
             <CFormText className="help-block">
-              {this.validator.message("system_commission_amount", this.state.fields.system_commission_amount, "required|numeric|min:0,num|max:6", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "system_commission_amount",
+                this.state.fields.system_commission_amount,
+                "required|numeric|min:0,num|max:6",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
           <CFormGroup row>
-                  <CCol md="2">Profile Image</CCol>
+            <CCol md="2">Profile Image</CCol>
 
-                  <CCol sm="2">
-                    <img
-                      src={
-                        // this.state.fields.profile_image ||
-                        "/avatars/default-avatar.png"
-                      }
-                      className=""
-                      width={100}
-                    />
-                  </CCol>
-                  <CCol sm="5">
-                    <CInput
-                      type="file"
-                      id="profile_image"
-                      name="profile_image"
-                      placeholder="Browe Logo "
-                      autoComplete="profile_image "
-                      onChange={this.handleUpload}
-                    />
-                    {this.state.imageTypeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Select valid image. (jpg, jpeg or png)
-                        </div>
-                      </small>
-                    )}
-                    {this.state.imageSizeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Image size is grater then 5MB. Please upload image
-                          below 5MB.
-                        </div>
-                      </small>
-                    )}
-                  </CCol>
-                </CFormGroup>
+            <CCol sm="2">
+              <img
+                src={
+                  this.state.fields.profile_image
+                    ? URL.createObjectURL(this.state.fields.profile_image)
+                    : "/avatars/default-avatar.png"
+                }
+                className=""
+                width={100}
+              />
+            </CCol>
+            <CCol sm="5">
+              <CInput
+                type="file"
+                id="profile_image"
+                name="profile_image"
+                placeholder="Browse Logo "
+                autoComplete="profile_image "
+                onChange={this.handleUpload}
+                style={{ border: "none" }}
+              />
+              {this.state.imageTypeValidation && (
+                <small className="form-text text-muted help-block">
+                  <div className="text-danger">
+                    Select valid image. (jpg, jpeg or png)
+                  </div>
+                </small>
+              )}
+              {this.state.imageSizeValidation && (
+                <small className="form-text text-muted help-block">
+                  <div className="text-danger">
+                    Image size is greater than 5MB. Please upload image below
+                    5MB.
+                  </div>
+                </small>
+              )}
+            </CCol>
+          </CFormGroup>
           <CFormGroup className="limits-wrap">
             <div className="row mb-3 mb-lg-4 limits-heading">
               <div className="col-md-6 col">
                 <p>Payment Types</p>
               </div>
-              
             </div>
           </CFormGroup>
-          {this.state?.collectionData?.map((ele,index)=>{
+          {this.state?.collectionData?.map((ele, index) => {
             return (
               <CFormGroup row key={ele.id}>
-              
                 {/* <CCol md="1">
                  <CInput
                  type="checkbox"
@@ -630,71 +693,97 @@ class Agent_Customers_Add extends Component {
                  
                 </CCol> */}
                 <CCol className="customCBWrap">
-                <CInput
-                 type="checkbox"
-                 name="status"
-                 id={`${'status'+ele.id}`}
-                 value={ele.id}
-                 onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'status')}}
-                 
-                 />
-                  <CLabel type="text" id={ele.id} htmlFor={`${'status'+ele.id}`} value={ele.collection_type}>{ele.collection_type}</CLabel>
+                  <CInput
+                    type="checkbox"
+                    name="status"
+                    id={`${"status" + ele.id}`}
+                    value={ele.id}
+                    onChange={(e) => {
+                      this.handlePaymentTypeChange(index, e, "status");
+                    }}
+                  />
+                  <CLabel
+                    type="text"
+                    id={ele.id}
+                    htmlFor={`${"status" + ele.id}`}
+                    value={ele.collection_type}
+                  >
+                    {ele.collection_type}
+                  </CLabel>
                 </CCol>
                 <CCol>
                   <CSelect
                     custom
                     name="type"
-                    id={`${'type'+ele.id}`}
-                    onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'type')}}
+                    id={`${"type" + ele.id}`}
+                    onChange={(e) => {
+                      this.handlePaymentTypeChange(index, e, "type");
+                    }}
                     disabled={
-                      this.state.fields?.card_commission[index]?.status === 1 ? false : true
+                      this.state.fields?.card_commission[index]?.status === 1
+                        ? false
+                        : true
                     }
-                    value={this.state.fields?.card_commission[index]?.status === 1 ? this.state.fields.card_commission[index].type : ''}
+                    value={
+                      this.state.fields?.card_commission[index]?.status === 1
+                        ? this.state.fields.card_commission[index].type
+                        : ""
+                    }
                     // id="system_commission_type"
                   >
-                    <option value={''}>{'Select Type'}</option>
-                    <option value={'fixed'}>{'Fixed'}</option>
-                    <option value={'percentage'}>{'Percentage'}</option>
+                    <option value={""}>{"Select Type"}</option>
+                    <option value={"fixed"}>{"Fixed"}</option>
+                    <option value={"percentage"}>{"Percentage"}</option>
                   </CSelect>
                   <CFormText className="help-block">
-                    {
-                      this.state.fields?.card_commission[index]?.status == 1 && 
+                    {this.state.fields?.card_commission[index]?.status == 1 &&
                       this.validator.message(
-                        "type", this.state.fields?.card_commission[index]?.type, "required", {
-                      className: "text-danger",
-                    })}
+                        "type",
+                        this.state.fields?.card_commission[index]?.type,
+                        "required",
+                        {
+                          className: "text-danger",
+                        }
+                      )}
                   </CFormText>
-                  </CCol>
-                  <CCol>
+                </CCol>
+                <CCol>
                   <CInput
                     type="number"
-                    id={`${'amount'+ele.id}`}
+                    id={`${"amount" + ele.id}`}
                     name="amount"
                     placeholder="Enter Amount"
                     autoComplete="amount"
-                    onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'amount')}}
+                    onChange={(e) => {
+                      this.handlePaymentTypeChange(index, e, "amount");
+                    }}
                     onKeyPress={this.handleKeyPress}
                     disabled={
-                      this.state.fields?.card_commission[index]?.status === 1 ? false : true
+                      this.state.fields?.card_commission[index]?.status === 1
+                        ? false
+                        : true
                     }
                     value={
-                      this.state.fields?.card_commission[index]?.status === 1 ?
-                      this.state?.fields?.card_commission[index]?.amount : ''}
-
+                      this.state.fields?.card_commission[index]?.status === 1
+                        ? this.state?.fields?.card_commission[index]?.amount
+                        : ""
+                    }
                   />
                   <CFormText className="help-block">
-                    {
-                      this.state.fields?.card_commission[index]?.status == 1 && 
+                    {this.state.fields?.card_commission[index]?.status == 1 &&
                       this.validator.message(
-                        "amount", this.state.fields?.card_commission[index]?.amount, "required|numeric|min:0,num|max:6", {
-                      className: "text-danger",
-                    })}
+                        "amount",
+                        this.state.fields?.card_commission[index]?.amount,
+                        "required|numeric|min:0,num|max:6",
+                        {
+                          className: "text-danger",
+                        }
+                      )}
                   </CFormText>
-                  </CCol>
+                </CCol>
               </CFormGroup>
-            )
+            );
           })}
-          
         </CCardBody>
         <CCardFooter>
           <CButton

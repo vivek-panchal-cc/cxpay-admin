@@ -67,6 +67,7 @@ class Agent_Customers_Edit extends React.Component {
       updatedCollectionType: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
+      newProfileImage: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -332,10 +333,7 @@ class Agent_Customers_Edit extends React.Component {
     }
 
     this.setState({
-      fields: {
-        ...this.state.fields,
-        newProfileImage: file,
-      },
+      newProfileImage: file,
     });
     setLoading(false);
   }
@@ -430,16 +428,16 @@ class Agent_Customers_Edit extends React.Component {
 
   handleSubmit() {
     if (
-      this.state.fields.newProfileImage &&
-      !this.state.fields.newProfileImage.name.match(/\.(jpg|jpeg|png)$/)
+      this.state.newProfileImage &&
+      !this.state.newProfileImage.name.match(/\.(jpg|jpeg|png)$/)
     ) {
       this.setState({ imageTypeValidation: true });
       return false;
     }
 
     if (
-      this.state.fields.newProfileImage &&
-      this.state.fields.newProfileImage.size > 5000000
+      this.state.newProfileImage &&
+      this.state.newProfileImage.size > 5000000
     ) {
       this.setState({ imageSizeValidation: true });
       return false;
@@ -461,7 +459,9 @@ class Agent_Customers_Edit extends React.Component {
       }
 
       let formData = new FormData();
-
+      if (this.state.newProfileImage) {
+        formData.append("profile_image", this.state.newProfileImage);
+      }
       formData.append("first_name", this.state.fields.first_name);
       formData.append("last_name", this.state.fields.last_name);
       formData.append("account_number", this.state.fields.account_number);
@@ -523,7 +523,7 @@ class Agent_Customers_Edit extends React.Component {
   };
 
   render() {
-    var { module_permission } = this.state;
+    var { module_permission, newProfileImage } = this.state;
 
     return (
       <>
@@ -847,8 +847,10 @@ class Agent_Customers_Edit extends React.Component {
                   <CCol sm="2">
                     <img
                       src={
-                        this.state.fields.profile_image ||
-                        "/avatars/default-avatar.png"
+                        newProfileImage
+                          ? URL.createObjectURL(newProfileImage)
+                          : this.state.fields.profile_image ||
+                            "/avatars/default-avatar.png"
                       }
                       className=""
                       width={100}
@@ -859,9 +861,10 @@ class Agent_Customers_Edit extends React.Component {
                       type="file"
                       id="newProfileImage"
                       name="newProfileImage"
-                      placeholder="Browe Logo "
+                      placeholder="Browse Logo "
                       autoComplete="newProfileImage "
                       onChange={this.handleUpload}
+                      style={{ border: "none" }}
                     />
                     {this.state.imageTypeValidation && (
                       <small className="form-text text-muted help-block">
@@ -873,7 +876,7 @@ class Agent_Customers_Edit extends React.Component {
                     {this.state.imageSizeValidation && (
                       <small className="form-text text-muted help-block">
                         <div className="text-danger">
-                          Image size is grater then 5MB. Please upload image
+                          Image size is greater than 5MB. Please upload image
                           below 5MB.
                         </div>
                       </small>
