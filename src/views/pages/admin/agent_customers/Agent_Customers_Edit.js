@@ -59,6 +59,7 @@ class Agent_Customers_Edit extends React.Component {
         system_commission_type: "",
         system_commission_amount: "",
         card_commission: [],
+        is_kyc: true,
       },
       countryData: {},
       cityData: [],
@@ -79,6 +80,7 @@ class Agent_Customers_Edit extends React.Component {
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleMergeArrays = this.mergeArrays.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
+    this.handleCheckboxChangeKYC = this.handleCheckboxChangeKYC.bind(this);
   }
 
   componentDidMount() {
@@ -155,12 +157,13 @@ class Agent_Customers_Edit extends React.Component {
                 (e) => e.iso === res.data.country
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
-
+            const kyctmp = res.data.is_kyc === false ? false : true;
             this.setState({
               cityData: [...this.state.countryData.city_list[iso]],
               city: res.data.city,
               country: country_index,
               status: statustmp,
+              is_kyc: kyctmp,
             });
           }
         });
@@ -317,6 +320,17 @@ class Agent_Customers_Edit extends React.Component {
         ...this.state.fields,
         status: tmp,
       },
+    });
+  }
+
+  handleCheckboxChangeKYC(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    const tmpKyc = value ? true : false;
+
+    this.setState({
+      [name]: tmpKyc,
     });
   }
 
@@ -488,6 +502,7 @@ class Agent_Customers_Edit extends React.Component {
       );
 
       formData.append("status", this.state.fields.status);
+      formData.append("kyc_status", this.state.is_kyc);
       formData.append("email", this.state.fields.email);
 
       // formData.append("card_commission", this.state.fields.card_commission);
@@ -897,9 +912,9 @@ class Agent_Customers_Edit extends React.Component {
                 </CFormGroup> */}
 
                 <CFormGroup row>
-                  <CCol md="2">Status</CCol>
+                  <CCol md="1">Status</CCol>
 
-                  <CCol sm="2">
+                  <CCol sm="11">
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.status == 1 && (
                         <CSwitch
@@ -921,6 +936,41 @@ class Agent_Customers_Edit extends React.Component {
                           name="status"
                           value={this.state.fields.status}
                           onChange={this.handleCheckboxChange}
+                        />
+                      )}
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+
+                <CFormGroup row>
+                  <CCol md="1">KYC</CCol>
+
+                  <CCol sm="11">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      {this.state.fields.is_kyc === true && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          defaultChecked
+                          // disabled={
+                          //   new Date(this.state.fields.kyc_expiration_date) >
+                          //   new Date()
+                          // }
+                          onChange={this.handleCheckboxChangeKYC}
+                        />
+                      )}
+
+                      {this.state.fields.is_kyc === false && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          onChange={this.handleCheckboxChangeKYC}
                         />
                       )}
                     </CFormGroup>

@@ -23,7 +23,7 @@ import {
 
 const REQUEST_ITEM_HEADERS = [
   { label: "Request From", field: "name" },
-  { label: "Bank Name", field: "bank_name" },
+  // { label: "Bank Name", field: "bank_name" },
   { label: "Date", field: "request_receive_date" },
   { label: "Amount", field: "amount" },
   { label: "Status", field: "status" },
@@ -136,7 +136,7 @@ const Manual_Topup_Request = () => {
                         <tr key={transaction_id || index}>
                           <td>{index + 1}</td>
                           <td>{name}</td>
-                          <td>{bank_name}</td>
+                          {/* <td>{bank_name}</td> */}
                           <td>{date}</td>
                           <td>
                             <WrapAmount value={amount} />

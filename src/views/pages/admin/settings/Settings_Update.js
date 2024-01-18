@@ -140,7 +140,7 @@ class Settings_Update extends Component {
               <CLink
                 className="btn btn-danger btn-sm"
                 aria-current="page"
-                to="/admin/settings"
+                to="/admin/dashboard"
               >
                 {" "}
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back
@@ -188,7 +188,7 @@ class Settings_Update extends Component {
           <CLink
             className="btn btn-danger btn-sm"
             aria-current="page"
-            to="/admin/settings"
+            to="/admin/dashboard"
           >
             {" "}
             <FontAwesomeIcon icon={faBan} className="mr-1" /> Cancel

@@ -634,7 +634,7 @@ class Business_Customers_Edit extends React.Component {
 
                   <CCol sm="11">
                     <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.is_kyc == true && (
+                      {this.state.fields.is_kyc === true && (
                         <CSwitch
                           className="mr-1"
                           color="primary"
@@ -650,7 +650,7 @@ class Business_Customers_Edit extends React.Component {
                         />
                       )}
 
-                      {this.state.fields.is_kyc == false && (
+                      {this.state.fields.is_kyc === false && (
                         <CSwitch
                           className="mr-1"
                           color="primary"

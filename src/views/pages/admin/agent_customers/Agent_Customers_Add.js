@@ -71,6 +71,7 @@ class Agent_Customers_Add extends Component {
         card_commission: [
           // cash = {},
         ],
+        kyc_status: false,
       },
       countryCityRes: [],
       countryData: [],
@@ -259,7 +260,7 @@ class Agent_Customers_Add extends Component {
       return false;
     }
     if (!this.checkIsCardSelected(this.state?.fields?.card_commission)) {
-      notify.error("Please select atleast one payment type");
+      notify.error("Please select at least one payment type");
       return false;
     }
     if (this.validator.allValid()) {
@@ -669,6 +670,22 @@ class Agent_Customers_Add extends Component {
                   </div>
                 </small>
               )}
+            </CCol>
+          </CFormGroup>
+          <CFormGroup row>
+            <CCol tag="label" md="1">
+              KYC
+            </CCol>
+            <CCol sm="11">
+              <CFormGroup variant="custom-checkbox" inline>
+                <CSwitch
+                  name="kyc_status"
+                  className="mr-1"
+                  color="primary"
+                  defaultChecked={this.state.kyc_status}
+                  onClick={this.handleChange}
+                />
+              </CFormGroup>
             </CCol>
           </CFormGroup>
           <CFormGroup className="limits-wrap">
