@@ -11,6 +11,7 @@ export const reportsService = {
   downloadCustomerCSV,
   getTransactionList,
   downloadTransactionCSV,
+  downloadAgentCSV,
 };
 
 async function getCustomersList(postData) {
@@ -45,10 +46,7 @@ async function customerDetails(postData) {
   let response;
   try {
     setLoading(true);
-    response = await fetch(
-      `${API_URL}api/get-customer`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/get-customer`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -110,6 +108,23 @@ async function downloadTransactionCSV(postData) {
       `${API_URL}api/export-transaction-report`,
       requestOptions
     );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+  }
+  return handleResponse(response);
+}
+
+async function downloadAgentCSV(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("agent_reports", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(`${API_URL}api/export-agent-report`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);

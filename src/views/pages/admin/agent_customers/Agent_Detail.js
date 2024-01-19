@@ -20,6 +20,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
+  CCardFooter,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,10 +31,11 @@ import {
   faPlus,
   faEye,
   faArrowLeft,
+  faFileExport,
 } from "@fortawesome/free-solid-svg-icons";
 import { _canAccess, _loginUsersDetails } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
-
+import { reportsService } from "../../../../services/admin/reports.service";
 class Agent_Detail extends React.Component {
   /*********** Define Initial Satte ****************/
   constructor(props) {
@@ -147,6 +149,16 @@ class Agent_Detail extends React.Component {
     const { name, value } = e.target;
     this.setState({ fields: { ...this.state.fields, search: value } });
   };
+
+  downloadFile = async () => {
+    const { search } = this.state.fields;
+    reportsService.downloadAgentCSV({ search }).then((res) => {
+      //  if (res.success) {
+      notify.success("Successfully send report logged in user mail");
+      // }
+    });
+  };
+
   /****************************** Render Data To Dom ***************************************/
 
   render() {
@@ -216,22 +228,20 @@ class Agent_Detail extends React.Component {
             <CCard>
               <CCardHeader>
                 Agent
-                <div className="card-header-actions">
-                  <CTooltip content={globalConstants.BACK_MSG}>
-                    <CLink
-                      className="btn btn-danger btn-sm"
-                      aria-current="page"
-                      to="/admin/agent_customers"
-                    >
-                      {" "}
-                      <FontAwesomeIcon
-                        icon={faArrowLeft}
-                        className="mr-1"
-                      />{" "}
-                      Back
-                    </CLink>
-                  </CTooltip>
-                </div>
+                {/* <div className="card-header-actions">
+                  {_canAccess("agent_customers", "view") && (
+                    <CTooltip content={globalConstants.EXPORT_AGENT_DATA}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        onClick={this.downloadFile}
+                        to="#"
+                      >
+                        <FontAwesomeIcon icon={faFileExport} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div> */}
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -368,6 +378,18 @@ class Agent_Detail extends React.Component {
                   )}
                 </div>
               </CCardBody>
+              <CCardFooter>
+                <CTooltip content={globalConstants.BACK_MSG}>
+                  <CLink
+                    className="btn btn-danger btn-sm"
+                    aria-current="page"
+                    to="/admin/agent_customers"
+                  >
+                    {" "}
+                    <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back
+                  </CLink>
+                </CTooltip>
+              </CCardFooter>
             </CCard>
           </CCol>
         </CRow>
