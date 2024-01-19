@@ -394,27 +394,54 @@ class Customers_Management_Edit extends React.Component {
                 </div>
               </CCardHeader>
               <CCardBody>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Account Number</CLabel>
-                  <CInput
-                    type="text"
-                    id="account_number"
-                    name="account_number"
-                    placeholder="Enter Account Number "
-                    autoComplete="name"
-                    value={this.state.fields.account_number}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "account_number",
-                      this.state.fields.account_number,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
+                <CRow>
+                  <CCol className="col-md-6 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Account Number</CLabel>
+                      <CInput
+                        type="text"
+                        id="account_number"
+                        name="account_number"
+                        placeholder="Enter Account Number "
+                        autoComplete="name"
+                        value={this.state.fields.account_number}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "account_number",
+                          this.state.fields.account_number,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-6 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Balance</CLabel>
+                      <CInput
+                        type="text"
+                        id="available_balance"
+                        name="available_balance"
+                        placeholder="Enter Balance"
+                        autoComplete="name"
+                        value={this.state.fields.available_balance}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "available_balance",
+                          this.state.fields.available_balance,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
                 <CFormGroup>
                   <CLabel htmlFor="nf-name">Customer ID</CLabel>
                   <CInput

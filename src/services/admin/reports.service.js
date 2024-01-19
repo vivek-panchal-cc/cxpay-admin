@@ -124,7 +124,7 @@ async function downloadAgentCSV(postData) {
   };
   let response;
   try {
-    response = await fetch(`${API_URL}api/export-agent-report`, requestOptions);
+    response = await fetch(`${API_URL}api/export-agent-commission-report`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
