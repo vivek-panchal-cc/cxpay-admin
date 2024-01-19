@@ -228,7 +228,7 @@ class Agent_Detail extends React.Component {
             <CCard>
               <CCardHeader>
                 Agent
-                {/* <div className="card-header-actions">
+                <div className="card-header-actions">
                   {_canAccess("agent_customers", "view") && (
                     <CTooltip content={globalConstants.EXPORT_AGENT_DATA}>
                       <CLink
@@ -241,7 +241,7 @@ class Agent_Detail extends React.Component {
                       </CLink>
                     </CTooltip>
                   )}
-                </div> */}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
