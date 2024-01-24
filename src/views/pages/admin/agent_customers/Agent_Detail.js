@@ -40,54 +40,39 @@ class Agent_Detail extends React.Component {
   /*********** Define Initial Satte ****************/
   constructor(props) {
     super(props);
+    this.pageChange = this.pageChange.bind(this);
     this.state = {
       fields: {
+        page: 1,
+        account_number: this.props.match.params.id,
         sort_dir: "desc",
         sort_field: "created_at",
         search: "",
-        page: 1,
+        totalPage: 1,
       },
-      id: this.props.match.params.id, // Getting Id From Url
+      agent_recharges: [],
+      // id: this.props.match.params.id, // Getting Id From Url
     };
   }
-  // state = {
-  //     fields: {
-  //         sort_dir: 'desc',
-  //         sort_field: 'created_at',
-  //         search: '',
-  //         page: 1,
-  //     },
-  //     id: this.props.match.params.id  // Getting Id From Url
-  // };
 
   /************ Retrieve Api very first time component render to Dom ******************/
   componentDidMount() {
-    this.getDetailview();
+    this.getDetailView();
   }
 
   /************ Define Function for retrieving Record for display particular post  ******************/
-  getDetailview() {
-    let postData = {
-      account_number: this.state.id,
-      sort_dir: this.state.fields.sort_dir,
-      sort_field: this.state.fields.sort_field,
-      search: this.state.fields.search,
-    };
-
-    agentService.detailview(postData).then((res) => {
+  getDetailView() {
+    agentService.detailview(this.state.fields).then((res) => {
       if (!res.success) {
-        this.setState({
-          agent_recharges: [],
-        });
         // notify.error(res.message);
       } else {
         this.setState({
-          agent_recharges: res.data.agent_recharges,
+          totalRecords: res.data.pagination.total,
           fields: {
             ...this.state.fields,
             totalPage: res.data.pagination.last_page,
-            totalRecords: res.data.pagination.total,
           },
+          agent_recharges: res.data.agent_recharges,
         });
       }
     });
@@ -103,7 +88,7 @@ class Agent_Detail extends React.Component {
         },
       },
       () => {
-        this.getDetailview();
+        this.getDetailView();
       }
     );
   };
@@ -120,7 +105,7 @@ class Agent_Detail extends React.Component {
         },
       },
       () => {
-        this.getDetailview();
+        this.getDetailView();
       }
     );
   }
@@ -131,17 +116,19 @@ class Agent_Detail extends React.Component {
         {
           fields: {
             page: 1,
+            account_number: this.props.match.params.id,
             search: "",
             sort_field: "created_at",
             sort_dir: "DESC",
+            totalPage: 1,
           },
         },
         () => {
-          this.getDetailview();
+          this.getDetailView();
         }
       );
     } else {
-      this.getDetailview();
+      this.getDetailView();
     }
   }
 
@@ -151,13 +138,9 @@ class Agent_Detail extends React.Component {
   };
 
   downloadFile = async () => {
-    const { search } = this.state.fields;
-    reportsService.downloadAgentCSV({ search }).then((res) => {
-      if (res.error.code === 404) {
-        notify.error(res.error.message);
-      } else {
-        notify.success("Successfully send report logged in user mail");
-      }
+    const { search, account_number } = this.state.fields;
+    reportsService.downloadAgentCSV({ search, account_number }).then((res) => {
+      notify.success("Successfully send report logged in user mail");
     });
   };
 
@@ -229,7 +212,7 @@ class Agent_Detail extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                Agent
+                Recharge Details
                 <div className="card-header-actions">
                   {_canAccess("agent_customers", "view") && (
                     <CTooltip content={globalConstants.EXPORT_AGENT_DATA}>
@@ -349,9 +332,9 @@ class Agent_Detail extends React.Component {
                     </thead>
 
                     <tbody>
-                      {this.state?.agent_recharges?.length > 0 &&
+                      {this.state.agent_recharges?.length > 0 &&
                         this.state.agent_recharges.map((u, index) => (
-                          <tr key={u.mobile_number}>
+                          <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.mobile_number}</td>
@@ -364,14 +347,14 @@ class Agent_Detail extends React.Component {
                             <td>{parseFloat(u.card_commission)?.toFixed(2)}</td>
                           </tr>
                         ))}
-                      {this.state?.agent_recharges?.length === 0 && (
+                      {this.state.agent_recharges?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
                       )}
                     </tbody>
                   </table>
-                  {this.state?.agent_recharges?.length > 0 && (
+                  {this.state.agent_recharges?.length > 0 && (
                     <CPagination
                       activePage={this.state.fields.page}
                       onActivePageChange={this.pageChange}

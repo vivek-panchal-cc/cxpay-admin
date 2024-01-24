@@ -27,7 +27,7 @@ export const globalConstants = {
   MEDIA_LIBRARY: "Click to select media from library",
   VIEW_CUSTOMER_DETAILS: "View customer details",
   EXPORT_CUSTOMER_DATA: "Export customer data",
-  EXPORT_AGENT_DATA: "Export agents data",
+  EXPORT_AGENT_DATA: "Export recharge details",
   EXPORT_TRANSACTION_DATA: "Export transaction data",
   VIEW_WITHDRAW_DETAILS: "View withdraw request detail",
   VIEW_MANUAL_TOPUP_DETAILS: "View manual top up details",

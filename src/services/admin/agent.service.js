@@ -149,20 +149,26 @@ function updateAgent(postData) {
 }
 
 /********************** Retrieve Api for Detail view of Post from server   *****************************/
-function detailview(postData) {
+
+async function detailview(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("agent_customers", "view"),
     body: JSON.stringify(postData),
   };
-  return fetch(`${API_URL}api/agent-wise-recharge`, requestOptions)
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/agent-wise-recharge`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+  }
+  return handleResponse(response);
 }
 
 function changeAgentStatus(postData) {
