@@ -258,7 +258,8 @@ class BlockedRequests extends React.Component {
                     <CLink
                       className="btn btn-danger btn-sm"
                       aria-current="page"
-                      onClick={this.handleGoBack}
+                      // onClick={this.handleGoBack}
+                      to={`/admin/${this.props.module_name}`}
                     >
                       {" "}
                       <FontAwesomeIcon
