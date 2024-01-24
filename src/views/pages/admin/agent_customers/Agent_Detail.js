@@ -153,9 +153,11 @@ class Agent_Detail extends React.Component {
   downloadFile = async () => {
     const { search } = this.state.fields;
     reportsService.downloadAgentCSV({ search }).then((res) => {
-      //  if (res.success) {
-      notify.success("Successfully send report logged in user mail");
-      // }
+      if (res.error.code === 404) {
+        notify.error(res.error.message);
+      } else {
+        notify.success("Successfully send report logged in user mail");
+      }
     });
   };
 
@@ -353,11 +355,13 @@ class Agent_Detail extends React.Component {
                             <td>{index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.mobile_number}</td>
-                            <td>{u.topup_amount}</td>
+                            <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>
                             <td>{u.topup_type}</td>
-                            <td>{u.agent_commission}</td>
-                            <td>{u.system_commission}</td>
-                            <td>{u.card_commission}</td>
+                            <td>{parseFloat(u.agent_commission).toFixed(2)}</td>
+                            <td>
+                              {parseFloat(u.system_commission)?.toFixed(2)}
+                            </td>
+                            <td>{parseFloat(u.card_commission)?.toFixed(2)}</td>
                           </tr>
                         ))}
                       {this.state?.agent_recharges?.length === 0 && (
