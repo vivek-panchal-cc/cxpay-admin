@@ -228,7 +228,7 @@ class Agent_list extends React.Component {
     this.setState({ _openPopup: true, deleteId: id });
   }
   deleteUser() {
-    let postData = { mobile_number: [this.state.deleteId] };
+    let postData = { mobile_number: [this.state.deleteId], user_type: "agent" };
     this.setState({ _openPopup: false, deleteId: undefined });
     agentService.deleteAgent(postData).then((res) => {
       if (res.status === "error") {

@@ -239,7 +239,7 @@ class Business_Customers_Index extends React.Component {
   deleteUser() {
     this.setState({ _openPopup: false, deleteId: undefined });
 
-    var postData = { mobile_number: [this.state.deleteId] };
+    var postData = { mobile_number: [this.state.deleteId], user_type: "business" };
 
     businessCustomersService.deleteCustomer(postData).then((res) => {
       if (res.status === "error") {
