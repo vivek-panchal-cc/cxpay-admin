@@ -670,10 +670,10 @@ class Business_Customers_Edit extends React.Component {
                           name="is_kyc"
                           value={this.state.fields.is_kyc}
                           defaultChecked
-                          disabled={
-                            new Date(this.state.fields.kyc_expiration_date) >
-                            new Date()
-                          }
+                          // disabled={
+                          //   new Date(this.state.fields.kyc_expiration_date) >
+                          //   new Date()
+                          // }
                           onChange={this.handleCheckboxChangeKYC}
                         />
                       )}
