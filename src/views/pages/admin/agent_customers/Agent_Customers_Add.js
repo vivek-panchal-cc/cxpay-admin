@@ -71,7 +71,7 @@ class Agent_Customers_Add extends Component {
         card_commission: [
           // cash = {},
         ],
-        kyc_status: false,
+        kyc_status: true,
       },
       countryCityRes: [],
       countryData: [],
@@ -682,7 +682,7 @@ class Agent_Customers_Add extends Component {
                   name="kyc_status"
                   className="mr-1"
                   color="primary"
-                  defaultChecked={this.state.kyc_status}
+                  defaultChecked={this.state.fields.kyc_status}
                   onClick={this.handleChange}
                 />
               </CFormGroup>

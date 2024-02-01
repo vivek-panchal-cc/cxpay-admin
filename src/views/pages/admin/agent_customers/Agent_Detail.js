@@ -213,20 +213,22 @@ class Agent_Detail extends React.Component {
             <CCard>
               <CCardHeader>
                 Recharge Details
-                <div className="card-header-actions">
-                  {_canAccess("agent_customers", "view") && (
-                    <CTooltip content={globalConstants.EXPORT_AGENT_DATA}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        onClick={this.downloadFile}
-                        to="#"
-                      >
-                        <FontAwesomeIcon icon={faFileExport} />
-                      </CLink>
-                    </CTooltip>
-                  )}
-                </div>
+                {this.state.agent_recharges?.length > 0 && (
+                  <div className="card-header-actions">
+                    {_canAccess("agent_customers", "view") && (
+                      <CTooltip content={globalConstants.EXPORT_AGENT_DATA}>
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          onClick={this.downloadFile}
+                          to="#"
+                        >
+                          <FontAwesomeIcon icon={faFileExport} />
+                        </CLink>
+                      </CTooltip>
+                    )}
+                  </div>
+                )}
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
