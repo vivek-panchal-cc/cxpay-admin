@@ -1,5 +1,5 @@
 import React from "react";
-import { notify } from "../../../../_helpers";
+import { formatDate, notify } from "../../../../_helpers";
 import { agentService } from "../../../../services/admin/agent.service";
 import Fullpage from "./Cms_Pages_FullPost";
 import {
@@ -330,6 +330,14 @@ class Agent_Detail extends React.Component {
                             </span>
                           </span>
                         </th>
+
+                        <th>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Recharge Date
+                            </span>
+                          </span>
+                        </th>
                       </tr>
                     </thead>
 
@@ -342,11 +350,12 @@ class Agent_Detail extends React.Component {
                             <td>{u.mobile_number}</td>
                             <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>
                             <td>{u.topup_type}</td>
-                            <td>{parseFloat(u.agent_commission).toFixed(2)}</td>
+                            <td>{parseFloat(u.agent_commission)?.toFixed(2)}</td>
                             <td>
                               {parseFloat(u.system_commission)?.toFixed(2)}
                             </td>
                             <td>{parseFloat(u.card_commission)?.toFixed(2)}</td>
+                            <td>{formatDate(u.recharge_date) || "-"}</td>
                           </tr>
                         ))}
                       {this.state.agent_recharges?.length === 0 && (
