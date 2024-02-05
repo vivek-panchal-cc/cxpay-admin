@@ -213,22 +213,28 @@ class Agent_Detail extends React.Component {
             <CCard>
               <CCardHeader>
                 Recharge Details
-                {this.state.agent_recharges?.length > 0 && (
-                  <div className="card-header-actions">
-                    {_canAccess("agent_customers", "view") && (
-                      <CTooltip content={globalConstants.EXPORT_AGENT_DATA}>
-                        <CLink
-                          className="btn btn-dark btn-block"
-                          aria-current="page"
-                          onClick={this.downloadFile}
-                          to="#"
-                        >
-                          <FontAwesomeIcon icon={faFileExport} />
-                        </CLink>
-                      </CTooltip>
-                    )}
-                  </div>
-                )}
+                <div className="card-header-actions">
+                  {_canAccess("agent_customers", "view") && (
+                    <CTooltip content={globalConstants.EXPORT_AGENT_DATA}>
+                      <CLink
+                        className={`btn btn-dark btn-block ${
+                          this.state.agent_recharges.length === 0
+                            ? "disabled"
+                            : ""
+                        }`}
+                        aria-current="page"
+                        onClick={
+                          this.state.agent_recharges.length > 0
+                            ? this.downloadFile
+                            : null
+                        }
+                        to="#"
+                      >
+                        <FontAwesomeIcon icon={faFileExport} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -350,7 +356,9 @@ class Agent_Detail extends React.Component {
                             <td>{u.mobile_number}</td>
                             <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>
                             <td>{u.topup_type}</td>
-                            <td>{parseFloat(u.agent_commission)?.toFixed(2)}</td>
+                            <td>
+                              {parseFloat(u.agent_commission)?.toFixed(2)}
+                            </td>
                             <td>
                               {parseFloat(u.system_commission)?.toFixed(2)}
                             </td>
