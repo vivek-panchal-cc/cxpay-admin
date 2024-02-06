@@ -1,5 +1,5 @@
 import { notify, history } from "./index";
-import { differenceInCalendarDays, differenceInMonths } from 'date-fns';
+import { differenceInCalendarDays, differenceInMonths } from "date-fns";
 
 /* Handle all http resopnse from all API */
 export const handleResponse = (response) => {
@@ -171,6 +171,31 @@ export const formatDateFull = (inputDate) => {
   return formattedDate;
 };
 
+export const formatDateFullWithTimeStamp = (dateString) => {
+  // Convert "YYYY-MM-DD HH:MM:SS" to "YYYY/MM/DDTHH:MM:SS" format
+  const reformattedDate = dateString.replace(" ", "T");
+
+  const dateObj = new Date(reformattedDate);
+
+  // Extract the day, month, and year
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Add 1 to get the month number and pad to 2 digits
+  const year = dateObj.getFullYear();
+
+  // Extract the hours and minutes
+  let hours = dateObj.getHours();
+  const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+  const period = hours >= 12 ? "PM" : "AM";
+
+  if (hours > 12) hours -= 12; // Convert 24-hour format to 12-hour format
+  if (hours === 0) hours = 12; // If it's 00 hours, change to 12 (for 12 AM)
+
+  // Add leading zero if necessary
+  hours = String(hours).padStart(2, "0");
+
+  return `${day}-${month}-${year} ${hours}:${minutes} ${period}`;
+};
+
 export const calculateDuration = (renewDate, expirationDate) => {
   const renew = new Date(renewDate);
   const expiration = new Date(expirationDate);
@@ -201,15 +226,17 @@ export const calculateDurationLeft = (expirationDate) => {
   let durationLeft = "";
 
   if (monthsLeft > 0) {
-    durationLeft += `${monthsLeft} ${monthsLeft === 1 ? 'month' : 'months'}`;
+    durationLeft += `${monthsLeft} ${monthsLeft === 1 ? "month" : "months"}`;
   }
 
   if (daysLeft > 0) {
     const remainingDaysInMonth = daysLeft % 30;
     if (monthsLeft > 0) {
-      durationLeft += ' ';
+      durationLeft += " ";
     }
-    durationLeft += `${remainingDaysInMonth} ${remainingDaysInMonth === 1 ? 'day' : 'days'}`;
+    durationLeft += `${remainingDaysInMonth} ${
+      remainingDaysInMonth === 1 ? "day" : "days"
+    }`;
   }
 
   return durationLeft.trim();

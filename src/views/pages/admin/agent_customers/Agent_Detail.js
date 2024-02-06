@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate, notify } from "../../../../_helpers";
+import { formatDate, formatDateFullWithTimeStamp, notify } from "../../../../_helpers";
 import { agentService } from "../../../../services/admin/agent.service";
 import Fullpage from "./Cms_Pages_FullPost";
 import {
@@ -363,7 +363,7 @@ class Agent_Detail extends React.Component {
                               {parseFloat(u.system_commission)?.toFixed(2)}
                             </td>
                             <td>{parseFloat(u.card_commission)?.toFixed(2)}</td>
-                            <td>{formatDate(u.recharge_date) || "-"}</td>
+                            <td>{formatDateFullWithTimeStamp(u.recharge_date) || "-"}</td>
                           </tr>
                         ))}
                       {this.state.agent_recharges?.length === 0 && (
