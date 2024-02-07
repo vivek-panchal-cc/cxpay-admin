@@ -32,6 +32,7 @@ import { globalConstants } from "constants/admin/global.constants";
 import { agentService } from "services/admin/agent.service";
 import { _canAccess } from "_helpers";
 import { formatDateFull } from "_helpers";
+import { formatDateFullWithTimeStamp } from "_helpers";
 
 class BlockedRequests extends React.Component {
   constructor(props) {
@@ -394,7 +395,7 @@ class BlockedRequests extends React.Component {
                             <td>{u.user_name}</td>
                             <td>{u.account_number}</td>
                             <td>{u.mobile_number}</td>
-                            <td>{formatDateFull(u.suspended_at)}</td>
+                            <td>{formatDateFullWithTimeStamp(u.suspended_at)}</td>
                             <td>{u.suspension_reasons}</td>
 
                             {_canAccess(this.props.module_name, "view") && (
