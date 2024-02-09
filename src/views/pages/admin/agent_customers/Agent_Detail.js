@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDate, formatDateFullWithTimeStamp, notify } from "../../../../_helpers";
+import { formatDate, formatDateFullWithTimeStamp, formatMobileNumber, notify } from "../../../../_helpers";
 import { agentService } from "../../../../services/admin/agent.service";
 import Fullpage from "./Cms_Pages_FullPost";
 import {
@@ -353,7 +353,7 @@ class Agent_Detail extends React.Component {
                           <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{u.name}</td>
-                            <td>{u.mobile_number}</td>
+                            <td>{formatMobileNumber(u.mobile_number)}</td>                            
                             <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>
                             <td>{u.topup_type}</td>
                             <td>

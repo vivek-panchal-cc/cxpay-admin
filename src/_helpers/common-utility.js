@@ -241,3 +241,14 @@ export const calculateDurationLeft = (expirationDate) => {
 
   return durationLeft.trim();
 };
+
+export const formatMobileNumber = (mobileNumber) => {
+  // Check if the mobileNumber contains '#'
+  const index = mobileNumber?.indexOf("#");
+  if (index !== -1) {
+    // Extract the part before '#'
+    const formattedNumber = mobileNumber?.substring(0, index);
+    return formattedNumber?.trim(); // Trim any whitespace
+  }
+  return mobileNumber; // Return as it is if no '#' found
+};
