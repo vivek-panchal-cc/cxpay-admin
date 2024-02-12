@@ -394,8 +394,8 @@ class Email_Template_Add extends Component {
                             xl={this.state.selectedMediaFile !== "" ? 9 : 12}
                           >
                             <CRow className="pt-4 media-popup">
-                              {this.state.media.length > 0 &&
-                                this.state.media.map((u, index) => (
+                              {this.state.media?.length > 0 &&
+                                this.state.media?.map((u, index) => (
                                   <CCol xs="12" sm="6" lg="3" key={index}>
                                     <div
                                       className="card bg-gradient-info text-white"

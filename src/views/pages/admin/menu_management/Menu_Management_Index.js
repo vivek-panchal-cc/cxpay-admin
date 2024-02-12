@@ -89,14 +89,14 @@ class Menu_Category_List extends React.Component {
           menu_category_list: res.result,
         });
         /*multi delete cms pages */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let menucategory = res.result;
           let multiaction = [];
           for (var key in menucategory) {
             multiaction[menucategory[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -425,8 +425,8 @@ class Menu_Category_List extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.menu_category_list.length > 0 &&
-                        this.state.menu_category_list.map((u, index) => (
+                      {this.state.menu_category_list?.length > 0 &&
+                        this.state.menu_category_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               <CheckBoxes
@@ -527,7 +527,7 @@ class Menu_Category_List extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.menu_category_list.length === 0 && (
+                      {this.state.menu_category_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>

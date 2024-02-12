@@ -161,7 +161,7 @@ const Manual_Topup_Request = () => {
                         </tr>
                       );
                     })}
-                    {manualRequests.length === 0 && (
+                    {manualRequests?.length === 0 && (
                       <tr>
                         <td colSpan="5">No records found</td>
                       </tr>

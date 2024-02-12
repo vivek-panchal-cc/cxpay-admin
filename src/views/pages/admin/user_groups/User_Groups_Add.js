@@ -136,7 +136,7 @@ class User_Groups_Add extends React.Component {
         }
       }
     }
-    if (this.validator.allValid() && Object.keys(finalPermission).length !== 0) {
+    if (this.validator.allValid() && Object.keys(finalPermission)?.length !== 0) {
       var postVal = {
         ...this.state.fields,
         permissions: Object.assign({}, finalPermission)
@@ -151,7 +151,7 @@ class User_Groups_Add extends React.Component {
       });
     } else {
       this.validator.showMessages();
-      if (Object.keys(finalPermission).length === 0) {
+      if (Object.keys(finalPermission)?.length === 0) {
         $('.module_permission').html('<div class="text-danger">Atleast one module permission has required.</div>');
       }
     }

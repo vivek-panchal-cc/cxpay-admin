@@ -166,7 +166,7 @@ class Push_Notification_Add extends React.Component {
   };
 
   selectedCustomerData(customer) {
-    if (customer.filter((x) => x.value == "all").length > 0) {
+    if (customer.filter((x) => x.value == "all")?.length > 0) {
       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];

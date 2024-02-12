@@ -150,8 +150,8 @@ class Settings_Update extends Component {
         </CCardHeader>
         <CCardBody>
           {this.state.page_list &&
-            this.state.page_list.length > 0 &&
-            this.state.page_list.map((option, index) => {
+            this.state.page_list?.length > 0 &&
+            this.state.page_list?.map((option, index) => {
               const modifiedString = this.removeUnderscore(
                 Object.keys(option)[0]
               );

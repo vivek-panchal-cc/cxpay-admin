@@ -134,7 +134,7 @@ class Customers_Management_Index extends React.Component {
             }
 
             this.setState({ multiaction: multiaction });
-          } else if (res.result && res.result.length === 0) {
+          } else if (res.result && res.result?.length === 0) {
             this.setState({ multiaction: [] });
           }
         }
@@ -693,7 +693,7 @@ class Customers_Management_Index extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.customers_management_list.length === 0 && (
+                      {this.state.customers_management_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>

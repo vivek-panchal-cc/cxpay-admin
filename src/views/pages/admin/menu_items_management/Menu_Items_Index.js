@@ -102,14 +102,14 @@ class Menu_Items_List extends React.Component {
           menu_item_list: res.result,
         });
         /*multi delete cms pages */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let menuitem = res.result;
           let multiaction = [];
           for (var key in menuitem) {
             multiaction[menuitem[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -456,8 +456,8 @@ class Menu_Items_List extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.menu_item_list.length > 0 &&
-                        this.state.menu_item_list.map((u, index) => (
+                      {this.state.menu_item_list?.length > 0 &&
+                        this.state.menu_item_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               <CheckBoxes
@@ -516,7 +516,7 @@ class Menu_Items_List extends React.Component {
                             </td>
                           </tr>
                         ))}
-                      {this.state.menu_item_list.length === 0 && (
+                      {this.state.menu_item_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>

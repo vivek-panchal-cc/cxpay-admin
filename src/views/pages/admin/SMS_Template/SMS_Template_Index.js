@@ -96,14 +96,14 @@ class SMS_list extends React.Component {
         });
 
         /*multi delete cms pages */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let pages = res.result;
           let multiaction = [];
           for (var key in pages) {
             multiaction[pages[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -222,7 +222,7 @@ class SMS_list extends React.Component {
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
     let allTrue = false;
-    if (this.state.multiaction.length > 0) {
+    if (this.state.multiaction?.length > 0) {
       allTrue = this.state.multiaction.every((element) => element === true);
     }
     this.setState({ allCheckedbox: allTrue });
@@ -447,8 +447,8 @@ class SMS_list extends React.Component {
                     </thead>
 
                     <tbody>
-                      {this.state.page_list.length > 0 &&
-                        this.state.page_list.map((u, index) => (
+                      {this.state.page_list?.length > 0 &&
+                        this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               <CheckBoxes
@@ -522,7 +522,7 @@ class SMS_list extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.page_list.length === 0 && (
+                      {this.state.page_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>

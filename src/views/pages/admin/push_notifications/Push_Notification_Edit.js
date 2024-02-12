@@ -83,7 +83,7 @@ class PushNotificationEdit extends React.Component {
                   fields: res.data,
                 });
 
-                if (res.data.customer_notifications.length > 0) {
+                if (res.data.customer_notifications?.length > 0) {
                   let userData = [];
 
                   res.data.customer_notifications.forEach((element) => {
@@ -99,7 +99,7 @@ class PushNotificationEdit extends React.Component {
 
                   this.setState({ selectedCustomer: selectedCustomer });
                 } else if (
-                  res.data.customer_notifications.length == 0 &&
+                  res.data.customer_notifications?.length == 0 &&
                   res.data.customer_type == "all"
                 ) {
                   this.setState({
@@ -155,7 +155,7 @@ class PushNotificationEdit extends React.Component {
   }
 
   selectedCustomerData(customer) {
-    if (customer?.filter((x) => x.value == "all").length > 0) {
+    if (customer?.filter((x) => x.value == "all")?.length > 0) {
       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];
@@ -248,7 +248,7 @@ class PushNotificationEdit extends React.Component {
           );
         });
       } else if (schedule_time > now) {
-        times.length = 0;
+        times?.length = 0;
       }
     }
     return times;

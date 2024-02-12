@@ -89,7 +89,7 @@ class User_Groups_Index extends React.Component {
           user_list: res.result,
         });
         /* Multi delete checkbox code */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let users = res.result;
           let multiaction = [];
           const current_user = _loginUsersDetails();
@@ -108,7 +108,7 @@ class User_Groups_Index extends React.Component {
           }
 
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -258,7 +258,7 @@ class User_Groups_Index extends React.Component {
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
     let allTrue = false;
-    if (this.state.multiaction.length > 0) {
+    if (this.state.multiaction?.length > 0) {
       allTrue = this.state.multiaction.every((element) => element === true);
     }
     this.setState({ allCheckedbox: allTrue });
@@ -437,8 +437,8 @@ class User_Groups_Index extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.user_list.length > 0 &&
-                        this.state.user_list.map((u, index) => (
+                      {this.state.user_list?.length > 0 &&
+                        this.state.user_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               {this.state.multiaction[u._id] !== undefined && (
@@ -524,7 +524,7 @@ class User_Groups_Index extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.user_list.length === 0 && (
+                      {this.state.user_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>

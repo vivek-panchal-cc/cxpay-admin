@@ -305,8 +305,8 @@ class Site_Setting extends React.Component {
                     </thead>
 
                     <tbody>
-                      {this.state.banner_list.length > 0 &&
-                        this.state.banner_list.map((u, index) => (
+                      {this.state.banner_list?.length > 0 &&
+                        this.state.banner_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>{index + 1}</td>
                             <td>{u.site_name}</td>
@@ -343,7 +343,7 @@ class Site_Setting extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.banner_list.length === 0 && (
+                      {this.state.banner_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>

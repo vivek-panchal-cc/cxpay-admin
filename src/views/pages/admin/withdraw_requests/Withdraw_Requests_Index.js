@@ -473,8 +473,8 @@ class Withdraw_Requests_Index extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.withdraw_requests.length > 0 &&
-                        this.state.withdraw_requests.map((c, index) => (
+                      {this.state.withdraw_requests?.length > 0 &&
+                        this.state.withdraw_requests?.map((c, index) => (
                           <tr key={index + 1}>
                             {/* <td>
                               {this.state.multiaction[c.mobile] !==
@@ -557,7 +557,7 @@ class Withdraw_Requests_Index extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.withdraw_requests.length === 0 && (
+                      {this.state.withdraw_requests?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>

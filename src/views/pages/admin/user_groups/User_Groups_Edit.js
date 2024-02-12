@@ -167,7 +167,7 @@ class User_Groups_Edit extends React.Component {
         }
       }
     }
-    if (this.validator.allValid() && Object.keys(finalPermission).length !== 0) {
+    if (this.validator.allValid() && Object.keys(finalPermission)?.length !== 0) {
       var postVal = {
         id: this.state.fields._id,
         user_group_name: this.state.fields.user_group_name,
@@ -185,7 +185,7 @@ class User_Groups_Edit extends React.Component {
       });
     } else {
       this.validator.showMessages();
-      if (Object.keys(finalPermission).length === 0) {
+      if (Object.keys(finalPermission)?.length === 0) {
         $('.module_permission').html('<div class="text-danger">Atleast one module permission has required.</div>');
       }
     }

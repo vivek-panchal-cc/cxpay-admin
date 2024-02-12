@@ -62,7 +62,7 @@ const Fullpage = (props) => {
     if (!adminComment) {
       setInputErrors((err) => ({ ...err, comment: "Please add comment." }));
       return;
-    } else if (adminComment.length > 150) {
+    } else if (adminComment?.length > 150) {
       setInputErrors((err) => ({
         ...err,
         comment: "Comment must not be greater than 150 characters.",
@@ -74,14 +74,14 @@ const Fullpage = (props) => {
 
   const isValidFiles = (required = false) => {
     const allFiles = [...recieptFiles];
-    if (allFiles.length <= 0) {
+    if (allFiles?.length <= 0) {
       setInputErrors((err) => ({
         ...err,
         reciept: "Please add a reciept file.",
       }));
       return required ? false : true;
     }
-    if (allFiles.length > 4) {
+    if (allFiles?.length > 4) {
       setInputErrors((err) => ({
         ...err,
         reciept: "At most 4 files are allowed.",
@@ -107,7 +107,7 @@ const Fullpage = (props) => {
       inputField.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    if (adminComment.length > 150) {
+    if (adminComment?.length > 150) {
       setInputErrors((err) => ({
         ...err,
         comment: "Comment must not be greater than 150 characters.",
@@ -130,7 +130,7 @@ const Fullpage = (props) => {
       return;
     }
     const allFiles = [...recieptFiles];
-    if (allFiles.length > 4) {
+    if (allFiles?.length > 4) {
       setInputErrors((err) => ({
         ...err,
         reciept: "At most 4 files are allowed.",
