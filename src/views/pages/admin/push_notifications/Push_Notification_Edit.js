@@ -248,7 +248,7 @@ class PushNotificationEdit extends React.Component {
           );
         });
       } else if (schedule_time > now) {
-        times?.length = 0;
+        times.length = 0;
       }
     }
     return times;
