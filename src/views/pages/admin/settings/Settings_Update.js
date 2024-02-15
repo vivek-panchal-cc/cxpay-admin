@@ -60,7 +60,29 @@ class Settings_Update extends Component {
     });
   }
 
+  // removeUnderscore(str) {
+  //   return str
+  //     .split("_")
+  //     .map((word) => {
+  //       const capitalizedWord =
+  //         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  //       return capitalizedWord;
+  //     })
+  //     .join(" ");
+  // }
+
   removeUnderscore(str) {
+    const specialCases = {
+      SWIFT_CODE: "Account Name"
+      // Add more special cases here if needed
+    };
+  
+    // Check if the str exists in specialCases, if yes, return its value
+    if (specialCases.hasOwnProperty(str)) {
+      return specialCases[str];
+    }
+  
+    // Otherwise, capitalize and replace underscores as before
     return str
       .split("_")
       .map((word) => {
@@ -69,7 +91,7 @@ class Settings_Update extends Component {
         return capitalizedWord;
       })
       .join(" ");
-  }
+  }  
 
   // Close  modal box method
   _handleCancelAction() {

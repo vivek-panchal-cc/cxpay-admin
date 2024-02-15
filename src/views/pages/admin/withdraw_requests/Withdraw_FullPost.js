@@ -350,7 +350,7 @@ const Fullpage = (props) => {
 
                         <div className="wr-bdatail-dwld ps-xl-5 ps-md-4 border-start">
                           <div className="font-16-quick  w-100 pb-md-4 pb-3 dark_blue font-600">
-                            Transaction Reciept
+                            Transaction Receipt
                           </div>
                           <div className="wr-dwld-wrap">
                             {showEdits ? (
