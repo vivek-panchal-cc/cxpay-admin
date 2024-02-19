@@ -97,8 +97,9 @@ class Business_Customers_Index extends React.Component {
     businessCustomersService
       .getCustomersManagementList(this.state.fields)
       .then((res) => {
-        if (res.status === false) {
-          notify.error(res.message);
+        if (res.success === false) {
+          // notify.error(res.message);
+          this.setState({ customers_management_list: [] });
         } else {
           this.setState({
             totalRecords: res.data?.pagination?.total,
@@ -239,7 +240,10 @@ class Business_Customers_Index extends React.Component {
   deleteUser() {
     this.setState({ _openPopup: false, deleteId: undefined });
 
-    var postData = { mobile_number: [this.state.deleteId], user_type: "business" };
+    var postData = {
+      mobile_number: [this.state.deleteId],
+      user_type: "business",
+    };
 
     businessCustomersService.deleteCustomer(postData).then((res) => {
       if (res.status === "error") {
@@ -641,94 +645,100 @@ class Business_Customers_Index extends React.Component {
                     </thead>
                     <tbody>
                       {this.state.customers_management_list?.length > 0 &&
-                        this.state.customers_management_list?.map((c, index) => (
-                          <tr key={c.mobile}>
-                            <td>
-                              {this.state.multiaction[c.mobile] !==
-                                undefined && (
-                                <CheckBoxes
-                                  handleCheckChieldElement={
-                                    this.handleCheckChieldElement
-                                  }
-                                  _id={c.mobile}
-                                  _isChecked={this.state.multiaction[c.mobile]}
-                                />
-                              )}
-                            </td>
-                            <td>{index + 1}</td>
-                            <td>{c.company_name}</td>
-                            <td>{c.email}</td>
-                            <td>{c.mobile}</td>
-                            <td>{c.date}</td>
-                            <td>
-                              {_canAccess("business_customers", "update") && (
-                                <CLink
-                                  onClick={() =>
-                                    this.StatusChangedHandler(
-                                      c.mobile,
-                                      c.status
-                                    )
-                                  }
-                                >
-                                  {c.status == 0 ? "Active" : "Deactive"}
-                                </CLink>
-                              )}
-                              {_canAccess("business_customers", "update") ===
-                                false && (
-                                <>{c.status == "0" ? "Active" : "Deactive"}</>
-                              )}
-                            </td>
-                            {(_canAccess("business_customers", "update") ||
-                              _canAccess("business_customers", "delete")) && (
-                              <>
-                                <td>
-                                  {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
-                                    c._id
-                                  ) === -1 && (
-                                    <>
-                                      {current_user.user_group_id !== c._id &&
-                                        _canAccess(
-                                          "business_customers",
-                                          "update"
-                                        ) && (
-                                          <CTooltip
-                                            content={globalConstants.EDIT_BTN}
-                                          >
-                                            <CLink
-                                              className="btn  btn-md btn-primary"
-                                              aria-current="page"
-                                              to={`/admin/business_customers/edit/${c.mobile}`}
+                        this.state.customers_management_list?.map(
+                          (c, index) => (
+                            <tr key={c.mobile}>
+                              <td>
+                                {this.state.multiaction[c.mobile] !==
+                                  undefined && (
+                                  <CheckBoxes
+                                    handleCheckChieldElement={
+                                      this.handleCheckChieldElement
+                                    }
+                                    _id={c.mobile}
+                                    _isChecked={
+                                      this.state.multiaction[c.mobile]
+                                    }
+                                  />
+                                )}
+                              </td>
+                              <td>{index + 1}</td>
+                              <td>{c.company_name}</td>
+                              <td>{c.email}</td>
+                              <td>{c.mobile}</td>
+                              <td>{c.date}</td>
+                              <td>
+                                {_canAccess("business_customers", "update") && (
+                                  <CLink
+                                    onClick={() =>
+                                      this.StatusChangedHandler(
+                                        c.mobile,
+                                        c.status
+                                      )
+                                    }
+                                  >
+                                    {c.status == 0 ? "Active" : "Deactive"}
+                                  </CLink>
+                                )}
+                                {_canAccess("business_customers", "update") ===
+                                  false && (
+                                  <>{c.status == "0" ? "Active" : "Deactive"}</>
+                                )}
+                              </td>
+                              {(_canAccess("business_customers", "update") ||
+                                _canAccess("business_customers", "delete")) && (
+                                <>
+                                  <td>
+                                    {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
+                                      c._id
+                                    ) === -1 && (
+                                      <>
+                                        {current_user.user_group_id !== c._id &&
+                                          _canAccess(
+                                            "business_customers",
+                                            "update"
+                                          ) && (
+                                            <CTooltip
+                                              content={globalConstants.EDIT_BTN}
                                             >
-                                              <CIcon name="cil-pencil"></CIcon>{" "}
-                                            </CLink>
-                                          </CTooltip>
-                                        )}
-                                      &nbsp;
-                                      {current_user.user_group_id !== c._id &&
-                                        _canAccess(
-                                          "business_customers",
-                                          "delete"
-                                        ) && (
-                                          <CTooltip
-                                            content={globalConstants.DELETE_BTN}
-                                          >
-                                            <button
-                                              className="btn  btn-md btn-danger "
-                                              onClick={() =>
-                                                this.openDeletePopup(c.mobile)
+                                              <CLink
+                                                className="btn  btn-md btn-primary"
+                                                aria-current="page"
+                                                to={`/admin/business_customers/edit/${c.mobile}`}
+                                              >
+                                                <CIcon name="cil-pencil"></CIcon>{" "}
+                                              </CLink>
+                                            </CTooltip>
+                                          )}
+                                        &nbsp;
+                                        {current_user.user_group_id !== c._id &&
+                                          _canAccess(
+                                            "business_customers",
+                                            "delete"
+                                          ) && (
+                                            <CTooltip
+                                              content={
+                                                globalConstants.DELETE_BTN
                                               }
                                             >
-                                              <CIcon name="cil-trash"></CIcon>
-                                            </button>
-                                          </CTooltip>
-                                        )}
-                                    </>
-                                  )}
-                                </td>
-                              </>
-                            )}
-                          </tr>
-                        ))}
+                                              <button
+                                                className="btn  btn-md btn-danger "
+                                                onClick={() =>
+                                                  this.openDeletePopup(c.mobile)
+                                                }
+                                              >
+                                                <CIcon name="cil-trash"></CIcon>
+                                              </button>
+                                            </CTooltip>
+                                          )}
+                                      </>
+                                    )}
+                                  </td>
+                                </>
+                              )}
+                            </tr>
+                          )
+                        )}
                       {this.state.customers_management_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>

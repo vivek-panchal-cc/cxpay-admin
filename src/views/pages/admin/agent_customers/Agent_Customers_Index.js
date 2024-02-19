@@ -102,7 +102,8 @@ class Agent_list extends React.Component {
   getAgentList() {
     agentService.getAgentList(this.state.fields).then((res) => {
       if (res.success === false) {
-        notify.error(res.message);
+        // notify.error(res.message);
+        this.setState({ agents: [] });
       } else {
         this.setState({
           totalRecords: res.data?.pagination?.total,
