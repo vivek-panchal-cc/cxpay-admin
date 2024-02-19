@@ -334,6 +334,13 @@ class Business_Customers_Edit extends React.Component {
     }
   }
 
+  handleClearProfilePic = () => {
+    this.setState({
+      fields: { ...this.state.fields, profile_image: null },
+      profile_image: null,
+    });
+  };
+
   render() {
     var { module_permission, site_logo } = this.state;
 
@@ -610,6 +617,18 @@ class Business_Customers_Edit extends React.Component {
                           below 5MB.
                         </div>
                       </small>
+                    )}
+                    {false && (
+                      <CCol>
+                        <CButton
+                          type="button"
+                          size="sm"
+                          color="secondary"
+                          onClick={this.handleClearProfilePic}
+                        >
+                          Clear
+                        </CButton>
+                      </CCol>
                     )}
                   </CCol>
                 </CFormGroup>
