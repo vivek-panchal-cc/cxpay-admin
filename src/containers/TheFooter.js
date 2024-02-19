@@ -2,11 +2,12 @@ import React from "react";
 import { CFooter } from "@coreui/react";
 
 const TheFooter = () => {
+  const currentYear = new Date().getFullYear();
   return (
     <CFooter fixed={false}>
       <div>
         <span className="ml-1">
-          2023 &copy;{" "}
+          {currentYear} &copy;{" "}
           <a
             href="https://communicationcrafts.com"
             target="_blank"
