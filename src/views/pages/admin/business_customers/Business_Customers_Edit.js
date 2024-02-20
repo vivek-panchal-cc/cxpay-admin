@@ -337,7 +337,7 @@ class Business_Customers_Edit extends React.Component {
   handleClearProfilePic = () => {
     this.setState({
       fields: { ...this.state.fields, profile_image: null },
-      profile_image: null,
+      site_logo: null,
     });
   };
 
