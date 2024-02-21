@@ -518,30 +518,26 @@ class Fee_Management_Index extends React.Component {
                             <td>{u.fee_label}</td>
 
                             <td>
-                              {current_user.id !== u._id &&
-                                _canAccess("fee_management", "update") && (
-                                  <CLink
-                                    onClick={() =>
-                                      this.PageStatusChangedHandler(
-                                        u._id,
-                                        u.status
-                                      )
-                                    }
-                                  >
-                                    {u.status == false
-                                      ? "Activate"
-                                      : "Deactivate"}
-                                  </CLink>
-                                )}
-                              {current_user.id !== u._id &&
-                                _canAccess("fee_management", "update") ===
-                                  false && (
-                                  <>
-                                    {u.status == true
-                                      ? "Activate"
-                                      : "Deactivate"}
-                                  </>
-                                )}
+                              {_canAccess("fee_management", "update") && (
+                                <CLink
+                                  onClick={() =>
+                                    this.PageStatusChangedHandler(
+                                      u._id,
+                                      u.status
+                                    )
+                                  }
+                                >
+                                  {u.status == false
+                                    ? "Activate"
+                                    : "Deactivate"}
+                                </CLink>
+                              )}
+                              {_canAccess("fee_management", "update") ===
+                                false && (
+                                <>
+                                  {u.status == true ? "Activate" : "Deactivate"}
+                                </>
+                              )}
                             </td>
                             {(_canAccess("fee_management", "update") ||
                               _canAccess("fee_management", "delete")) && (

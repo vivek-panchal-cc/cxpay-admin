@@ -682,24 +682,22 @@ class Agent_list extends React.Component {
                             <td>{u.mobile_number}</td>
                             <td>{u.date}</td>
                             <td>
-                              {current_user.id !== u._id &&
-                                _canAccess("agent_customers", "update") && (
-                                  <CLink
-                                    onClick={() =>
-                                      this.PageStatusChangedHandler(
-                                        u.mobile_number,
-                                        u.status
-                                      )
-                                    }
-                                  >
-                                    {u.status == "0" ? "Active" : "Deactive"}
-                                  </CLink>
-                                )}
-                              {current_user.id !== u._id &&
-                                _canAccess("agent_customers", "update") ===
-                                  false && (
-                                  <>{u.status ? "Active" : "Deactive"}</>
-                                )}
+                              {_canAccess("agent_customers", "update") && (
+                                <CLink
+                                  onClick={() =>
+                                    this.PageStatusChangedHandler(
+                                      u.mobile_number,
+                                      u.status
+                                    )
+                                  }
+                                >
+                                  {u.status == "0" ? "Active" : "Deactive"}
+                                </CLink>
+                              )}
+                              {_canAccess("agent_customers", "update") ===
+                                false && (
+                                <>{u.status ? "Active" : "Deactive"}</>
+                              )}
                             </td>
                             {(_canAccess("agent_customers", "update") ||
                               _canAccess("agent_customers", "delete") ||

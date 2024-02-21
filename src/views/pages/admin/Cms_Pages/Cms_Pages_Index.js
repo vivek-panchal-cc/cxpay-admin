@@ -379,25 +379,18 @@ class Page_list extends React.Component {
                           />
                         </th>
                         <th>#</th>
-                        <th
-                          onClick={() =>
-                            this.handleColumnSort("title")
-                          }
-                        >
+                        <th onClick={() => this.handleColumnSort("title")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">Title</span>
-                            {this.state.fields.sort_field !==
-                              "title" && (
+                            {this.state.fields.sort_field !== "title" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field ===
-                                "title" && (
+                              this.state.fields.sort_field === "title" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field ===
-                                "title" && (
+                              this.state.fields.sort_field === "title" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -455,23 +448,21 @@ class Page_list extends React.Component {
                               )}
                             </td>
                             <td>
-                              {current_user.id !== u._id &&
-                                _canAccess("cms_pages", "update") && (
-                                  <CLink
-                                    onClick={() =>
-                                      this.PageStatusChangedHandler(
-                                        u._id,
-                                        u.status
-                                      )
-                                    }
-                                  >
-                                    {u.status ? "Active" : "Deactive"}
-                                  </CLink>
-                                )}
-                              {current_user.id !== u._id &&
-                                _canAccess("cms_pages", "update") === false && (
-                                  <>{u.status ? "Active" : "Deactive"}</>
-                                )}
+                              {_canAccess("cms_pages", "update") && (
+                                <CLink
+                                  onClick={() =>
+                                    this.PageStatusChangedHandler(
+                                      u._id,
+                                      u.status
+                                    )
+                                  }
+                                >
+                                  {u.status ? "Active" : "Deactive"}
+                                </CLink>
+                              )}
+                              {_canAccess("cms_pages", "update") === false && (
+                                <>{u.status ? "Active" : "Deactive"}</>
+                              )}
                             </td>
                             {(_canAccess("cms_pages", "update") ||
                               _canAccess("cms_pages", "delete")) && (
@@ -540,7 +531,9 @@ class Page_list extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Page</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this CMS page?</CModalBody>
+          <CModalBody>
+            Are you sure you want to delete this CMS page?
+          </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

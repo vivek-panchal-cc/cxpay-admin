@@ -464,26 +464,22 @@ class SMS_list extends React.Component {
                             <td>{u.name}</td>
                             <td>{u.slug}</td>
                             <td>
-                              {current_user.id !== u._id &&
-                                _canAccess("sms_templates", "update") && (
-                                  <CLink
-                                    onClick={() =>
-                                      this.PageStatusChangedHandler(
-                                        u._id,
-                                        u.status
-                                      )
-                                    }
-                                  >
-                                    {u.status == false ? "Active" : "Deactive"}
-                                  </CLink>
-                                )}
-                              {current_user.id !== u._id &&
-                                _canAccess("sms_templates", "update") ===
-                                  false && (
-                                  <>
-                                    {u.status == true ? "Active" : "Deactive"}
-                                  </>
-                                )}
+                              {_canAccess("sms_templates", "update") && (
+                                <CLink
+                                  onClick={() =>
+                                    this.PageStatusChangedHandler(
+                                      u._id,
+                                      u.status
+                                    )
+                                  }
+                                >
+                                  {u.status == false ? "Active" : "Deactive"}
+                                </CLink>
+                              )}
+                              {_canAccess("sms_templates", "update") ===
+                                false && (
+                                <>{u.status == true ? "Active" : "Deactive"}</>
+                              )}
                             </td>
                             {(_canAccess("sms_templates", "update") ||
                               _canAccess("sms_templates", "delete")) && (
@@ -552,7 +548,9 @@ class SMS_list extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Page</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this template?</CModalBody>
+          <CModalBody>
+            Are you sure you want to delete this template?
+          </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete
