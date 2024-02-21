@@ -169,7 +169,7 @@ class Dashboard extends React.Component {
           </CCol>
         </CRow>
         <CRow>
-          <CCol sm={4}>
+          <CCol sm={6}>
             <CCard color="warning" className="dashboard-card">
               <CCardBody>
                 <span className="float-right">
@@ -189,7 +189,7 @@ class Dashboard extends React.Component {
               </CCardBody>
             </CCard>
           </CCol>
-          <CCol sm={4}>
+          <CCol sm={6}>
             <CCard color="danger" className="dashboard-card">
               <CCardBody>
                 <span className="float-right">
