@@ -38,6 +38,7 @@ import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
 import InputDateRange from "components/admin/InputDateRange";
 import "./../agent_customers/notification.css";
+import ResetPassword from "components/admin/Reset_Password";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -53,6 +54,7 @@ class Business_Customers_Index extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.openDeletePopup = this.openDeletePopup.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
+    this.resetPassword = this.resetPassword.bind(this);
     this.pageChange = this.pageChange.bind(this);
 
     this.state = {
@@ -77,10 +79,11 @@ class Business_Customers_Index extends React.Component {
         status: "",
       },
       _openPopup: false,
+      _openResetPassPopup: false,
       customers_management_list: [],
       deleteBusinessCustomers: [],
       multiaction: [],
-      allCheckedbox: false,
+      allCheckedbox: false,      
     };
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
@@ -240,7 +243,7 @@ class Business_Customers_Index extends React.Component {
   deleteUser() {
     this.setState({ _openPopup: false, deleteId: undefined });
 
-    var postData = {
+    let postData = {
       mobile_number: [this.state.deleteId],
       user_type: "business",
     };
@@ -254,6 +257,29 @@ class Business_Customers_Index extends React.Component {
       }
     });
   }
+
+  openResetPassPopup(id) {
+    this.setState({ _openResetPassPopup: true, deleteId: id });
+  }
+  resetPassword(value) {    
+    this.setState({ _openResetPassPopup: true, deleteId: undefined });
+
+    let postData = {
+      // mobile_number: [this.state.deleteId],
+      password: value.password,
+    };
+
+    businessCustomersService.deleteCustomer(postData).then((res) => {      
+      if (!res.success) {        
+        notify.error(res.message)
+      } else {
+        notify.success(res.message);
+        this.setState({...this.state, _openResetPassPopup: false})
+        this.getUserGroupsList();
+      }
+    });
+  }
+
   resetCheckedBox() {
     this.setState({ allCheckedbox: false });
   }
@@ -638,7 +664,12 @@ class Business_Customers_Index extends React.Component {
                         {(_canAccess("business_customers", "update") ||
                           _canAccess("business_customers", "delete")) && (
                           <>
-                            <th>Action</th>
+                            {this.state.customers_management_list?.length >
+                            0 ? (
+                              <th style={{ minWidth: "165px" }}>Action</th>
+                            ) : (
+                              <th>Action</th>
+                            )}
                           </>
                         )}
                       </tr>
@@ -693,44 +724,60 @@ class Business_Customers_Index extends React.Component {
                                       c._id
                                     ) === -1 && (
                                       <>
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "business_customers",
-                                            "update"
-                                          ) && (
-                                            <CTooltip
-                                              content={globalConstants.EDIT_BTN}
+                                        {_canAccess(
+                                          "business_customers",
+                                          "update"
+                                        ) && (
+                                          <CTooltip
+                                            content={globalConstants.EDIT_BTN}
+                                          >
+                                            <CLink
+                                              className="btn  btn-md btn-primary"
+                                              aria-current="page"
+                                              to={`/admin/business_customers/edit/${c.mobile}`}
                                             >
-                                              <CLink
-                                                className="btn  btn-md btn-primary"
-                                                aria-current="page"
-                                                to={`/admin/business_customers/edit/${c.mobile}`}
-                                              >
-                                                <CIcon name="cil-pencil"></CIcon>{" "}
-                                              </CLink>
-                                            </CTooltip>
-                                          )}
+                                              <CIcon name="cil-pencil"></CIcon>{" "}
+                                            </CLink>
+                                          </CTooltip>
+                                        )}
                                         &nbsp;
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "business_customers",
-                                            "delete"
-                                          ) && (
-                                            <CTooltip
-                                              content={
-                                                globalConstants.DELETE_BTN
+                                        {_canAccess(
+                                          "business_customers",
+                                          "delete"
+                                        ) && (
+                                          <CTooltip
+                                            content={globalConstants.DELETE_BTN}
+                                          >
+                                            <button
+                                              className="btn  btn-md btn-danger "
+                                              onClick={() =>
+                                                this.openDeletePopup(c.mobile)
                                               }
                                             >
-                                              <button
-                                                className="btn  btn-md btn-danger "
-                                                onClick={() =>
-                                                  this.openDeletePopup(c.mobile)
-                                                }
-                                              >
-                                                <CIcon name="cil-trash"></CIcon>
-                                              </button>
-                                            </CTooltip>
-                                          )}
+                                              <CIcon name="cil-trash"></CIcon>
+                                            </button>
+                                          </CTooltip>
+                                        )}
+                                        &nbsp;
+                                        {_canAccess(
+                                          "business_customers",
+                                          "update"
+                                        ) && false && (
+                                          <CTooltip
+                                            content={globalConstants.RESET_PASS}
+                                          >
+                                            <button
+                                              className="btn  btn-md btn-secondary "
+                                              onClick={() =>
+                                                this.openResetPassPopup(
+                                                  c.mobile
+                                                )
+                                              }
+                                            >
+                                              <CIcon name="cil-trash"></CIcon>
+                                            </button>
+                                          </CTooltip>
+                                        )}
                                       </>
                                     )}
                                   </td>
@@ -789,6 +836,32 @@ class Business_Customers_Index extends React.Component {
               Cancel
             </CButton>
           </CModalFooter>
+        </CModal>
+
+        <CModal
+          show={this.state._openResetPassPopup}
+          onClose={() => {
+            this.setState({
+              _openResetPassPopup: !this.state._openResetPassPopup,
+            });
+          }}
+          color="primary"
+        >
+          <CModalHeader closeButton>
+            <CModalTitle>Reset Password</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {this.state._openResetPassPopup && (
+              <ResetPassword
+                onClose={() => {
+                  this.setState({
+                    _openResetPassPopup: !this.state._openResetPassPopup                    
+                  });
+                }}
+                onSubmit={(value) => this.resetPassword(value)}                
+              />
+            )}
+          </CModalBody>
         </CModal>
       </>
     );

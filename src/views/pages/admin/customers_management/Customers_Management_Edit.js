@@ -395,7 +395,7 @@ class Customers_Management_Edit extends React.Component {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  <CCol className="col-md-6 col flex-wrap">
+                  <CCol className="col-md-4 col flex-wrap">
                     <CFormGroup>
                       <CLabel htmlFor="nf-name">Account Number</CLabel>
                       <CInput
@@ -418,7 +418,7 @@ class Customers_Management_Edit extends React.Component {
                       </CFormText>
                     </CFormGroup>
                   </CCol>
-                  <CCol className="col-md-6 col flex-wrap">
+                  <CCol className="col-md-4 col flex-wrap">
                     <CFormGroup>
                       <CLabel htmlFor="nf-name">Balance</CLabel>
                       <CInput
@@ -435,6 +435,29 @@ class Customers_Management_Edit extends React.Component {
                         {this.validator.message(
                           "available_balance",
                           this.state.fields.available_balance,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Reserved Amount</CLabel>
+                      <CInput
+                        type="text"
+                        id="reserved_amount"
+                        name="reserved_amount"
+                        placeholder="Enter Reserved Amount"
+                        autoComplete="name"
+                        value={this.state.fields.reserved_amount}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "reserved_amount",
+                          this.state.fields.reserved_amount,
                           "required",
                           { className: "text-danger" }
                         )}
@@ -797,6 +820,22 @@ class Customers_Management_Edit extends React.Component {
                           <td>{this.state.fields.kyc_transaction_id}</td>
                         </tr>
                       )}
+                      {this.state.fields.status && (
+                        <tr>
+                          <td>Status</td>
+                          <td>
+                            {this.state.fields.status === "1" ? (
+                              <span className="success-green">Success</span>
+                            ) : (
+                              <span className="text-danger">Decline</span>
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                      <tr>
+                        <td>Attempted Count</td>
+                        <td>{this.state.fields.kyc_attempt_count}</td>
+                      </tr>
                     </tbody>
                   </table>
                 )}

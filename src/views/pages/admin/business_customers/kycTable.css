@@ -1,6 +1,7 @@
 .kyc-table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
 .kyc-table th,
@@ -12,4 +13,12 @@
 
 .kyc-table th {
   background-color: #f2f2f2;
+}
+
+.smaller-note{
+  font-size: 10px;
+}
+
+.success-green{
+  color: green;
 }

@@ -43,6 +43,7 @@ class Business_Customers_Edit extends React.Component {
         user_group_name: "",
         status: true,
         is_kyc: true,
+        admin_approved: true,
         _id: this.props.match.params.id,
       },
       module_permission: {},
@@ -61,6 +62,8 @@ class Business_Customers_Edit extends React.Component {
     this.handleCityChange = this.handleCityChange.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleCheckboxChangeKYC = this.handleCheckboxChangeKYC.bind(this);
+    this.handleCheckboxChangeIsApproved =
+      this.handleCheckboxChangeIsApproved.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
   }
 
@@ -97,12 +100,14 @@ class Business_Customers_Edit extends React.Component {
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
             const kyctmp = res.data.is_kyc === false ? false : true;
+            const isApprovedtmp = res.data.admin_approved === false ? false : true;
             this.setState({
               cityData: [...this.state.countryData.city_list[iso]],
               city: res.data.city,
               country: country_index,
               status: statustmp,
               is_kyc: kyctmp,
+              admin_approved: isApprovedtmp,
             });
           }
         });
@@ -157,6 +162,17 @@ class Business_Customers_Edit extends React.Component {
 
     this.setState({
       [name]: tmpKyc,
+    });
+  }
+
+  handleCheckboxChangeIsApproved(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    const tmpIsApproved = value ? true : false;
+
+    this.setState({
+      [name]: tmpIsApproved,
     });
   }
 
@@ -275,6 +291,7 @@ class Business_Customers_Edit extends React.Component {
       formData.append("company_name", this.state.fields.company_name);
       formData.append("status", this.state.status);
       formData.append("kyc_status", this.state.is_kyc);
+      formData.append("admin_approved", this.state.admin_approved);
       formData.append("email", this.state.fields.email);
       formData.append("city", this.state.city);
       formData.append(
@@ -370,7 +387,7 @@ class Business_Customers_Edit extends React.Component {
               </CCardHeader>
               <CCardBody>
                 <CRow>
-                  <CCol className="col-md-6 col flex-wrap">
+                  <CCol className="col-md-4 col flex-wrap">
                     <CFormGroup>
                       <CLabel htmlFor="nf-name">Account Number</CLabel>
                       <CInput
@@ -393,7 +410,7 @@ class Business_Customers_Edit extends React.Component {
                       </CFormText>
                     </CFormGroup>
                   </CCol>
-                  <CCol className="col-md-6 col flex-wrap">
+                  <CCol className="col-md-4 col flex-wrap">
                     <CFormGroup>
                       <CLabel htmlFor="nf-name">Balance</CLabel>
                       <CInput
@@ -410,6 +427,29 @@ class Business_Customers_Edit extends React.Component {
                         {this.validator.message(
                           "available_balance",
                           this.state.fields.available_balance,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Reserved Amount</CLabel>
+                      <CInput
+                        type="text"
+                        id="reserved_amount"
+                        name="reserved_amount"
+                        placeholder="Enter Reserved Amount"
+                        autoComplete="name"
+                        value={this.state.fields.reserved_amount}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "reserved_amount",
+                          this.state.fields.reserved_amount,
                           "required",
                           { className: "text-danger" }
                         )}
@@ -511,12 +551,17 @@ class Business_Customers_Edit extends React.Component {
                   </CFormText>
                 </CFormGroup>
                 <CFormGroup>
-                  <CLabel htmlFor="nf-name">Business ID</CLabel>
+                  <CLabel htmlFor="nf-name">
+                    Chamber of Commerce{" "}
+                    <span className="smaller-note">
+                      (not older than 2 months)
+                    </span>
+                  </CLabel>
                   <CInput
                     type="text"
                     id="business_id"
                     name="business_id"
-                    placeholder="Enter Business Id "
+                    placeholder="Enter Chamber of Commerce"
                     autoComplete="name"
                     value={this.state.fields.business_id}
                     onChange={this.handleChange}
@@ -646,9 +691,9 @@ class Business_Customers_Edit extends React.Component {
                 </CFormGroup>
 
                 <CFormGroup row>
-                  <CCol md="1">Status</CCol>
+                  <CCol md="2">Status</CCol>
 
-                  <CCol sm="11">
+                  <CCol sm="10">
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.status == 1 && (
                         <CSwitch
@@ -677,9 +722,9 @@ class Business_Customers_Edit extends React.Component {
                 </CFormGroup>
 
                 <CFormGroup row>
-                  <CCol md="1">KYC</CCol>
+                  <CCol md="2">KYC</CCol>
 
-                  <CCol sm="11">
+                  <CCol sm="10">
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.is_kyc === true && (
                         <CSwitch
@@ -764,9 +809,56 @@ class Business_Customers_Edit extends React.Component {
                           <td>{this.state.fields.kyc_transaction_id}</td>
                         </tr>
                       )}
+                      {this.state.fields.status && (
+                        <tr>
+                          <td>Status</td>
+                          <td>
+                            {this.state.fields.status === "1" ? (
+                              <span className="success-green">Success</span>
+                            ) : (
+                              <span className="text-danger">Decline</span>
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                      <tr>
+                        <td>Attempted Count</td>
+                        <td>{this.state.fields.kyc_attempt_count}</td>
+                      </tr>
                     </tbody>
                   </table>
                 )}
+
+                <CFormGroup row>
+                  <CCol md="2">Is Approved?</CCol>
+
+                  <CCol sm="10">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      {this.state.fields.admin_approved === true && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="admin_approved"
+                          name="admin_approved"
+                          value={this.state.fields.admin_approved}
+                          defaultChecked
+                          onChange={this.handleCheckboxChangeIsApproved}
+                        />
+                      )}
+
+                      {this.state.fields.admin_approved === false && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="admin_approved"
+                          name="admin_approved"
+                          value={this.state.fields.admin_approved}
+                          onChange={this.handleCheckboxChangeIsApproved}
+                        />
+                      )}
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
 
                 <CFormGroup className="limits-wrap">
                   <div className="row mb-3 mb-lg-4 limits-heading">
