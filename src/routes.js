@@ -105,6 +105,9 @@ const User_Myprofile = React.lazy(() =>
 const Customers_Management_Index = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Index")
 );
+const Customers_Management_Pending_Kyc_Index = React.lazy(() =>
+  import("./views/pages/admin/customers_management/Customers_Management_Pending_Kyc_Index")
+);
 const Customers_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Edit")
 );
@@ -120,6 +123,12 @@ const SMS_Template_Edit = React.lazy(() =>
 );
 const Business_Customers_Index = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Index")
+);
+const Business_Customers_Admin_Approval_Index = React.lazy(() =>
+  import("./views/pages/admin/business_customers/Business_Customers_Admin_Approval_Index")
+);
+const Business_Customers_Pending_Kyc_Index = React.lazy(() =>
+  import("./views/pages/admin/business_customers/Business_Customers_Pending_Kyc_Index")
 );
 const Business_Customers_Edit = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Edit")
@@ -487,6 +496,14 @@ const routes = [
     action: "view",
   },
   {
+    path: "/admin/personal_customers/pending_kyc",
+    exact: true,
+    name: "Pending Merchant",
+    component: Customers_Management_Pending_Kyc_Index,
+    module_name: "personal_customers",
+    action: "view",
+  },
+  {
     path: "/admin/personal_customers/edit/:id",
     exact: true,
     name: "Edit",
@@ -525,6 +542,22 @@ const routes = [
     exact: true,
     name: "Business Customers",
     component: Business_Customers_Index,
+    module_name: "business_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/business_customers/admin_approval",
+    exact: true,
+    name: "Pending Merchant",
+    component: Business_Customers_Admin_Approval_Index,
+    module_name: "business_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/business_customers/pending_kyc",
+    exact: true,
+    name: "Pending Kyc",
+    component: Business_Customers_Pending_Kyc_Index,
     module_name: "business_customers",
     action: "view",
   },

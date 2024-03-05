@@ -29,7 +29,10 @@ import {
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArchive,
   faBan,
+  faBell,
+  faBomb,
   faSort,
   faSortDown,
   faSortUp,
@@ -39,6 +42,7 @@ import CIcon from "@coreui/icons-react";
 import InputDateRange from "components/admin/InputDateRange";
 import "./../agent_customers/notification.css";
 import ResetPassword from "components/admin/Reset_Password";
+import IconMaster from "assets/icons/IconMaster";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -82,8 +86,10 @@ class Business_Customers_Index extends React.Component {
       _openResetPassPopup: false,
       customers_management_list: [],
       deleteBusinessCustomers: [],
+      adminApprovalCustomers: [],
+      pendingKycCustomers: [],
       multiaction: [],
-      allCheckedbox: false,      
+      allCheckedbox: false,
     };
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
@@ -94,6 +100,8 @@ class Business_Customers_Index extends React.Component {
   componentDidMount() {
     this.getUserGroupsList();
     this.getDeleteRequests();
+    this.getAdminApprovalCustomerList();
+    this.getPendingKycCustomerList();
   }
 
   getUserGroupsList() {
@@ -155,6 +163,34 @@ class Business_Customers_Index extends React.Component {
             totalPage: res.data.pagination.last_page,
             totalRecords: res.data.pagination.total,
           },
+        });
+      }
+    });
+  }
+
+  getAdminApprovalCustomerList() {
+    businessCustomersService.getAdminApprovalCustomerList().then((res) => {
+      if (!res.success) {
+        this.setState({
+          adminApprovalCustomers: [],
+        });
+      } else {
+        this.setState({
+          adminApprovalCustomers: res.data.customers,
+        });
+      }
+    });
+  }
+  
+  getPendingKycCustomerList() {
+    businessCustomersService.getPendingKycCustomerList({customer_type: "1"}).then((res) => {
+      if (!res.success) {
+        this.setState({
+          pendingKycCustomers: [],
+        });
+      } else {
+        this.setState({
+          pendingKycCustomers: res.data.blocked_users,
         });
       }
     });
@@ -261,7 +297,7 @@ class Business_Customers_Index extends React.Component {
   openResetPassPopup(id) {
     this.setState({ _openResetPassPopup: true, deleteId: id });
   }
-  resetPassword(value) {    
+  resetPassword(value) {
     this.setState({ _openResetPassPopup: true, deleteId: undefined });
 
     let postData = {
@@ -269,12 +305,12 @@ class Business_Customers_Index extends React.Component {
       password: value.password,
     };
 
-    businessCustomersService.deleteCustomer(postData).then((res) => {      
-      if (!res.success) {        
-        notify.error(res.message)
+    businessCustomersService.deleteCustomer(postData).then((res) => {
+      if (!res.success) {
+        notify.error(res.message);
       } else {
         notify.success(res.message);
-        this.setState({...this.state, _openResetPassPopup: false})
+        this.setState({ ...this.state, _openResetPassPopup: false });
         this.getUserGroupsList();
       }
     });
@@ -542,6 +578,46 @@ class Business_Customers_Index extends React.Component {
                     </CTooltip>
                   )}
                 </div>
+                <div className="card-header-actions px-2">
+                  {_canAccess("business_customers", "view") && (
+                    <CTooltip content={globalConstants.ADMIN_APPROVAL}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to={`/admin/business_customers/admin_approval`}
+                      >
+                        <span
+                          className={`${
+                            this.state.adminApprovalCustomers?.length > 0
+                              ? "notification-badge-pending-customers"
+                              : ""
+                          }`}
+                        ></span>
+                        <IconMaster />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
+                <div className="card-header-actions px-2">
+                  {_canAccess("business_customers", "view") && (
+                    <CTooltip content={globalConstants.KYC_PENDING}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to={`/admin/business_customers/pending_kyc`}
+                      >
+                        <span
+                          className={`${
+                            this.state.pendingKycCustomers?.length > 0
+                              ? "notification-badge-pending-customers"
+                              : ""
+                          }`}
+                        ></span>
+                        <FontAwesomeIcon icon={faArchive} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -762,22 +838,25 @@ class Business_Customers_Index extends React.Component {
                                         {_canAccess(
                                           "business_customers",
                                           "update"
-                                        ) && false && (
-                                          <CTooltip
-                                            content={globalConstants.RESET_PASS}
-                                          >
-                                            <button
-                                              className="btn  btn-md btn-secondary "
-                                              onClick={() =>
-                                                this.openResetPassPopup(
-                                                  c.mobile
-                                                )
+                                        ) &&
+                                          false && (
+                                            <CTooltip
+                                              content={
+                                                globalConstants.RESET_PASS
                                               }
                                             >
-                                              <CIcon name="cil-trash"></CIcon>
-                                            </button>
-                                          </CTooltip>
-                                        )}
+                                              <button
+                                                className="btn  btn-md btn-secondary "
+                                                onClick={() =>
+                                                  this.openResetPassPopup(
+                                                    c.mobile
+                                                  )
+                                                }
+                                              >
+                                                <CIcon name="cil-trash"></CIcon>
+                                              </button>
+                                            </CTooltip>
+                                          )}
                                       </>
                                     )}
                                   </td>
@@ -855,10 +934,10 @@ class Business_Customers_Index extends React.Component {
               <ResetPassword
                 onClose={() => {
                   this.setState({
-                    _openResetPassPopup: !this.state._openResetPassPopup                    
+                    _openResetPassPopup: !this.state._openResetPassPopup,
                   });
                 }}
-                onSubmit={(value) => this.resetPassword(value)}                
+                onSubmit={(value) => this.resetPassword(value)}
               />
             )}
           </CModalBody>

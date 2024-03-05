@@ -20,28 +20,28 @@ import {
   CTooltip,
   CSelect,
 } from "@coreui/react";
-// import { userGroupsService } from "../../../../services/admin/user_groups.service";
-import { customersManagementService } from "../../../../services/admin/customers_management.service";
+import { businessCustomersService } from "../../../../services/admin/business_customers.service";
 import {
   notify,
   history,
   _canAccess,
   _loginUsersDetails,
+  formatDate,
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBan,
+  faBell,
+  faBomb,
   faSort,
   faSortDown,
   faSortUp,
-  faPlus,
-  faBan,
-  faBomb,
-  faArchive,
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
 import InputDateRange from "components/admin/InputDateRange";
-import { businessCustomersService } from "services/admin/business_customers.service";
+import "./../agent_customers/notification.css";
+import ResetPassword from "components/admin/Reset_Password";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -49,7 +49,7 @@ const MultiActionBar = React.lazy(() =>
   import("../../../../components/admin/MultiActionBar")
 );
 
-class Customers_Management_Index extends React.Component {
+class Business_Customers_Index extends React.Component {
   constructor(props) {
     super(props);
     this.handleColumnSort = this.handleColumnSort.bind(this);
@@ -57,6 +57,7 @@ class Customers_Management_Index extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.openDeletePopup = this.openDeletePopup.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
+    this.resetPassword = this.resetPassword.bind(this);
     this.pageChange = this.pageChange.bind(this);
 
     this.state = {
@@ -75,92 +76,93 @@ class Customers_Management_Index extends React.Component {
         page: 1,
         start_date: "",
         end_date: "",
-        search_name: "",
+        search_company_name: "",
         sort_field: "created_at",
         sort_dir: "desc",
         status: "",
-        // pageNo: 1,
-        // sort_dir: 'asc',
-        // sort_field: "user_group_name",
-        // search_user_group_name: "",
-        // totalPage: 1
+        customer_type: "1",
       },
       _openPopup: false,
+      _openResetPassPopup: false,
       customers_management_list: [],
-      pendingKycCustomers: [],
+      deleteBusinessCustomers: [],
       multiaction: [],
       allCheckedbox: false,
     };
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/personal_customers");
+      history.push("/admin/business_customers");
     }
   }
 
   componentDidMount() {
-    this.getUserGroupsList();
     this.getPendingKycCustomerList();
+    this.getDeleteRequests();
   }
 
-  getUserGroupsList() {
-    customersManagementService
-      .getCustomersManagementList(this.state.fields)
+  getPendingKycCustomerList() {
+    businessCustomersService
+      .getPendingKycCustomerList(this.state.fields)
       .then((res) => {
         if (res.success === false) {
           // notify.error(res.message);
           this.setState({ customers_management_list: [] });
         } else {
           this.setState({
-            totalRecords: res.data?.pagination?.total || null,
+            totalRecords: res.data?.pagination?.total,
             fields: {
               ...this.state.fields,
-              totalPage: res.data?.pagination?.last_page || null,
+              totalPage: res.data?.pagination?.last_page,
             },
-            customers_management_list: res.data?.customers || [],
+            customers_management_list: res.data?.blocked_users,
           });
           /* Multi delete checkbox code */
-          if (res.data && res.data.customers?.length > 0) {
-            let customers_management = res.data.customers;
+          if (res?.data && res?.data?.blocked_users?.length > 0) {
+            let customers_management = res?.data?.blocked_users;
             let multiaction = [];
             const current_user = _loginUsersDetails();
             for (var key in customers_management) {
               if (
                 globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
-                  customers_management[key].mobile
+                  customers_management[key].mobile_number
                 ) > -1
               ) {
                 continue;
               }
               if (
-                current_user.user_group_id === customers_management[key].mobile
+                current_user.user_group_id ===
+                customers_management[key].mobile_number
               ) {
                 continue;
               }
-              multiaction[customers_management[key].mobile] = false;
+              multiaction[customers_management[key].mobile_number] = false;
             }
 
             this.setState({ multiaction: multiaction });
-          } else if (res.result && res.result?.length === 0) {
+          } else if (res.result && res.result.length === 0) {
             this.setState({ multiaction: [] });
           }
         }
       });
   }
 
-  getPendingKycCustomerList() {
-    businessCustomersService
-      .getPendingKycCustomerList({ customer_type: "2" })
-      .then((res) => {
-        if (!res.success) {
-          this.setState({
-            pendingKycCustomers: [],
-          });
-        } else {
-          this.setState({
-            pendingKycCustomers: res.data.blocked_users,
-          });
-        }
-      });
+  getDeleteRequests() {
+    businessCustomersService.getDeleteRequests().then((res) => {
+      if (!res.success) {
+        this.setState({
+          deleteBusinessCustomers: [],
+        });
+      } else {
+        this.setState({
+          deleteBusinessCustomers: res.data.business,
+          fields: {
+            ...this.state.fields,
+            totalPage: res.data.pagination.last_page,
+            totalRecords: res.data.pagination.total,
+          },
+        });
+      }
+    });
   }
 
   pageChange = (newPage) => {
@@ -173,7 +175,7 @@ class Customers_Management_Index extends React.Component {
         },
       },
       () => {
-        this.getUserGroupsList();
+        this.getPendingKycCustomerList();
       }
     );
   };
@@ -190,7 +192,7 @@ class Customers_Management_Index extends React.Component {
         },
       },
       () => {
-        this.getUserGroupsList();
+        this.getPendingKycCustomerList();
       }
     );
   }
@@ -203,7 +205,7 @@ class Customers_Management_Index extends React.Component {
     if (e.key === "Enter") {
       e.preventDefault();
       e.stopPropagation();
-      this.getUserGroupsList();
+      this.getPendingKycCustomerList();
     }
   };
   handleSearch(type) {
@@ -225,23 +227,19 @@ class Customers_Management_Index extends React.Component {
             page: 1,
             start_date: "",
             end_date: "",
-            search_name: "",
+            search_company_name: "",
             sort_field: "created_at",
             sort_dir: "desc",
             status: "",
-            // pageNo: 1,
-            // sort_dir: 'DESC',
-            // sort_field: "created_at",
-            // search_name: "",
-            // totalPage: 1
+            customer_type: "2",
           },
         },
         () => {
-          this.getUserGroupsList();
+          this.getPendingKycCustomerList();
         }
       );
     } else {
-      this.getUserGroupsList();
+      this.getPendingKycCustomerList();
     }
   }
 
@@ -251,20 +249,43 @@ class Customers_Management_Index extends React.Component {
   deleteUser() {
     this.setState({ _openPopup: false, deleteId: undefined });
 
-    var postData = {
+    let postData = {
       mobile_number: [this.state.deleteId],
-      user_type: "personal",
+      user_type: "business",
     };
 
-    customersManagementService.deleteCustomer(postData).then((res) => {
+    businessCustomersService.deleteCustomer(postData).then((res) => {
       if (res.status === "error") {
         notify.error(res.message);
       } else {
         notify.success(res.message);
-        this.getUserGroupsList();
+        this.getPendingKycCustomerList();
       }
     });
   }
+
+  openResetPassPopup(id) {
+    this.setState({ _openResetPassPopup: true, deleteId: id });
+  }
+  resetPassword(value) {
+    this.setState({ _openResetPassPopup: true, deleteId: undefined });
+
+    let postData = {
+      // mobile_number: [this.state.deleteId],
+      password: value.password,
+    };
+
+    businessCustomersService.deleteCustomer(postData).then((res) => {
+      if (!res.success) {
+        notify.error(res.message);
+      } else {
+        notify.success(res.message);
+        this.setState({ ...this.state, _openResetPassPopup: false });
+        this.getPendingKycCustomerList();
+      }
+    });
+  }
+
   resetCheckedBox() {
     this.setState({ allCheckedbox: false });
   }
@@ -281,14 +302,14 @@ class Customers_Management_Index extends React.Component {
       this.resetCheckedBox();
       switch (actionValue) {
         case "delete": {
-          customersManagementService
+          businessCustomersService
             .deleteMultipleCustomer({ mobile_number: appliedActionId })
             .then((res) => {
               if (res.status === false) {
                 notify.error(res.message);
               } else {
                 notify.success(res.message);
-                this.getUserGroupsList();
+                this.getPendingKycCustomerList();
               }
             });
           break;
@@ -340,22 +361,6 @@ class Customers_Management_Index extends React.Component {
     this.setState({ allCheckedbox: allChecked });
   };
 
-  StatusChangedHandler(_id, status) {
-    var postData = {
-      mobile_number: [_id],
-      status: status == 0 ? 1 : 0,
-    };
-
-    customersManagementService.changeCustomerStatus(postData).then((res) => {
-      if (res.status === "error") {
-        notify.error(res.message);
-      } else {
-        notify.success(res.message);
-        this.getUserGroupsList();
-      }
-    });
-  }
-
   //filter code
   handleChangeDateFilter = (params) => {
     const [startDate, endDate] = params;
@@ -376,17 +381,31 @@ class Customers_Management_Index extends React.Component {
     });
   };
 
+  StatusChangedHandler(_id, status) {
+    var postData = {
+      mobile_number: [_id],
+      status: status == 0 ? 1 : 0,
+    };
+
+    businessCustomersService.changeCustomerStatus(postData).then((res) => {
+      if (res.status === "error") {
+        notify.error(res.message);
+      } else {
+        notify.success(res.message);
+        this.getPendingKycCustomerList();
+      }
+    });
+  }
+
   bulkCustomerStatusChangeHandler(postData) {
-    customersManagementService
-      .changeBulkCustomerStatus(postData)
-      .then((res) => {
-        if (res.status === "error") {
-          notify.error(res.message);
-        } else {
-          notify.success(res.message);
-          this.getUserGroupsList();
-        }
-      });
+    businessCustomersService.changeBulkCustomerStatus(postData).then((res) => {
+      if (res.status === "error") {
+        notify.error(res.message);
+      } else {
+        notify.success(res.message);
+        this.getPendingKycCustomerList();
+      }
+    });
   }
 
   render() {
@@ -401,12 +420,12 @@ class Customers_Management_Index extends React.Component {
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
-                        <CLabel htmlFor="name">Name</CLabel>
+                        <CLabel htmlFor="name">Company Name</CLabel>
                         <CInput
                           id="name"
-                          placeholder="Search Name"
-                          name="search_name"
-                          value={this.state.fields.search_name}
+                          placeholder="Search Company Name"
+                          name="search_company_name"
+                          value={this.state.fields.search_company_name}
                           onChange={this.handleChange}
                           onKeyDown={this.handleKeyDown}
                         />
@@ -481,48 +500,13 @@ class Customers_Management_Index extends React.Component {
         <CRow>
           <CCol xl={12}>
             <CCard>
-              <CCardHeader>
-                Personal Customers Pending KYC
-                <div className="card-header-actions px-2">
-                  {_canAccess("personal_customers", "view") && (
-                    <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to={`/admin/personal_customers/blocked_requests/2`}
-                      >
-                        <FontAwesomeIcon icon={faBan} />
-                      </CLink>
-                    </CTooltip>
-                  )}
-                </div>
-                <div className="card-header-actions px-2">
-                  {_canAccess("business_customers", "view") && (
-                    <CTooltip content={globalConstants.KYC_PENDING}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to={`/admin/personal_customers/pending_kyc`}
-                      >
-                        <span
-                          className={`${
-                            this.state.pendingKycCustomers?.length > 0
-                              ? "notification-badge-pending-customers"
-                              : ""
-                          }`}
-                        ></span>
-                        <FontAwesomeIcon icon={faArchive} />
-                      </CLink>
-                    </CTooltip>
-                  )}
-                </div>
-              </CCardHeader>
+              <CCardHeader>Business Customers Pending Kyc</CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
                   <MultiActionBar
                     onClick={this.handleApplyAction}
                     checkBoxData={this.state.multiaction}
-                    module_name={"personal_customers"}
+                    module_name={"business_customers"}
                   />
                   <table className="table">
                     <thead>
@@ -537,34 +521,20 @@ class Customers_Management_Index extends React.Component {
                           />
                         </th>
                         <th>#</th>
-                        <th onClick={() => this.handleColumnSort("name")}>
+                        <th onClick={() => this.handleColumnSort("user_name")}>
                           <span className="sortCls">
-                            <span className="table-header-text-mrg">Name</span>
-                            {this.state.fields.sort_field !== "name" && (
+                            <span className="table-header-text-mrg">
+                              Company Name
+                            </span>
+                            {this.state.fields.sort_field !== "user_name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field === "name" && (
+                              this.state.fields.sort_field === "user_name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field === "name" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-                        <th onClick={() => this.handleColumnSort("email")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">Email</span>
-                            {this.state.fields.sort_field !== "email" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field === "email" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field === "email" && (
+                              this.state.fields.sort_field === "user_name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -628,11 +598,9 @@ class Customers_Management_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        {(_canAccess("personal_customers", "update") ||
-                          _canAccess("personal_customers", "delete")) && (
-                          <>
-                            <th>Action</th>
-                          </>
+                        {(_canAccess("business_customers", "update") ||
+                          _canAccess("business_customers", "delete")) && (
+                          <th>Action</th>
                         )}
                       </tr>
                     </thead>
@@ -640,32 +608,31 @@ class Customers_Management_Index extends React.Component {
                       {this.state.customers_management_list?.length > 0 &&
                         this.state.customers_management_list?.map(
                           (c, index) => (
-                            <tr key={c.mobile}>
+                            <tr key={c.mobile_number}>
                               <td>
-                                {this.state.multiaction[c.mobile] !==
+                                {this.state.multiaction[c.mobile_number] !==
                                   undefined && (
                                   <CheckBoxes
                                     handleCheckChieldElement={
                                       this.handleCheckChieldElement
                                     }
-                                    _id={c.mobile}
+                                    _id={c.mobile_number}
                                     _isChecked={
-                                      this.state.multiaction[c.mobile]
+                                      this.state.multiaction[c.mobile_number]
                                     }
                                   />
                                 )}
                               </td>
                               <td>{index + 1}</td>
-                              <td>{c.name}</td>
-                              <td>{c.email}</td>
-                              <td>{c.mobile}</td>
-                              <td>{c.date}</td>
+                              <td>{c.user_name}</td>
+                              <td>{c.mobile_number}</td>
+                              <td>{formatDate(c.date)}</td>
                               <td>
-                                {_canAccess("personal_customers", "update") && (
+                                {_canAccess("business_customers", "update") && (
                                   <CLink
                                     onClick={() =>
                                       this.StatusChangedHandler(
-                                        c.mobile,
+                                        c.mobile_number,
                                         c.status
                                       )
                                     }
@@ -673,51 +640,72 @@ class Customers_Management_Index extends React.Component {
                                     {c.status == 0 ? "Active" : "Deactive"}
                                   </CLink>
                                 )}
-                                {_canAccess("personal_customers", "update") ===
+                                {_canAccess("business_customers", "update") ===
                                   false && (
                                   <>{c.status == "0" ? "Active" : "Deactive"}</>
                                 )}
                               </td>
-                              {(_canAccess("personal_customers", "update") ||
-                                _canAccess("personal_customers", "delete")) && (
+                              {(_canAccess("business_customers", "update") ||
+                                _canAccess("business_customers", "delete")) && (
                                 <>
                                   <td>
                                     {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
                                       c._id
                                     ) === -1 && (
                                       <>
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "personal_customers",
-                                            "update"
-                                          ) && (
-                                            <CTooltip
-                                              content={globalConstants.EDIT_BTN}
+                                        {_canAccess(
+                                          "business_customers",
+                                          "update"
+                                        ) && (
+                                          <CTooltip
+                                            content={globalConstants.EDIT_BTN}
+                                          >
+                                            <CLink
+                                              className="btn  btn-md btn-primary"
+                                              aria-current="page"
+                                              to={`/admin/business_customers/edit/${c.mobile_number}`}
                                             >
-                                              <CLink
-                                                className="btn  btn-md btn-primary"
-                                                aria-current="page"
-                                                to={`/admin/personal_customers/edit/${c.mobile}`}
-                                              >
-                                                <CIcon name="cil-pencil"></CIcon>{" "}
-                                              </CLink>
-                                            </CTooltip>
-                                          )}
+                                              <CIcon name="cil-pencil"></CIcon>{" "}
+                                            </CLink>
+                                          </CTooltip>
+                                        )}
                                         &nbsp;
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "personal_customers",
-                                            "delete"
-                                          ) && (
+                                        {_canAccess(
+                                          "business_customers",
+                                          "delete"
+                                        ) && (
+                                          <CTooltip
+                                            content={globalConstants.DELETE_BTN}
+                                          >
+                                            <button
+                                              className="btn  btn-md btn-danger "
+                                              onClick={() =>
+                                                this.openDeletePopup(
+                                                  c.mobile_number
+                                                )
+                                              }
+                                            >
+                                              <CIcon name="cil-trash"></CIcon>
+                                            </button>
+                                          </CTooltip>
+                                        )}
+                                        &nbsp;
+                                        {_canAccess(
+                                          "business_customers",
+                                          "update"
+                                        ) &&
+                                          false && (
                                             <CTooltip
                                               content={
-                                                globalConstants.DELETE_BTN
+                                                globalConstants.RESET_PASS
                                               }
                                             >
                                               <button
-                                                className="btn  btn-md btn-danger "
+                                                className="btn  btn-md btn-secondary "
                                                 onClick={() =>
-                                                  this.openDeletePopup(c.mobile)
+                                                  this.openResetPassPopup(
+                                                    c.mobile_number
+                                                  )
                                                 }
                                               >
                                                 <CIcon name="cil-trash"></CIcon>
@@ -739,7 +727,7 @@ class Customers_Management_Index extends React.Component {
                       )}
                     </tbody>
                   </table>
-                  {this.state.customers_management_list?.length > 0 && (
+                  {this.state?.customers_management_list?.length > 0 && (
                     <CPagination
                       activePage={this.state.fields.page}
                       onActivePageChange={this.pageChange}
@@ -783,9 +771,35 @@ class Customers_Management_Index extends React.Component {
             </CButton>
           </CModalFooter>
         </CModal>
+
+        <CModal
+          show={this.state._openResetPassPopup}
+          onClose={() => {
+            this.setState({
+              _openResetPassPopup: !this.state._openResetPassPopup,
+            });
+          }}
+          color="primary"
+        >
+          <CModalHeader closeButton>
+            <CModalTitle>Reset Password</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {this.state._openResetPassPopup && (
+              <ResetPassword
+                onClose={() => {
+                  this.setState({
+                    _openResetPassPopup: !this.state._openResetPassPopup,
+                  });
+                }}
+                onSubmit={(value) => this.resetPassword(value)}
+              />
+            )}
+          </CModalBody>
+        </CModal>
       </>
     );
   }
 }
 
-export default Customers_Management_Index;
+export default Business_Customers_Index;

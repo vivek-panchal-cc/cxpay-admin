@@ -8,6 +8,8 @@ export const globalConstants = {
   RESET_PASS: "Click to reset password.",
   DELETE_REQ_BTN: "Click to list delete requests.",
   BLOCKED_REQ_BTN: "Click to list blocked requests.",
+  ADMIN_APPROVAL: "Pending Merchant Approval List.",
+  KYC_PENDING: "Pending KYC List.",
   APPR_DEL_REQ: "Approve delete request.",
   REJ_DEL_REQ: "Reject delete request.",
   REL_CUST: "Release Customer",

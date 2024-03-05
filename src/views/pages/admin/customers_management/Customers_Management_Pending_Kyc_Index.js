@@ -27,6 +27,7 @@ import {
   history,
   _canAccess,
   _loginUsersDetails,
+  formatDate,
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -35,8 +36,6 @@ import {
   faSortUp,
   faPlus,
   faBan,
-  faBomb,
-  faArchive,
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
@@ -79,6 +78,7 @@ class Customers_Management_Index extends React.Component {
         sort_field: "created_at",
         sort_dir: "desc",
         status: "",
+        customer_type: "2",
         // pageNo: 1,
         // sort_dir: 'asc',
         // sort_field: "user_group_name",
@@ -87,7 +87,6 @@ class Customers_Management_Index extends React.Component {
       },
       _openPopup: false,
       customers_management_list: [],
-      pendingKycCustomers: [],
       multiaction: [],
       allCheckedbox: false,
     };
@@ -98,13 +97,12 @@ class Customers_Management_Index extends React.Component {
   }
 
   componentDidMount() {
-    this.getUserGroupsList();
     this.getPendingKycCustomerList();
   }
 
-  getUserGroupsList() {
-    customersManagementService
-      .getCustomersManagementList(this.state.fields)
+  getPendingKycCustomerList() {
+    businessCustomersService
+      .getPendingKycCustomerList(this.state.fields)
       .then((res) => {
         if (res.success === false) {
           // notify.error(res.message);
@@ -116,49 +114,33 @@ class Customers_Management_Index extends React.Component {
               ...this.state.fields,
               totalPage: res.data?.pagination?.last_page || null,
             },
-            customers_management_list: res.data?.customers || [],
+            customers_management_list: res.data?.blocked_users || [],
           });
           /* Multi delete checkbox code */
-          if (res.data && res.data.customers?.length > 0) {
-            let customers_management = res.data.customers;
+          if (res.data && res.data.blocked_users?.length > 0) {
+            let customers_management = res.data.blocked_users;
             let multiaction = [];
             const current_user = _loginUsersDetails();
             for (var key in customers_management) {
               if (
                 globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
-                  customers_management[key].mobile
+                  customers_management[key].mobile_number
                 ) > -1
               ) {
                 continue;
               }
               if (
-                current_user.user_group_id === customers_management[key].mobile
+                current_user.user_group_id === customers_management[key].mobile_number
               ) {
                 continue;
               }
-              multiaction[customers_management[key].mobile] = false;
+              multiaction[customers_management[key].mobile_number] = false;
             }
 
             this.setState({ multiaction: multiaction });
           } else if (res.result && res.result?.length === 0) {
             this.setState({ multiaction: [] });
           }
-        }
-      });
-  }
-
-  getPendingKycCustomerList() {
-    businessCustomersService
-      .getPendingKycCustomerList({ customer_type: "2" })
-      .then((res) => {
-        if (!res.success) {
-          this.setState({
-            pendingKycCustomers: [],
-          });
-        } else {
-          this.setState({
-            pendingKycCustomers: res.data.blocked_users,
-          });
         }
       });
   }
@@ -173,7 +155,7 @@ class Customers_Management_Index extends React.Component {
         },
       },
       () => {
-        this.getUserGroupsList();
+        this.getPendingKycCustomerList();
       }
     );
   };
@@ -190,7 +172,7 @@ class Customers_Management_Index extends React.Component {
         },
       },
       () => {
-        this.getUserGroupsList();
+        this.getPendingKycCustomerList();
       }
     );
   }
@@ -203,7 +185,7 @@ class Customers_Management_Index extends React.Component {
     if (e.key === "Enter") {
       e.preventDefault();
       e.stopPropagation();
-      this.getUserGroupsList();
+      this.getPendingKycCustomerList();
     }
   };
   handleSearch(type) {
@@ -229,6 +211,7 @@ class Customers_Management_Index extends React.Component {
             sort_field: "created_at",
             sort_dir: "desc",
             status: "",
+            customer_type: "2",
             // pageNo: 1,
             // sort_dir: 'DESC',
             // sort_field: "created_at",
@@ -237,11 +220,11 @@ class Customers_Management_Index extends React.Component {
           },
         },
         () => {
-          this.getUserGroupsList();
+          this.getPendingKycCustomerList();
         }
       );
     } else {
-      this.getUserGroupsList();
+      this.getPendingKycCustomerList();
     }
   }
 
@@ -261,7 +244,7 @@ class Customers_Management_Index extends React.Component {
         notify.error(res.message);
       } else {
         notify.success(res.message);
-        this.getUserGroupsList();
+        this.getPendingKycCustomerList();
       }
     });
   }
@@ -288,7 +271,7 @@ class Customers_Management_Index extends React.Component {
                 notify.error(res.message);
               } else {
                 notify.success(res.message);
-                this.getUserGroupsList();
+                this.getPendingKycCustomerList();
               }
             });
           break;
@@ -351,7 +334,7 @@ class Customers_Management_Index extends React.Component {
         notify.error(res.message);
       } else {
         notify.success(res.message);
-        this.getUserGroupsList();
+        this.getPendingKycCustomerList();
       }
     });
   }
@@ -384,7 +367,7 @@ class Customers_Management_Index extends React.Component {
           notify.error(res.message);
         } else {
           notify.success(res.message);
-          this.getUserGroupsList();
+          this.getPendingKycCustomerList();
         }
       });
   }
@@ -481,42 +464,7 @@ class Customers_Management_Index extends React.Component {
         <CRow>
           <CCol xl={12}>
             <CCard>
-              <CCardHeader>
-                Personal Customers Pending KYC
-                <div className="card-header-actions px-2">
-                  {_canAccess("personal_customers", "view") && (
-                    <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to={`/admin/personal_customers/blocked_requests/2`}
-                      >
-                        <FontAwesomeIcon icon={faBan} />
-                      </CLink>
-                    </CTooltip>
-                  )}
-                </div>
-                <div className="card-header-actions px-2">
-                  {_canAccess("business_customers", "view") && (
-                    <CTooltip content={globalConstants.KYC_PENDING}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to={`/admin/personal_customers/pending_kyc`}
-                      >
-                        <span
-                          className={`${
-                            this.state.pendingKycCustomers?.length > 0
-                              ? "notification-badge-pending-customers"
-                              : ""
-                          }`}
-                        ></span>
-                        <FontAwesomeIcon icon={faArchive} />
-                      </CLink>
-                    </CTooltip>
-                  )}
-                </div>
-              </CCardHeader>
+              <CCardHeader>Personal Customers Pending Kyc</CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
                   <MultiActionBar
@@ -552,23 +500,7 @@ class Customers_Management_Index extends React.Component {
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
-                        </th>
-                        <th onClick={() => this.handleColumnSort("email")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">Email</span>
-                            {this.state.fields.sort_field !== "email" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field === "email" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field === "email" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
+                        </th>                        
                         <th
                           onClick={() => this.handleColumnSort("mobile_number")}
                         >
@@ -640,32 +572,31 @@ class Customers_Management_Index extends React.Component {
                       {this.state.customers_management_list?.length > 0 &&
                         this.state.customers_management_list?.map(
                           (c, index) => (
-                            <tr key={c.mobile}>
+                            <tr key={c.mobile_number}>
                               <td>
-                                {this.state.multiaction[c.mobile] !==
+                                {this.state.multiaction[c.mobile_number] !==
                                   undefined && (
                                   <CheckBoxes
                                     handleCheckChieldElement={
                                       this.handleCheckChieldElement
                                     }
-                                    _id={c.mobile}
+                                    _id={c.mobile_number}
                                     _isChecked={
-                                      this.state.multiaction[c.mobile]
+                                      this.state.multiaction[c.mobile_number]
                                     }
                                   />
                                 )}
                               </td>
                               <td>{index + 1}</td>
-                              <td>{c.name}</td>
-                              <td>{c.email}</td>
-                              <td>{c.mobile}</td>
-                              <td>{c.date}</td>
+                              <td>{c.user_name}</td>                              
+                              <td>{c.mobile_number}</td>
+                              <td>{formatDate(c.date)}</td>
                               <td>
                                 {_canAccess("personal_customers", "update") && (
                                   <CLink
                                     onClick={() =>
                                       this.StatusChangedHandler(
-                                        c.mobile,
+                                        c.mobile_number,
                                         c.status
                                       )
                                     }
@@ -697,7 +628,7 @@ class Customers_Management_Index extends React.Component {
                                               <CLink
                                                 className="btn  btn-md btn-primary"
                                                 aria-current="page"
-                                                to={`/admin/personal_customers/edit/${c.mobile}`}
+                                                to={`/admin/personal_customers/edit/${c.mobile_number}`}
                                               >
                                                 <CIcon name="cil-pencil"></CIcon>{" "}
                                               </CLink>
@@ -717,7 +648,7 @@ class Customers_Management_Index extends React.Component {
                                               <button
                                                 className="btn  btn-md btn-danger "
                                                 onClick={() =>
-                                                  this.openDeletePopup(c.mobile)
+                                                  this.openDeletePopup(c.mobile_number)
                                                 }
                                               >
                                                 <CIcon name="cil-trash"></CIcon>
