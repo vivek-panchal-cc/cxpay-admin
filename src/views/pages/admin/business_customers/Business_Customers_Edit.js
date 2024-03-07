@@ -16,6 +16,7 @@ import {
   CTooltip,
   CSwitch,
   CSelect,
+  CInputRadio,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import {
@@ -32,6 +33,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
 import "./kycTable.css";
+import SectionDetails from "components/admin/sections/SectionDetails";
+import SectionTransactionReceipt from "components/admin/sections/SectionTransactionReceipt";
+import "assets/css/page.css";
+import "assets/css/responsive.css";
 
 class Business_Customers_Edit extends React.Component {
   constructor(props) {
@@ -44,6 +49,11 @@ class Business_Customers_Edit extends React.Component {
         status: true,
         is_kyc: true,
         admin_approved: true,
+        kyc_approved: true,
+        kyc_document_file: "",
+        kyc_document_id: "",
+        kyc_document_type: "",
+        kyc_expiration_date: null,
         _id: this.props.match.params.id,
       },
       module_permission: {},
@@ -100,7 +110,10 @@ class Business_Customers_Edit extends React.Component {
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
             const kyctmp = res.data.is_kyc === false ? false : true;
-            const isApprovedtmp = res.data.admin_approved === false ? false : true;
+            const isApprovedtmp =
+              res.data.admin_approved === false ? false : true;
+            const isKycApproved =
+              res.data.kyc_approved === false ? false : true;
             this.setState({
               cityData: [...this.state.countryData.city_list[iso]],
               city: res.data.city,
@@ -108,6 +121,7 @@ class Business_Customers_Edit extends React.Component {
               status: statustmp,
               is_kyc: kyctmp,
               admin_approved: isApprovedtmp,
+              kyc_approved: isKycApproved,
             });
           }
         });
@@ -164,6 +178,16 @@ class Business_Customers_Edit extends React.Component {
       [name]: tmpKyc,
     });
   }
+
+  handleRadioChange = (event) => {
+    const { name, value } = event.target;
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [name]: value === "true", // Convert value to boolean
+      },
+    }));
+  };
 
   handleCheckboxChangeIsApproved(event) {
     const target = event.target;
@@ -292,6 +316,7 @@ class Business_Customers_Edit extends React.Component {
       formData.append("status", this.state.status);
       formData.append("kyc_status", this.state.is_kyc);
       formData.append("admin_approved", this.state.admin_approved);
+      formData.append("kyc_approved", this.state.fields.kyc_approved);
       formData.append("email", this.state.fields.email);
       formData.append("city", this.state.city);
       formData.append(
@@ -356,6 +381,16 @@ class Business_Customers_Edit extends React.Component {
       fields: { ...this.state.fields, profile_image: null },
       site_logo: null,
     });
+  };
+
+  // Handle click on receipt
+  handleKycDocument = (url) => {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    downloadLink.download = url.substring(url.lastIndexOf("/") + 1); // Extract filename from URL
+    document.body.appendChild(downloadLink);
+    downloadLink.click(); // Trigger the click event to start downloading
+    document.body.removeChild(downloadLink); // Clean up the temporary anchor element
   };
 
   render() {
@@ -721,6 +756,81 @@ class Business_Customers_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
+                <CFormGroup row>
+                  <CCol md="2">KYC Approved</CCol>
+                  <CCol sm="10">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "20px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="approveRadio"
+                          name="kyc_approved"
+                          value={true}
+                          checked={this.state.fields.kyc_approved === true}
+                          onChange={this.handleRadioChange}
+                        />
+                        <CLabel
+                          check
+                          className="form-check-label"
+                          htmlFor="approveRadio"
+                        >
+                          Approve
+                        </CLabel>
+                      </CFormGroup>
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "35px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="rejectRadio"
+                          name="kyc_approved"
+                          value={false}
+                          checked={this.state.fields.kyc_approved === false}
+                          onChange={this.handleRadioChange}
+                        />
+                        <CLabel
+                          check
+                          className="form-check-label"
+                          htmlFor="rejectRadio"
+                        >
+                          Reject
+                        </CLabel>
+                      </CFormGroup>
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                <div className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper">
+                  <div className="wcr-innner-wrap wbr-innner-wrap-3 d-flex flex-wrap w-100 align-items-center mb-3">
+                    <SectionDetails
+                      detailsHeading="Document Details"
+                      details={[
+                        {
+                          key: "Document Type",
+                          value: this.state.fields.kyc_document_type,
+                        },
+                        {
+                          key: "Document Id",
+                          value: this.state.fields.kyc_document_id,
+                        },
+                        {
+                          key: "Expiry Date",
+                          value: this.state.fields.kyc_expiration_date,
+                        },
+                      ]}
+                    />
+                    <SectionTransactionReceipt
+                      documentHeading="Document"
+                      receipts={this.state.fields.kyc_document_file || null}
+                      handleClickReceipt={this.handleKycDocument}
+                    />
+                  </div>
+                </div>
                 <CFormGroup row>
                   <CCol md="2">KYC</CCol>
 

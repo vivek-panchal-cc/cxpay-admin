@@ -48,7 +48,7 @@ const MultiActionBar = React.lazy(() =>
   import("../../../../components/admin/MultiActionBar")
 );
 
-class Business_Customers_Index extends React.Component {
+class BusinessCustomerAdminApprovalIndex extends React.Component {
   constructor(props) {
     super(props);
     this.handleColumnSort = this.handleColumnSort.bind(this);
@@ -818,4 +818,4 @@ class Business_Customers_Index extends React.Component {
   }
 }
 
-export default Business_Customers_Index;
+export default BusinessCustomerAdminApprovalIndex;

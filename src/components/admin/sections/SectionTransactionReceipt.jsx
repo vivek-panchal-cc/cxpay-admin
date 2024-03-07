@@ -2,7 +2,7 @@ import React from "react";
 import CIcon from "@coreui/icons-react";
 
 const SectionTransactionReceipt = (props) => {
-  const { receipts = [], handleClickReceipt = () => {} } = props || {};
+  const { documentHeading = "", receipts = [], handleClickReceipt = () => {} } = props || {};
 
   const validFileExtensions = {
     image: ["jpg", "png", "jpeg", "svg", "heif", "hevc"],
@@ -31,7 +31,7 @@ const SectionTransactionReceipt = (props) => {
   return (
     <div className="wr-bdatail-dwld ps-xl-5 ps-md-4 border-start">
       <div className="font-16-quick  w-100 pb-md-4 pb-3 dark_blue font-600">
-        Transaction Reciept
+        {documentHeading ? documentHeading : "Transaction Receipt"}
       </div>
       <div className="wr-dwld-wrap">
         <ul>
