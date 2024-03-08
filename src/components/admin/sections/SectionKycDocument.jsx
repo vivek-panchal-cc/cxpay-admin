@@ -46,7 +46,7 @@ const SectionKycDocument = ({
             outline: "none",
             border: "0px",
             backgroundColor: "transparent",
-            padding: "5px 0",
+            padding: "10px 0",
             marginLeft: "10px",
           }}
         >

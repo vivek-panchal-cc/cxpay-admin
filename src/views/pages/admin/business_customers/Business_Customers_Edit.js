@@ -383,31 +383,34 @@ class Business_Customers_Edit extends React.Component {
     });
   };
 
-  handleKycDocument = (url) => {
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        const blobUrl = URL.createObjectURL(blob);
-        const downloadLink = document.createElement("a");
-        downloadLink.href = blobUrl;
+  // handleKycDocument = (file) => {
+  //   if (file) {
+  //     try {
+  //       // Fetch the file as a Blob
+  //       fetch(file)
+  //         .then((response) => response.blob())
+  //         .then((blob) => {
+  //           const blobUrl = URL.createObjectURL(blob);
+  //           const downloadLink = document.createElement("a");
+  //           downloadLink.href = blobUrl;
+  //           const filename = file.substring(file.lastIndexOf("/") + 1);
+  //           downloadLink.setAttribute("download", filename);
+  //           downloadLink.click();
+  //           URL.revokeObjectURL(blobUrl);
+  //         })
+  //         .catch((error) => {
+  //           console.log("Error fetching file:", error);
+  //         });
+  //     } catch (error) {
+  //       console.log("Error downloading file:", error);
+  //     }
+  //   }
+  // };
 
-        // Set the filename based on the URL
-        const filename = url.substring(url.lastIndexOf("/") + 1);
-        downloadLink.setAttribute("download", filename);
-
-        downloadLink.click();
-
-        // Clean up the blob URL after the download
-        URL.revokeObjectURL(blobUrl);
-      })
-      .catch((error) => {
-        console.error("Error downloading file:", error);
-      });
+  handleKycDocument = (file) => {
+    if (file) {
+      window.open(file, "_blank");
+    }
   };
 
   render() {

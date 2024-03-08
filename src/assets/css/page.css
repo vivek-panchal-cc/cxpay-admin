@@ -399,6 +399,9 @@ ul.bank-refund-ul .rcard-info {
 .wbr-innner-wrap-3 > div {
   width: 50%;
 }
+.kyc-innner-wrap table td:last-child {
+  padding-right: 15px;
+}
 .kyc-document-innner-wrap-3 > div {
   width: 50%;
 }
