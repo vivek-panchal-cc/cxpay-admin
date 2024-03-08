@@ -60,6 +60,18 @@ export const capitalize = (s) => {
   return separateWord.join(" ");
 };
 
+export const capitalizeWordByWord = (type) => {
+  // Split the string by underscores and capitalize each word
+  const words = type
+    ?.split("_")
+    ?.map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1));
+
+  // Join the words back together
+  const formattedWord = words?.join(" ");
+
+  return formattedWord;
+};
+
 /* Checkiang for menu permission */
 export const menuPermission = (navigation) => {
   let user = JSON.parse(localStorage.getItem("user"));
@@ -151,6 +163,49 @@ export const formatDate = (dateString) => {
   const year = date.getFullYear();
 
   return `${day}/${month}/${year}`;
+};
+
+export const formatDateByConditional = (dateStr, onlyDate = false) => {
+  // Convert to ISO string format
+  const isoDateStr = dateStr?.replace(" ", "T");
+
+  const dateObj = new Date(isoDateStr);
+  if (isNaN(dateObj.getTime())) {
+    return "Invalid Date";
+  }
+
+  const dd = String(dateObj.getDate()).padStart(2, "0");
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = monthNames[dateObj.getMonth()];
+  const yyyy = dateObj.getFullYear();
+
+  let hh = dateObj.getHours();
+  let period = "AM";
+  if (hh >= 12) {
+    if (hh > 12) hh -= 12; // Convert to 12-hour format
+    period = "PM";
+  }
+  hh = String(hh).padStart(2, "0");
+  const min = String(dateObj.getMinutes()).padStart(2, "0");
+
+  if (onlyDate) {
+    return `${dd}-${month}-${yyyy}`;
+  } else {
+    return `${dd}-${month}-${yyyy} at ${hh}:${min} ${period}`;
+  }
 };
 
 export const formatDateFull = (inputDate) => {

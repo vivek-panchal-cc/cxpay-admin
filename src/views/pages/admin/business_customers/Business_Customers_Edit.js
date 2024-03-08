@@ -26,6 +26,8 @@ import {
   formatDateFull,
   calculateDuration,
   calculateDurationLeft,
+  formatDateByConditional,
+  capitalizeWordByWord,
 } from "../../../../_helpers/index";
 import $ from "jquery";
 import { globalConstants } from "../../../../constants/admin/global.constants";
@@ -844,7 +846,7 @@ class Business_Customers_Edit extends React.Component {
                         details={[
                           {
                             key: "Document Type",
-                            value: this.state.fields.kyc_document_type,
+                            value: capitalizeWordByWord(this.state.fields.kyc_document_type),
                           },
                           {
                             key: "Document Id",
@@ -852,7 +854,7 @@ class Business_Customers_Edit extends React.Component {
                           },
                           {
                             key: "Expiry Date",
-                            value: this.state.fields.kyc_expiration_date,
+                            value: formatDateByConditional(this.state.fields.kyc_expiration_date, true),
                           },
                         ]}
                       />
