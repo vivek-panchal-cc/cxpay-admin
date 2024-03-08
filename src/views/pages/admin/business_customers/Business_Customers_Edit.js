@@ -32,9 +32,9 @@ import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
+import SectionKycDocument from "components/admin/sections/SectionKycDocument";
+import SectionKycDetails from "components/admin/sections/SectionKycDetails";
 import "./kycTable.css";
-import SectionDetails from "components/admin/sections/SectionDetails";
-import SectionTransactionReceipt from "components/admin/sections/SectionTransactionReceipt";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
 
@@ -383,14 +383,31 @@ class Business_Customers_Edit extends React.Component {
     });
   };
 
-  // Handle click on receipt
   handleKycDocument = (url) => {
-    const downloadLink = document.createElement("a");
-    downloadLink.href = url;
-    downloadLink.download = url.substring(url.lastIndexOf("/") + 1); // Extract filename from URL
-    document.body.appendChild(downloadLink);
-    downloadLink.click(); // Trigger the click event to start downloading
-    document.body.removeChild(downloadLink); // Clean up the temporary anchor element
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        const downloadLink = document.createElement("a");
+        downloadLink.href = blobUrl;
+
+        // Set the filename based on the URL
+        const filename = url.substring(url.lastIndexOf("/") + 1);
+        downloadLink.setAttribute("download", filename);
+
+        downloadLink.click();
+
+        // Clean up the blob URL after the download
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch((error) => {
+        console.error("Error downloading file:", error);
+      });
   };
 
   render() {
@@ -756,9 +773,11 @@ class Business_Customers_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                <CFormGroup row>
-                  <CCol md="2">KYC Approved</CCol>
-                  <CCol sm="10">
+                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">
+                    KYC Approved
+                  </CCol>
+                  <CCol sm="10" className="pl-0">
                     <CFormGroup variant="custom-checkbox" inline>
                       <CFormGroup
                         check
@@ -805,36 +824,51 @@ class Business_Customers_Edit extends React.Component {
                     </CFormGroup>
                   </CCol>
                 </CFormGroup>
-                <div className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper">
-                  <div className="wcr-innner-wrap wbr-innner-wrap-3 d-flex flex-wrap w-100 align-items-center mb-3">
-                    <SectionDetails
-                      detailsHeading="Document Details"
-                      details={[
-                        {
-                          key: "Document Type",
-                          value: this.state.fields.kyc_document_type,
-                        },
-                        {
-                          key: "Document Id",
-                          value: this.state.fields.kyc_document_id,
-                        },
-                        {
-                          key: "Expiry Date",
-                          value: this.state.fields.kyc_expiration_date,
-                        },
-                      ]}
-                    />
-                    <SectionTransactionReceipt
-                      documentHeading="Document"
-                      receipts={this.state.fields.kyc_document_file || null}
-                      handleClickReceipt={this.handleKycDocument}
-                    />
+                {!this.state.fields.kyc_approved && (
+                  <div
+                    className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper kyc-approved-border"
+                    style={{ marginBottom: "20px" }}
+                  >
+                    <div
+                      className={`kyc-innner-wrap d-flex flex-wrap w-100 ${
+                        this.state.fields.kyc_document_file
+                          ? "kyc-document-innner-wrap-3"
+                          : "kyc-wbr-innner-wrap-3"
+                      }`}
+                    >
+                      <SectionKycDetails
+                        detailsHeading="Document Details"
+                        details={[
+                          {
+                            key: "Document Type",
+                            value: this.state.fields.kyc_document_type,
+                          },
+                          {
+                            key: "Document Id",
+                            value: this.state.fields.kyc_document_id,
+                          },
+                          {
+                            key: "Expiry Date",
+                            value: this.state.fields.kyc_expiration_date,
+                          },
+                        ]}
+                      />
+                      {this.state.fields.kyc_document_file && (
+                        <SectionKycDocument
+                          documentHeading="Document"
+                          receipt={this.state.fields.kyc_document_file || null}
+                          handleClickReceipt={this.handleKycDocument}
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
-                <CFormGroup row>
-                  <CCol md="2">KYC</CCol>
+                )}
+                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">
+                    KYC
+                  </CCol>
 
-                  <CCol sm="10">
+                  <CCol sm="10" className="pl-0">
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.is_kyc === true && (
                         <CSwitch
@@ -939,10 +973,12 @@ class Business_Customers_Edit extends React.Component {
                   </table>
                 )}
 
-                <CFormGroup row>
-                  <CCol md="2">Is Approved?</CCol>
+                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">
+                    Is Approved?
+                  </CCol>
 
-                  <CCol sm="10">
+                  <CCol sm="10" className="pl-0">
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.admin_approved === true && (
                         <CSwitch

@@ -530,7 +530,7 @@ class SMS_Template_Add extends Component {
             />
 
             <Editor
-              apiKey="ovyr2unz01dy6h1yzrkiga2ptd9z0nbuzwgpa8634x2k6z7j"
+              apiKey={process.env.REACT_APP_TINY_API_KEY}
               //initialValue=''
               value={this.state.initialValue}
               init={{

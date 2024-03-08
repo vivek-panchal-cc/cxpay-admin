@@ -555,7 +555,7 @@ class SMS_Template_Edit extends Component {
               style={{ display: "none" }}
             />
             <Editor
-              apiKey="ovyr2unz01dy6h1yzrkiga2ptd9z0nbuzwgpa8634x2k6z7j"
+              apiKey={process.env.REACT_APP_TINY_API_KEY}
               // initialValue={this.state.initialValue}
               value={this.state.initialValue}
               init={{

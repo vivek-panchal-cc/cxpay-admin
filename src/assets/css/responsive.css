@@ -193,6 +193,10 @@
     font-size: 14px;
     line-height: 18px;
   }
+  .kyc-innner-wrap table td {
+    font-size: 14px;
+    line-height: 18px;
+  }
   .wcr-info-1 h2 {
     font-size: 22px;
     line-height: 30px;
@@ -269,6 +273,9 @@
   .wcr-eligible-msg .font-16-quick {
     font-size: 14px;
   }
+  .wcr-eligible-msg .font-14-quick {
+    font-size: 14px;
+  }
   .wcr-transition-info-2 table td:first-child,
   .wcr-transition-info-1 table td:first-child {
     width: 130px;
@@ -289,13 +296,25 @@
   .wcr-innner-wrap table td:last-child {
     padding-right: 0px;
   }
+  .kyc-innner-wrap table td:last-child {
+    padding-right: 0px;
+  }
   .wr-bdatail-dwld.border-start {
     border-width: 0px !important;
   }
   .wbr-innner-wrap-3 > div {
     width: 100%;
   }
+  .kyc-document-innner-wrap-3 > div {
+    width: 50%;
+  }
+  .kyc-innner-wrap-3 > div {
+    width: 100%;
+  }
   .wbr-innner-wrap-3 > div:not(:last-child) {
+    margin-bottom: 20px;
+  }
+  .kyc-wbr-innner-wrap-3 > div:not(:last-child) {
     margin-bottom: 20px;
   }
   .wr-dwld-wrap ul li {
@@ -344,6 +363,9 @@
     width: 135px;
   }
   .wcr-innner-wrap table td {
+    font-size: 12px;
+  }
+  .kyc-innner-wrap table td {
     font-size: 12px;
   }
   .wr-details-back-btn .btn {

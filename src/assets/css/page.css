@@ -144,6 +144,19 @@ ul.bank-refund-ul .rcard-info {
   line-height: 22px;
   font-family: "Quicksand", sans-serif;
 }
+.font-14-quick {
+  font-size: 14px;
+  line-height: 22px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f2f2f2;
+}
+.kyc-table-second-child {
+  border-left: 1px solid #ddd;
+}
+.kyc-approved-border {
+  border: 1px solid #ddd;
+}
 .wcr-innner-wrap-1 .wcr-img-wrap {
   width: 100px;
   padding-right: 20px;
@@ -206,6 +219,16 @@ ul.bank-refund-ul .rcard-info {
   white-space: normal;
   line-height: 20px;
   word-break: break-word;
+}
+.kyc-innner-wrap table {
+  width: 100%;
+  margin-left: 10px;
+}
+.kyc-innner-wrap table td {
+  padding: 10px 10px 10px 0px;  
+}
+.kyc-innner-wrap td:last-child {
+  color: var(--dark_blue);
 }
 .wcr-transition-info-1 table td:first-child {
   width: 140px;
@@ -375,6 +398,12 @@ ul.bank-refund-ul .rcard-info {
 }
 .wbr-innner-wrap-3 > div {
   width: 50%;
+}
+.kyc-document-innner-wrap-3 > div {
+  width: 50%;
+}
+.kyc-wbr-innner-wrap-3 > div {
+  width: 100%;
 }
 .wr-bdatail-dwld.border-start {
   border-width: 2px !important;
