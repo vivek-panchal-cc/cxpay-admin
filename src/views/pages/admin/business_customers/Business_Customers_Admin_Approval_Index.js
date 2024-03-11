@@ -428,7 +428,7 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                  <CCol xl={3}>
+                  {/* <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
                         <CLabel htmlFor="name">Status</CLabel>
@@ -459,7 +459,7 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                         />
                       </CCol>
                     </CFormGroup>
-                  </CCol>
+                  </CCol> */}
 
                   <CCol xl={9}>
                     <CFormGroup row>

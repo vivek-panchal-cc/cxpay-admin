@@ -17,6 +17,7 @@ import {
   CTooltip,
   CSwitch,
   CSelect,
+  CInputRadio,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import {
@@ -31,13 +32,19 @@ import {
   formatDateFull,
   calculateDurationLeft,
   calculateDuration,
+  capitalizeWordByWord,
+  formatDateByConditional,
 } from "../../../../_helpers/index";
 import $ from "jquery";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import { customersManagementService } from "../../../../services/admin/customers_management.service";
+import SectionKycDocument from "components/admin/sections/SectionKycDocument";
+import SectionKycDetails from "components/admin/sections/SectionKycDetails";
 import "../business_customers/kycTable.css";
+import "assets/css/page.css";
+import "assets/css/responsive.css";
 
 class Customers_Management_Edit extends React.Component {
   constructor(props) {
@@ -49,6 +56,11 @@ class Customers_Management_Edit extends React.Component {
         user_group_name: "",
         status: true,
         is_kyc: true,
+        kyc_approved_status: "",
+        kyc_document_file: "",
+        kyc_document_id: "",
+        kyc_document_type: "",
+        kyc_expiration_date: null,
         _id: this.props.match.params.id,
       },
       module_permission: {},
@@ -109,6 +121,7 @@ class Customers_Management_Edit extends React.Component {
               country: country_index,
               status: statustmp,
               is_kyc: kyctmp,
+              kyc_approved_status: res.data.kyc_approved_status,
             });
           }
         });
@@ -180,6 +193,16 @@ class Customers_Management_Edit extends React.Component {
       // fields:{[name]: tmp}
     });
   }
+
+  handleRadioChange = (event) => {
+    const { name, value } = event.target;
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [name]: value === "true", // Convert value to boolean
+      },
+    }));
+  };
 
   handleCheckboxChangeKYC(event) {
     const target = event.target;
@@ -308,6 +331,10 @@ class Customers_Management_Edit extends React.Component {
       formData.append("last_name", this.state.fields.last_name);
       formData.append("status", this.state.status);
       formData.append("kyc_status", this.state.is_kyc);
+      formData.append(
+        "kyc_approved_status",
+        this.state.fields.kyc_approved_status
+      );
       formData.append("email", this.state.fields.email);
       formData.append("city", this.state.city);
       formData.append(
@@ -365,6 +392,12 @@ class Customers_Management_Edit extends React.Component {
       // }
     }
   }
+  
+  handleKycDocument = (file) => {
+    if (file) {
+      window.open(file, "_blank");
+    }
+  };
 
   render() {
     var { module_permission, site_logo } = this.state;
@@ -702,9 +735,9 @@ class Customers_Management_Edit extends React.Component {
                 </CFormGroup>
 
                 <CFormGroup row>
-                  <CCol md="1">Status</CCol>
+                  <CCol md="2">Status</CCol>
 
-                  <CCol sm="11">
+                  <CCol sm="10" style={{ paddingLeft: "10px" }}>
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.status == 1 && (
                         <CSwitch
@@ -732,113 +765,226 @@ class Customers_Management_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                <CFormGroup row>
-                  <CCol md="1">KYC</CCol>
-
-                  <CCol sm="11">
-                    <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.is_kyc === true && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="is_kyc"
-                          name="is_kyc"
-                          value={this.state.fields.is_kyc}
-                          defaultChecked
-                          // disabled={
-                          //   new Date(this.state.fields.kyc_expiration_date) >
-                          //   new Date()
-                          // }
-                          onChange={this.handleCheckboxChangeKYC}
-                        />
-                      )}
-
-                      {this.state.fields.is_kyc === false && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="is_kyc"
-                          name="is_kyc"
-                          value={this.state.fields.is_kyc}
-                          onChange={this.handleCheckboxChangeKYC}
-                        />
-                      )}
-                    </CFormGroup>
-                  </CCol>
-                </CFormGroup>
-
-                {this.state.fields.is_kyc && (
-                  <table className="kyc-table">
-                    <thead>
-                      <tr>
-                        <th>KYC</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.fields.kyc_completion_date && (
-                        <tr>
-                          <td>Completion on</td>
-                          <td>
-                            {formatDateFull(
-                              this.state.fields.kyc_completion_date
-                            )}
-                          </td>
-                        </tr>
-                      )}
-                      {this.state.fields.kyc_renew_date && (
-                        <tr>
-                          <td>Renewed on</td>
-                          <td>
-                            {formatDateFull(this.state.fields.kyc_renew_date)}
-                          </td>
-                        </tr>
-                      )}
-                      {this.state.fields.kyc_expiration_date && (
-                        <tr>
-                          <td>Expiration on</td>
-                          <td>
-                            {formatDateFull(
-                              this.state.fields.kyc_expiration_date
-                            )}
-                            {this.state.fields.kyc_renew_date && (
-                              <span>
-                                {" (Duration: "}
-                                {calculateDuration(
-                                  this.state.fields.kyc_renew_date,
-                                  this.state.fields.kyc_expiration_date
-                                )}
-                                {")"}
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      )}
-                      {this.state.fields.kyc_transaction_id && (
-                        <tr>
-                          <td>Transaction Id</td>
-                          <td>{this.state.fields.kyc_transaction_id}</td>
-                        </tr>
-                      )}
-                      {this.state.fields.status && (
-                        <tr>
-                          <td>Status</td>
-                          <td>
-                            {this.state.fields.status === "1" ? (
-                              <span className="success-green">Success</span>
-                            ) : (
-                              <span className="text-danger">Decline</span>
-                            )}
-                          </td>
-                        </tr>
-                      )}
-                      <tr>
-                        <td>Attempted Count</td>
-                        <td>{this.state.fields.kyc_attempt_count}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                {this.state.fields.kyc_type?.toLowerCase() === "manual" && (
+                  <CFormGroup className="limits-wrap d-flex flex-wrap">
+                    <CCol md="2" className="pl-0">
+                      KYC Approved
+                    </CCol>
+                    <CCol sm="10" className="pl-0">
+                      <CFormGroup variant="custom-checkbox" inline>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "20px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="approveRadio"
+                            name="kyc_approved_status"
+                            value={"approved"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "approved"
+                            }
+                            onChange={this.handleChange}
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="approveRadio"
+                          >
+                            Approve
+                          </CLabel>
+                        </CFormGroup>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "35px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="rejectRadio"
+                            name="kyc_approved_status"
+                            value={"rejected"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "rejected"
+                            }
+                            onChange={this.handleChange}
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="rejectRadio"
+                          >
+                            Reject
+                          </CLabel>
+                        </CFormGroup>
+                      </CFormGroup>
+                    </CCol>
+                  </CFormGroup>
                 )}
+
+                {this.state.fields.kyc_type?.toLowerCase() === "manual" &&
+                  this.state.fields.kyc_document_type && (
+                    <div
+                      className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper kyc-approved-border"
+                      style={{ marginBottom: "20px" }}
+                    >
+                      <div
+                        className={`kyc-innner-wrap d-flex flex-wrap w-100 ${
+                          this.state.fields.kyc_document_file
+                            ? "kyc-document-innner-wrap-3"
+                            : "kyc-wbr-innner-wrap-3"
+                        }`}
+                      >
+                        <SectionKycDetails
+                          detailsHeading="Document Details"
+                          details={[
+                            {
+                              key: "Document Type",
+                              value: capitalizeWordByWord(
+                                this.state.fields.kyc_document_type
+                              ),
+                            },
+                            {
+                              key: "Document Id",
+                              value: this.state.fields.kyc_document_id,
+                            },
+                            {
+                              key: "Expiry Date",
+                              value: formatDateByConditional(
+                                this.state.fields.kyc_expiration_date,
+                                true
+                              ),
+                            },
+                          ]}
+                        />
+                        {this.state.fields.kyc_document_file && (
+                          <SectionKycDocument
+                            documentHeading="Document"
+                            receipt={
+                              this.state.fields.kyc_document_file || null
+                            }
+                            handleClickReceipt={this.handleKycDocument}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                {this.state.fields.kyc_type?.toLowerCase() === "system" && (
+                  <CFormGroup className="limits-wrap d-flex flex-wrap">
+                    <CCol md="2" className="pl-0">
+                      KYC
+                    </CCol>
+
+                    <CCol sm="10" className="pl-0">
+                      <CFormGroup variant="custom-checkbox" inline>
+                        {this.state.fields.is_kyc === true && (
+                          <CSwitch
+                            className="mr-1"
+                            color="primary"
+                            id="is_kyc"
+                            name="is_kyc"
+                            value={this.state.fields.is_kyc}
+                            defaultChecked
+                            // disabled={
+                            //   new Date(this.state.fields.kyc_expiration_date) >
+                            //   new Date()
+                            // }
+                            onChange={this.handleCheckboxChangeKYC}
+                          />
+                        )}
+
+                        {this.state.fields.is_kyc === false && (
+                          <CSwitch
+                            className="mr-1"
+                            color="primary"
+                            id="is_kyc"
+                            name="is_kyc"
+                            value={this.state.fields.is_kyc}
+                            onChange={this.handleCheckboxChangeKYC}
+                          />
+                        )}
+                      </CFormGroup>
+                    </CCol>
+                  </CFormGroup>
+                )}
+
+                {this.state.fields.kyc_type?.toLowerCase() === "system" &&
+                  this.state.fields.is_kyc && (
+                    <table className="kyc-table">
+                      <thead>
+                        <tr>
+                          <th>KYC</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.state.fields.kyc_completion_date && (
+                          <tr>
+                            <td>Completion on</td>
+                            <td>
+                              {formatDateFull(
+                                this.state.fields.kyc_completion_date
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        {this.state.fields.kyc_renew_date && (
+                          <tr>
+                            <td>Renewed on</td>
+                            <td>
+                              {formatDateFull(this.state.fields.kyc_renew_date)}
+                            </td>
+                          </tr>
+                        )}
+                        {this.state.fields.kyc_expiration_date && (
+                          <tr>
+                            <td>Expiration on</td>
+                            <td>
+                              {formatDateFull(
+                                this.state.fields.kyc_expiration_date
+                              )}
+                              {this.state.fields.kyc_renew_date && (
+                                <span>
+                                  {" (Duration: "}
+                                  {calculateDuration(
+                                    this.state.fields.kyc_renew_date,
+                                    this.state.fields.kyc_expiration_date
+                                  )}
+                                  {")"}
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        {this.state.fields.kyc_transaction_id && (
+                          <tr>
+                            <td>Transaction Id</td>
+                            <td>{this.state.fields.kyc_transaction_id}</td>
+                          </tr>
+                        )}
+                        {this.state.fields.status && (
+                          <tr>
+                            <td>Status</td>
+                            <td>
+                              {this.state.fields.status === "1" ? (
+                                <span className="success-green">Success</span>
+                              ) : (
+                                <span className="text-danger">Decline</span>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        <tr>
+                          <td>Attempted Count</td>
+                          <td>{this.state.fields.kyc_attempt_count}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
 
                 <CFormGroup className="limits-wrap">
                   <div className="row mb-3 mb-lg-4 limits-heading">
