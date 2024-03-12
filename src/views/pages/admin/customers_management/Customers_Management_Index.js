@@ -482,7 +482,7 @@ class Customers_Management_Index extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                Personal Customers Pending KYC
+                Personal Customers
                 <div className="card-header-actions px-2">
                   {_canAccess("personal_customers", "view") && (
                     <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
