@@ -803,6 +803,10 @@ class Business_Customers_Edit extends React.Component {
                               "approved"
                             }
                             onChange={this.handleChange}
+                            disabled={
+                              this.state.fields.kyc_approved_status ===
+                              "approved"
+                            }
                           />
                           <CLabel
                             check
@@ -827,6 +831,10 @@ class Business_Customers_Edit extends React.Component {
                               "rejected"
                             }
                             onChange={this.handleChange}
+                            disabled={
+                              this.state.fields.kyc_approved_status ===
+                              "approved"
+                            }
                           />
                           <CLabel
                             check
