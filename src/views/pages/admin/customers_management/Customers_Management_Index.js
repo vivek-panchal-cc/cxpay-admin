@@ -42,6 +42,7 @@ import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
 import InputDateRange from "components/admin/InputDateRange";
 import { businessCustomersService } from "services/admin/business_customers.service";
+import "./../agent_customers/notification.css";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
