@@ -131,7 +131,7 @@ class FaqIndex extends React.Component {
       faqList?.splice(destination.index, 0, movedItem);
     } else {
       // Moving to a different droppable
-      const movedItem = faqList.splice(source.index, 1)[0];
+      const movedItem = faqList?.splice(source.index, 1)[0];
       faqList?.splice(destination.index, 0, movedItem);
 
       // Update sequence values after move
