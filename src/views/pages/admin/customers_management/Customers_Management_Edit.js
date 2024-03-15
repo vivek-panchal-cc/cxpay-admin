@@ -382,7 +382,8 @@ class Customers_Management_Edit extends React.Component {
           notify.error(res.message);
         } else {
           notify.success(res.message);
-          history.push("/admin/personal_customers");
+          // history.push("/admin/personal_customers");
+          history.goBack();
         }
       });
     } else {
@@ -414,7 +415,10 @@ class Customers_Management_Edit extends React.Component {
                     <CLink
                       className="btn btn-danger btn-sm"
                       aria-current="page"
-                      to="/admin/personal_customers"
+                      // to="/admin/personal_customers"
+                      onClick={() => {
+                        history.goBack();
+                      }}
                     >
                       {" "}
                       <FontAwesomeIcon
@@ -1210,7 +1214,10 @@ class Customers_Management_Edit extends React.Component {
                 <CLink
                   className="btn btn-danger btn-sm"
                   aria-current="page"
-                  to="/admin/personal_customers"
+                  // to="/admin/personal_customers"
+                  onClick={() => {
+                    history.goBack();
+                  }}
                 >
                   <FontAwesomeIcon icon={faBan} className="mr-1" />
                   Cancel
