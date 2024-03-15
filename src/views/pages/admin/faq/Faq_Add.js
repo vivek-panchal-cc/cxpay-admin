@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import slugify from "react-slugify";
-import { _canAccess } from "../../../../_helpers/index";
+import { notify, history, _canAccess } from "../../../../_helpers/index";
 
 import {
   CButton,
@@ -31,8 +31,6 @@ import {
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { pageService } from "../../../../services/admin/page.service";
-import { notify, history } from "../../../../_helpers/index";
 import $ from "jquery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -42,6 +40,7 @@ import Dropzone from "react-dropzone-uploader";
 import { mediaService } from "./../../../../services/admin/media.service";
 import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
 import "react-dropzone-uploader/dist/styles.css";
+import { faqService } from "services/admin/faq.service";
 import "./Draft.css";
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -53,12 +52,9 @@ class FaqAdd extends Component {
     this.state = {
       initialValue: "",
       editorValidated: true,
-      title: "",
-      meta_title: "",
-      meta_keywords: "",
-      meta_desc: "",
+      faq_question: "",
+      faq_answer: "",
       status: false,
-      is_display: false,
       media: [],
       activeTab: 1,
       _openPopup: false,
@@ -80,7 +76,7 @@ class FaqAdd extends Component {
   componentDidMount() {
     this.getMedia();
     setTimeout(() => {
-      _canAccess(this.props.module_name, this.props.action, "/admin/cms_pages");
+      _canAccess(this.props.module_name, this.props.action, "/admin/faq");
     }, 300);
   }
 
@@ -112,7 +108,7 @@ class FaqAdd extends Component {
   // Method For Form Field
   handleChange(event) {
     const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;    
+    const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
     this.setState({
       [name]: value,
@@ -128,9 +124,7 @@ class FaqAdd extends Component {
 
   _handleApplyAction = (event, editor) => {
     const img_src = `${
-      API_URL +
-      "uploads/media/" +
-      this.state.selectedMediaFile
+      API_URL + "uploads/media/" + this.state.selectedMediaFile
     }`;
     let content = this.state.initialValue;
     if (
@@ -236,25 +230,18 @@ class FaqAdd extends Component {
 
   checkValidation(event) {
     if (this.validator.allValid()) {
-      const slug = slugify(this.state.title, { delimiter: "-" });
-
-      pageService
-        .createPages({
-          content: this.state.initialValue,
-          title: this.state.title,
-          slug: slug,
-          meta_title: this.state.meta_title,
-          meta_keywords: this.state.meta_keywords,
-          meta_desc: this.state.meta_desc,
+      faqService
+        .createFaq({
+          faq_answer: this.state.initialValue,
+          faq_question: this.state.faq_question,
           status: this.state.status,
-          is_display: this.state.is_display,
         })
         .then((res) => {
-          if (res.status === "error") {
+          if (!res.success) {
             notify.error(res.message);
           } else {
             notify.success(res.message);
-            history.push("/admin/cms_pages");
+            history.push("/admin/faq");
             event.preventDefault();
           }
         });
@@ -282,13 +269,13 @@ class FaqAdd extends Component {
     return (
       <CCard>
         <CCardHeader>
-          Add Page
+          Add Faq
           <div className="card-header-actions">
             <CTooltip content={globalConstants.BACK_MSG}>
               <CLink
                 className="btn btn-danger btn-sm"
                 aria-current="page"
-                to="/admin/cms_pages"
+                to="/admin/faq"
               >
                 {" "}
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back
@@ -298,84 +285,29 @@ class FaqAdd extends Component {
         </CCardHeader>
         <CCardBody>
           <CFormGroup>
-            <CLabel htmlFor="nf-name">Title</CLabel>
+            <CLabel htmlFor="nf-name">Question</CLabel>
             <CInput
               type="text"
-              id="title"
-              name="title"
-              placeholder="Enter Title"
-              autoComplete="title"
+              id="faq_question"
+              name="faq_question"
+              placeholder="Enter Faq"
+              autoComplete="faq_question"
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
-              {this.validator.message("title", this.state.title, "required", {
-                className: "text-danger",
-              })}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Slug</CLabel>
-            <CInput
-              type="text"
-              name="slug"
-              id="slug"
-              placeholder="Enter Slug"
-              value={slugify(this.state.title, { delimiter: "-" })}
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block"></CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Meta Title</CLabel>
-            <CInput
-              type="text"
-              id="meta_title"
-              name="meta_title"
-              placeholder="Enter Meta Title "
-              autoComplete="meta_title"
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block">
-              {this.validator.message("meta_title", this.state.meta_title, "max:50", {
-                className: "text-danger",
-              })}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Meta Keywords</CLabel>
-            <CInput
-              type="text"
-              id="meta_keywords"
-              name="meta_keywords"
-              placeholder="Enter Meta Keywords "
-              autoComplete="meta_keywords"
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block">
-              {this.validator.message("meta_keywords", this.state.meta_keywords, "max:50", {
-                className: "text-danger",
-              })}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Meta Description</CLabel>
-            <CInput
-              type="text"
-              id="meta_desc"
-              name="meta_desc"
-              placeholder="Enter Meta Description"
-              autoComplete="meta_desc"
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block">
-              {this.validator.message("meta_desc", this.state.meta_desc, "max:160", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "faq_question",
+                this.state.faq_question,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
 
           <CFormGroup>
-            <CLabel htmlFor="nf-name"> Description</CLabel>
+            <CLabel htmlFor="nf-name">Answer</CLabel>
             <div id="myModal" className="modal1">
               <div className="modal-content1">
                 <CModalHeader closeButton>
@@ -584,7 +516,7 @@ class FaqAdd extends Component {
               initialValue=""
               value={this.state.initialValue}
               init={{
-                placeholder: "Enter Description",
+                placeholder: "Enter Answer",
                 height: 500,
 
                 // tinydrive_upload_path: `${API_URL}`,
@@ -650,7 +582,7 @@ class FaqAdd extends Component {
 
             <CFormText className="help-block">
               {this.validator.message(
-                "description ",
+                "faq_answer",
                 this.state.initialValue,
                 "required",
                 { className: "text-danger" }
@@ -673,22 +605,6 @@ class FaqAdd extends Component {
               </CFormGroup>
             </CCol>
           </CFormGroup>
-          <CFormGroup row>
-            <CCol tag="label" sm="1" className="col-form-label">
-              Display
-            </CCol>
-            <CCol sm="11">
-              <CFormGroup variant="custom-checkbox" inline>
-                <CSwitch
-                  name="is_display"
-                  className="mr-1"
-                  color="primary"
-                  defaultChecked={this.state.is_display}
-                  onClick={this.handleChange}
-                />
-              </CFormGroup>
-            </CCol>
-          </CFormGroup>
         </CCardBody>
         <CCardFooter>
           <CButton
@@ -704,7 +620,7 @@ class FaqAdd extends Component {
           <CLink
             className="btn btn-danger btn-sm"
             aria-current="page"
-            to="/admin/cms_pages"
+            to="/admin/faq"
           >
             {" "}
             <FontAwesomeIcon icon={faBan} className="mr-1" /> Cancel

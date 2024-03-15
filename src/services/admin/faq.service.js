@@ -12,7 +12,7 @@ export const faqService = {
   updateFaq,
   detailFaqView,
   changeFaqStatus,
-  deleteMultipleFaqs,
+  changeSequenceData,
   changeBulkFaqsStatus,
 };
 
@@ -131,16 +131,16 @@ async function detailFaqView(id) {
   return handleResponse(response);
 }
 
-async function changeFaqStatus(id, postData) {
+async function changeFaqStatus(postData) {
   setLoading(true);
   const requestOptions = {
-    method: "PUT",
+    method: "POST",
     headers: authHeader("faqs", "edit"),
     body: JSON.stringify(postData),
   };
   let response;
   try {
-    response = await fetch(`${API_URL}api/faq/${id}`, requestOptions);
+    response = await fetch(`${API_URL}api/faq/change-status`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -149,7 +149,7 @@ async function changeFaqStatus(id, postData) {
   return handleResponse(response);
 }
 
-async function deleteMultipleFaqs(postData) {
+async function changeSequenceData(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -160,7 +160,7 @@ async function deleteMultipleFaqs(postData) {
   let response;
   try {
     response = await fetch(
-      `${API_URL}api/delete_multiple_pages`,
+      `${API_URL}api/faq/change-sequence`,
       requestOptions
     );
   } catch (error) {

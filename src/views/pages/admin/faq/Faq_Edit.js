@@ -32,7 +32,6 @@ import {
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { pageService } from "../../../../services/admin/page.service";
 import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { Editor } from "@tinymce/tinymce-react";
 import { globalConstants } from "../../../../constants/admin/global.constants";
@@ -43,23 +42,22 @@ import { mediaService } from "./../../../../services/admin/media.service";
 import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
 import "react-dropzone-uploader/dist/styles.css";
 import "./Draft.css";
+import { faqService } from "services/admin/faq.service";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-class Faq_Edit extends Component {
+class FaqEdit extends Component {
   constructor(props) {
     super(props);
 
     /************  Define iniitla State by  ***********************/
     this.state = {
-      title: "",
-      meta_title: "",
-      meta_keywords: "",
-      meta_desc: "",
+      faq_question: "",
+      faq_answer: "",
       id: this.props.match.params.id,
       initialValue: "",
       status: false,
-      is_display: false,
+      sequence: "",
       media: [],
       activeTab: 1,
       _openPopup: false,
@@ -230,32 +228,23 @@ class Faq_Edit extends Component {
   componentDidMount() {
     this.getMedia();
     setTimeout(() => {
-      if (
-        _canAccess(
-          this.props.module_name,
-          this.props.action,
-          "/admin/cms_pages"
-        )
-      ) {
-        const slug = slugify(this.state.title, { delimiter: "-" });
-        pageService.getpage(this.state.id).then((res) => {
-          if (res.status === false) {
+      if (_canAccess(this.props.module_name, this.props.action, "/admin/faq")) {
+        faqService.getFaq({ id: this.state.id }).then((res) => {
+          if (!res.success) {
             notify.error(res.message);
-            history.push("/admin/cms_pages");
+            history.push("/admin/faq");
           } else {
-            if (res.result == null) {
+            if (res.data == null) {
               notify.error("Page not found");
-              history.push("/admin/cms_pages");
+              history.push("/admin/faq");
             } else {
               this.setState({
-                title: res.result.title,
-                meta_title: res.result.meta_title,
-                meta_desc: res.result.meta_desc,
-                meta_keywords: res.result.meta_keywords,
-                initialValue: res.result.content,
-                status: res.result.status,
-                is_display: res.result.is_display,
-                slug: slug,
+                faq_question: res.data.faq_question,
+                faq_answer: res.data.faq_answer,
+                meta_keywords: res.data.meta_keywords,
+                initialValue: res.data.faq_answer,
+                sequence: res.data.sequence,
+                status: res.data.status,
               });
             }
           }
@@ -271,25 +260,19 @@ class Faq_Edit extends Component {
 
   checkValidation(event) {
     if (this.validator.allValid()) {
-      const slug = slugify(this.state.title, { delimiter: "-" });
-      pageService
-        .updatepage({
-          content: this.state.initialValue,
-          title: this.state.title,
-          slug: slug,
-          meta_title: this.state.meta_title,
-          meta_keywords: this.state.meta_keywords,
-          meta_desc: this.state.meta_desc,
+      faqService
+        .updateFaq({
+          faq_answer: this.state.initialValue,
+          faq_question: this.state.faq_question,
           status: this.state.status,
-          is_display: this.state.is_display,
-          _id: this.state.id,
+          id: +this.state.id,
         })
         .then((res) => {
-          if (res.status === "error") {
+          if (!res.success) {
             notify.error(res.message);
           } else {
             notify.success(res.message);
-            history.push("/admin/cms_pages");
+            history.push("/admin/faq");
             event.preventDefault();
           }
         });
@@ -314,13 +297,13 @@ class Faq_Edit extends Component {
     return (
       <CCard>
         <CCardHeader>
-          Edit Page
+          Edit Faq
           <div className="card-header-actions">
             <CTooltip content={globalConstants.BACK_MSG}>
               <CLink
                 className="btn btn-danger btn-sm"
                 aria-current="page"
-                to="/admin/cms_pages"
+                to="/admin/faq"
               >
                 {" "}
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back
@@ -330,75 +313,30 @@ class Faq_Edit extends Component {
         </CCardHeader>
         <CCardBody>
           <CFormGroup>
-            <CLabel htmlFor="nf-name">Title</CLabel>
+            <CLabel htmlFor="nf-name">Question</CLabel>
             <CInput
               type="text"
-              id="title"
-              name="title"
-              placeholder="Enter Title"
-              autoComplete="title"
+              id="faq_question"
+              name="faq_question"
+              placeholder="Enter Question"
+              autoComplete="faq_question"
               onChange={this.handleChange}
-              value={this.state.title}
+              value={this.state.faq_question}
             />
             <CFormText className="help-block">
-              {this.validator.message("title", this.state.title, "required", {
-                className: "text-danger",
-              })}
+              {this.validator.message(
+                "faq_question",
+                this.state.faq_question,
+                "required",
+                {
+                  className: "text-danger",
+                }
+              )}
             </CFormText>
           </CFormGroup>
 
           <CFormGroup>
-            <CLabel htmlFor="nf-name">Slug</CLabel>
-            <CInput
-              type="text"
-              name="slug"
-              id="slug"
-              placeholder="Enter Slug"
-              value={slugify(this.state.title, { delimiter: "-" })}
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block"></CFormText>
-          </CFormGroup>
-
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Meta Title</CLabel>
-            <CInput
-              type="text"
-              id="meta_title"
-              name="meta_title"
-              placeholder="Enter Meta Title "
-              autoComplete="meta_title"
-              onChange={this.handleChange}
-              value={this.state.meta_title}
-            />
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Meta Keywords</CLabel>
-            <CInput
-              type="text"
-              id="meta_keywords"
-              name="meta_keywords"
-              placeholder="Enter Meta Keywords "
-              autoComplete="meta_keywords"
-              onChange={this.handleChange}
-              value={this.state.meta_keywords}
-            />
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Meta Description</CLabel>
-            <CInput
-              type="text"
-              id="meta_desc"
-              name="meta_desc"
-              placeholder="Enter Meta Description"
-              autoComplete="meta_desc"
-              onChange={this.handleChange}
-              value={this.state.meta_desc}
-            />
-          </CFormGroup>
-
-          <CFormGroup>
-            <CLabel htmlFor="nf-name"> Description</CLabel>
+            <CLabel htmlFor="nf-name">Answer</CLabel>
             <div id="myModal" className="modal1">
               <div className="modal-content1">
                 <CModalHeader closeButton>
@@ -606,7 +544,7 @@ class Faq_Edit extends Component {
               // initialValue={this.state.initialValue}
               value={this.state.initialValue}
               init={{
-                placeholder: "Enter Description",
+                placeholder: "Enter Answer",
 
                 height: 500,
                 plugins: [
@@ -667,7 +605,7 @@ class Faq_Edit extends Component {
             />
             <CFormText className="help-block">
               {this.validator.message(
-                "description ",
+                "faq_answer",
                 this.state.initialValue,
                 "required",
                 { className: "text-danger" }
@@ -705,47 +643,6 @@ class Faq_Edit extends Component {
               </CFormGroup>
             </CCol>
           </CFormGroup>
-
-          <CFormGroup row>
-            <CCol tag="label" sm="1" className="col-form-label">
-              Display
-            </CCol>
-
-            <CCol sm="11">
-              <CFormGroup variant="custom-checkbox" inline>
-                {this.state.is_display && (
-                  <CSwitch
-                    className="mr-1"
-                    color="primary"
-                    name="is_display"
-                    value={this.state.is_display}
-                    defaultChecked
-                    onChange={this.handleChange}
-                  />
-                )}
-
-                {this.state.is_display === false && (
-                  <CSwitch
-                    className="mr-1"
-                    color="primary"
-                    name="is_display"
-                    value={this.state.is_display}
-                    onChange={this.handleChange}
-                  />
-                )}
-
-                {this.state.is_display === null && (
-                  <CSwitch
-                    className="mr-1"
-                    color="primary"
-                    name="is_display"
-                    value={false}
-                    onChange={this.handleChange}
-                  />
-                )}
-              </CFormGroup>
-            </CCol>
-          </CFormGroup>
         </CCardBody>
         <CCardFooter>
           <CButton
@@ -761,7 +658,7 @@ class Faq_Edit extends Component {
           <CLink
             className="btn btn-danger btn-sm"
             aria-current="page"
-            to="/admin/cms_pages"
+            to="/admin/faq"
           >
             {" "}
             <FontAwesomeIcon icon={faBan} className="mr-1" /> Cancel
@@ -772,4 +669,4 @@ class Faq_Edit extends Component {
   }
 }
 // Export out Class component
-export default Faq_Edit;
+export default FaqEdit;

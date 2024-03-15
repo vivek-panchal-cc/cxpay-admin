@@ -1,4 +1,5 @@
 export const globalConstants = {
+  DRAG_DROP: "Drag to change sequence",
   CURRENCY_SYMBOL: "ANG",
   BACK_MSG: "Back to listing page.",
   BULK_APPLY_BTN: "Click to perform bulk action.",
