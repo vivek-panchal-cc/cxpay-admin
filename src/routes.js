@@ -42,6 +42,13 @@ const CMS_Page_Detail = React.lazy(() =>
   import("./views/pages/admin/Cms_Pages/Cms_Pages_Detail")
 );
 
+const Faq_Add = React.lazy(() => import("./views/pages/admin/faq/Faq_Add"));
+const Faq_Index = React.lazy(() => import("./views/pages/admin/faq/Faq_Index"));
+const Faq_Edit = React.lazy(() => import("./views/pages/admin/faq/Faq_Edit"));
+const Faq_Detail = React.lazy(() =>
+  import("./views/pages/admin/faq/Faq_Detail")
+);
+
 //Import file for Menu Management
 
 const Menu_Management_Index = React.lazy(() =>
@@ -106,7 +113,9 @@ const Customers_Management_Index = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Index")
 );
 const Customers_Management_Pending_Kyc_Index = React.lazy(() =>
-  import("./views/pages/admin/customers_management/Customers_Management_Pending_Kyc_Index")
+  import(
+    "./views/pages/admin/customers_management/Customers_Management_Pending_Kyc_Index"
+  )
 );
 const Customers_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Edit")
@@ -125,10 +134,14 @@ const Business_Customers_Index = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Index")
 );
 const Business_Customers_Admin_Approval_Index = React.lazy(() =>
-  import("./views/pages/admin/business_customers/Business_Customers_Admin_Approval_Index")
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Admin_Approval_Index"
+  )
 );
 const Business_Customers_Pending_Kyc_Index = React.lazy(() =>
-  import("./views/pages/admin/business_customers/Business_Customers_Pending_Kyc_Index")
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Pending_Kyc_Index"
+  )
 );
 const Business_Customers_Edit = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Edit")
@@ -366,6 +379,39 @@ const routes = [
     name: "DetailView",
     component: CMS_Page_Detail,
     module_name: "cms_pages",
+    action: "view",
+  },
+  
+  {
+    path: "/admin/faq",
+    exact: true,
+    name: "Faq",
+    component: Faq_Index,
+    module_name: "faqs",
+    action: "view",
+  },
+  {
+    path: "/admin/faq/add",
+    exact: true,
+    name: "Add",
+    component: Faq_Add,
+    module_name: "faqs",
+    action: "create",
+  },
+  {
+    path: "/admin/faq/edit/:id",
+    exact: true,
+    name: "Edit",
+    component: Faq_Edit,
+    module_name: "faqs",
+    action: "update",
+  },
+  {
+    path: "/admin/faq/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Faq_Detail,
+    module_name: "faqs",
     action: "view",
   },
 

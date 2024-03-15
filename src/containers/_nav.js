@@ -23,7 +23,8 @@ import {
   faWallet,
   faUserTie,
   faStopwatch,
-  faSyncAlt
+  faSyncAlt,
+  faQuestion
 } from "@fortawesome/free-solid-svg-icons";
 import IconFlorin from "assets/icons/IconFlorin";
 
@@ -133,6 +134,15 @@ const _nav = [
     icon: <FontAwesomeIcon icon={faBook} className="c-sidebar-nav-icon" />,
     module_name: "cms_pages",
     id: "cms_pages_sidebar_id",
+    // id: "cms_templates_sidebar_id",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "FAQ",
+    to: "/admin/faq",
+    icon: <FontAwesomeIcon icon={faQuestion} className="c-sidebar-nav-icon" />,
+    module_name: "faqs",
+    id: "faq_pages_sidebar_id",
     // id: "cms_templates_sidebar_id",
   },
   {
