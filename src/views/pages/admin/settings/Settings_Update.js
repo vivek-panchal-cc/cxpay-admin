@@ -53,33 +53,36 @@ class Settings_Update extends Component {
   handleChange(event, index) {
     const { name, value, type } = event.target;
     const page_list = [...this.state.page_list];
-
+  
     if (type === "radio") {
       // Update the value of the selected radio button
       page_list[index].value = value;
     } else if (type === "checkbox") {
-      // Update the array of checked values for checkboxes
       const checkedValue = event.target.value;
       const isChecked = event.target.checked;
-      let updatedValues = [...page_list[index].value];
-
-      // Copy existing values
+      const updatedValues = [...page_list[index].value]; // Copy the array
+  
       if (isChecked) {
-        updatedValues.push(checkedValue);
+        // If the checkbox is checked, add its value to the array
+        updatedValues.push({ [checkedValue]: true });
       } else {
-        updatedValues = page_list[index].value?.filter(
-          (val) => val !== checkedValue
-        );
+        // If the checkbox is unchecked, remove its value from the array
+        const indexToRemove = updatedValues.findIndex(obj => Object.keys(obj)[0] === checkedValue);
+        if (indexToRemove !== -1) {
+          updatedValues.splice(indexToRemove, 1);
+        }
       }
-
+  
       page_list[index].value = updatedValues;
     } else {
       // Update the value of other input types
       page_list[index].value = value;
     }
-
+  
     this.setState({ page_list });
   }
+  
+  
 
   // removeUnderscore(str) {
   //   return str
@@ -137,8 +140,11 @@ class Settings_Update extends Component {
               // Map the initial value of checkboxes to an array
               const updatedPageList = res.data.system_options?.map((option) => {
                 if (option.field_type === "checkbox") {
-                  const initialValue = option.value?.split(",");
-                  return { ...option, value: initialValue };
+                  // Convert value to array if it's not already
+                  const valueArray = Array.isArray(option.value)
+                    ? option.value
+                    : [option.value];
+                  return { ...option, value: valueArray };
                 }
                 return option;
               });
@@ -299,7 +305,7 @@ class Settings_Update extends Component {
                         id={`${option.system_option_name}_${key}`}
                         name={option.system_option_name}
                         value={key}
-                        checked={option.value?.includes(key)}
+                        checked={option.value.some(obj => obj[key])}
                         onChange={(e) => this.handleChange(e, index)}
                       />
                       <label
