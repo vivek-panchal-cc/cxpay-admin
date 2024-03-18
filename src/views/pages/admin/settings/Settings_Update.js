@@ -12,6 +12,8 @@ import {
   CCardBody,
   CCardFooter,
   CTooltip,
+  CSelect,
+  CFormText,
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
@@ -50,14 +52,34 @@ class Settings_Update extends Component {
 
   /************************ Define  Method For Form Field **************************/
   handleChange(event, index) {
-    const value = event.target.value;
-    const target = event.target;
-    const name = target.name;
+    const { name, value, type } = event.target;
     const page_list = [...this.state.page_list];
-    page_list[index][name] = value;
-    this.setState({
-      page_list: page_list,
-    });
+
+    if (type === "radio") {
+      // Update the value of the selected radio button
+      page_list[index].value = value;
+    } else if (type === "checkbox") {
+      // Update the array of checked values for checkboxes
+      const checkedValue = event.target.value;
+      const isChecked = event.target.checked;
+      let updatedValues = [...page_list[index].value];
+
+      // Copy existing values
+      if (isChecked) {
+        updatedValues.push(checkedValue);
+      } else {
+        updatedValues = page_list[index].value.filter(
+          (val) => val !== checkedValue
+        );
+      }
+
+      page_list[index].value = updatedValues;
+    } else {
+      // Update the value of other input types
+      page_list[index].value = value;
+    }
+
+    this.setState({ page_list });
   }
 
   // removeUnderscore(str) {
@@ -73,15 +95,15 @@ class Settings_Update extends Component {
 
   removeUnderscore(str) {
     const specialCases = {
-      SWIFT_CODE: "Account Name"
+      SWIFT_CODE: "Account Name",
       // Add more special cases here if needed
     };
-  
+
     // Check if the str exists in specialCases, if yes, return its value
     if (specialCases.hasOwnProperty(str)) {
       return specialCases[str];
     }
-  
+
     // Otherwise, capitalize and replace underscores as before
     return str
       .split("_")
@@ -91,7 +113,7 @@ class Settings_Update extends Component {
         return capitalizedWord;
       })
       .join(" ");
-  }  
+  }
 
   // Close  modal box method
   _handleCancelAction() {
@@ -113,8 +135,16 @@ class Settings_Update extends Component {
               notify.error("Page not found");
               history.push("/admin/settings");
             } else {
+              // Map the initial value of checkboxes to an array
+              const updatedPageList = res.data.system_options.map((option) => {
+                if (option.field_type === "checkbox") {
+                  const initialValue = option.value.split(",");
+                  return { ...option, value: initialValue };
+                }
+                return option;
+              });
               this.setState({
-                page_list: res.data.system_options,
+                page_list: updatedPageList,
               });
             }
           }
@@ -130,22 +160,52 @@ class Settings_Update extends Component {
 
   checkValidation(event) {
     if (this.validator.allValid()) {
-      const convertedPayload = this.state.page_list.reduce((acc, item) => {
-        const key = Object.keys(item)[0];
-        const value = item[key];
-        acc[key] = value;
-        return acc;
-      }, {});
+      const convertedPayload = {};
+      let isValid = true;
 
-      settingsService.updateSettings(convertedPayload).then((res) => {
-        if (res.status === "error") {
-          notify.error(res.message);
-        } else {
-          notify.success(res.message);
-          history.push("/admin/settings");
-          event.preventDefault();
+      // Iterate over each system option and add it to the payload
+      this.state.page_list.forEach((option) => {
+        convertedPayload[option.system_option_name] = option.value;
+
+        // Perform additional validation based on field_validation property
+        if (option.field_validation === "number") {
+          if (
+            isNaN(option.value) ||
+            option.value === "" ||
+            !/^\d+$/.test(option.value)
+          ) {
+            notify.error(`${option.field_title} must be a number`);
+            // this.validator.showMessageFor(option.system_option_name, {
+            //   type: "required",
+            //   message: `${option.field_title} must be a number`,
+            // });
+            isValid = false;
+          }
+        } else if (option.field_validation === "email") {
+          if (!/^\S+@\S+\.\S+$/.test(option.value)) {
+            notify.error(`${option.field_title} must be a valid email address`);
+            // this.validator.showMessageFor(option.system_option_name, {
+            //   type: "required",
+            //   message: `${option.field_title} must be a valid email address`,
+            // });
+            isValid = false;
+          }
         }
       });
+
+      if (isValid) {
+        settingsService.updateSettings(convertedPayload).then((res) => {
+          if (res.status === "error") {
+            notify.error(res.message);
+          } else {
+            notify.success(res.message);
+            history.push("/admin/settings");
+            event.preventDefault();
+          }
+        });
+      } else {
+        this.validator.showMessages();
+      }
     } else {
       this.validator.showMessages();
     }
@@ -171,30 +231,128 @@ class Settings_Update extends Component {
           </div>
         </CCardHeader>
         <CCardBody>
-          {this.state.page_list &&
-            this.state.page_list?.length > 0 &&
-            this.state.page_list?.map((option, index) => {
-              const modifiedString = this.removeUnderscore(
-                Object.keys(option)[0]
-              );
-              const key = Object.keys(option)[0];
-              const value = option[key];
-              return (
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">{modifiedString}</CLabel>
+          {/* Iterate over each system option */}
+          {this.state.page_list.map((option, index) => (
+            <CFormGroup key={index}>
+              <CLabel htmlFor={option.system_option_name}>
+                {option.field_title}
+              </CLabel>
+              {/* Render different input fields based on field type */}
+              {option.field_type === "text" && (
+                <div>
                   <CInput
                     type="text"
-                    step="any"
-                    id={key}
-                    name={key}
-                    placeholder="Enter Amount"
-                    autoComplete="amount"
-                    value={value}
+                    id={option.system_option_name}
+                    name={option.system_option_name}
+                    value={option.value}
                     onChange={(e) => this.handleChange(e, index)}
                   />
-                </CFormGroup>
-              );
-            })}
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+              {option.field_type === "radio" && (
+                <div>
+                  {Object.entries(option.field_options).map(([key, value]) => (
+                    <div key={key}>
+                      <input
+                        type="radio"
+                        id={`${option.system_option_name}_${key}`}
+                        name={option.system_option_name}
+                        value={key}
+                        checked={option.value === key}
+                        onChange={(e) => this.handleChange(e, index)}
+                      />
+                      <label
+                        style={{ marginLeft: "5px" }}
+                        htmlFor={`${option.system_option_name}_${key}`}
+                      >
+                        {value}
+                      </label>
+                    </div>
+                  ))}
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+              {option.field_type === "checkbox" && (
+                <div>
+                  {Object.entries(option.field_options).map(([key, value]) => (
+                    <div key={key}>
+                      <input
+                        type="checkbox"
+                        id={`${option.system_option_name}_${key}`}
+                        name={option.system_option_name}
+                        value={key}
+                        checked={option.value?.includes(key)}
+                        onChange={(e) => this.handleChange(e, index)}
+                      />
+                      <label
+                        style={{ marginLeft: "5px" }}
+                        htmlFor={`${option.system_option_name}_${key}`}
+                      >
+                        {value}
+                      </label>
+                    </div>
+                  ))}
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+              {option.field_type === "select" && (
+                <div>
+                  <CSelect
+                    id={option.system_option_name}
+                    name={option.system_option_name}
+                    value={option.value}
+                    onChange={(e) => this.handleChange(e, index)}
+                  >
+                    {Object.entries(option.field_options).map(
+                      ([key, value]) => (
+                        <option key={key} value={key}>
+                          {value}
+                        </option>
+                      )
+                    )}
+                  </CSelect>
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+            </CFormGroup>
+          ))}
         </CCardBody>
         <CCardFooter>
           <CButton
