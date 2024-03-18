@@ -22,7 +22,6 @@ import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-
 class Settings_Update extends Component {
   constructor(props) {
     super(props);
@@ -68,7 +67,7 @@ class Settings_Update extends Component {
       if (isChecked) {
         updatedValues.push(checkedValue);
       } else {
-        updatedValues = page_list[index].value.filter(
+        updatedValues = page_list[index].value?.filter(
           (val) => val !== checkedValue
         );
       }
@@ -136,9 +135,9 @@ class Settings_Update extends Component {
               history.push("/admin/settings");
             } else {
               // Map the initial value of checkboxes to an array
-              const updatedPageList = res.data.system_options.map((option) => {
+              const updatedPageList = res.data.system_options?.map((option) => {
                 if (option.field_type === "checkbox") {
-                  const initialValue = option.value.split(",");
+                  const initialValue = option.value?.split(",");
                   return { ...option, value: initialValue };
                 }
                 return option;
@@ -172,22 +171,22 @@ class Settings_Update extends Component {
           if (
             isNaN(option.value) ||
             option.value === "" ||
-            !/^\d+$/.test(option.value)
+            !/^\d+(\.\d+)?$/.test(option.value)
           ) {
             notify.error(`${option.field_title} must be a number`);
-            // this.validator.showMessageFor(option.system_option_name, {
-            //   type: "required",
-            //   message: `${option.field_title} must be a number`,
-            // });
+            this.validator.showMessageFor(option.system_option_name, {
+              type: "required",
+              message: `${option.field_title} must be a number`,
+            });
             isValid = false;
           }
         } else if (option.field_validation === "email") {
           if (!/^\S+@\S+\.\S+$/.test(option.value)) {
             notify.error(`${option.field_title} must be a valid email address`);
-            // this.validator.showMessageFor(option.system_option_name, {
-            //   type: "required",
-            //   message: `${option.field_title} must be a valid email address`,
-            // });
+            this.validator.showMessageFor(option.system_option_name, {
+              type: "required",
+              message: `${option.field_title} must be a valid email address`,
+            });
             isValid = false;
           }
         }
@@ -199,7 +198,7 @@ class Settings_Update extends Component {
             notify.error(res.message);
           } else {
             notify.success(res.message);
-            history.push("/admin/settings");
+            history.push("/admin/dashboard");
             event.preventDefault();
           }
         });
@@ -232,7 +231,7 @@ class Settings_Update extends Component {
         </CCardHeader>
         <CCardBody>
           {/* Iterate over each system option */}
-          {this.state.page_list.map((option, index) => (
+          {this.state.page_list?.map((option, index) => (
             <CFormGroup key={index}>
               <CLabel htmlFor={option.system_option_name}>
                 {option.field_title}
@@ -261,7 +260,7 @@ class Settings_Update extends Component {
               )}
               {option.field_type === "radio" && (
                 <div>
-                  {Object.entries(option.field_options).map(([key, value]) => (
+                  {Object.entries(option.field_options)?.map(([key, value]) => (
                     <div key={key}>
                       <input
                         type="radio"
@@ -293,7 +292,7 @@ class Settings_Update extends Component {
               )}
               {option.field_type === "checkbox" && (
                 <div>
-                  {Object.entries(option.field_options).map(([key, value]) => (
+                  {Object.entries(option.field_options)?.map(([key, value]) => (
                     <div key={key}>
                       <input
                         type="checkbox"
@@ -331,7 +330,7 @@ class Settings_Update extends Component {
                     value={option.value}
                     onChange={(e) => this.handleChange(e, index)}
                   >
-                    {Object.entries(option.field_options).map(
+                    {Object.entries(option.field_options)?.map(
                       ([key, value]) => (
                         <option key={key} value={key}>
                           {value}
