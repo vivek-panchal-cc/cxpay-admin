@@ -63,6 +63,7 @@ class Customers_Management_Edit extends React.Component {
         kyc_expiration_date: null,
         _id: this.props.match.params.id,
       },
+      is_kyc_approved_status: "",
       module_permission: {},
       countryData: {},
       cityData: [],
@@ -122,6 +123,7 @@ class Customers_Management_Edit extends React.Component {
               status: statustmp,
               is_kyc: kyctmp,
               kyc_approved_status: res.data.kyc_approved_status,
+              is_kyc_approved_status: res.data.kyc_approved_status,
             });
           }
         });
@@ -791,6 +793,10 @@ class Customers_Management_Edit extends React.Component {
                               "approved"
                             }
                             onChange={this.handleChange}
+                            disabled={
+                              this.state.is_kyc_approved_status ===
+                              "approved"
+                            }
                           />
                           <CLabel
                             check
@@ -815,6 +821,10 @@ class Customers_Management_Edit extends React.Component {
                               "rejected"
                             }
                             onChange={this.handleChange}
+                            disabled={
+                              this.state.is_kyc_approved_status ===
+                              "approved"
+                            }
                           />
                           <CLabel
                             check

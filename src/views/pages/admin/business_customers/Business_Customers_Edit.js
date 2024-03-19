@@ -58,6 +58,7 @@ class Business_Customers_Edit extends React.Component {
         kyc_expiration_date: null,
         _id: this.props.match.params.id,
       },
+      is_kyc_approved_status: "",
       module_permission: {},
       countryData: {},
       cityData: [],
@@ -124,6 +125,7 @@ class Business_Customers_Edit extends React.Component {
               is_kyc: kyctmp,
               admin_approved: isApprovedtmp,
               kyc_approved_status: res.data.kyc_approved_status,
+              is_kyc_approved_status: res.data.kyc_approved_status,
             });
           }
         });
@@ -808,7 +810,7 @@ class Business_Customers_Edit extends React.Component {
                             }
                             onChange={this.handleChange}
                             disabled={
-                              this.state.fields.kyc_approved_status ===
+                              this.state.is_kyc_approved_status ===
                               "approved"
                             }
                           />
@@ -836,7 +838,7 @@ class Business_Customers_Edit extends React.Component {
                             }
                             onChange={this.handleChange}
                             disabled={
-                              this.state.fields.kyc_approved_status ===
+                              this.state.is_kyc_approved_status ===
                               "approved"
                             }
                           />
