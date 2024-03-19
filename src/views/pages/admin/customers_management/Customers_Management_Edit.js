@@ -384,8 +384,8 @@ class Customers_Management_Edit extends React.Component {
           notify.error(res.message);
         } else {
           notify.success(res.message);
-          // history.push("/admin/personal_customers");
-          history.goBack();
+          history.push("/admin/personal_customers");
+          // history.goBack();
         }
       });
     } else {

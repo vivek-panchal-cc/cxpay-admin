@@ -372,8 +372,8 @@ class Business_Customers_Edit extends React.Component {
           notify.error(res.message);
         } else {
           notify.success(res.message);
-          // history.push("/admin/business_customers");
-          history.goBack();
+          history.push("/admin/business_customers");
+          // history.goBack();
         }
       });
     } else {
