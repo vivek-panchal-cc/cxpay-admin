@@ -53,7 +53,7 @@ class Settings_Update extends Component {
   handleChange(event, index) {
     const { name, value, type } = event.target;
     const page_list = [...this.state.page_list];
-  
+
     if (type === "radio") {
       // Update the value of the selected radio button
       page_list[index].value = value;
@@ -61,60 +61,27 @@ class Settings_Update extends Component {
       const checkedValue = event.target.value;
       const isChecked = event.target.checked;
       const updatedValues = [...page_list[index].value]; // Copy the array
-  
+
       if (isChecked) {
         // If the checkbox is checked, add its value to the array
         updatedValues.push({ [checkedValue]: true });
       } else {
         // If the checkbox is unchecked, remove its value from the array
-        const indexToRemove = updatedValues.findIndex(obj => Object.keys(obj)[0] === checkedValue);
+        const indexToRemove = updatedValues?.findIndex(
+          (obj) => Object.keys(obj)[0] === checkedValue
+        );
         if (indexToRemove !== -1) {
-          updatedValues.splice(indexToRemove, 1);
+          updatedValues?.splice(indexToRemove, 1);
         }
       }
-  
+
       page_list[index].value = updatedValues;
     } else {
       // Update the value of other input types
       page_list[index].value = value;
     }
-  
+
     this.setState({ page_list });
-  }
-  
-  
-
-  // removeUnderscore(str) {
-  //   return str
-  //     .split("_")
-  //     .map((word) => {
-  //       const capitalizedWord =
-  //         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  //       return capitalizedWord;
-  //     })
-  //     .join(" ");
-  // }
-
-  removeUnderscore(str) {
-    const specialCases = {
-      SWIFT_CODE: "Account Name",
-      // Add more special cases here if needed
-    };
-
-    // Check if the str exists in specialCases, if yes, return its value
-    if (specialCases.hasOwnProperty(str)) {
-      return specialCases[str];
-    }
-
-    // Otherwise, capitalize and replace underscores as before
-    return str
-      .split("_")
-      .map((word) => {
-        const capitalizedWord =
-          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        return capitalizedWord;
-      })
-      .join(" ");
   }
 
   // Close  modal box method
@@ -169,7 +136,7 @@ class Settings_Update extends Component {
       let isValid = true;
 
       // Iterate over each system option and add it to the payload
-      this.state.page_list.forEach((option) => {
+      this.state.page_list?.forEach((option) => {
         convertedPayload[option.system_option_name] = option.value;
 
         // Perform additional validation based on field_validation property
@@ -305,7 +272,7 @@ class Settings_Update extends Component {
                         id={`${option.system_option_name}_${key}`}
                         name={option.system_option_name}
                         value={key}
-                        checked={option.value.some(obj => obj[key])}
+                        checked={option.value.some((obj) => obj[key])}
                         onChange={(e) => this.handleChange(e, index)}
                       />
                       <label
