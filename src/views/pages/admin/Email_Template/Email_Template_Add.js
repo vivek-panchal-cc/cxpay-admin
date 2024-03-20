@@ -566,7 +566,7 @@ class Email_Template_Add extends Component {
                 ],
 
                 toolbar:
-                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link  preview myCustomToolbarButton ",
+                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link  preview",
 
                 file_browser_callback_types: "image",
 

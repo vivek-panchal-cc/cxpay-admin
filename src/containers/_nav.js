@@ -138,7 +138,7 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavItem",
-    name: "FAQ",
+    name: "FAQs",
     to: "/admin/faq",
     icon: <FontAwesomeIcon icon={faQuestion} className="c-sidebar-nav-icon" />,
     module_name: "faqs",

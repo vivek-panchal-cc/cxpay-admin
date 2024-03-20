@@ -593,7 +593,7 @@ class Email_Template_Edit extends Component {
                 ],
 
                 toolbar:
-                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link myCustomToolbarButton ",
+                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link",
 
                 file_browser_callback_types: "image",
 
