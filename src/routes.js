@@ -544,7 +544,7 @@ const routes = [
   {
     path: "/admin/personal_customers/pending_kyc",
     exact: true,
-    name: "Pending Merchant",
+    name: "Pending Kyc",
     component: Customers_Management_Pending_Kyc_Index,
     module_name: "personal_customers",
     action: "view",
