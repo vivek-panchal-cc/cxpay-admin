@@ -810,8 +810,7 @@ class Business_Customers_Edit extends React.Component {
                             }
                             onChange={this.handleChange}
                             disabled={
-                              this.state.is_kyc_approved_status ===
-                              "approved"
+                              this.state.is_kyc_approved_status === "approved"
                             }
                           />
                           <CLabel
@@ -838,8 +837,7 @@ class Business_Customers_Edit extends React.Component {
                             }
                             onChange={this.handleChange}
                             disabled={
-                              this.state.is_kyc_approved_status ===
-                              "approved"
+                              this.state.is_kyc_approved_status === "approved"
                             }
                           />
                           <CLabel
@@ -903,44 +901,62 @@ class Business_Customers_Edit extends React.Component {
                     </div>
                   )}
 
-                {this.state.fields.kyc_type?.toLowerCase() === "system" && (
-                  <CFormGroup className="limits-wrap d-flex flex-wrap">
-                    <CCol md="2" className="pl-0">
-                      KYC
-                    </CCol>
+                {/* {this.state.fields.kyc_type?.toLowerCase() === "system" && ( */}
+                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">
+                    KYC
+                  </CCol>
 
-                    <CCol sm="10" className="pl-0">
-                      <CFormGroup variant="custom-checkbox" inline>
-                        {this.state.fields.is_kyc === true && (
-                          <CSwitch
-                            className="mr-1"
-                            color="primary"
-                            id="is_kyc"
-                            name="is_kyc"
-                            value={this.state.fields.is_kyc}
-                            defaultChecked
-                            // disabled={
-                            //   new Date(this.state.fields.kyc_expiration_date) >
-                            //   new Date()
-                            // }
-                            onChange={this.handleCheckboxChangeKYC}
-                          />
-                        )}
+                  <CCol sm="10" className="pl-0">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      {this.state.fields.is_kyc === true && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          defaultChecked
+                          disabled={
+                            this.state.fields.kyc_expiration_date === null ||
+                            this.state.fields.kyc_approved_status?.toLowerCase() ===
+                              "pending" ||
+                            this.state.fields.kyc_approved_status?.toLowerCase() ===
+                              "inprogress"
+                          }
+                          onChange={this.handleCheckboxChangeKYC}
+                        />
+                      )}
 
-                        {this.state.fields.is_kyc === false && (
-                          <CSwitch
-                            className="mr-1"
-                            color="primary"
-                            id="is_kyc"
-                            name="is_kyc"
-                            value={this.state.fields.is_kyc}
-                            onChange={this.handleCheckboxChangeKYC}
-                          />
-                        )}
-                      </CFormGroup>
-                    </CCol>
-                  </CFormGroup>
-                )}
+                      {this.state.fields.is_kyc === false && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          disabled={
+                            this.state.fields.kyc_expiration_date === null ||
+                            this.state.fields.kyc_approved_status?.toLowerCase() ===
+                              "pending" ||
+                            this.state.fields.kyc_approved_status?.toLowerCase() ===
+                              "inprogress"
+                          }
+                          onChange={this.handleCheckboxChangeKYC}
+                        />
+                      )}
+                    </CFormGroup>
+                    {this.state.fields.kyc_expiration_date === null && (
+                      <CLabel
+                        className="text-danger"
+                        style={{ contain: "content", fontSize: "12px" }}
+                      >
+                        The customer has not completed the KYC process.
+                      </CLabel>
+                    )}
+                  </CCol>
+                </CFormGroup>
+                {/* )} */}
 
                 {this.state.fields.kyc_type?.toLowerCase() === "system" &&
                   this.state.fields.is_kyc && (
