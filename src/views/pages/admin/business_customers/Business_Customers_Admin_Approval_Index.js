@@ -499,15 +499,15 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
               <CCardHeader>Business Customers Pending Approval</CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
-                  <MultiActionBar
+                  {/* <MultiActionBar
                     onClick={this.handleApplyAction}
                     checkBoxData={this.state.multiaction}
                     module_name={"business_customers"}
-                  />
+                  /> */}
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
+                        {/* <th>
                           <input
                             type="checkbox"
                             onClick={this.handleAllChecked}
@@ -515,7 +515,7 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                             onChange={(e) => {}}
                             checked={this.state.allCheckedbox}
                           />
-                        </th>
+                        </th> */}
                         <th>#</th>
                         <th
                           onClick={() => this.handleColumnSort("company_name")}
@@ -626,7 +626,7 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                         this.state.customers_management_list?.map(
                           (c, index) => (
                             <tr key={c.mobile}>
-                              <td>
+                              {/* <td>
                                 {this.state.multiaction[c.mobile] !==
                                   undefined && (
                                   <CheckBoxes
@@ -639,14 +639,20 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                                     }
                                   />
                                 )}
+                              </td> */}
+                              <td>
+                                {this.state.fields.page >= 2
+                                  ? index +
+                                    1 +
+                                    10 * (this.state.fields.page - 1)
+                                  : index + 1}
                               </td>
-                              <td>{index + 1}</td>
                               <td>{c.company_name}</td>
                               <td>{c.email}</td>
                               <td>{c.mobile}</td>
                               <td>{c.date}</td>
                               <td>
-                                {_canAccess("business_customers", "update") && (
+                                {/* {_canAccess("business_customers", "update") && (
                                   <CLink
                                     onClick={() =>
                                       this.StatusChangedHandler(
@@ -661,7 +667,8 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                                 {_canAccess("business_customers", "update") ===
                                   false && (
                                   <>{c.status == "0" ? "Active" : "Deactive"}</>
-                                )}
+                                )} */}
+                                {c.status === "1" ? "Active" : "Deactive"}
                               </td>
                               {(_canAccess("business_customers", "update") ||
                                 _canAccess("business_customers", "delete")) && (

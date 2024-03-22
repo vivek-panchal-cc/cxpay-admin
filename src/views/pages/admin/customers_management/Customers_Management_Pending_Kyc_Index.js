@@ -467,15 +467,15 @@ class CustomerManagementPendingKycIndex extends React.Component {
               <CCardHeader>Personal Customers Pending Kyc</CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
-                  <MultiActionBar
+                  {/* <MultiActionBar
                     onClick={this.handleApplyAction}
                     checkBoxData={this.state.multiaction}
                     module_name={"personal_customers"}
-                  />
+                  /> */}
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
+                        {/* <th>
                           <input
                             type="checkbox"
                             onClick={this.handleAllChecked}
@@ -483,7 +483,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                             onChange={(e) => {}}
                             checked={this.state.allCheckedbox}
                           />
-                        </th>
+                        </th> */}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -542,7 +542,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th onClick={() => this.handleColumnSort("status")}>
+                        {/* <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
                               Status
@@ -559,7 +559,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
-                        </th>
+                        </th> */}
                         {(_canAccess("personal_customers", "update") ||
                           _canAccess("personal_customers", "delete")) && (
                           <>
@@ -573,7 +573,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                         this.state.customers_management_list?.map(
                           (c, index) => (
                             <tr key={c.mobile_number}>
-                              <td>
+                              {/* <td>
                                 {this.state.multiaction[c.mobile_number] !==
                                   undefined && (
                                   <CheckBoxes
@@ -586,12 +586,14 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                     }
                                   />
                                 )}
-                              </td>
-                              <td>{index + 1}</td>
+                              </td> */}
+                              <td>{this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}</td>
                               <td>{c.user_name}</td>                              
                               <td>{c.mobile_number}</td>
                               <td>{formatDate(c.date)}</td>
-                              <td>
+                              {/* <td>
                                 {_canAccess("personal_customers", "update") && (
                                   <CLink
                                     onClick={() =>
@@ -608,7 +610,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                   false && (
                                   <>{c.status == "0" ? "Active" : "Deactive"}</>
                                 )}
-                              </td>
+                              </td> */}
                               {(_canAccess("personal_customers", "update") ||
                                 _canAccess("personal_customers", "delete")) && (
                                 <>

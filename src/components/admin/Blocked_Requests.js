@@ -391,7 +391,9 @@ class BlockedRequests extends React.Component {
                       {this.state?.blockedCustomers?.length > 0 &&
                         this.state.blockedCustomers.map((u, index) => (
                           <tr key={u.account_number || index}>
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}</td>
                             <td>{u.user_name}</td>
                             <td>{u.account_number}</td>
                             <td>{u.mobile_number}</td>

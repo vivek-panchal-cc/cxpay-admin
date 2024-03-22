@@ -901,7 +901,7 @@ class Business_Customers_Edit extends React.Component {
                     </div>
                   )}
 
-                {this.state.fields.kyc_approved_status?.toLowerCase() === "approved" && (
+                {/* {this.state.fields.kyc_approved_status?.toLowerCase() === "approved" && ( */}
                   <CFormGroup className="limits-wrap d-flex flex-wrap">
                     <CCol md="2" className="pl-0">
                       KYC
@@ -956,7 +956,7 @@ class Business_Customers_Edit extends React.Component {
                       )}
                     </CCol>
                   </CFormGroup>
-                )}
+                {/* )} */}
 
                 {this.state.fields.kyc_type?.toLowerCase() === "system" &&
                   this.state.fields.is_kyc && (

@@ -656,7 +656,9 @@ class Customers_Management_Index extends React.Component {
                                   />
                                 )}
                               </td>
-                              <td>{index + 1}</td>
+                              <td>{this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}</td>
                               <td>{c.name}</td>
                               <td>{c.email}</td>
                               <td>{c.mobile}</td>
