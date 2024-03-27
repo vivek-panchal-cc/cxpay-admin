@@ -231,7 +231,7 @@ class BusinessCustomerPendingKycIndex extends React.Component {
             sort_field: "created_at",
             sort_dir: "desc",
             status: "",
-            customer_type: "2",
+            customer_type: "1",
           },
         },
         () => {
