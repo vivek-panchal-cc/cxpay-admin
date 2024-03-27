@@ -76,7 +76,7 @@ class BusinessCustomerPendingKycIndex extends React.Component {
         page: 1,
         start_date: "",
         end_date: "",
-        search_company_name: "",
+        search_name: "",
         sort_field: "created_at",
         sort_dir: "desc",
         status: "",
@@ -227,7 +227,7 @@ class BusinessCustomerPendingKycIndex extends React.Component {
             page: 1,
             start_date: "",
             end_date: "",
-            search_company_name: "",
+            search_name: "",
             sort_field: "created_at",
             sort_dir: "desc",
             status: "",
@@ -424,8 +424,8 @@ class BusinessCustomerPendingKycIndex extends React.Component {
                         <CInput
                           id="name"
                           placeholder="Search Company Name"
-                          name="search_company_name"
-                          value={this.state.fields.search_company_name}
+                          name="search_name"
+                          value={this.state.fields.search_name}
                           onChange={this.handleChange}
                           onKeyDown={this.handleKeyDown}
                         />
