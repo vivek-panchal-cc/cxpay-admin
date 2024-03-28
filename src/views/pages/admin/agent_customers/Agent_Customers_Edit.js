@@ -503,6 +503,9 @@ class Agent_Customers_Edit extends React.Component {
 
       formData.append("status", this.state.fields.status);
       formData.append("kyc_status", this.state.is_kyc);
+      if (this.state.is_kyc === true) {
+        formData.append("kyc_approved_status", "approved");
+      }
       formData.append("email", this.state.fields.email);
 
       // formData.append("card_commission", this.state.fields.card_commission);
