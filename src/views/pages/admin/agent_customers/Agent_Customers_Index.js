@@ -667,7 +667,9 @@ class Agent_list extends React.Component {
                               )}
                             </td>
 
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}</td>
                             <td>
                               {" "}
                               {/* {_canAccess("agent_customers", "view") && (

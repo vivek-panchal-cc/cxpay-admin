@@ -276,7 +276,9 @@ class System_Modules_Index extends React.Component {
                       this.state.module_list?.map((u, index) => (
                         <tr key={u._id}>
                           <td><CheckBoxes handleCheckChieldElement={this.handleCheckChieldElement} _id={u._id} _isChecked={this.state.multiaction[u._id]} /></td>
-                          <td>{index + 1}</td>
+                          <td>{this.state.fields.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
+                                : index + 1}</td>
                           <td>{u.module_name}</td>
                           <td>
                           <CTooltip content={globalConstants.EDIT_BTN} ><CLink className="btn  btn-md btn-primary" aria-current="page" to={`/admin/system_modules/edit/${u._id}`} ><CIcon name="cil-pencil"></CIcon>  </CLink></CTooltip>

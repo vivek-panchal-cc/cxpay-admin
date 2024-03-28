@@ -482,7 +482,9 @@ class Banner_list extends React.Component {
                               />
                             </td>
 
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
+                                : index + 1}</td>
                             <td>{u.title}</td>
                             <td style={cursor}>
                               {/* <img onError={this.addDefaultSrc} src={`${API_URL + 'uploads/' + u.image_path}`} alt="Banner Image " style={styles} onClick={() => this.openimgpop(u.image_path)} /> */}

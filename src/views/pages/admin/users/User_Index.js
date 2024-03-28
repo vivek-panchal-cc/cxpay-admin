@@ -454,7 +454,9 @@ class User_Index extends React.Component {
                                 />
                               )}{" "}
                             </td>
-                            <td>{index + 1}</td>
+                            <td>{this.state.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.pageNo - 1)
+                                : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>

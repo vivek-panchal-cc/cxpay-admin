@@ -462,7 +462,9 @@ class Email_list extends React.Component {
                               />
                             </td>
 
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.pageNo >= 2
+                                ? index + 1 + 15 * (this.state.fields.pageNo - 1)
+                                : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.subject}</td>
                             <td>

@@ -468,7 +468,9 @@ class Menu_Items_List extends React.Component {
                                 _isChecked={this.state.multiaction[u._id]}
                               />
                             </td>
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
+                                : index + 1}</td>
 
                             <td>{u.menu_title}</td>
                             <td>{u.menu_types}</td>

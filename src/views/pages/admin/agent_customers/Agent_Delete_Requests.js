@@ -385,7 +385,9 @@ class Agent_Delete_Requests extends React.Component {
                       {this.state?.agents?.length > 0 &&
                         this.state.agents.map((u, index) => (
                           <tr key={u.mobile_number}>
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>{u.mobile_number}</td>

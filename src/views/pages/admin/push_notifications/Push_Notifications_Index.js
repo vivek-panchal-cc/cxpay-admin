@@ -468,7 +468,9 @@ class Push_Notifications_Index extends React.Component {
                       {this.state?.notification_list?.length > 0 ? (
                         this.state.notification_list.map((u, index) => (
                           <tr key={u.id}>
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}</td>
                             <td>{u.title}</td>
                             <td>
                               <MessagePopup message={u.description} />

@@ -103,18 +103,28 @@ const Manual_Topup_Request = () => {
                           <th key={header.field || index}>
                             <span
                               className="sortCls"
-                              onClick={header?.field != 'bank_name' ? () => handleApplySorting(header.field) : ''}
+                              onClick={
+                                header?.field != "bank_name"
+                                  ? () => handleApplySorting(header.field)
+                                  : ""
+                              }
                             >
                               <span className="table-header-text-mrg">
                                 {header?.label || ""}
                               </span>
-                              {!isSort && header?.field != 'bank_name' && <FontAwesomeIcon icon={faSort} />}
-                              {isSort && header?.field != 'bank_name' && sortDirect === "desc" && (
-                                <FontAwesomeIcon icon={faSortUp} />
+                              {!isSort && header?.field != "bank_name" && (
+                                <FontAwesomeIcon icon={faSort} />
                               )}
-                              {isSort && header?.field != 'bank_name' && sortDirect === "asc" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
+                              {isSort &&
+                                header?.field != "bank_name" &&
+                                sortDirect === "desc" && (
+                                  <FontAwesomeIcon icon={faSortUp} />
+                                )}
+                              {isSort &&
+                                header?.field != "bank_name" &&
+                                sortDirect === "asc" && (
+                                  <FontAwesomeIcon icon={faSortDown} />
+                                )}
                             </span>
                           </th>
                         );
@@ -134,7 +144,11 @@ const Manual_Topup_Request = () => {
                       } = item || {};
                       return (
                         <tr key={transaction_id || index}>
-                          <td>{index + 1}</td>
+                          <td>
+                            {currentPage >= 2
+                              ? index + 1 + 10 * (currentPage - 1)
+                              : index + 1}
+                          </td>
                           <td>{name}</td>
                           {/* <td>{bank_name}</td> */}
                           <td>{date}</td>

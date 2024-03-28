@@ -351,7 +351,9 @@ class Agent_Detail extends React.Component {
                       {this.state.agent_recharges?.length > 0 &&
                         this.state.agent_recharges.map((u, index) => (
                           <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{formatMobileNumber(u.mobile_number)}</td>                            
                             <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>

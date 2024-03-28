@@ -436,7 +436,9 @@ class Page_list extends React.Component {
                               />
                             </td>
 
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
+                                : index + 1}</td>
                             <td>
                               {" "}
                               {_canAccess("cms_pages", "view") && (
