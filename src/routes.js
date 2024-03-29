@@ -276,7 +276,7 @@ const routes = [
   {
     path: "/admin/users/add",
     exact: true,
-    name: "Add",
+    name: "Add User",
     component: User_Add,
     module_name: "users",
     action: "create",
@@ -308,7 +308,7 @@ const routes = [
   {
     path: "/admin/user_groups/add",
     exact: true,
-    name: "Add",
+    name: "Add User Group",
     component: User_Groups_Add,
     module_name: "user_groups",
     action: "create",
@@ -334,7 +334,7 @@ const routes = [
   {
     path: "/admin/system_modules/add",
     exact: true,
-    name: "Add",
+    name: "Add System Module",
     component: System_Modules_Add,
     module_name: "system_modules",
     action: "view",
@@ -360,7 +360,7 @@ const routes = [
   {
     path: "/admin/cms_pages/add",
     exact: true,
-    name: "Add ",
+    name: "Add CMS Page",
     component: CMS_Page_Add,
     module_name: "cms_pages",
     action: "create",
@@ -393,7 +393,7 @@ const routes = [
   {
     path: "/admin/faq/add",
     exact: true,
-    name: "Add",
+    name: "Add Faq",
     component: Faq_Add,
     module_name: "faqs",
     action: "create",
@@ -427,7 +427,7 @@ const routes = [
   {
     path: "/admin/menu_management/add",
     exact: true,
-    name: "Add",
+    name: "Add Menu",
     component: Menu_Management_Add,
     module_name: "menu_management",
     action: "create",
@@ -479,7 +479,7 @@ const routes = [
   {
     path: "/admin/banner_management/add",
     exact: true,
-    name: "Add",
+    name: "Add Banner",
     component: Banner_Management_Add,
     module_name: "banner_management",
     action: "create",
@@ -518,7 +518,7 @@ const routes = [
   {
     path: "/admin/email_templates/add",
     exact: true,
-    name: "Add ",
+    name: "Add Email Template",
     component: Email_Template_Add,
     module_name: "email_templates",
     action: "create",
@@ -570,7 +570,7 @@ const routes = [
   {
     path: "/admin/sms_templates/add",
     exact: true,
-    name: "Add ",
+    name: "Add SMS Template",
     component: SMS_Template_Add,
     module_name: "sms_templates",
     action: "create",
@@ -636,7 +636,7 @@ const routes = [
   {
     path: "/admin/fee_management/add",
     exact: true,
-    name: "Add",
+    name: "Add Fee",
     component: Fee_Management_Add,
     module_name: "fee_management",
     action: "create",
@@ -671,7 +671,7 @@ const routes = [
   {
     path: "/admin/notifications/add",
     exact: true,
-    name: "Add",
+    name: "Add Push Notification",
     component: Push_Notification_Add,
     module_name: "notifications",
     action: "create",
@@ -787,7 +787,7 @@ const routes = [
   {
     path: "/admin/agent_customers/add",
     exact: true,
-    name: "Add ",
+    name: "Add Agent",
     component: Agent_Customers_Add,
     module_name: "agent_customers",
     action: "create",

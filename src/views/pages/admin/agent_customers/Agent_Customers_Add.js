@@ -327,7 +327,7 @@ class Agent_Customers_Add extends Component {
     return (
       <CCard>
         <CCardHeader>
-          Add Page
+          Add Agent
           <div className="card-header-actions">
             <CTooltip content={globalConstants.BACK_MSG}>
               <CLink
