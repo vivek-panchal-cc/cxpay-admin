@@ -49,7 +49,7 @@ class Business_Customers_Edit extends React.Component {
       fields: {
         user_group_name: "",
         status: true,
-        is_kyc: true,
+        // is_kyc: true,
         admin_approved: true,
         kyc_approved_status: "",
         kyc_document_file: "",
@@ -57,6 +57,9 @@ class Business_Customers_Edit extends React.Component {
         kyc_document_type: "",
         kyc_expiration_date: null,
         _id: this.props.match.params.id,
+        renew_kyc_data: {
+          renew_kyc_approved_status: "",
+        },
       },
       is_kyc_approved_status: "",
       module_permission: {},
@@ -68,6 +71,7 @@ class Business_Customers_Edit extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeKYCRenewal = this.handleChangeKYCRenewal.bind(this);
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.permssionChange = this.permssionChange.bind(this);
@@ -112,7 +116,7 @@ class Business_Customers_Edit extends React.Component {
                 (e) => e.iso === res.data.country
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
-            const kyctmp = res.data.is_kyc === false ? false : true;
+            // const kyctmp = res.data.is_kyc === false ? false : true;
             const isApprovedtmp =
               res.data.admin_approved === false ? false : true;
             // const isKycApproved =
@@ -122,7 +126,7 @@ class Business_Customers_Edit extends React.Component {
               city: res.data.city,
               country: country_index,
               status: statustmp,
-              is_kyc: kyctmp,
+              // is_kyc: kyctmp,
               admin_approved: isApprovedtmp,
               kyc_approved_status: res.data.kyc_approved_status,
               is_kyc_approved_status: res.data.kyc_approved_status,
@@ -258,6 +262,23 @@ class Business_Customers_Edit extends React.Component {
     }
   };
 
+  handleChangeKYCRenewal = (e) => {
+    const { name, value, type } = e.target;
+    if (type === "radio") {
+      if (name === "renew_kyc_approved_status") {
+        this.setState(() => ({
+          fields: {
+            ...this.state.fields,
+            renew_kyc_data: {
+              ...this.state.fields.renew_kyc_data,
+              renew_kyc_approved_status: value,
+            },
+          },
+        }));
+      }
+    }
+  };
+
   permssionChange(e) {
     const { name, value } = e.target;
 
@@ -318,12 +339,18 @@ class Business_Customers_Edit extends React.Component {
 
       formData.append("company_name", this.state.fields.company_name);
       formData.append("status", this.state.status);
-      formData.append("kyc_status", this.state.is_kyc);
+      // formData.append("kyc_status", this.state.is_kyc);
       formData.append("admin_approved", this.state.admin_approved);
       formData.append(
         "kyc_approved_status",
         this.state.fields.kyc_approved_status
       );
+      if (this.state.fields.renew_kyc_data) {
+        formData.append(
+          "renew_kyc_approved_status",
+          this.state.fields.renew_kyc_data.renew_kyc_approved_status
+        );
+      }
       formData.append("email", this.state.fields.email);
       formData.append("city", this.state.city);
       formData.append(
@@ -423,7 +450,7 @@ class Business_Customers_Edit extends React.Component {
 
   render() {
     var { module_permission, site_logo } = this.state;
-
+  
     return (
       <>
         <CRow>
@@ -787,71 +814,75 @@ class Business_Customers_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                {this.state.fields.kyc_type?.toLowerCase() === "manual" && (
-                  <CFormGroup className="limits-wrap d-flex flex-wrap">
-                    <CCol md="2" className="pl-0">
-                      KYC Document Approval
-                    </CCol>
-                    <CCol sm="10" className="pl-0">
-                      <CFormGroup variant="custom-checkbox" inline>
-                        <CFormGroup
+                {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && ( */}
+                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">
+                    KYC Approval
+                  </CCol>
+                  <CCol sm="10" className="pl-0">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "20px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="approveRadio"
+                          name="kyc_approved_status"
+                          value={"approved"}
+                          checked={
+                            this.state.fields.kyc_approved_status === "approved"
+                          }
+                          onChange={this.handleChange}
+                          disabled={
+                            this.state.fields.kyc_approved_status === "pending"
+                          }
+                          // disabled={
+                          //   this.state.is_kyc_approved_status === "approved"
+                          // }
+                        />
+                        <CLabel
                           check
-                          className="radio"
-                          style={{ marginLeft: "20px", marginBottom: "10px" }}
+                          className="form-check-label"
+                          htmlFor="approveRadio"
                         >
-                          <CInputRadio
-                            className="form-check-input"
-                            id="approveRadio"
-                            name="kyc_approved_status"
-                            value={"approved"}
-                            checked={
-                              this.state.fields.kyc_approved_status ===
-                              "approved"
-                            }
-                            onChange={this.handleChange}
-                            disabled={
-                              this.state.is_kyc_approved_status === "approved"
-                            }
-                          />
-                          <CLabel
-                            check
-                            className="form-check-label"
-                            htmlFor="approveRadio"
-                          >
-                            Approve
-                          </CLabel>
-                        </CFormGroup>
-                        <CFormGroup
-                          check
-                          className="radio"
-                          style={{ marginLeft: "35px", marginBottom: "10px" }}
-                        >
-                          <CInputRadio
-                            className="form-check-input"
-                            id="rejectRadio"
-                            name="kyc_approved_status"
-                            value={"rejected"}
-                            checked={
-                              this.state.fields.kyc_approved_status ===
-                              "rejected"
-                            }
-                            onChange={this.handleChange}
-                            disabled={
-                              this.state.is_kyc_approved_status === "approved"
-                            }
-                          />
-                          <CLabel
-                            check
-                            className="form-check-label"
-                            htmlFor="rejectRadio"
-                          >
-                            Reject
-                          </CLabel>
-                        </CFormGroup>
+                          Approve
+                        </CLabel>
                       </CFormGroup>
-                    </CCol>
-                  </CFormGroup>
-                )}
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "35px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="rejectRadio"
+                          name="kyc_approved_status"
+                          value={"rejected"}
+                          checked={
+                            this.state.fields.kyc_approved_status === "rejected"
+                          }
+                          onChange={this.handleChange}
+                          disabled={
+                            this.state.fields.kyc_approved_status === "pending"
+                          }
+                          // disabled={
+                          //   this.state.is_kyc_approved_status === "approved"
+                          // }
+                        />
+                        <CLabel
+                          check
+                          className="form-check-label"
+                          htmlFor="rejectRadio"
+                        >
+                          Reject
+                        </CLabel>
+                      </CFormGroup>
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                {/* )} */}
 
                 {this.state.fields.kyc_type?.toLowerCase() === "manual" &&
                   this.state.fields.kyc_document_type && (
@@ -901,8 +932,164 @@ class Business_Customers_Edit extends React.Component {
                     </div>
                   )}
 
+                {this.state.fields.is_apply_for_renew && (
+                  <CFormGroup className="limits-wrap d-flex flex-wrap">
+                    <CCol md="2" className="pl-0">
+                      KYC Renewal
+                    </CCol>
+                    <CCol sm="10" className="pl-0">
+                      <CFormGroup variant="custom-checkbox" inline>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "20px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="approveRadio"
+                            name="renew_kyc_approved_status"
+                            value={"approved"}
+                            checked={
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_approved_status === "approved"
+                            }
+                            onChange={this.handleChangeKYCRenewal}
+                            disabled={
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_approved_status === "pending"
+                            }
+                            // disabled={
+                            //   this.state.is_kyc_approved_status === "approved"
+                            // }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="approveRadio"
+                          >
+                            Approve
+                          </CLabel>
+                        </CFormGroup>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "35px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="rejectRadio"
+                            name="renew_kyc_approved_status"
+                            value={"rejected"}
+                            checked={
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_approved_status === "rejected"
+                            }
+                            onChange={this.handleChangeKYCRenewal}
+                            disabled={
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_approved_status === "pending"
+                            }
+                            // disabled={
+                            //   this.state.is_kyc_approved_status === "approved"
+                            // }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="rejectRadio"
+                          >
+                            Reject
+                          </CLabel>
+                        </CFormGroup>
+                      </CFormGroup>
+                    </CCol>
+                  </CFormGroup>
+                )}
+
+                {this.state.fields.is_apply_for_renew && (
+                  <div
+                    className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper kyc-approved-border"
+                    style={{ marginBottom: "20px" }}
+                  >
+                    <div
+                      className={`kyc-innner-wrap d-flex flex-wrap w-100 ${
+                        this.state.fields.renew_kyc_data.renew_kyc_document_file
+                          ? "kyc-document-innner-wrap-3"
+                          : "kyc-wbr-innner-wrap-3"
+                      }`}
+                    >
+                      <SectionKycDetails
+                        detailsHeading="Renewal Details"
+                        details={[
+                          {
+                            key: "Document Type",
+                            value: capitalizeWordByWord(
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_document_type
+                            ),
+                          },
+                          {
+                            key: "Document Id",
+                            value:
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_document_id,
+                          },
+                          {
+                            key: "Transaction Id",
+                            value: capitalizeWordByWord(
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_transaction_id
+                            ),
+                          },
+                          {
+                            key: "Renew Date",
+                            value: formatDateByConditional(
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_renew_date,
+                              true
+                            ),
+                          },
+                          {
+                            key: "Expiry Date",
+                            value: formatDateByConditional(
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_expiration_date,
+                              true
+                            ),
+                          },
+                          {
+                            key: "Completion Date",
+                            value: formatDateByConditional(
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_completion_date,
+                              true
+                            ),
+                          },
+                          {
+                            key: "Attempted Count",
+                            value:
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_attempt_count,
+                          },
+                        ]}
+                      />
+                      {this.state.fields.renew_kyc_data
+                        .renew_kyc_document_file && (
+                        <SectionKycDocument
+                          documentHeading="Document"
+                          receipt={
+                            this.state.fields.renew_kyc_data
+                              .renew_kyc_document_file || null
+                          }
+                          handleClickReceipt={this.handleKycDocument}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* {this.state.fields.kyc_approved_status?.toLowerCase() === "approved" && ( */}
-                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                {/* <CFormGroup className="limits-wrap d-flex flex-wrap">
                   <CCol md="2" className="pl-0">
                     KYC Approval
                   </CCol>
@@ -955,11 +1142,11 @@ class Business_Customers_Edit extends React.Component {
                       </CLabel>
                     )}
                   </CCol>
-                </CFormGroup>
+                </CFormGroup> */}
                 {/* )} */}
 
                 {this.state.fields.kyc_type?.toLowerCase() === "system" &&
-                  this.state.fields.is_kyc && (
+                  this.state.fields.kyc_expiration_date && (
                     <table className="kyc-table">
                       <thead>
                         <tr>

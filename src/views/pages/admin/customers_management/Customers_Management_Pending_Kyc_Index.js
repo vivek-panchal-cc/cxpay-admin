@@ -384,10 +384,10 @@ class CustomerManagementPendingKycIndex extends React.Component {
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
-                        <CLabel htmlFor="name">Name</CLabel>
+                        <CLabel htmlFor="name">Search</CLabel>
                         <CInput
                           id="name"
-                          placeholder="Search Name"
+                          placeholder="Search here..."
                           name="search_name"
                           value={this.state.fields.search_name}
                           onChange={this.handleChange}

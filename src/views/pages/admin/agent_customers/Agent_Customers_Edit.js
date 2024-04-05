@@ -16,6 +16,7 @@ import {
   CTooltip,
   CSwitch,
   CSelect,
+  CInputRadio,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import { notify, history, _canAccess } from "../../../../_helpers/index";
@@ -59,7 +60,8 @@ class Agent_Customers_Edit extends React.Component {
         system_commission_type: "",
         system_commission_amount: "",
         card_commission: [],
-        is_kyc: true,
+        // is_kyc: true,
+        kyc_approved_status: "",
       },
       countryData: {},
       cityData: [],
@@ -157,13 +159,14 @@ class Agent_Customers_Edit extends React.Component {
                 (e) => e.iso === res.data.country
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
-            const kyctmp = res.data.is_kyc === false ? false : true;
+            // const kyctmp = res.data.is_kyc === false ? false : true;
             this.setState({
               cityData: [...this.state.countryData.city_list[iso]],
               city: res.data.city,
               country: country_index,
               status: statustmp,
-              is_kyc: kyctmp,
+              // is_kyc: kyctmp,
+              kyc_approved_status: res.data.kyc_approved_status,
             });
           }
         });
@@ -502,13 +505,11 @@ class Agent_Customers_Edit extends React.Component {
       );
 
       formData.append("status", this.state.fields.status);
-      formData.append("kyc_status", this.state.is_kyc);
-      if (this.state.is_kyc === true) {
-        formData.append("kyc_approved_status", "approved");
-      }
-      if (this.state.is_kyc === false) {
-        formData.append("kyc_approved_status", "inprogress");
-      }
+      // formData.append("kyc_status", this.state.is_kyc);
+      formData.append(
+        "kyc_approved_status",
+        this.state.fields.kyc_approved_status
+      );
       formData.append("email", this.state.fields.email);
 
       // formData.append("card_commission", this.state.fields.card_commission);
@@ -949,36 +950,62 @@ class Agent_Customers_Edit extends React.Component {
                 </CFormGroup>
 
                 <CFormGroup row>
-                  <CCol md="1">KYC</CCol>
+                  <CCol md="1">KYC Approval</CCol>
 
-                  <CCol sm="11">
+                  <CCol sm="10" className="pl-0">
                     <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.is_kyc === true && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="is_kyc"
-                          name="is_kyc"
-                          value={this.state.fields.is_kyc}
-                          defaultChecked
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "20px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="approveRadio"
+                          name="kyc_approved_status"
+                          value={"approved"}
+                          checked={
+                            this.state.fields.kyc_approved_status === "approved"
+                          }
+                          onChange={this.handleChange}
                           // disabled={
-                          //   new Date(this.state.fields.kyc_expiration_date) >
-                          //   new Date()
+                          //   this.state.is_kyc_approved_status === "approved"
                           // }
-                          onChange={this.handleCheckboxChangeKYC}
                         />
-                      )}
-
-                      {this.state.fields.is_kyc === false && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="is_kyc"
-                          name="is_kyc"
-                          value={this.state.fields.is_kyc}
-                          onChange={this.handleCheckboxChangeKYC}
+                        <CLabel
+                          check
+                          className="form-check-label"
+                          htmlFor="approveRadio"
+                        >
+                          Approve
+                        </CLabel>
+                      </CFormGroup>
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "35px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="rejectRadio"
+                          name="kyc_approved_status"
+                          value={"rejected"}
+                          checked={
+                            this.state.fields.kyc_approved_status === "rejected"
+                          }
+                          onChange={this.handleChange}
+                          // disabled={
+                          //   this.state.is_kyc_approved_status === "approved"
+                          // }
                         />
-                      )}
+                        <CLabel
+                          check
+                          className="form-check-label"
+                          htmlFor="rejectRadio"
+                        >
+                          Reject
+                        </CLabel>
+                      </CFormGroup>
                     </CFormGroup>
                   </CCol>
                 </CFormGroup>
