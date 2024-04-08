@@ -919,9 +919,9 @@ class Agent_Customers_Edit extends React.Component {
                 </CFormGroup> */}
 
                 <CFormGroup row>
-                  <CCol md="1">Status</CCol>
+                  <CCol md="2">Status</CCol>
 
-                  <CCol sm="11">
+                  <CCol sm="10" style={{ paddingLeft: "10px" }}>
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.status == 1 && (
                         <CSwitch
@@ -949,8 +949,8 @@ class Agent_Customers_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                <CFormGroup row>
-                  <CCol md="1">KYC Approval</CCol>
+                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">KYC Approval</CCol>
 
                   <CCol sm="10" className="pl-0">
                     <CFormGroup variant="custom-checkbox" inline>
