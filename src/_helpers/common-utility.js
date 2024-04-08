@@ -171,7 +171,7 @@ export const formatDateByConditional = (dateStr, onlyDate = false) => {
 
   const dateObj = new Date(isoDateStr);
   if (isNaN(dateObj.getTime())) {
-    return "Invalid Date";
+    return "";
   }
 
   const dd = String(dateObj.getDate()).padStart(2, "0");

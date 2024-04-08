@@ -450,7 +450,7 @@ class Business_Customers_Edit extends React.Component {
 
   render() {
     var { module_permission, site_logo } = this.state;
-  
+
     return (
       <>
         <CRow>
@@ -836,7 +836,8 @@ class Business_Customers_Edit extends React.Component {
                           }
                           onChange={this.handleChange}
                           disabled={
-                            this.state.fields.kyc_approved_status === "pending"
+                            this.state.fields.kyc_approved_status ===
+                              "pending" || this.state.fields.is_apply_for_renew
                           }
                           // disabled={
                           //   this.state.is_kyc_approved_status === "approved"
@@ -865,7 +866,8 @@ class Business_Customers_Edit extends React.Component {
                           }
                           onChange={this.handleChange}
                           disabled={
-                            this.state.fields.kyc_approved_status === "pending"
+                            this.state.fields.kyc_approved_status ===
+                              "pending" || this.state.fields.is_apply_for_renew
                           }
                           // disabled={
                           //   this.state.is_kyc_approved_status === "approved"
@@ -884,53 +886,51 @@ class Business_Customers_Edit extends React.Component {
                 </CFormGroup>
                 {/* )} */}
 
-                {this.state.fields.kyc_type?.toLowerCase() === "manual" &&
-                  this.state.fields.kyc_document_type && (
+                {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && */}
+                {this.state.fields.kyc_document_type && (
+                  <div
+                    className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper kyc-approved-border"
+                    style={{ marginBottom: "20px" }}
+                  >
                     <div
-                      className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper kyc-approved-border"
-                      style={{ marginBottom: "20px" }}
+                      className={`kyc-innner-wrap d-flex flex-wrap w-100 ${
+                        this.state.fields.kyc_document_file
+                          ? "kyc-document-innner-wrap-3"
+                          : "kyc-wbr-innner-wrap-3"
+                      }`}
                     >
-                      <div
-                        className={`kyc-innner-wrap d-flex flex-wrap w-100 ${
-                          this.state.fields.kyc_document_file
-                            ? "kyc-document-innner-wrap-3"
-                            : "kyc-wbr-innner-wrap-3"
-                        }`}
-                      >
-                        <SectionKycDetails
-                          detailsHeading="Document Details"
-                          details={[
-                            {
-                              key: "Document Type",
-                              value: capitalizeWordByWord(
-                                this.state.fields.kyc_document_type
-                              ),
-                            },
-                            {
-                              key: "Document Id",
-                              value: this.state.fields.kyc_document_id,
-                            },
-                            {
-                              key: "Expiry Date",
-                              value: formatDateByConditional(
-                                this.state.fields.kyc_expiration_date,
-                                true
-                              ),
-                            },
-                          ]}
+                      <SectionKycDetails
+                        detailsHeading="Document Details"
+                        details={[
+                          {
+                            key: "Document Type",
+                            value: capitalizeWordByWord(
+                              this.state.fields.kyc_document_type
+                            ),
+                          },
+                          {
+                            key: "Document Id",
+                            value: this.state.fields.kyc_document_id,
+                          },
+                          {
+                            key: "Expiry Date",
+                            value: formatDateByConditional(
+                              this.state.fields.kyc_expiration_date,
+                              true
+                            ),
+                          },
+                        ]}
+                      />
+                      {this.state.fields.kyc_document_file && (
+                        <SectionKycDocument
+                          documentHeading="Document"
+                          receipt={this.state.fields.kyc_document_file || null}
+                          handleClickReceipt={this.handleKycDocument}
                         />
-                        {this.state.fields.kyc_document_file && (
-                          <SectionKycDocument
-                            documentHeading="Document"
-                            receipt={
-                              this.state.fields.kyc_document_file || null
-                            }
-                            handleClickReceipt={this.handleKycDocument}
-                          />
-                        )}
-                      </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {this.state.fields.is_apply_for_renew && (
                   <CFormGroup className="limits-wrap d-flex flex-wrap">
