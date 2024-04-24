@@ -268,7 +268,7 @@ export const calculateDuration = (renewDate, expirationDate) => {
     duration += ` ${monthDiff} ${monthDiff === 1 ? "month" : "months"}`;
   }
 
-  return duration.trim();
+  return duration.trim() || "0";
 };
 
 export const calculateDurationLeft = (expirationDate) => {
