@@ -425,7 +425,7 @@ const Fullpage = (props) => {
                                   <li className="w-75">
                                     <div
                                       className={`w-100 h-100 d-flex flex-column align-items-start overflow-auto pl-3 bg-extension ${
-                                        recieptFiles.length > 1
+                                        recieptFiles?.length > 1
                                           ? "justify-content-start"
                                           : "justify-content-center"
                                       }`}
@@ -438,7 +438,7 @@ const Fullpage = (props) => {
                                           >
                                             <p
                                               className={`p-0 ${
-                                                recieptFiles.length > 1
+                                                recieptFiles?.length > 1
                                                   ? "mb-2"
                                                   : "m-0"
                                               }`}
