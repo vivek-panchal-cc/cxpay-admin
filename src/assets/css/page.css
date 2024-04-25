@@ -225,7 +225,7 @@ ul.bank-refund-ul .rcard-info {
   margin-left: 10px;
 }
 .kyc-innner-wrap table td {
-  padding: 10px 10px 10px 0px;  
+  padding: 10px 10px 10px 0px;
 }
 .kyc-innner-wrap td:last-child {
   color: var(--dark_blue);
@@ -385,7 +385,7 @@ ul.bank-refund-ul .rcard-info {
   border-radius: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
 }
 .wr-dwld-wrap ul li:first-child {
   margin-left: 0px;

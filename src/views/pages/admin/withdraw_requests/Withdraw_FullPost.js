@@ -190,6 +190,21 @@ const Fullpage = (props) => {
     }
   };
 
+  const handleFileInputChange = (e) => {
+    const files = e.currentTarget.files || [];
+
+    // Append the newly selected files to the existing files
+    setRecieptFiles((prevFiles) => [...prevFiles, ...files]);
+  };
+
+  const removeFile = (index) => {
+    setRecieptFiles((prevFiles) => {
+      const newFiles = [...prevFiles];
+      newFiles.splice(index, 1); // Remove the file at the specified index
+      return newFiles;
+    });
+  };
+
   return (
     <>
       <CContainer fluid>
@@ -363,11 +378,7 @@ const Fullpage = (props) => {
                                       id="cxp-admin-wd-recipt"
                                       type="file"
                                       style={{ height: 0, width: 0 }}
-                                      onChange={(e) => {
-                                        const files =
-                                          e?.currentTarget?.files || [];
-                                        setRecieptFiles(files);
-                                      }}
+                                      onChange={handleFileInputChange}
                                       accept="*"
                                       multiple
                                     />
@@ -378,7 +389,7 @@ const Fullpage = (props) => {
                                         cursor: "pointer",
                                       }}
                                     >
-                                      <p className="bg-extension">
+                                      <p className="bg-extension justify-content-center">
                                         <svg
                                           width="24"
                                           height="24"
@@ -412,10 +423,49 @@ const Fullpage = (props) => {
                                     </label>
                                   </li>
                                   <li className="w-75">
-                                    <div className="w-100 h-100 d-flex flex-column align-items-start overflow-auto pl-3 bg-extension">
-                                      {[...recieptFiles].map((item) => {
+                                    <div
+                                      className={`w-100 h-100 d-flex flex-column align-items-start overflow-auto pl-3 bg-extension ${
+                                        recieptFiles.length > 1
+                                          ? "justify-content-start"
+                                          : "justify-content-center"
+                                      }`}
+                                    >
+                                      {[...recieptFiles].map((item, index) => {
                                         return (
-                                          <p className="p-0 m-0">{item.name}</p>
+                                          <div
+                                            key={index}
+                                            className="d-flex align-items-center"
+                                          >
+                                            <p
+                                              className={`p-0 ${
+                                                recieptFiles.length > 1
+                                                  ? "mb-2"
+                                                  : "m-0"
+                                              }`}
+                                            >
+                                              {`${index + 1}. ${item.name}`}
+                                              <svg
+                                                className={`ms-2 ml-2`}
+                                                onClick={() =>
+                                                  removeFile(index)
+                                                } // Attach the removeFile handler
+                                                style={{ cursor: "pointer" }} // Add cursor pointer style for interaction
+                                                width="15"
+                                                height="15"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                              >
+                                                <path
+                                                  d="M6 18L18 6M6 6L18 18"
+                                                  stroke="black"
+                                                  strokeWidth="2"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                />
+                                              </svg>
+                                            </p>
+                                          </div>
                                         );
                                       })}
                                     </div>
@@ -467,7 +517,7 @@ const Fullpage = (props) => {
                                               alt="image_type"
                                             />
                                           ) : (
-                                            <p className="bg-extension">
+                                            <p className="bg-extension justify-content-center">
                                               <svg
                                                 width="24"
                                                 height="24"
