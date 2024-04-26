@@ -65,7 +65,7 @@ class MultiActionBar extends React.Component {
         // notify.error("Select bulk action");
       }
     } else {
-      notify.error("Please select any action");
+      notify.error("Please select any record");
     }
   };
 
