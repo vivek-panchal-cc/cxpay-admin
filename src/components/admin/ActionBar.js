@@ -59,14 +59,14 @@ class ActionBar extends React.Component {
         notify.error("Select bulk action");
       }
     } else {
-      notify.error("Not found any selected records for bulk action");
+      notify.error("Please select any action");
     }
   };
 
   render() {
     return (
       (_canAccess(this.props.module_name, "delete") ||
-      _canAccess(this.props.module_name, "update")) && 
+      _canAccess(this.props.module_name, "update")) &&
       <>
         <CFormGroup row className="mr-0 ">
           <CCol xs="2">
