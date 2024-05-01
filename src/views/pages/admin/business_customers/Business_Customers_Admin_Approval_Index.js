@@ -416,10 +416,10 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
-                        <CLabel htmlFor="name">Company Name</CLabel>
+                        <CLabel htmlFor="name">Search</CLabel>
                         <CInput
                           id="name"
-                          placeholder="Search Company Name"
+                          placeholder="Search here..."
                           name="search_company_name"
                           value={this.state.fields.search_company_name}
                           onChange={this.handleChange}
