@@ -56,10 +56,10 @@ class ActionBar extends React.Component {
         }
         this.setState({ _openPopup: true, _popupMessage: modelPoupMessage });
       } else {
-        notify.error("Select bulk action");
+        notify.error("Please select any option for bulk action");
       }
     } else {
-      notify.error("Please select any option for bulk action");
+      notify.error("Please select any record");
     }
   };
 
