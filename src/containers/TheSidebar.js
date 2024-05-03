@@ -30,12 +30,23 @@ const TheSidebar = (props) => {
       "c-active"
     );
   }, 200);
+  const sidebarNavStyle = {
+    overflowY: "auto", /* Enable vertical scrollbar */
+    scrollbarWidth: "none", /* Width of the scrollbar */
+    scrollbarColor: "#3c4b64 #3c4b64", /* Color of the scrollbar thumb and track */
+    scrollbarTrackColor: "#3c4b64", /* Color of the scrollbar track */
+    scrollbarTrackHoverColor: "#3c4b64", /* Color of the scrollbar track on hover */
+    scrollbarHandleColor: "#3c4b64", /* Color of the scrollbar handle */
+    scrollbarHandleHoverColor: "#3c4b64", /* Color of the scrollbar handle on hover */
+    scrollbarCornerColor: "transparent", /* Color of the scrollbar corner */
+  };
+
   return (
     <CSidebar
       show={show}
       onShowChange={(val) => dispatch({ type: "set", sidebarShow: val })}
     >
-      <CSidebarBrand className="d-md-down-none" to="admin/dashboard">
+      <CSidebarBrand className="d-md-down-none" to="dashboard">
         <img
           src={require("assets/img/cxpay_me_logo.png").default}
           className="cc-logo-styles"
@@ -51,7 +62,7 @@ const TheSidebar = (props) => {
           height={35}
         /> */}
       </CSidebarBrand>
-      <CSidebarNav>
+      <CSidebarNav style={sidebarNavStyle}>
         <CCreateElement
           items={permissions_navigations}
           components={{
