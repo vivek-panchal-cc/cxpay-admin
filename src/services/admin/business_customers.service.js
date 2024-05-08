@@ -18,6 +18,7 @@ export const businessCustomersService = {
   rejectDeleteRequest,
   getPendingKycCustomerList,
   getAdminApprovalCustomerList,
+  getBusinessKycDocument,
 };
 
 function getCustomersManagementList(postData) {
@@ -44,7 +45,10 @@ async function getPendingKycCustomerList(postData) {
   };
   let response;
   try {
-    response = await fetch(`${API_URL}api/customers/pending-kyc-customer-list`, requestOptions);
+    response = await fetch(
+      `${API_URL}api/customers/pending-kyc-customer-list`,
+      requestOptions
+    );
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -62,7 +66,10 @@ async function getAdminApprovalCustomerList(postData) {
   };
   let response;
   try {
-    response = await fetch(`${API_URL}api/customers/pending-approved-customer-list`, requestOptions);
+    response = await fetch(
+      `${API_URL}api/customers/pending-approved-customer-list`,
+      requestOptions
+    );
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -239,6 +246,27 @@ async function rejectDeleteRequest(postData) {
   try {
     response = await fetch(
       `${API_URL}api/delete-request-status-change-business`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function getBusinessKycDocument(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/download-user-kyc-document`,
       requestOptions
     );
   } catch (error) {

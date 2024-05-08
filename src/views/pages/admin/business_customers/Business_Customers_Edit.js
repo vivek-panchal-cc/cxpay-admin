@@ -420,31 +420,31 @@ class Business_Customers_Edit extends React.Component {
 
   // handleKycDocument = (file) => {
   //   if (file) {
-  //     try {
-  //       // Fetch the file as a Blob
-  //       fetch(file)
-  //         .then((response) => response.blob())
-  //         .then((blob) => {
-  //           const blobUrl = URL.createObjectURL(blob);
-  //           const downloadLink = document.createElement("a");
-  //           downloadLink.href = blobUrl;
-  //           const filename = file.substring(file.lastIndexOf("/") + 1);
-  //           downloadLink.setAttribute("download", filename);
-  //           downloadLink.click();
-  //           URL.revokeObjectURL(blobUrl);
-  //         })
-  //         .catch((error) => {
-  //           console.log("Error fetching file:", error);
-  //         });
-  //     } catch (error) {
-  //       console.log("Error downloading file:", error);
-  //     }
+  //     window.open(file, "_blank");
   //   }
   // };
 
-  handleKycDocument = (file) => {
-    if (file) {
-      window.open(file, "_blank");
+  /**
+   * For downloading kyc document
+   * @param {string} account_number
+   */
+  handleKycDocument = async () => {
+    try {
+      const values = { account_number: this.state.fields.account_number || "" };
+      const { data, success, message } =
+        await businessCustomersService.getBusinessKycDocument(values);
+      if (!success) throw message;
+      const { encoded_file, file_name } = data;
+      const extension = file_name?.split(".")?.[1] || "";
+      const dtnow = new Date().toISOString();
+      const linkSource = `data:application/${extension};base64,${encoded_file}`;
+      const downloadLink = document.createElement("a");
+      const fileName = `${this.state.fields.account_number}_${dtnow}.${extension}`;
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
+    } catch (error) {
+      console.log(error);
     }
   };
 
