@@ -132,7 +132,14 @@ class User_Index extends React.Component {
         }
       );
     } else {
-      this.props.getUsersList(this.state);
+      this.setState(
+        {
+          pageNo: 1
+        },
+        () => {
+          this.props.getUsersList(this.state);
+        }
+      );
     }
   }
 
@@ -181,11 +188,16 @@ class User_Index extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction?.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   componentWillReceiveProps(nextProps) {
     const current_user = _loginUsersDetails();
-    if (nextProps.users.user_list.length > 0) {
+    if (nextProps.users.user_list?.length > 0) {
       let users = nextProps.users.user_list;
       let multiaction = [];
       for (var key in users) {
@@ -194,7 +206,7 @@ class User_Index extends React.Component {
         }
       }
       this.setState({ multiaction: multiaction });
-    } else if (nextProps.users.user_list.length === 0) {
+    } else if (nextProps.users.user_list?.length === 0) {
       this.setState({ multiaction: [] });
     }
   }
@@ -427,8 +439,8 @@ class User_Index extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {user_list.length > 0 &&
-                        user_list.map((u, index) => (
+                      {user_list?.length > 0 &&
+                        user_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               {" "}
@@ -442,7 +454,9 @@ class User_Index extends React.Component {
                                 />
                               )}{" "}
                             </td>
-                            <td>{index + 1}</td>
+                            <td>{this.state.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.pageNo - 1)
+                                : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>
@@ -511,7 +525,7 @@ class User_Index extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {user_list.length === 0 && (
+                      {user_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
@@ -541,7 +555,7 @@ class User_Index extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete User</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>Are you sure you want to delete this user?</CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

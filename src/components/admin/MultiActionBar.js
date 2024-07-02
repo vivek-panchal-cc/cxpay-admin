@@ -61,15 +61,18 @@ class MultiActionBar extends React.Component {
         }
         this.setState({ _openPopup: true, _popupMessage: modelPoupMessage });
       } else {
-        notify.error("Select bulk action");
+        notify.error("Please select any option for bulk action");
+        // notify.error("Select bulk action");
       }
     } else {
-      notify.error("Not found any selected records for bulk action");
+      notify.error("Please select any record");
     }
   };
 
   render() {
     return (
+      (_canAccess(this.props.module_name, "delete") ||
+      _canAccess(this.props.module_name, "update")) &&
       <>
         <CFormGroup row className="mr-0 ">
           <CCol xs="2">
@@ -82,7 +85,7 @@ class MultiActionBar extends React.Component {
                 -- Bulk Action --
               </option>
               ;
-              {_canAccess(this.props.module_name, "delete") && (
+              {_canAccess(this.props.module_name, "delete") && this.props.module_name != 'user_groups' && (
                 <option key="1" value="delete">
                   Delete
                 </option>

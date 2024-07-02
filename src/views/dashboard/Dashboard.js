@@ -26,51 +26,90 @@ class Dashboard extends React.Component {
       total_credit_amount: 0,
       total_debit_amount: 0,
       total_customers: 0,
-      currentMonth: null,
+      currentMonth: this.getCurrentMonth(),
     };
   }
 
-  componentDidMount() {
-    if (
-      this.props.location.state !== undefined &&
-      this.props.location.state !== null
-    ) {
-      window.history.replaceState("page", "");
-      setTimeout(() => {
-        window.location.reload();
-      }, 700);
-    }
-    var today = new Date();
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
+  getCurrentMonth() {
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const yyyy = today.getFullYear();
+    return mm + "/" + yyyy;
+  }
 
-    today = mm + "/" + yyyy;
-    this.setState({ currentMonth: today });
+  // componentDidMount() {
+  //   if (
+  //     this.props.location.state !== undefined &&
+  //     this.props.location.state !== null
+  //   ) {
+  //     window.history.replaceState("page", "");
+  //     setTimeout(() => {
+  //       window.location.reload();
+  //     }, 700);
+  //   }
+  //   var today = new Date();
+  //   var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  //   var yyyy = today.getFullYear();
+
+  //   today = mm + "/" + yyyy;
+  //   this.setState({ currentMonth: today });
+  //   this.getDashboardDetails();
+  // }
+
+  componentDidMount() {
     this.getDashboardDetails();
   }
 
-  getDashboardDetails() {
-    setLoading(true);
-    dashboardService.getDetails().then((res) => {
+  // getDashboardDetails() {
+  //   setLoading(true);
+  //   dashboardService.getDetails().then((res) => {
+  //     if (res.status === false) {
+  //       notify.error(res.message);
+  //       setLoading(false);
+  //     } else {
+  //       this.setState({
+  //         total_individuals: res.data.total_individuals,
+  //         active_individuals: res.data.active_individuals,
+  //         inactive_individuals: res.data.inactive_individuals,
+  //         business_customer_total: res.data.total_business,
+  //         transaction_total: res.data.transaction_total,
+  //         active_business: res.data.active_business,
+  //         inactive_business: res.data.inactive_business,
+  //         total_credit_amount: res.data.total_credit_amount,
+  //         total_debit_amount: res.data.total_debit_amount,
+  //         total_customers: res.data.total_customers,
+  //       });
+  //       setLoading(false);
+  //     }
+  //   });
+  // }
+
+  async getDashboardDetails() {
+    try {
+      setLoading(true);
+      const res = await dashboardService.getDetails();
+
       if (res.status === false) {
         notify.error(res.message);
-        setLoading(false);
       } else {
         this.setState({
-          total_individuals: res.data.total_individuals,
-          active_individuals: res.data.active_individuals,
-          inactive_individuals: res.data.inactive_individuals,
-          business_customer_total: res.data.total_business,
-          transaction_total: res.data.transaction_total,
-          active_business: res.data.active_business,
-          inactive_business: res.data.inactive_business,
-          total_credit_amount: res.data.total_credit_amount,
-          total_debit_amount: res.data.total_debit_amount,
-          total_customers: res.data.total_customers,
+          total_individuals: res.data.total_individuals || 0,
+          active_individuals: res.data.active_individuals || 0,
+          inactive_individuals: res.data.inactive_individuals || 0,
+          business_customer_total: res.data.total_business || 0,
+          transaction_total: res.data.transaction_total || 0,
+          active_business: res.data.active_business || 0,
+          inactive_business: res.data.inactive_business || 0,
+          total_credit_amount: res.data.total_credit_amount || 0,
+          total_debit_amount: res.data.total_debit_amount || 0,
+          total_customers: res.data.total_customers || 0,
         });
-        setLoading(false);
       }
-    });
+    } catch (error) {
+      notify.error("An error occurred while fetching dashboard details.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   render() {
@@ -130,7 +169,7 @@ class Dashboard extends React.Component {
           </CCol>
         </CRow>
         <CRow>
-          <CCol sm={4}>
+          <CCol sm={6}>
             <CCard color="warning" className="dashboard-card">
               <CCardBody>
                 <span className="float-right">
@@ -144,13 +183,13 @@ class Dashboard extends React.Component {
                     ANG{" "}
                     {this.state.total_credit_amount
                       ? this.state.total_credit_amount
-                      : "N/A"}
+                      : "0"}
                   </h4>
                 </CCardText>
               </CCardBody>
             </CCard>
           </CCol>
-          <CCol sm={4}>
+          <CCol sm={6}>
             <CCard color="danger" className="dashboard-card">
               <CCardBody>
                 <span className="float-right">

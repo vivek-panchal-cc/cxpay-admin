@@ -1,7 +1,6 @@
 import React from "react";
 import "./page.css";
 import moment from "moment";
-
 import {
   CCard,
   CCardBody,
@@ -10,10 +9,12 @@ import {
   CRow,
   CContainer,
   CCardFooter,
+  CLink,
 } from "@coreui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Fullpage = (props) => {
-  console.log(props);
   return (
     <>
       <CContainer fluid>
@@ -56,7 +57,8 @@ const Fullpage = (props) => {
                   <tr>
                     <th>Name:</th>
                     <td>
-                      {props.customer.user_type == "personal"
+                      {props.customer.user_type == "personal" ||
+                      props.customer.user_type == "agent"
                         ? props.customer.first_name +
                           " " +
                           props.customer.last_name
@@ -87,7 +89,16 @@ const Fullpage = (props) => {
                   </tr>
                 </table>
               </CCardBody>
-              <CCardFooter></CCardFooter>
+              <CCardFooter>
+                <CLink
+                  className="btn btn-danger btn-sm"
+                  aria-current="page"
+                  to="/admin/customer_reports"
+                >
+                  {" "}
+                  <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back
+                </CLink>
+              </CCardFooter>
             </CCard>
           </CCol>
         </CRow>

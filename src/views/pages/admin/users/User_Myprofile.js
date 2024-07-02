@@ -12,7 +12,10 @@ import {
   CFormText,
   CCardFooter,
   CButton,
-  CLink
+  CLink,
+  CInputGroup,
+  CInputGroupPrepend,
+  CInputGroupText
 } from '@coreui/react'
 import SimpleReactValidator from 'simple-react-validator';
 import { userService } from '../../../../services/admin/user.service'
@@ -21,7 +24,7 @@ import $ from 'jquery';
 import { connect } from 'react-redux';
 import { userConstants } from '../../../../constants/admin';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBan,faSave } from '@fortawesome/free-solid-svg-icons'
+import { faBan,faSave,faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 
 class User_Myprofile extends React.Component {
@@ -35,11 +38,15 @@ class User_Myprofile extends React.Component {
         email:'',
         password:'',
         confirm_password:''
-      }
+      },
+      showPassword: false,
+      showConfirmPassword:false
     }
     this.handleChange = this.handleChange.bind(this);
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
+    this.toggleConfirmPasswordVisibility = this.toggleConfirmPasswordVisibility.bind(this);
   }
 
   componentDidMount() {    
@@ -53,8 +60,12 @@ class User_Myprofile extends React.Component {
           notify.error('Something Went Wrong!');
           history.push('/admin/my-profile');
         } else {
-          this.setState({  fields: {...this.state.fields, name: res.data.name } });
-          this.setState({  fields: {...this.state.fields, email: res.data.email } });
+          this.setState({  
+            fields: {
+              ...this.state.fields, 
+              name: res.data.name,
+              email: res.data.email
+            } });
         }
       }
     }); 
@@ -107,6 +118,12 @@ class User_Myprofile extends React.Component {
     }
   }
 
+  togglePasswordVisibility() {
+    this.setState({showPassword:!this.state.showPassword});
+  }
+  toggleConfirmPasswordVisibility() {
+    this.setState({showConfirmPassword:!this.state.showConfirmPassword});
+  }
   render() {
 
     return (<>
@@ -128,13 +145,27 @@ class User_Myprofile extends React.Component {
               </CFormGroup>
               <CFormGroup>
                 <CLabel htmlFor="nf-email">Password</CLabel>
-                <CInput type="password" id="password" name="password" placeholder="Enter Password " autoComplete="false" value={this.state.fields.password} onChange={this.handleChange} />
+                <CInputGroup>
+                  <CInput type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="Enter Password " autoComplete="false" value={this.state.fields.password} onChange={this.handleChange} />
+                  <CInputGroupPrepend>
+                    <CInputGroupText onClick={this.togglePasswordVisibility}>
+                      <FontAwesomeIcon icon={this.state.showPassword ? faEyeSlash : faEye} />
+                    </CInputGroupText>
+                  </CInputGroupPrepend>
+                </CInputGroup>
                 <CFormText className="help-block"></CFormText>
               </CFormGroup>
 
               <CFormGroup>
                 <CLabel htmlFor="nf-email">Confirm Password</CLabel>
-                <CInput type="password" id="confirm_password" name="confirm_password" placeholder="Enter Confirm Password " autoComplete="false" value={this.state.fields.confirm_password} onChange={this.handleChange} />
+                <CInputGroup>
+                  <CInput type={this.state.showConfirmPassword ? 'text' : 'password'} id="confirm_password" name="confirm_password" placeholder="Enter Confirm Password " autoComplete="false" value={this.state.fields.confirm_password} onChange={this.handleChange} />
+                  <CInputGroupPrepend>
+                    <CInputGroupText onClick={this.toggleConfirmPasswordVisibility}>
+                      <FontAwesomeIcon icon={this.state.showConfirmPassword ? faEyeSlash : faEye} />
+                    </CInputGroupText>
+                  </CInputGroupPrepend>
+                </CInputGroup>
                 <CFormText className="help-block confirm_password"></CFormText>
               </CFormGroup>
             </CCardBody>

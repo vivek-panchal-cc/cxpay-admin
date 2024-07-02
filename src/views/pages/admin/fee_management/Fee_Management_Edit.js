@@ -188,7 +188,7 @@ class Fee_Management_Edit extends Component {
                 -- Payment Types --{" "}
               </option>
               <option key="PL" value="PL">
-                Deposit
+                Top up with card
               </option>
               ;
               <option key="WW" value="WW">
@@ -196,7 +196,10 @@ class Fee_Management_Edit extends Component {
               </option>
               ;
               <option key="WD" value="WD">
-                Withdrawal
+                Refund to card
+              </option>
+              <option key="MF" value="MF">
+                Bank transfer
               </option>
               ;
             </CSelect>

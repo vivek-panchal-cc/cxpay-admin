@@ -44,7 +44,7 @@ const TheHeaderDropdown = (props) => {
               history.push("/admin/settings");
             }}
           >
-            <FontAwesomeIcon icon={faCogs} className="c-sidebar-nav-icon" />
+            <FontAwesomeIcon icon={faCogs} className="c-icon mfe-2" />
             Settings
           </CDropdownItem>
         )}

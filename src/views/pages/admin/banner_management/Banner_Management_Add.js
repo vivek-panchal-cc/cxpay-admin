@@ -26,6 +26,7 @@ import { faArrowLeft, faBan, faSave } from '@fortawesome/free-solid-svg-icons'
 import { globalConstants } from '../../../../constants/admin/global.constants';
 const MediaLibrary = React.lazy(() => import('../../../../components/admin/MediaLibrary'));
 
+const API_URL = process.env.REACT_APP_API_URL;
 class Menu_Management_Add extends React.Component {
 
   constructor(props) {
@@ -107,7 +108,7 @@ class Menu_Management_Add extends React.Component {
     }
   }
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + 'uploads/default.jpg'}`
+    ev.target.src = `${API_URL + 'uploads/default.jpg'}`
   }
 
   handleSelectMedia = (media_id = '', selectedMediaFile = '') => {
@@ -163,7 +164,7 @@ class Menu_Management_Add extends React.Component {
                   <CFormGroup >
                     <CLabel>Banner Image </CLabel>
                     <MediaLibrary onClick={this.handleSelectMedia} />
-                    <img onError={this.addDefaultSrc} src={`${process.env.REACT_APP_API_URL + 'uploads/media/' + this.state.selectedMediaFile}`} alt="Banner Image " style={styles} />
+                    <img onError={this.addDefaultSrc} src={`${API_URL + 'uploads/media/' + this.state.selectedMediaFile}`} alt="Banner Image " style={styles} />
                     <CFormText className="help-block">{this.validator.message('Banner Image', this.state.media_id, 'required', { className: 'text-danger' })}</CFormText>
                   </CFormGroup>
                   <CFormGroup >

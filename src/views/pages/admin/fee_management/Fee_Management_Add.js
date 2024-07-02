@@ -27,9 +27,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import "react-dropzone-uploader/dist/styles.css";
-
 import "./Draft.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
 class Fee_Management_Add extends Component {
   constructor(props) {
     super(props);
@@ -124,7 +124,7 @@ class Fee_Management_Add extends Component {
     }
   }
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
+    ev.target.src = `${API_URL + "uploads/default.jpg"}`;
   }
   // Rendering Html To Dom
   render() {
@@ -159,7 +159,7 @@ class Fee_Management_Add extends Component {
                 -- Payment Types --{" "}
               </option>
               <option key="PL" value="PL">
-                Deposit
+                Top up with card
               </option>
               ;
               <option key="WW" value="WW">
@@ -167,7 +167,10 @@ class Fee_Management_Add extends Component {
               </option>
               ;
               <option key="WD" value="WD">
-                Withdrawal
+                Refund to card
+              </option>
+              <option key="MF" value="MF">
+                Bank transfer
               </option>
               ;
             </CSelect>

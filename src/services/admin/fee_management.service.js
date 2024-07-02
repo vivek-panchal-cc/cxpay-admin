@@ -2,6 +2,8 @@ import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 /*************** Export Functions Defined For Services ******************************/
 
 export const feeManagementService = {
@@ -24,7 +26,7 @@ function getFeeStructures(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/fees/index`, requestOptions)
+  return fetch(`${API_URL}api/fees/index`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(true);
@@ -49,7 +51,7 @@ function createFeeStructure(postData) {
   // fee_label:Personal fee
   // status:0
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/fees/add`, requestOptions)
+  return fetch(`${API_URL}api/fees/add`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(true);
@@ -71,7 +73,7 @@ function getFeeDetail(postData) {
   // id: 3
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/detail`,
+    `${API_URL}api/fees/detail`,
     requestOptions
   )
     .catch((error) => {
@@ -101,7 +103,7 @@ function updateFeeStructure(postData) {
   // id: 6
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/update`,
+    `${API_URL}api/fees/update`,
     requestOptions
   )
     .catch((error) => {
@@ -115,7 +117,6 @@ function updateFeeStructure(postData) {
 /********************** Retrieve Api for Detail view of Post from server   *****************************/
 
 function changeFeeStatus(postData) {
-  //console.log(postData);
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -128,7 +129,7 @@ function changeFeeStatus(postData) {
   // status:true
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/change-status`,
+    `${API_URL}api/fees/change-status`,
     requestOptions
   )
     .catch((error) => {
@@ -152,7 +153,7 @@ function deleteMultiplePages(postData) {
   // status: true
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/fee_management/delete`,
+    `${API_URL}api/fee_management/delete`,
     requestOptions
   )
     .catch((error) => {
@@ -176,7 +177,7 @@ function changeBulkFeeStatus(postData) {
   // status:true
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/change-status`,
+    `${API_URL}api/fees/change-status`,
     requestOptions
   )
     .catch((error) => {

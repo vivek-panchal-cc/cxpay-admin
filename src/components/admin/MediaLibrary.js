@@ -28,7 +28,7 @@ import { authHeaderMutlipart } from '../../_helpers/auth-header';
 // const Preview = React.lazy(() => import('./Preview'));
 require('dotenv').config();
 
-
+const API_URL = process.env.REACT_APP_API_URL;
 class MediaLibrary extends React.Component {
   constructor(props) {
     super(props);
@@ -113,7 +113,7 @@ class MediaLibrary extends React.Component {
   }
 
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + 'uploads/default.jpg'}`
+    ev.target.src = `${API_URL + 'uploads/default.jpg'}`
   }
 
   _handleCancelAction() {
@@ -123,7 +123,7 @@ class MediaLibrary extends React.Component {
   getUploadParams = ({ file }) => {
     const body = new FormData();
     body.append('media_path', file);
-    return { headers: authHeaderMutlipart('', ''), url: `${process.env.REACT_APP_API_URL}api/media/upload`, body }
+    return { headers: authHeaderMutlipart('', ''), url: `${API_URL}api/media/upload`, body }
   }
 
   handleChangeStatus = ({ xhr }) => {
@@ -194,7 +194,7 @@ class MediaLibrary extends React.Component {
                     this.state.media.map((u, index) => (
                       <CCol xs="12" sm="6" lg="3" key={index}>
                         <div className="card bg-gradient-info text-white" style={responsive} >
-                          <img className="sortCls mediaLibrary" id={u._id} onError={this.addDefaultSrc} src={`${process.env.REACT_APP_API_URL + 'uploads/media/' + u.media_path}`} alt="Media Image" onClick={(event) => { this.selectMedia(u._id, u.media_path) }} />
+                          <img className="sortCls mediaLibrary" id={u._id} onError={this.addDefaultSrc} src={`${API_URL + 'uploads/media/' + u.media_path}`} alt="Media Image" onClick={(event) => { this.selectMedia(u._id, u.media_path) }} />
                         </div>
                       </CCol>
                     ))

@@ -17,6 +17,7 @@ import {
   CTooltip,
   CSwitch,
   CSelect,
+  CInputRadio,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import {
@@ -28,12 +29,22 @@ import {
   history,
   capitalize,
   _canAccess,
+  formatDateFull,
+  calculateDurationLeft,
+  calculateDuration,
+  capitalizeWordByWord,
+  formatDateByConditional,
 } from "../../../../_helpers/index";
 import $ from "jquery";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import { customersManagementService } from "../../../../services/admin/customers_management.service";
+import SectionKycDocument from "components/admin/sections/SectionKycDocument";
+import SectionKycDetails from "components/admin/sections/SectionKycDetails";
+import "../business_customers/kycTable.css";
+import "assets/css/page.css";
+import "assets/css/responsive.css";
 
 class Customers_Management_Edit extends React.Component {
   constructor(props) {
@@ -44,22 +55,35 @@ class Customers_Management_Edit extends React.Component {
       fields: {
         user_group_name: "",
         status: true,
+        // is_kyc: true,
+        kyc_approved_status: "",
+        kyc_document_file: "",
+        kyc_document_id: "",
+        kyc_document_type: "",
+        kyc_expiration_date: null,
         _id: this.props.match.params.id,
+        renew_kyc_data: {
+          renew_kyc_approved_status: "",
+        },
       },
+      is_kyc_approved_status: "",
       module_permission: {},
       countryData: {},
       cityData: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
+      site_logo: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeKYCRenewal = this.handleChangeKYCRenewal.bind(this);
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.permssionChange = this.permssionChange.bind(this);
     this.handleCountryChange = this.handleCountryChange.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+    this.handleCheckboxChangeKYC = this.handleCheckboxChangeKYC.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
   }
 
@@ -95,11 +119,15 @@ class Customers_Management_Edit extends React.Component {
                 (e) => e.iso === res.data.country
               ) || {};
             const statustmp = res.data.status == 0 ? 0 : 1;
+            // const kyctmp = res.data.is_kyc === false ? false : true;
             this.setState({
               cityData: iso ? [...this.state.countryData.city_list[iso]] : [],
               city: res.data.city,
               country: country_index,
               status: statustmp,
+              // is_kyc: kyctmp,
+              kyc_approved_status: res.data.kyc_approved_status,
+              is_kyc_approved_status: res.data.kyc_approved_status,
             });
           }
         });
@@ -119,13 +147,12 @@ class Customers_Management_Edit extends React.Component {
     });
   }
 
-  /* 
+  /*
     Get system module actions
   */
   // setSystemModules() {
 
   //   var savedPermission = this.state.fields.permission;
-  //   console.log(savedPermission);
   //   systemModulesService.getSystemModulesList().then(res => {
   //     if (res.status === false) {
   //       notify.error(res.message);
@@ -173,6 +200,27 @@ class Customers_Management_Edit extends React.Component {
     });
   }
 
+  handleRadioChange = (event) => {
+    const { name, value } = event.target;
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [name]: value === "true", // Convert value to boolean
+      },
+    }));
+  };
+
+  handleCheckboxChangeKYC(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    const tmpKyc = value ? true : false;
+
+    this.setState({
+      [name]: tmpKyc,
+    });
+  }
+
   handleUpload(event) {
     const file = event.target.files[0];
     const filename = event.target.files[0].name;
@@ -189,15 +237,60 @@ class Customers_Management_Edit extends React.Component {
     });
   }
 
-  handleChange(e) {
+  // handleChange(e) {
+  //   const { name, value } = e.target;
+  //   if (name === "status") {
+  //     var fstatus = value === "true" ? false : true;
+  //     this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
+  //   } else {
+  //     this.setState({ fields: { ...this.state.fields, [name]: value } });
+  //   }
+  // }
+
+  handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "status") {
-      var fstatus = value === "true" ? false : true;
-      this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
+
+    if (name === "daily_request_limit") {
+      // Remove any non-digit characters
+      const sanitizedValue = value.replace(/[^0-9]/g, "");
+
+      // Take only the first two digits
+      const firstTwoDigits = sanitizedValue.substring(0, 2);
+
+      this.setState({
+        fields: { ...this.state.fields, [name]: firstTwoDigits },
+      });
     } else {
-      this.setState({ fields: { ...this.state.fields, [name]: value } });
+      // For other fields, proceed with the generic handling
+      if (name === "status") {
+        const fstatus = value === "true" ? false : true;
+        this.setState({
+          fields: { ...this.state.fields, [name]: fstatus },
+        });
+      } else {
+        this.setState({
+          fields: { ...this.state.fields, [name]: value },
+        });
+      }
     }
-  }
+  };
+
+  handleChangeKYCRenewal = (e) => {
+    const { name, value, type } = e.target;
+    if (type === "radio") {
+      if (name === "renew_kyc_approved_status") {
+        this.setState(() => ({
+          fields: {
+            ...this.state.fields,
+            renew_kyc_data: {
+              ...this.state.fields.renew_kyc_data,
+              renew_kyc_approved_status: value,
+            },
+          },
+        }));
+      }
+    }
+  };
 
   permssionChange(e) {
     const { name, value } = e.target;
@@ -255,27 +348,22 @@ class Customers_Management_Edit extends React.Component {
     }
 
     if (this.validator.allValid()) {
-      // var postVal = {
-      //   first_name: this.state.fields.first_name,
-      //   last_name: this.state.fields.last_name,
-      //   // status: this.state.fields.status,
-      //   status: this.state.status ,
-      //   email: this.state.fields.email,
-      //   city: this.state.city,
-      //   // country: this.state.country,
-      //   country: this.state.countryData.country_list[this.state.country].country_name,
-      //   personal_id: this.state.fields.personal_id,
-      //   personal_url: this.state.fields.personal_url,
-      //   country_code : this.state.fields.country_code,
-      //   mobile_number : this.state.fields.mobile_number,
-      //   profile_image : this.state.site_logo
-      // }
-
       let formData = new FormData();
 
       formData.append("first_name", this.state.fields.first_name);
       formData.append("last_name", this.state.fields.last_name);
       formData.append("status", this.state.status);
+      // formData.append("kyc_status", this.state.is_kyc);
+      formData.append(
+        "kyc_approved_status",
+        this.state.fields.kyc_approved_status
+      );
+      if (this.state.fields.renew_kyc_data) {
+        formData.append(
+          "renew_kyc_approved_status",
+          this.state.fields.renew_kyc_data.renew_kyc_approved_status
+        );
+      }
       formData.append("email", this.state.fields.email);
       formData.append("city", this.state.city);
       formData.append(
@@ -289,8 +377,34 @@ class Customers_Management_Edit extends React.Component {
       if (this.state.site_logo) {
         formData.append("profile_image", this.state.site_logo);
       }
-      // console.log(postVal)
-      // console.log(formData.get('profile_image'));
+      formData.append(
+        "daily_add_fund_limit",
+        this.state.fields.daily_add_fund_limit
+      );
+      formData.append(
+        "daily_wallet_transfer_limit",
+        this.state.fields.daily_wallet_transfer_limit
+      );
+      formData.append(
+        "daily_withdraw_limit",
+        this.state.fields.daily_withdraw_limit
+      );
+      formData.append(
+        "monthly_add_fund_limit",
+        this.state.fields.monthly_add_fund_limit
+      );
+      formData.append(
+        "monthly_wallet_transfer_limit",
+        this.state.fields.monthly_wallet_transfer_limit
+      );
+      formData.append(
+        "monthly_withdraw_limit",
+        this.state.fields.monthly_withdraw_limit
+      );
+      formData.append(
+        "daily_request_limit",
+        this.state.fields.daily_request_limit
+      );
       // return
       customersManagementService.updateCustomer(formData).then((res) => {
         if (res.status === false) {
@@ -298,6 +412,7 @@ class Customers_Management_Edit extends React.Component {
         } else {
           notify.success(res.message);
           history.push("/admin/personal_customers");
+          // history.goBack();
         }
       });
     } else {
@@ -308,8 +423,38 @@ class Customers_Management_Edit extends React.Component {
     }
   }
 
+  // handleKycDocument = (file) => {
+  //   if (file) {
+  //     window.open(file, "_blank");
+  //   }
+  // };
+
+  /**
+   * For downloading kyc document
+   * @param {string} account_number
+   */
+  handleKycDocument = async () => {
+    try {
+      const values = { account_number: this.state.fields.account_number || "" };
+      const { data, success, message } =
+        await customersManagementService.getPersonalKycDocument(values);
+      if (!success) throw message;
+      const { encoded_file, file_name } = data;
+      const extension = file_name?.split(".")?.[1] || "";
+      const dtnow = new Date().toISOString();
+      const linkSource = `data:application/${extension};base64,${encoded_file}`;
+      const downloadLink = document.createElement("a");
+      const fileName = `${this.state.fields.account_number}_${dtnow}.${extension}`;
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   render() {
-    var { module_permission } = this.state;
+    var { module_permission, site_logo } = this.state;
 
     return (
       <>
@@ -323,7 +468,10 @@ class Customers_Management_Edit extends React.Component {
                     <CLink
                       className="btn btn-danger btn-sm"
                       aria-current="page"
-                      to="/admin/personal_customers"
+                      // to="/admin/personal_customers"
+                      onClick={() => {
+                        history.goBack();
+                      }}
                     >
                       {" "}
                       <FontAwesomeIcon
@@ -336,27 +484,77 @@ class Customers_Management_Edit extends React.Component {
                 </div>
               </CCardHeader>
               <CCardBody>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Account Number</CLabel>
-                  <CInput
-                    type="text"
-                    id="account_number"
-                    name="account_number"
-                    placeholder="Enter Account Number "
-                    autoComplete="name"
-                    value={this.state.fields.account_number}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "account_number",
-                      this.state.fields.account_number,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Account Number</CLabel>
+                      <CInput
+                        type="text"
+                        id="account_number"
+                        name="account_number"
+                        placeholder="Enter Account Number "
+                        autoComplete="name"
+                        value={this.state.fields.account_number}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "account_number",
+                          this.state.fields.account_number,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Balance</CLabel>
+                      <CInput
+                        type="text"
+                        id="available_balance"
+                        name="available_balance"
+                        placeholder="Enter Balance"
+                        autoComplete="name"
+                        value={this.state.fields.available_balance}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "available_balance",
+                          this.state.fields.available_balance,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Reserved Amount</CLabel>
+                      <CInput
+                        type="text"
+                        id="reserved_amount"
+                        name="reserved_amount"
+                        placeholder="Enter Reserved Amount"
+                        autoComplete="name"
+                        value={this.state.fields.reserved_amount}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "reserved_amount",
+                          this.state.fields.reserved_amount,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
                 <CFormGroup>
                   <CLabel htmlFor="nf-name">Customer ID</CLabel>
                   <CInput
@@ -544,8 +742,10 @@ class Customers_Management_Edit extends React.Component {
                   <CCol sm="2">
                     <img
                       src={
-                        this.state.fields.profile_image ||
-                        "/avatars/default-avatar.png"
+                        site_logo
+                          ? URL.createObjectURL(site_logo)
+                          : this.state.fields.profile_image ||
+                            "/avatars/default-avatar.png"
                       }
                       className=""
                       width={100}
@@ -556,9 +756,10 @@ class Customers_Management_Edit extends React.Component {
                       type="file"
                       id="site_logo"
                       name="site_logo"
-                      placeholder="Browe Logo "
+                      placeholder="Browse Logo "
                       autoComplete="site_logo "
                       onChange={this.handleUpload}
+                      style={{ border: "none" }}
                     />
                     {this.state.imageTypeValidation && (
                       <small className="form-text text-muted help-block">
@@ -570,7 +771,7 @@ class Customers_Management_Edit extends React.Component {
                     {this.state.imageSizeValidation && (
                       <small className="form-text text-muted help-block">
                         <div className="text-danger">
-                          Image size is grater then 5MB. Please upload image
+                          Image size is greater than 5MB. Please upload image
                           below 5MB.
                         </div>
                       </small>
@@ -591,9 +792,9 @@ class Customers_Management_Edit extends React.Component {
                 </CFormGroup>
 
                 <CFormGroup row>
-                  <CCol md="1">Status</CCol>
+                  <CCol md="2">Status</CCol>
 
-                  <CCol sm="11">
+                  <CCol sm="10" style={{ paddingLeft: "10px" }}>
                     <CFormGroup variant="custom-checkbox" inline>
                       {this.state.fields.status == 1 && (
                         <CSwitch
@@ -620,6 +821,636 @@ class Customers_Management_Edit extends React.Component {
                     </CFormGroup>
                   </CCol>
                 </CFormGroup>
+
+                {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && ( */}
+                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">
+                    KYC Approval
+                  </CCol>
+                  <CCol sm="10" className="pl-0">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "20px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="approveRadio"
+                          name="kyc_approved_status"
+                          value={"approved"}
+                          checked={
+                            this.state.fields.kyc_approved_status === "approved"
+                          }
+                          onChange={this.handleChange}
+                          // disabled={
+                          //   this.state.fields.kyc_approved_status ===
+                          //     "pending" || this.state.fields.is_apply_for_renew
+                          // }
+                          disabled={
+                            (this.state.fields.kyc_approved_status ===
+                              "pending" ||
+                              this.state.fields.is_apply_for_renew) &&
+                            (!this.state.fields.kyc_document_id ||
+                              !this.state.fields.kyc_transaction_id)
+                          }
+                        />
+                        <CLabel
+                          check
+                          className="form-check-label"
+                          htmlFor="approveRadio"
+                        >
+                          Approve
+                        </CLabel>
+                      </CFormGroup>
+                      <CFormGroup
+                        check
+                        className="radio"
+                        style={{ marginLeft: "35px", marginBottom: "10px" }}
+                      >
+                        <CInputRadio
+                          className="form-check-input"
+                          id="rejectRadio"
+                          name="kyc_approved_status"
+                          value={"rejected"}
+                          checked={
+                            this.state.fields.kyc_approved_status === "rejected"
+                          }
+                          onChange={this.handleChange}
+                          // disabled={
+                          //   this.state.fields.kyc_approved_status ===
+                          //     "pending" || this.state.fields.is_apply_for_renew
+                          // }
+                          disabled={
+                            (this.state.fields.kyc_approved_status ===
+                              "pending" ||
+                              this.state.fields.is_apply_for_renew) &&
+                            (!this.state.fields.kyc_document_id ||
+                              !this.state.fields.kyc_transaction_id)
+                          }
+                        />
+                        <CLabel
+                          check
+                          className="form-check-label"
+                          htmlFor="rejectRadio"
+                        >
+                          Reject
+                        </CLabel>
+                      </CFormGroup>
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                {/* )} */}
+
+                {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && */}
+                {this.state.fields.kyc_document_type && (
+                  <div
+                    className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper kyc-approved-border"
+                    style={{ marginBottom: "20px" }}
+                  >
+                    <div
+                      className={`kyc-innner-wrap d-flex flex-wrap w-100 ${
+                        this.state.fields.kyc_document_file
+                          ? "kyc-document-innner-wrap-3"
+                          : "kyc-wbr-innner-wrap-3"
+                      }`}
+                    >
+                      <SectionKycDetails
+                        detailsHeading="Document Details"
+                        details={[
+                          {
+                            key: "Document Type",
+                            value: capitalizeWordByWord(
+                              this.state.fields.kyc_document_type
+                            ),
+                          },
+                          {
+                            key: "Document Id",
+                            value: this.state.fields.kyc_document_id,
+                          },
+                          {
+                            key: "Expiry Date",
+                            value: formatDateByConditional(
+                              this.state.fields.kyc_expiration_date,
+                              true
+                            ),
+                          },
+                        ]}
+                      />
+                      {this.state.fields.kyc_document_file && (
+                        <SectionKycDocument
+                          documentHeading="Document"
+                          receipt={this.state.fields.kyc_document_file || null}
+                          handleClickReceipt={this.handleKycDocument}
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {this.state.fields.is_apply_for_renew &&
+                  this.state.fields.renew_kyc_data.renew_kyc_approved_status !==
+                    "pending" && (
+                    <CFormGroup className="limits-wrap d-flex flex-wrap">
+                      <CCol md="2" className="pl-0">
+                        KYC Renewal
+                      </CCol>
+                      <CCol sm="10" className="pl-0">
+                        <CFormGroup variant="custom-checkbox" inline>
+                          <CFormGroup
+                            check
+                            className="radio"
+                            style={{ marginLeft: "20px", marginBottom: "10px" }}
+                          >
+                            <CInputRadio
+                              className="form-check-input"
+                              id="approveRadioRenew"
+                              name="renew_kyc_approved_status"
+                              value={"approved"}
+                              checked={
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_approved_status === "approved"
+                              }
+                              onChange={this.handleChangeKYCRenewal}
+                              disabled={
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_approved_status === "pending"
+                              }
+                              // disabled={
+                              //   this.state.is_kyc_approved_status === "approved"
+                              // }
+                            />
+                            <CLabel
+                              check
+                              className="form-check-label"
+                              htmlFor="approveRadioRenew"
+                            >
+                              Approve
+                            </CLabel>
+                          </CFormGroup>
+                          <CFormGroup
+                            check
+                            className="radio"
+                            style={{ marginLeft: "35px", marginBottom: "10px" }}
+                          >
+                            <CInputRadio
+                              className="form-check-input"
+                              id="rejectRadioRenew"
+                              name="renew_kyc_approved_status"
+                              value={"rejected"}
+                              checked={
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_approved_status === "rejected"
+                              }
+                              onChange={this.handleChangeKYCRenewal}
+                              disabled={
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_approved_status === "pending"
+                              }
+                              // disabled={
+                              //   this.state.is_kyc_approved_status === "approved"
+                              // }
+                            />
+                            <CLabel
+                              check
+                              className="form-check-label"
+                              htmlFor="rejectRadioRenew"
+                            >
+                              Reject
+                            </CLabel>
+                          </CFormGroup>
+                        </CFormGroup>
+                      </CCol>
+                    </CFormGroup>
+                  )}
+
+                {this.state.fields.is_apply_for_renew &&
+                  this.state.fields.renew_kyc_data.renew_kyc_approved_status !==
+                    "pending" && (
+                    <div
+                      className="walllet-refund-wrapper wallet-refund-details-wrappper wr-bank-details-wrapper kyc-approved-border"
+                      style={{ marginBottom: "20px" }}
+                    >
+                      <div
+                        className={`kyc-innner-wrap d-flex flex-wrap w-100 ${
+                          this.state.fields.renew_kyc_data
+                            .renew_kyc_document_file
+                            ? "kyc-document-innner-wrap-3"
+                            : "kyc-wbr-innner-wrap-3"
+                        }`}
+                      >
+                        <SectionKycDetails
+                          detailsHeading="Renewal Details"
+                          details={[
+                            {
+                              key: "Document Type",
+                              value: capitalizeWordByWord(
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_document_type
+                              ),
+                            },
+                            {
+                              key: "Document Id",
+                              value:
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_document_id,
+                            },
+                            {
+                              key: "Transaction Id",
+                              value: capitalizeWordByWord(
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_transaction_id
+                              ),
+                            },
+                            {
+                              key: "Renew Date",
+                              value: formatDateByConditional(
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_renew_date,
+                                true
+                              ),
+                            },
+                            {
+                              key: "Expiry Date",
+                              value: formatDateByConditional(
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_expiration_date,
+                                true
+                              ),
+                            },
+                            {
+                              key: "Completion Date",
+                              value: formatDateByConditional(
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_completion_date,
+                                true
+                              ),
+                            },
+                            {
+                              key: "Attempted Count",
+                              value:
+                                this.state.fields.renew_kyc_data
+                                  .renew_kyc_attempt_count,
+                            },
+                          ]}
+                        />
+                        {this.state.fields.renew_kyc_data
+                          .renew_kyc_document_file && (
+                          <SectionKycDocument
+                            documentHeading="Document"
+                            receipt={
+                              this.state.fields.renew_kyc_data
+                                .renew_kyc_document_file || null
+                            }
+                            handleClickReceipt={this.handleKycDocument}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                {/* {this.state.fields.kyc_approved_status?.toLowerCase() ===
+                  "approved" && ( */}
+                {/* <CFormGroup className="limits-wrap d-flex flex-wrap">
+                  <CCol md="2" className="pl-0">
+                    KYC Approval
+                  </CCol>
+
+                  <CCol sm="10" className="pl-0">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      {this.state.fields.is_kyc === true && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          defaultChecked
+                          // disabled={
+                          //   this.state.fields.kyc_expiration_date === null ||
+                          //   this.state.fields.kyc_approved_status?.toLowerCase() ===
+                          //     "pending" ||
+                          //   this.state.fields.kyc_approved_status?.toLowerCase() ===
+                          //     "inprogress"
+                          // }
+                          onChange={this.handleCheckboxChangeKYC}
+                        />
+                      )}
+
+                      {this.state.fields.is_kyc === false && (
+                        <CSwitch
+                          className="mr-1"
+                          color="primary"
+                          id="is_kyc"
+                          name="is_kyc"
+                          value={this.state.fields.is_kyc}
+                          // disabled={
+                          //   this.state.fields.kyc_expiration_date === null ||
+                          //   this.state.fields.kyc_approved_status?.toLowerCase() ===
+                          //     "pending" ||
+                          //   this.state.fields.kyc_approved_status?.toLowerCase() ===
+                          //     "inprogress"
+                          // }
+                          onChange={this.handleCheckboxChangeKYC}
+                        />
+                      )}
+                    </CFormGroup>
+                    {this.state.fields.kyc_expiration_date === null && (
+                      <CLabel
+                        className="text-danger"
+                        style={{ contain: "content", fontSize: "12px" }}
+                      >
+                        The customer has not completed the KYC process.
+                      </CLabel>
+                    )}
+                  </CCol>
+                </CFormGroup> */}
+                {/* )} */}
+
+                {this.state.fields.kyc_type?.toLowerCase() === "system" &&
+                  this.state.fields.kyc_expiration_date && (
+                    <table className="kyc-table">
+                      <thead>
+                        <tr>
+                          <th>KYC</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.state.fields.kyc_completion_date && (
+                          <tr>
+                            <td>Completion on</td>
+                            <td>
+                              {formatDateFull(
+                                this.state.fields.kyc_completion_date
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        {this.state.fields.kyc_renew_date && (
+                          <tr>
+                            <td>Renewed on</td>
+                            <td>
+                              {formatDateFull(this.state.fields.kyc_renew_date)}
+                            </td>
+                          </tr>
+                        )}
+                        {this.state.fields.kyc_expiration_date && (
+                          <tr>
+                            <td>Expiration on</td>
+                            <td>
+                              {formatDateFull(
+                                this.state.fields.kyc_expiration_date
+                              )}
+                              {this.state.fields.kyc_renew_date && (
+                                <span>
+                                  {" (Duration: "}
+                                  {calculateDuration(
+                                    this.state.fields.kyc_renew_date,
+                                    this.state.fields.kyc_expiration_date
+                                  )}
+                                  {")"}
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        {this.state.fields.kyc_transaction_id && (
+                          <tr>
+                            <td>Transaction Id</td>
+                            <td>{this.state.fields.kyc_transaction_id}</td>
+                          </tr>
+                        )}
+                        {this.state.fields.status && (
+                          <tr>
+                            <td>Status</td>
+                            <td>
+                              {this.state.fields.status === "1" ? (
+                                <span className="success-green">Success</span>
+                              ) : (
+                                <span className="text-danger">Decline</span>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                        <tr>
+                          <td>Attempted Count</td>
+                          <td>{this.state.fields.kyc_attempt_count}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
+
+                <CFormGroup className="limits-wrap">
+                  <div className="row mb-3 mb-lg-4 limits-heading">
+                    <div className="col-md-6 col">
+                      <p>Daily Limits</p>
+                    </div>
+                    <div className="col-sm-6 col">
+                      <p>Monthly Limits</p>
+                    </div>
+                  </div>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_add_fund"
+                        className="col-form-label"
+                      >
+                        Add Fund Limit
+                      </CLabel>
+
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_add_fund"
+                          name="daily_add_fund_limit"
+                          placeholder="Enter Add Fund Limit"
+                          value={this.state.fields.daily_add_fund_limit}
+                          onChange={this.handleChange}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_add_fund_limit",
+                            this.state.fields.daily_add_fund_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="monthly_add_fund"
+                        className="col-form-label"
+                      >
+                        Add Fund Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="monthly_add_fund"
+                          name="monthly_add_fund_limit"
+                          placeholder="Enter Add Fund Limit"
+                          value={this.state.fields.monthly_add_fund_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "monthly_add_fund_limit",
+                            this.state.fields.monthly_add_fund_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_wallet_transfer"
+                        className="col-form-label"
+                      >
+                        Wallet Transfer Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_wallet_transfer"
+                          name="daily_wallet_transfer_limit"
+                          placeholder="Enter Wallet Transfer Limit"
+                          value={this.state.fields.daily_wallet_transfer_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_wallet_transfer_limit",
+                            this.state.fields.daily_wallet_transfer_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="monthly_wallet_transfer"
+                        className="col-form-label"
+                      >
+                        Wallet Transfer Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="monthly_wallet_transfer_limit"
+                          name="monthly_wallet_transfer_limit"
+                          placeholder="Enter Wallet Transfer Limit"
+                          value={
+                            this.state.fields.monthly_wallet_transfer_limit
+                          }
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "monthly_wallet_transfer_limit",
+                            this.state.fields.monthly_wallet_transfer_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_withdraw_limit"
+                        className="col-form-label"
+                      >
+                        Withdraw Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_withdraw_limit"
+                          name="daily_withdraw_limit"
+                          placeholder="Enter Withdraw Limit"
+                          value={this.state.fields.daily_withdraw_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_withdraw_limit",
+                            this.state.fields.daily_withdraw_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="monthly_withdraw"
+                        className="col-form-label"
+                      >
+                        Withdraw Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="monthly_withdraw_limit"
+                          name="monthly_withdraw_limit"
+                          placeholder="Enter Withdraw Limit"
+                          value={this.state.fields.monthly_withdraw_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "monthly_withdraw_limit",
+                            this.state.fields.monthly_withdraw_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+
+                  <CRow className="mb-3">
+                    <CCol className="col-sm-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_request"
+                        className="col-form-label"
+                      >
+                        Request Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_request_limit"
+                          name="daily_request_limit"
+                          placeholder="Enter Request Limit"
+                          value={this.state.fields.daily_request_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_request_limit",
+                            this.state.fields.daily_request_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+                </CFormGroup>
               </CCardBody>
               <CCardFooter>
                 <CButton
@@ -634,7 +1465,10 @@ class Customers_Management_Edit extends React.Component {
                 <CLink
                   className="btn btn-danger btn-sm"
                   aria-current="page"
-                  to="/admin/personal_customers"
+                  // to="/admin/personal_customers"
+                  onClick={() => {
+                    history.goBack();
+                  }}
                 >
                   <FontAwesomeIcon icon={faBan} className="mr-1" />
                   Cancel

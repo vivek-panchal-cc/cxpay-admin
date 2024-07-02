@@ -56,15 +56,17 @@ class ActionBar extends React.Component {
         }
         this.setState({ _openPopup: true, _popupMessage: modelPoupMessage });
       } else {
-        notify.error("Select bulk action");
+        notify.error("Please select any option for bulk action");
       }
     } else {
-      notify.error("Not found any selected records for bulk action");
+      notify.error("Please select any record");
     }
   };
 
   render() {
     return (
+      (_canAccess(this.props.module_name, "delete") ||
+      _canAccess(this.props.module_name, "update")) &&
       <>
         <CFormGroup row className="mr-0 ">
           <CCol xs="2">

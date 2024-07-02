@@ -1,0 +1,65 @@
+/* details.css */
+
+/* Basic Table Styling */
+.recurring-details-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+/* Header Styling */
+.recurring-details-container th {
+  /* background-color: #2a81c5;
+  color: white; */
+  background-color: transparent;
+  color: black;
+  padding: 10px;
+}
+
+/* Row Highlight */
+.recurring-details-container tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Hover Effect */
+.recurring-details-container tr:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+/* Nested Table Styling */
+.recurring-details-container td table {
+  width: 100%;
+}
+
+.recurring-details-container td table th,
+.recurring-details-container td table td {
+  padding: 8px;
+  text-align: center;
+}
+
+.recurring-details-container .nested-table th {
+  background-color: transparent;
+  border-bottom: 1px solid black;
+  color: black;
+}
+
+/* Adjusting cell padding */
+.recurring-details-container td {
+  padding: 10px;
+}
+
+.status-paid,
+.status-success {
+  color: green;
+}
+
+.status-pending {
+  color: #ff7a00;
+}
+
+.status-failed {
+  color: #ff3333;
+}

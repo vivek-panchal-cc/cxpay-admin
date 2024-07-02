@@ -12,6 +12,8 @@ import {
   CCardBody,
   CCardFooter,
   CTooltip,
+  CSelect,
+  CFormText,
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
@@ -20,7 +22,6 @@ import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-
 class Settings_Update extends Component {
   constructor(props) {
     super(props);
@@ -50,25 +51,37 @@ class Settings_Update extends Component {
 
   /************************ Define  Method For Form Field **************************/
   handleChange(event, index) {
-    const value = event.target.value;
-    const target = event.target;
-    const name = target.name;
+    const { name, value, type } = event.target;
     const page_list = [...this.state.page_list];
-    page_list[index][name] = value;
-    this.setState({
-      page_list: page_list,
-    });
-  }
 
-  removeUnderscore(str) {
-    return str
-      .split("_")
-      .map((word) => {
-        const capitalizedWord =
-          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        return capitalizedWord;
-      })
-      .join(" ");
+    if (type === "radio") {
+      // Update the value of the selected radio button
+      page_list[index].value = value;
+    } else if (type === "checkbox") {
+      const checkedValue = event.target.value;
+      const isChecked = event.target.checked;
+      const updatedValues = [...page_list[index].value]; // Copy the array
+
+      if (isChecked) {
+        // If the checkbox is checked, add its value to the array
+        updatedValues.push({ [checkedValue]: true });
+      } else {
+        // If the checkbox is unchecked, remove its value from the array
+        const indexToRemove = updatedValues?.findIndex(
+          (obj) => Object.keys(obj)[0] === checkedValue
+        );
+        if (indexToRemove !== -1) {
+          updatedValues?.splice(indexToRemove, 1);
+        }
+      }
+
+      page_list[index].value = updatedValues;
+    } else {
+      // Update the value of other input types
+      page_list[index].value = value;
+    }
+
+    this.setState({ page_list });
   }
 
   // Close  modal box method
@@ -91,8 +104,19 @@ class Settings_Update extends Component {
               notify.error("Page not found");
               history.push("/admin/settings");
             } else {
+              // Map the initial value of checkboxes to an array
+              const updatedPageList = res.data.system_options?.map((option) => {
+                if (option.field_type === "checkbox") {
+                  // Convert value to array if it's not already
+                  const valueArray = Array.isArray(option.value)
+                    ? option.value
+                    : [option.value];
+                  return { ...option, value: valueArray };
+                }
+                return option;
+              });
               this.setState({
-                page_list: res.data.system_options,
+                page_list: updatedPageList,
               });
             }
           }
@@ -108,22 +132,52 @@ class Settings_Update extends Component {
 
   checkValidation(event) {
     if (this.validator.allValid()) {
-      const convertedPayload = this.state.page_list.reduce((acc, item) => {
-        const key = Object.keys(item)[0];
-        const value = item[key];
-        acc[key] = value;
-        return acc;
-      }, {});
+      const convertedPayload = {};
+      let isValid = true;
 
-      settingsService.updateSettings(convertedPayload).then((res) => {
-        if (res.status === "error") {
-          notify.error(res.message);
-        } else {
-          notify.success(res.message);
-          history.push("/admin/settings");
-          event.preventDefault();
+      // Iterate over each system option and add it to the payload
+      this.state.page_list?.forEach((option) => {
+        convertedPayload[option.system_option_name] = option.value;
+
+        // Perform additional validation based on field_validation property
+        if (option.field_validation === "number") {
+          if (
+            isNaN(option.value) ||
+            option.value === "" ||
+            !/^\d+(\.\d+)?$/.test(option.value)
+          ) {
+            notify.error(`${option.field_title} must be a number`);
+            this.validator.showMessageFor(option.system_option_name, {
+              type: "required",
+              message: `${option.field_title} must be a number`,
+            });
+            isValid = false;
+          }
+        } else if (option.field_validation === "email") {
+          if (!/^\S+@\S+\.\S+$/.test(option.value)) {
+            notify.error(`${option.field_title} must be a valid email address`);
+            this.validator.showMessageFor(option.system_option_name, {
+              type: "required",
+              message: `${option.field_title} must be a valid email address`,
+            });
+            isValid = false;
+          }
         }
       });
+
+      if (isValid) {
+        settingsService.updateSettings(convertedPayload).then((res) => {
+          if (res.status === "error") {
+            notify.error(res.message);
+          } else {
+            notify.success(res.message);
+            history.push("/admin/dashboard");
+            event.preventDefault();
+          }
+        });
+      } else {
+        this.validator.showMessages();
+      }
     } else {
       this.validator.showMessages();
     }
@@ -140,7 +194,7 @@ class Settings_Update extends Component {
               <CLink
                 className="btn btn-danger btn-sm"
                 aria-current="page"
-                to="/admin/settings"
+                to="/admin/dashboard"
               >
                 {" "}
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back
@@ -149,30 +203,128 @@ class Settings_Update extends Component {
           </div>
         </CCardHeader>
         <CCardBody>
-          {this.state.page_list &&
-            this.state.page_list.length > 0 &&
-            this.state.page_list.map((option, index) => {
-              const modifiedString = this.removeUnderscore(
-                Object.keys(option)[0]
-              );
-              const key = Object.keys(option)[0];
-              const value = option[key];
-              return (
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">{modifiedString}</CLabel>
+          {/* Iterate over each system option */}
+          {this.state.page_list?.map((option, index) => (
+            <CFormGroup key={index}>
+              <CLabel htmlFor={option.system_option_name}>
+                {option.field_title}
+              </CLabel>
+              {/* Render different input fields based on field type */}
+              {option.field_type === "text" && (
+                <div>
                   <CInput
                     type="text"
-                    step="any"
-                    id={key}
-                    name={key}
-                    placeholder="Enter Amount"
-                    autoComplete="amount"
-                    value={value}
+                    id={option.system_option_name}
+                    name={option.system_option_name}
+                    value={option.value}
                     onChange={(e) => this.handleChange(e, index)}
                   />
-                </CFormGroup>
-              );
-            })}
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+              {option.field_type === "radio" && (
+                <div>
+                  {Object.entries(option.field_options)?.map(([key, value]) => (
+                    <div key={key}>
+                      <input
+                        type="radio"
+                        id={`${option.system_option_name}_${key}`}
+                        name={option.system_option_name}
+                        value={key}
+                        checked={option.value === key}
+                        onChange={(e) => this.handleChange(e, index)}
+                      />
+                      <label
+                        style={{ marginLeft: "5px" }}
+                        htmlFor={`${option.system_option_name}_${key}`}
+                      >
+                        {value}
+                      </label>
+                    </div>
+                  ))}
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+              {option.field_type === "checkbox" && (
+                <div>
+                  {Object.entries(option.field_options)?.map(([key, value]) => (
+                    <div key={key}>
+                      <input
+                        type="checkbox"
+                        id={`${option.system_option_name}_${key}`}
+                        name={option.system_option_name}
+                        value={key}
+                        checked={option.value.some((obj) => obj[key])}
+                        onChange={(e) => this.handleChange(e, index)}
+                      />
+                      <label
+                        style={{ marginLeft: "5px" }}
+                        htmlFor={`${option.system_option_name}_${key}`}
+                      >
+                        {value}
+                      </label>
+                    </div>
+                  ))}
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+              {option.field_type === "select" && (
+                <div>
+                  <CSelect
+                    id={option.system_option_name}
+                    name={option.system_option_name}
+                    value={option.value}
+                    onChange={(e) => this.handleChange(e, index)}
+                  >
+                    {Object.entries(option.field_options)?.map(
+                      ([key, value]) => (
+                        <option key={key} value={key}>
+                          {value}
+                        </option>
+                      )
+                    )}
+                  </CSelect>
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      option.system_option_name,
+                      option.value,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
+                </div>
+              )}
+            </CFormGroup>
+          ))}
         </CCardBody>
         <CCardFooter>
           <CButton
@@ -188,7 +340,7 @@ class Settings_Update extends Component {
           <CLink
             className="btn btn-danger btn-sm"
             aria-current="page"
-            to="/admin/settings"
+            to="/admin/dashboard"
           >
             {" "}
             <FontAwesomeIcon icon={faBan} className="mr-1" /> Cancel

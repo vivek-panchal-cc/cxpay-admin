@@ -2,6 +2,8 @@ import { authHeader } from '../../_helpers';
 import { notify,handleResponse,setLoading } from '../../_helpers/';
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const systemModulesService = {
     getSystemModulesList,
     getSystemModulesListData,
@@ -19,7 +21,7 @@ export const systemModulesService = {
         headers: authHeader('common','view')
     };
    
-    return fetch(`${process.env.REACT_APP_API_URL}api/system_modules/module/list`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/system_modules/module/list`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -34,7 +36,7 @@ function getSystemModulesListData(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/system_modules/index`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/system_modules/index`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -48,7 +50,7 @@ function createSystemModules(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/system_modules/add`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/system_modules/add`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -61,7 +63,7 @@ function getSystemModule(id) {
         headers: authHeader()
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/system_modules/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/system_modules/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -76,7 +78,7 @@ function updateSystemModule(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/system_modules/edit/${postData._id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/system_modules/edit/${postData._id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -89,7 +91,7 @@ function deleteSystemModules(id) {
         method: 'DELETE',
         headers: authHeader()
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/system_modules/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/system_modules/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -104,7 +106,7 @@ function deleteMultipleSystemModules(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/system_modules/delete_multi_delete_system_modules`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/system_modules/delete_multi_delete_system_modules`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
