@@ -433,9 +433,12 @@ class Customers_Management_Edit extends React.Component {
    * For downloading kyc document
    * @param {string} account_number
    */
-  handleKycDocument = async () => {
+  handleKycDocument = async (isRenewal = false) => {
     try {
-      const values = { account_number: this.state.fields.account_number || "" };
+      const values = {
+        account_number: this.state.fields.account_number || "",
+        is_renewal: isRenewal,
+      };
       const { data, success, message } =
         await customersManagementService.getPersonalKycDocument(values);
       if (!success) throw message;
@@ -941,7 +944,9 @@ class Customers_Management_Edit extends React.Component {
                         <SectionKycDocument
                           documentHeading="Document"
                           receipt={this.state.fields.kyc_document_file || null}
-                          handleClickReceipt={this.handleKycDocument}
+                          handleClickReceipt={() =>
+                            this.handleKycDocument(false)
+                          }
                         />
                       )}
                     </div>
@@ -1102,7 +1107,9 @@ class Customers_Management_Edit extends React.Component {
                               this.state.fields.renew_kyc_data
                                 .renew_kyc_document_file || null
                             }
-                            handleClickReceipt={this.handleKycDocument}
+                            handleClickReceipt={() =>
+                              this.handleKycDocument(true)
+                            }
                           />
                         )}
                       </div>
