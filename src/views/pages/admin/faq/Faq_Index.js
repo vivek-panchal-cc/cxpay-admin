@@ -286,6 +286,13 @@ class FaqIndex extends React.Component {
                                 )}
                               </Draggable>
                             ))}
+                            {this.state.faq_list?.length === 0 && (
+                              <tr>
+                                <td className="text-center" colSpan="5">
+                                  No records found
+                                </td>
+                              </tr>
+                            )}
                           </tbody>
                         </table>
                         {provided.placeholder}
