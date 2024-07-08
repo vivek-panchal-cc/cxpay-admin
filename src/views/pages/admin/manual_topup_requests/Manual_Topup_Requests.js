@@ -89,7 +89,7 @@ const Manual_Topup_Request = () => {
       <CRow>
         <CCol xl={12}>
           <CCard>
-            <CCardHeader>Manual Topup Requests</CCardHeader>
+            <CCardHeader>Manual Top Up Requests</CCardHeader>
             <CCardBody>
               <div className="position-relative table-responsive">
                 <table className="table">

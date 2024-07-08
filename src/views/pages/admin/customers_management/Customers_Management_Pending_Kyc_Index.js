@@ -464,7 +464,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
         <CRow>
           <CCol xl={12}>
             <CCard>
-              <CCardHeader>Personal Customers Pending Kyc</CCardHeader>
+              <CCardHeader>Personal Customers Pending KYC</CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
                   {/* <MultiActionBar
@@ -500,7 +500,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
-                        </th>                        
+                        </th>
                         <th
                           onClick={() => this.handleColumnSort("mobile_number")}
                         >
@@ -590,7 +590,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                               <td>{this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
                                 : index + 1}</td>
-                              <td>{c.user_name}</td>                              
+                              <td>{c.user_name}</td>
                               <td>{c.mobile_number}</td>
                               <td>{formatDate(c.date)}</td>
                               {/* <td>

@@ -159,7 +159,7 @@ class Fee_Management_Add extends Component {
                 -- Payment Types --{" "}
               </option>
               <option key="PL" value="PL">
-                Top up with card
+                Top Up with card
               </option>
               ;
               <option key="WW" value="WW">

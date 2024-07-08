@@ -500,7 +500,7 @@ class BusinessCustomerPendingKycIndex extends React.Component {
         <CRow>
           <CCol xl={12}>
             <CCard>
-              <CCardHeader>Business Customers Pending Kyc</CCardHeader>
+              <CCardHeader>Business Customers Pending KYC</CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
                   {/* <MultiActionBar

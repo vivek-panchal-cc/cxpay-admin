@@ -300,7 +300,7 @@ class Agent_Detail extends React.Component {
                         <th>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Topup Amount
+                              Top Up Amount
                             </span>
                           </span>
                         </th>
@@ -308,7 +308,7 @@ class Agent_Detail extends React.Component {
                         <th>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Topup Type
+                              Top Up Type
                             </span>
                           </span>
                         </th>
@@ -355,7 +355,7 @@ class Agent_Detail extends React.Component {
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
                                 : index + 1}</td>
                             <td>{u.name}</td>
-                            <td>{formatMobileNumber(u.mobile_number)}</td>                            
+                            <td>{formatMobileNumber(u.mobile_number)}</td>
                             <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>
                             <td>{u.topup_type}</td>
                             <td>

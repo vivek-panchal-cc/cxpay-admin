@@ -288,9 +288,7 @@ class FaqIndex extends React.Component {
                             ))}
                             {this.state.faq_list?.length === 0 && (
                               <tr>
-                                <td className="text-center" colSpan="5">
-                                  No records found
-                                </td>
+                                <td colSpan="5">No records found</td>
                               </tr>
                             )}
                           </tbody>

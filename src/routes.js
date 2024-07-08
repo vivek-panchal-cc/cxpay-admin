@@ -381,7 +381,7 @@ const routes = [
     module_name: "cms_pages",
     action: "view",
   },
-  
+
   {
     path: "/admin/faq",
     exact: true,
@@ -544,7 +544,7 @@ const routes = [
   {
     path: "/admin/personal_customers/pending_kyc",
     exact: true,
-    name: "Pending Kyc",
+    name: "Pending KYC",
     component: Customers_Management_Pending_Kyc_Index,
     module_name: "personal_customers",
     action: "view",
@@ -602,7 +602,7 @@ const routes = [
   {
     path: "/admin/business_customers/pending_kyc",
     exact: true,
-    name: "Pending Kyc",
+    name: "Pending KYC",
     component: Business_Customers_Pending_Kyc_Index,
     module_name: "business_customers",
     action: "view",
@@ -750,11 +750,11 @@ const routes = [
     module_name: "withdraw_requests",
     action: "view",
   },
-  // Manual Topup Requests
+  // Manual Top Up Requests
   {
     path: "/admin/manual_requests",
     exact: true,
-    name: "Manual Topup Requests",
+    name: "Manual Top Up Requests",
     component: Manual_Topup_Requests,
     module_name: "manual_requests",
     action: "view",

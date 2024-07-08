@@ -90,7 +90,7 @@ const Manual_Topup_Detail = () => {
     if (confirmationDetails.status && !regexId.test(appTopupId.trim()))
       return setIsError({
         appTopupId:
-          "Topup-id should be alpha numeric containing 5 - 25 characters",
+          "Top Up id should be alpha numeric containing 5 - 25 characters",
       });
     if (!confirmationDetails.status && !regexComment.test(rejComment.trim()))
       return setIsError({
@@ -296,7 +296,7 @@ const Manual_Topup_Detail = () => {
         <CFormGroup row>
           {confirmationDetails.status ? (
             <CCol xs="12">
-              <CLabel htmlFor="cxp-admin-mf-id">Add Topop Id</CLabel>
+              <CLabel htmlFor="cxp-admin-mf-id">Add Top Up Id</CLabel>
               <CInput
                 id="cxp-admin-mf-id"
                 placeholder="Transaction Id"

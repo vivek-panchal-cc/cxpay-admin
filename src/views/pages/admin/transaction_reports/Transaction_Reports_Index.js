@@ -324,7 +324,7 @@ class Transaction_Reports_Index extends React.Component {
                           <option value="PL">Deposit</option>
                           <option value="REQ">Request</option>
                           <option value="WW">Wallet to Wallet</option>
-                          <option value="AGENT TOPUP">Agent Topup</option>
+                          <option value="AGENT TOPUP">Agent Top Up</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
