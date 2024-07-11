@@ -181,7 +181,7 @@ class Business_Customers_Index extends React.Component {
       }
     });
   }
-  
+
   getPendingKycCustomerList() {
     businessCustomersService.getPendingKycCustomerList({customer_type: "1"}).then((res) => {
       if (!res.success) {
@@ -774,7 +774,7 @@ class Business_Customers_Index extends React.Component {
                                 : index + 1}</td>
                               <td>{c.company_name}</td>
                               <td>{c.email}</td>
-                              <td>{c.mobile}</td>
+                              <td>{`+${c.mobile}`}</td>
                               <td>{c.date}</td>
                               <td>
                                 {_canAccess("business_customers", "update") && (

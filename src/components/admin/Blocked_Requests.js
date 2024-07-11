@@ -396,7 +396,7 @@ class BlockedRequests extends React.Component {
                                 : index + 1}</td>
                             <td>{u.user_name}</td>
                             <td>{u.account_number}</td>
-                            <td>{u.mobile_number}</td>
+                            <td>{`+${u.mobile_number}`}</td>
                             <td>{formatDateFullWithTimeStamp(u.suspended_at)}</td>
                             <td>{u.suspension_reasons}</td>
 

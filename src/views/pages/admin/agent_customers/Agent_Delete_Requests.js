@@ -390,7 +390,7 @@ class Agent_Delete_Requests extends React.Component {
                                 : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
-                            <td>{u.mobile_number}</td>
+                            <td>{`+${u.mobile_number}`}</td>
                             <td>{u.account_number}</td>
                             <td>{u.agent_total_commission}</td>
                             <td>{u.system_total_commission}</td>

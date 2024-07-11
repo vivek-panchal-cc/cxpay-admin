@@ -355,7 +355,7 @@ class Agent_Detail extends React.Component {
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
                                 : index + 1}</td>
                             <td>{u.name}</td>
-                            <td>{formatMobileNumber(u.mobile_number)}</td>
+                            <td>{`+${formatMobileNumber(u.mobile_number)}`}</td>
                             <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>
                             <td>{u.topup_type}</td>
                             <td>

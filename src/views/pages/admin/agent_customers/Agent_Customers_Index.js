@@ -681,7 +681,7 @@ class Agent_list extends React.Component {
                               )} */}
                             </td>
                             <td>{u.email}</td>
-                            <td>{u.mobile_number}</td>
+                            <td>{`+${u.mobile_number}`}</td>
                             <td>{u.date}</td>
                             <td>
                               {_canAccess("agent_customers", "update") && (

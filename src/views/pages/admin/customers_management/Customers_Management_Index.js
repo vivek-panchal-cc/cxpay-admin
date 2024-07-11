@@ -661,7 +661,7 @@ class Customers_Management_Index extends React.Component {
                                 : index + 1}</td>
                               <td>{c.name}</td>
                               <td>{c.email}</td>
-                              <td>{c.mobile}</td>
+                              <td>{`+${c.mobile}`}</td>
                               <td>{c.date}</td>
                               <td>
                                 {_canAccess("personal_customers", "update") && (

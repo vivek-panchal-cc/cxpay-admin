@@ -576,7 +576,7 @@ const Fullpage = (props) => {
                             </tr>
                             <tr>
                               <td>Mobile Number</td>
-                              <td>{mobile_number}</td>
+                              <td>{`+${mobile_number}`}</td>
                             </tr>
                           </table>
                         </div>

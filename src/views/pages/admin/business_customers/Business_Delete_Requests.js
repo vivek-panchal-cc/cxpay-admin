@@ -359,7 +359,7 @@ class BusinessDeleteRequests extends React.Component {
                                 : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
-                            <td>{u.mobile_number}</td>
+                            <td>{`+${u.mobile_number}`}</td>
                             <td>{u.account_number}</td>
                             <td>{u.available_balance}</td>
 

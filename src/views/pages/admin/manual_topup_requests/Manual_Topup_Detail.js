@@ -237,7 +237,7 @@ const Manual_Topup_Detail = () => {
                           { key: "Email", value: details?.email },
                           {
                             key: "Mobile Number",
-                            value: details?.mobile_number,
+                            value: `+${details?.mobile_number}`,
                           },
                         ]}
                       />
