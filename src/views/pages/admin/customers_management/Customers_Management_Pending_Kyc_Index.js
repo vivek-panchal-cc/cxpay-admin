@@ -130,7 +130,8 @@ class CustomerManagementPendingKycIndex extends React.Component {
                 continue;
               }
               if (
-                current_user.user_group_id === customers_management[key].mobile_number
+                current_user.user_group_id ===
+                customers_management[key].mobile_number
               ) {
                 continue;
               }
@@ -542,20 +543,27 @@ class CustomerManagementPendingKycIndex extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th onClick={() => this.handleColumnSort("kyc_renew_date")}>
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("kyc_renew_date")
+                          }
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              KYC Renew Date
+                              KYC Requested At
                             </span>
-                            {this.state.fields.sort_field !== "kyc_renew_date" && (
+                            {this.state.fields.sort_field !==
+                              "kyc_renew_date" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field === "kyc_renew_date" && (
+                              this.state.fields.sort_field ===
+                                "kyc_renew_date" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field === "kyc_renew_date" && (
+                              this.state.fields.sort_field ===
+                                "kyc_renew_date" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -605,9 +613,13 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                   />
                                 )}
                               </td> */}
-                              <td>{this.state.fields.page >= 2
-                                ? index + 1 + 10 * (this.state.fields.page - 1)
-                                : index + 1}</td>
+                              <td>
+                                {this.state.fields.page >= 2
+                                  ? index +
+                                    1 +
+                                    10 * (this.state.fields.page - 1)
+                                  : index + 1}
+                              </td>
                               <td>{c.user_name}</td>
                               <td>{`+${c.mobile_number}`}</td>
                               <td>{formatDate(c.date)}</td>
@@ -669,7 +681,9 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                               <button
                                                 className="btn  btn-md btn-danger "
                                                 onClick={() =>
-                                                  this.openDeletePopup(c.mobile_number)
+                                                  this.openDeletePopup(
+                                                    c.mobile_number
+                                                  )
                                                 }
                                               >
                                                 <CIcon name="cil-trash"></CIcon>
