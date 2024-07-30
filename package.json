@@ -87,7 +87,7 @@
     "react-scripts": "^4.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT:8086 react-scripts start",
     "build": "react-scripts build",
     "build:local": "env-cmd -f .env.local react-scripts build",
     "build:qa": "env-cmd -f .env react-scripts build",
