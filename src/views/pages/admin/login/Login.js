@@ -66,7 +66,7 @@ class Login extends React.Component {
                         </div>
                       )}
                       <CInputGroup
-                        className="mb-3"
+                        // className="mb-3"
                         className={
                           "form-group" +
                           (submitted && !email ? " has-error" : "")
@@ -92,7 +92,7 @@ class Login extends React.Component {
                         </div>
                       )}
                       <CInputGroup
-                        className="mb-4"
+                        // className="mb-4"
                         className={
                           "form-group" +
                           (submitted && !password ? " has-error" : "")
@@ -143,8 +143,8 @@ class Login extends React.Component {
                   </CCardBody>
                 </CCard>
                 <CCard
-                  className="text-white bg-primary py-5 d-md-down-none"
-                  style={{ width: "44%" }}
+                  className="text-white py-5 d-md-down-none"
+                  style={{ width: "44%", backgroundColor: "#2a81c5" }}
                 >
                   <CCardBody className="text-center">
                     <div>
