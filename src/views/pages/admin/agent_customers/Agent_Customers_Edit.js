@@ -949,7 +949,7 @@ class Agent_Customers_Edit extends React.Component {
                   </CCol>
                 </CFormGroup>
 
-                <CFormGroup className="limits-wrap d-flex flex-wrap">
+                {/* <CFormGroup className="limits-wrap d-flex flex-wrap">
                   <CCol md="2" className="pl-0">KYC Approval</CCol>
 
                   <CCol sm="10" className="pl-0">
@@ -1008,7 +1008,7 @@ class Agent_Customers_Edit extends React.Component {
                       </CFormGroup>
                     </CFormGroup>
                   </CCol>
-                </CFormGroup>
+                </CFormGroup> */}
 
                 <CFormGroup className="limits-wrap">
                   <div className="row mb-3 mb-lg-4 limits-heading">
@@ -1029,7 +1029,7 @@ class Agent_Customers_Edit extends React.Component {
                       onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'status')}}
                       checked={ele.status}
                       />
-                      
+
                       </CCol> */}
 
                       <CCol className="customCBWrap">

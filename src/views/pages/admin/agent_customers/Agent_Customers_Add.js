@@ -674,7 +674,7 @@ class Agent_Customers_Add extends Component {
               )}
             </CCol>
           </CFormGroup>
-          <CFormGroup row>
+          {/* <CFormGroup row>
             <CCol tag="label" md="1">
               KYC Approval
             </CCol>
@@ -730,7 +730,7 @@ class Agent_Customers_Add extends Component {
                 </CFormGroup>
               </CFormGroup>
             </CCol>
-          </CFormGroup>
+          </CFormGroup> */}
           <CFormGroup className="limits-wrap">
             <div className="row mb-3 mb-lg-4 limits-heading">
               <div className="col-md-6 col">
@@ -748,9 +748,9 @@ class Agent_Customers_Add extends Component {
                  id={`${'status'+ele.id}`}
                  value={ele.id}
                  onChange={(e)=>{this.handlePaymentTypeChange(index, e, 'status')}}
-                 
+
                  />
-                 
+
                 </CCol> */}
                 <CCol className="customCBWrap">
                   <CInput
