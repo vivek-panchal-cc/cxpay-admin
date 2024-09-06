@@ -530,6 +530,7 @@ class FaqAdd extends Component {
                 toolbar:
                   "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link  preview",
 
+                menubar: "file",
                 file_browser_callback_types: "image",
 
                 file_picker_callback: function (callback, value, meta) {
