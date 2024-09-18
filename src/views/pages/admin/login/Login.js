@@ -123,6 +123,10 @@ class Login extends React.Component {
                             color="primary"
                             className="px-4"
                             type="submit"
+                            style={{
+                              backgroundColor: "#2a81c5",
+                              borderColor: "#2a81c5",
+                            }}
                           >
                             Login
                           </CButton>
@@ -144,7 +148,7 @@ class Login extends React.Component {
                 </CCard>
                 <CCard
                   className="text-white py-5 d-md-down-none"
-                  style={{ width: "44%", backgroundColor: "#2a81c5" }}
+                  style={{ width: "44%", backgroundColor: "#616666" }}
                 >
                   <CCardBody className="text-center">
                     <div>
