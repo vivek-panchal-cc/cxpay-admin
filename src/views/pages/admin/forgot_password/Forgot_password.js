@@ -79,7 +79,7 @@ class Forgot_password extends React.Component {
                         <CCol xs="6">
                           <CButton color="primary" className="px-4" type='submit'>Request</CButton>
                           &nbsp;
-                          <CButton color="primary" className="px-4" type='button' onClick={() => { history.push('/admin/login'); }}>Cancel</CButton>
+                          <CButton color="danger" className="px-4" type='button' onClick={() => { history.push('/admin/login'); }}>Cancel</CButton>
                         </CCol>
                       </CRow>
                     </CForm>
