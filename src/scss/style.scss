@@ -4,6 +4,11 @@ body {
     }
 }
 
+.btn-primary {
+    background-color: #2981c4 !important;
+    border-color: #2981c4 !important;
+}
+
 // If you want to override variables do it here
 @import "variables";
 
