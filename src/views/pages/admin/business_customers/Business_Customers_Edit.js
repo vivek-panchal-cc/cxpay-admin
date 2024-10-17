@@ -392,6 +392,14 @@ class Business_Customers_Edit extends React.Component {
         "daily_request_limit",
         this.state.fields.daily_request_limit
       );
+      formData.append(
+        "daily_agent_topup_limit",
+        this.state.fields.daily_agent_topup_limit
+      );
+      formData.append(
+        "monthly_agent_topup_limit",
+        this.state.fields.monthly_agent_topup_limit
+      );
 
       // return
       businessCustomersService.updateCustomer(formData).then((res) => {
@@ -1444,6 +1452,63 @@ class Business_Customers_Edit extends React.Component {
                           {this.validator.message(
                             "monthly_withdraw_limit",
                             this.state.fields.monthly_withdraw_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+
+                  <CRow className="mb-3">
+                    <CCol className="col-sm-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_agent_topup_limit"
+                        className="col-form-label"
+                      >
+                        Agent Topup Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="daily_agent_topup_limit"
+                          name="daily_agent_topup_limit"
+                          placeholder="Enter Agent Topup Limit"
+                          value={this.state.fields.daily_agent_topup_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "daily_agent_topup_limit",
+                            this.state.fields.daily_agent_topup_limit,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CCol>
+                    </CCol>
+                    <CCol className="col-sm-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="monthly_agent_topup_limit"
+                        className="col-form-label"
+                      >
+                        Agent Topup Limit
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="monthly_agent_topup_limit"
+                          name="monthly_agent_topup_limit"
+                          placeholder="Enter Agent Topup Limit"
+                          value={this.state.fields.monthly_agent_topup_limit}
+                          onChange={this.handleChange}
+                          disabled={false}
+                        />
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "monthly_agent_topup_limit",
+                            this.state.fields.monthly_agent_topup_limit,
                             "required",
                             { className: "text-danger" }
                           )}
