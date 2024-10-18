@@ -152,6 +152,9 @@ class Settings_Update extends Component {
               message: `${option.field_title} must be a number`,
             });
             isValid = false;
+          } else if (option.value.length > 16) {
+            notify.error(`${option.field_title} cannot exceed 16 digits`);
+            isValid = false;
           }
         } else if (option.field_validation === "email") {
           if (!/^\S+@\S+\.\S+$/.test(option.value)) {

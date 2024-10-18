@@ -260,6 +260,32 @@ class Customers_Management_Edit extends React.Component {
       this.setState({
         fields: { ...this.state.fields, [name]: firstTwoDigits },
       });
+    } else if (
+      name === "daily_add_fund_limit" ||
+      name === "daily_wallet_transfer_limit" ||
+      name === "daily_withdraw_limit" ||
+      name === "monthly_add_fund_limit" ||
+      name === "monthly_wallet_transfer_limit" ||
+      name === "monthly_withdraw_limit" ||
+      name === "daily_agent_topup_limit" ||
+      name === "monthly_agent_topup_limit"
+    ) {
+      // Remove any non-digit characters
+      const sanitizedValue = value.replace(/[^0-9.]/g, "");
+
+      // Ensure only one decimal point is allowed
+      const decimalCount = (sanitizedValue.match(/\./g) || [])?.length;
+
+      if (decimalCount > 1) {
+        return; // Prevent multiple decimal points from being entered
+      }
+
+      // Take only the first two digits
+      const firstSixteenDigits = sanitizedValue.substring(0, 16);
+
+      this.setState({
+        fields: { ...this.state.fields, [name]: firstSixteenDigits },
+      });
     } else {
       // For other fields, proceed with the generic handling
       if (name === "status") {
@@ -334,6 +360,43 @@ class Customers_Management_Edit extends React.Component {
   }
 
   handleSubmit() {
+    const {
+      daily_add_fund_limit,
+      daily_wallet_transfer_limit,
+      daily_withdraw_limit,
+      monthly_add_fund_limit,
+      monthly_wallet_transfer_limit,
+      monthly_withdraw_limit,
+      daily_agent_topup_limit,
+      monthly_agent_topup_limit,
+    } = this.state.fields;
+
+    const fieldsToValidate = [
+      { name: "Daily Add Fund Limit", value: daily_add_fund_limit },
+      {
+        name: "Daily Wallet Transfer Limit",
+        value: daily_wallet_transfer_limit,
+      },
+      { name: "Daily Withdraw Limit", value: daily_withdraw_limit },
+      { name: "Monthly Add Fund Limit", value: monthly_add_fund_limit },
+      {
+        name: "Monthly Wallet Transer Limit",
+        value: monthly_wallet_transfer_limit,
+      },
+      { name: "Monthly Withdraw Limit", value: monthly_withdraw_limit },
+      { name: "Daily Agent Topup Limit", value: daily_agent_topup_limit },
+      { name: "Monthly Agent Topup Limit", value: monthly_agent_topup_limit },
+    ];
+    const invalidFields = fieldsToValidate?.find((field) => {
+      return field.value && field.value?.endsWith(".");
+    });
+
+    if (invalidFields) {
+      notify.error(
+        `Please enter a valid decimal value in "${invalidFields.name}"`
+      );
+      return; // Stop form submission
+    }
     if (
       this.state.site_logo &&
       !this.state.site_logo.name.match(/\.(jpg|jpeg|png)$/)

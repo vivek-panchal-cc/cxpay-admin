@@ -1,5 +1,10 @@
 import React from "react";
-import { formatDate, formatDateFullWithTimeStamp, formatMobileNumber, notify } from "../../../../_helpers";
+import {
+  formatDate,
+  formatDateFullWithTimeStamp,
+  formatMobileNumber,
+  notify,
+} from "../../../../_helpers";
 import { agentService } from "../../../../services/admin/agent.service";
 import Fullpage from "./Cms_Pages_FullPost";
 import {
@@ -351,13 +356,19 @@ class Agent_Detail extends React.Component {
                       {this.state.agent_recharges?.length > 0 &&
                         this.state.agent_recharges.map((u, index) => (
                           <tr key={index}>
-                            <td>{this.state.fields.page >= 2
+                            <td>
+                              {this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
-                                : index + 1}</td>
+                                : index + 1}
+                            </td>
                             <td>{u.name}</td>
                             <td>{`+${formatMobileNumber(u.mobile_number)}`}</td>
                             <td>{parseFloat(u.topup_amount)?.toFixed(2)}</td>
-                            <td>{u.topup_type}</td>
+                            <td>
+                              {u.collection_type
+                                ? u.collection_type.toUpperCase()
+                                : "-"}
+                            </td>
                             <td>
                               {parseFloat(u.agent_commission)?.toFixed(2)}
                             </td>
@@ -365,7 +376,10 @@ class Agent_Detail extends React.Component {
                               {parseFloat(u.system_commission)?.toFixed(2)}
                             </td>
                             <td>{parseFloat(u.card_commission)?.toFixed(2)}</td>
-                            <td>{formatDateFullWithTimeStamp(u.recharge_date) || "-"}</td>
+                            <td>
+                              {formatDateFullWithTimeStamp(u.recharge_date) ||
+                                "-"}
+                            </td>
                           </tr>
                         ))}
                       {this.state.agent_recharges?.length === 0 && (
