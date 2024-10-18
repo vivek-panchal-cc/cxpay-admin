@@ -141,19 +141,31 @@ class Settings_Update extends Component {
 
         // Perform additional validation based on field_validation property
         if (option.field_validation === "number") {
-          if (
-            isNaN(option.value) ||
-            option.value === "" ||
-            !/^\d+(\.\d+)?$/.test(option.value)
-          ) {
-            notify.error(`${option.field_title} must be a number`);
+          if (isNaN(option.value) || option.value === "") {
+            notify.error(
+              `${option.field_title} must be a valid number and cannot be a string`
+            );
             this.validator.showMessageFor(option.system_option_name, {
               type: "required",
-              message: `${option.field_title} must be a number`,
+              message: `${option.field_title} must be a valid number and cannot be a string`,
+            });
+            isValid = false;
+          } else if (parseFloat(option.value) < 0) {
+            notify.error(`${option.field_title} cannot be a negative number.`);
+            this.validator.showMessageFor(option.system_option_name, {
+              type: "required",
+              message: `${option.field_title} cannot be a negative number.`,
             });
             isValid = false;
           } else if (option.value.length > 16) {
             notify.error(`${option.field_title} cannot exceed 16 digits`);
+            isValid = false;
+          } else if (!/^\d+(\.\d+)?$/.test(option.value)) {
+            notify.error(`${option.field_title} must be a valid number.`);
+            this.validator.showMessageFor(option.system_option_name, {
+              type: "required",
+              message: `${option.field_title} must be a valid number.`,
+            });
             isValid = false;
           }
         } else if (option.field_validation === "email") {
