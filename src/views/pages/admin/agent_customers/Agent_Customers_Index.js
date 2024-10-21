@@ -406,10 +406,11 @@ class Agent_list extends React.Component {
           filter_status: status,
         };
 
-        const data = await agentService.downloadAgentIndexData(reqParams);
-        if (!data.success) throw data.message;
-        if (typeof data.message === "string") notify.success(data.message);
-        const base64csv = data.data;
+        const { data, message, success } =
+          await agentService.downloadAgentIndexData(reqParams);
+        if (!success) throw message;
+        if (typeof message === "string") notify.success(message);
+        const base64csv = data;
         const dtnow = new Date().toISOString();
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
