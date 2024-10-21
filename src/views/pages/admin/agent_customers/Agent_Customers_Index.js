@@ -29,6 +29,7 @@ import {
   faPlus,
   faEye,
   faBan,
+  faFileExport,
 } from "@fortawesome/free-solid-svg-icons";
 import { agentService } from "../../../../services/admin/agent.service";
 import {
@@ -375,10 +376,53 @@ class Agent_list extends React.Component {
     }
   };
 
+  // downloadFile = async () => {
+  //   const { search, status, start_date, end_date } = this.state.fields;
+  //   let reqParams = {
+  //     filter_search: search,
+  //     filter_start_date: start_date,
+  //     filter_end_date: end_date,
+  //   };
+  //   agentService.downloadAgentIndexData(reqParams).then((res) => {
+  //     if (!res.success) throw data.message;
+  //   });
+  // };
+
   /****************** * Render Data To Dom ************************/
 
   render() {
     const current_user = _loginUsersDetails();
+
+    const downloadFile = async () => {
+      try {
+        const { search, status, start_date, end_date, sort_field, sort_dir } =
+          this.state.fields;
+        const reqParams = {
+          filter_search: search,
+          filter_start_date: start_date,
+          filter_end_date: end_date,
+          filter_sort_dir: sort_dir,
+          filter_sort_field: sort_field,
+          filter_status: status,
+        };
+
+        const data = await agentService.downloadAgentIndexData(reqParams);
+        if (!data.success) throw data.message;
+        if (typeof data.message === "string") notify.success(data.message);
+        const base64csv = data.data;
+        const dtnow = new Date().toISOString();
+        const csvContent = atob(base64csv);
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const downloadLink = document.createElement("a");
+        const fileName = `AGENT_LIST_${dtnow}.csv`;
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = fileName;
+        downloadLink.click();
+      } catch (error) {
+        if (typeof error === "string") notify.error(error);
+      }
+    };
+
     return (
       <>
         <CRow>
@@ -524,6 +568,25 @@ class Agent_list extends React.Component {
                     </CTooltip>
                   )}
                 </div>
+                {this.state.agents?.length > 0 ? (
+                  <div className="card-header-actions px-2">
+                    {_canAccess("agent_customers", "view") && (
+                      <CTooltip
+                        content={globalConstants.EXPORT_AGENT_DATA_INDEX}
+                      >
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          onClick={downloadFile}
+                          to="#"
+                          disabled={this.state.agents?.length <= 0}
+                        >
+                          <FontAwesomeIcon icon={faFileExport} />
+                        </CLink>
+                      </CTooltip>
+                    )}
+                  </div>
+                ) : null}
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -667,9 +730,11 @@ class Agent_list extends React.Component {
                               )}
                             </td>
 
-                            <td>{this.state.fields.page >= 2
+                            <td>
+                              {this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
-                                : index + 1}</td>
+                                : index + 1}
+                            </td>
                             <td>
                               {" "}
                               {/* {_canAccess("agent_customers", "view") && (

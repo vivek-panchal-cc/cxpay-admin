@@ -27,6 +27,7 @@ export const agentService = {
   rejectDeleteRequest,
   getBlockedRequests,
   releaseCustomer,
+  downloadAgentIndexData,
 };
 
 /*********************  Get List of All Pages from Database By - vivek bisht  *****************************/
@@ -160,10 +161,7 @@ async function detailview(postData) {
 
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/agent-wise-recharge`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/agent-wise-recharge`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -300,7 +298,10 @@ async function releaseCustomer(postData) {
   };
   let response;
   try {
-    response = await fetch(`${API_URL}api/customers/release-customer`, requestOptions);
+    response = await fetch(
+      `${API_URL}api/customers/release-customer`,
+      requestOptions
+    );
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -323,4 +324,24 @@ function rejectDeleteRequest(postData) {
       return Promise.reject();
     })
     .then(handleResponse);
+}
+
+async function downloadAgentIndexData(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("agent_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/export-agent-details-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+  }
+  return handleResponse(response);
 }
