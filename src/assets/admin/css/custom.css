@@ -186,7 +186,7 @@
 
 .cc-logo-styles-mobile {
   padding: 10px;
-  max-width: 70%;
+  max-width: 115px;
 }
 .selected-media {
   box-shadow: 0px 0px 2px 3px #0173aa;
@@ -273,6 +273,11 @@ img.mediaLibraryPreview {
   }
   .limits-wrap .d-flex.flex-wrap {
     flex-direction: column;
+  }
+}
+@media all and (max-width: 991px) {
+  .c-header .c-header-brand {
+    max-width: 175px;
   }
 }
 .loader-container.loading + div select {
