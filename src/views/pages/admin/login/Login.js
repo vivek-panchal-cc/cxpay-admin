@@ -160,6 +160,7 @@ class Login extends React.Component {
                           }
                           alt="Logo"
                           className="cc-logo-styles-mobile"
+                          style={{ maxWidth: "70%" }}
                         />
                       </p>
                     </div>
