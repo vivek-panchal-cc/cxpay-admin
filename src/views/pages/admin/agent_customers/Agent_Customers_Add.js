@@ -112,7 +112,12 @@ class Agent_Customers_Add extends Component {
       if (res.status === false) {
         notify.error(res.message);
       } else {
-        this.setState({ countryData: res?.data?.country_list });
+        const countryList = res?.data?.country_list || [];
+        this.setState({
+          countryData: countryList?.filter(
+            (country) => country.is_signup_country
+          ),
+        });
         this.setState({ countryCityRes: res?.data });
       }
     });

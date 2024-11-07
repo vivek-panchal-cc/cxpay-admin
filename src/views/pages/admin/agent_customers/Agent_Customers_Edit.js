@@ -697,13 +697,15 @@ class Agent_Customers_Edit extends React.Component {
                     disabled={true}
                   >
                     <option value="">-- Country --</option>;
-                    {this.state?.countryData?.country_list?.map((e, key) => {
-                      return (
-                        <option key={key} value={key}>
-                          {e.country_name}
-                        </option>
-                      );
-                    })}
+                    {this.state?.countryData?.country_list
+                      ?.filter((country) => country.is_signup_country)
+                      ?.map((e, key) => {
+                        return (
+                          <option key={key} value={key}>
+                            {e.country_name}
+                          </option>
+                        );
+                      })}
                   </CSelect>
                   <CFormText className="help-block">
                     {this.validator.message(
