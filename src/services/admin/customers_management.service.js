@@ -9,6 +9,7 @@ export const customersManagementService = {
   getCustomersManagementList,
   // createUsersGroups,
   getCustomer,
+  getCustomerWiseDetails,
   updateCustomer,
   deleteCustomer,
   deleteMultipleCustomer,
@@ -62,6 +63,28 @@ function getCustomer(postData) {
       return Promise.reject();
     })
     .then(handleResponse);
+}
+
+async function getCustomerWiseDetails(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("customers", "view"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-customer-wise-details`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
 }
 
 function updateCustomer(postData) {

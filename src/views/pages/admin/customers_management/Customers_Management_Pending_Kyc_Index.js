@@ -36,6 +36,7 @@ import {
   faSortUp,
   faPlus,
   faBan,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
@@ -645,7 +646,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
                               {(_canAccess("personal_customers", "update") ||
                                 _canAccess("personal_customers", "delete")) && (
                                 <>
-                                  <td>
+                                  <td className="d-flex">
                                     {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
                                       c._id
                                     ) === -1 && (
@@ -688,6 +689,35 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                               >
                                                 <CIcon name="cil-trash"></CIcon>
                                               </button>
+                                            </CTooltip>
+                                          )}
+                                        &nbsp;
+                                        {current_user.user_group_id !== c._id &&
+                                          _canAccess(
+                                            "personal_customers",
+                                            "view"
+                                          ) && (
+                                            <CTooltip
+                                              content={
+                                                globalConstants.REPORT_BTN
+                                              }
+                                            >
+                                              <CLink
+                                                className="btn btn-dark btn-block w-auto"
+                                                aria-current="page"
+                                                to={{
+                                                  pathname: `/admin/personal_customers/${c.account_number}/basic_details`,
+                                                  state: {
+                                                    route: "pending_kyc",
+                                                    mobile_number:
+                                                      c.mobile_number,
+                                                  },
+                                                }}
+                                              >
+                                                <FontAwesomeIcon
+                                                  icon={faEye}
+                                                ></FontAwesomeIcon>
+                                              </CLink>
                                             </CTooltip>
                                           )}
                                       </>

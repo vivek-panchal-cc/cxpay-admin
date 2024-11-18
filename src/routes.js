@@ -112,6 +112,13 @@ const User_Myprofile = React.lazy(() =>
 const Customers_Management_Index = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Index")
 );
+
+const Customers_Management_Details_Report = React.lazy(() =>
+  import(
+    "./views/pages/admin/customers_management/Customers_Management_Details_Report"
+  )
+);
+
 const Customers_Management_Pending_Kyc_Index = React.lazy(() =>
   import(
     "./views/pages/admin/customers_management/Customers_Management_Pending_Kyc_Index"
@@ -818,6 +825,15 @@ const routes = [
   generateRouteForModule("agent_customers"),
   generateRouteForModule("business_customers"),
   generateRouteForModule("personal_customers"),
+
+  {
+    path: "/admin/personal_customers/:account_number/:typeId",
+    exact: true,
+    name: "Reports",
+    component: Customers_Management_Details_Report,
+    module_name: "personal_customers",
+    action: "view",
+  },
 ];
 
 export default routes;

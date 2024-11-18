@@ -6,6 +6,7 @@ export const globalConstants = {
   ADD_BTN: "Click to add new record.",
   EDIT_BTN: "Click to edit record.",
   DELETE_BTN: "Click to delete record.",
+  REPORT_BTN: "Click to view report.",
   RESET_PASS: "Click to reset password.",
   DELETE_REQ_BTN: "Click to list delete requests.",
   BLOCKED_REQ_BTN: "Click to list blocked requests.",

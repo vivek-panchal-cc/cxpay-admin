@@ -124,7 +124,7 @@ class Business_Customers_Edit extends React.Component {
             this.setState({
               cityData: [...this.state.countryData.city_list[iso]],
               city: res.data.city,
-              country: country_index,
+              country: res.data.country,
               status: statustmp,
               // is_kyc: kyctmp,
               admin_approved: isApprovedtmp,
@@ -416,10 +416,11 @@ class Business_Customers_Edit extends React.Component {
       }
       formData.append("email", this.state.fields.email);
       formData.append("city", this.state.city);
-      formData.append(
-        "country",
-        this.state.countryData.country_list[this.state.country].iso
-      );
+      // formData.append(
+      //   "country",
+      //   this.state.countryData.country_list[this.state.country].iso
+      // );
+      formData.append("country", this.state.country);
       formData.append("business_id", this.state.fields.business_id);
       formData.append("business_url", this.state.fields.business_url);
       formData.append("country_code", this.state.fields.country_code);
@@ -754,19 +755,22 @@ class Business_Customers_Edit extends React.Component {
                   <CSelect
                     custom
                     name="country"
-                    id="select"
+                    id="country"
                     onChange={this.handleCountryChange}
                     value={this.state.country}
+                    disabled
                   >
-                    {/* <option value="">-- Country --</option>; */}
+                    <option value="">-- Country --</option>;
                     {this.state.countryData &&
-                      this.state.countryData?.country_list?.map((e, key) => {
-                        return (
-                          <option key={key} value={key}>
-                            {e.country_name}
-                          </option>
-                        );
-                      })}
+                      this.state.countryData?.country_list
+                        ?.filter((country) => country.is_signup_country)
+                        ?.map((e, key) => {
+                          return (
+                            <option key={key} value={e.iso}>
+                              {e.country_name}
+                            </option>
+                          );
+                        })}
                   </CSelect>
                 </CFormGroup>
 
