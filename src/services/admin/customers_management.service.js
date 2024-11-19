@@ -93,7 +93,7 @@ function updateCustomer(postData) {
   const requestOptions = {
     method: "POST",
     // headers: authHeader('customers','update'),
-    headers: authHeaderMutlipart("customers", "update"),
+    headers: authHeaderMutlipart("personal_customers", "update"),
     body: postData,
   };
   // let user = JSON.parse(localStorage.getItem('user'));
