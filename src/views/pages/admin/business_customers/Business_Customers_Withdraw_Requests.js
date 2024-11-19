@@ -33,9 +33,9 @@ import {
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import InputDropdown from "components/admin/InputDropdown";
 import InputDateRange from "components/admin/InputDateRange";
-import { customersManagementService } from "services/admin/customers_management.service";
+import { businessCustomersService } from "services/admin/business_customers.service";
 
-class Customer_Management_Withdraw_Requests extends React.Component {
+class Business_Customers_Withdraw_Requests extends React.Component {
   constructor(props) {
     super(props);
     this.handleColumnSort = this.handleColumnSort.bind(this);
@@ -77,7 +77,7 @@ class Customer_Management_Withdraw_Requests extends React.Component {
     };
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/personal_customers");
+      history.push("/admin/business_customers");
     }
   }
 
@@ -90,7 +90,7 @@ class Customer_Management_Withdraw_Requests extends React.Component {
   }
 
   getWithdrawRequests() {
-    customersManagementService
+    businessCustomersService
       .getCustomerWiseDetails(this.state.fields)
       .then((res) => {
         if (res.status === false) {
@@ -272,9 +272,7 @@ class Customer_Management_Withdraw_Requests extends React.Component {
     const downloadFile = async () => {
       try {
         const { data, message, success } =
-          await customersManagementService.downloadReportData(
-            this.state.fields
-          );
+          await businessCustomersService.downloadReportData(this.state.fields);
         if (!success) throw message;
         if (typeof message === "string") notify.success(message);
         const base64csv = data;
@@ -282,7 +280,7 @@ class Customer_Management_Withdraw_Requests extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `CUSTOMER_WITHDRAW_REQUEST_REPORT_${dtnow}.csv`;
+        const fileName = `BUSINESS_WITHDRAW_REQUEST_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();
@@ -385,7 +383,7 @@ class Customer_Management_Withdraw_Requests extends React.Component {
               <CCardHeader>
                 <strong>Withdraw Requests</strong>
                 <div className="card-header-actions">
-                  {_canAccess("personal_customers", "view") && (
+                  {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.EXPORT_REPORT}>
                       <CLink
                         className={`btn btn-dark btn-block ${
@@ -684,4 +682,4 @@ class Customer_Management_Withdraw_Requests extends React.Component {
   }
 }
 
-export default Customer_Management_Withdraw_Requests;
+export default Business_Customers_Withdraw_Requests;

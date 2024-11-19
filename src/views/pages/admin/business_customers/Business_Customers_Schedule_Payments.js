@@ -25,10 +25,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../schedule_payments/page.css";
 import InputDateRange from "components/admin/InputDateRange";
-import { customersManagementService } from "services/admin/customers_management.service";
+import { businessCustomersService } from "services/admin/business_customers.service";
 import { globalConstants } from "constants/admin/global.constants";
 
-class CustomerManagementSchedulePayments extends React.Component {
+class Business_Customers_Schedule_Payments extends React.Component {
   constructor(props) {
     super(props);
 
@@ -70,7 +70,7 @@ class CustomerManagementSchedulePayments extends React.Component {
 
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/personal_customers");
+      history.push("/admin/business_customers");
     }
   }
 
@@ -79,7 +79,7 @@ class CustomerManagementSchedulePayments extends React.Component {
   }
 
   getSchedulePaymentsList() {
-    customersManagementService
+    businessCustomersService
       .getCustomerWiseDetails(this.state.fields)
       .then((res) => {
         if (res.success === false) {
@@ -232,9 +232,7 @@ class CustomerManagementSchedulePayments extends React.Component {
     const downloadFile = async () => {
       try {
         const { data, message, success } =
-          await customersManagementService.downloadReportData(
-            this.state.fields
-          );
+          await businessCustomersService.downloadReportData(this.state.fields);
         if (!success) throw message;
         if (typeof message === "string") notify.success(message);
         const base64csv = data;
@@ -242,7 +240,7 @@ class CustomerManagementSchedulePayments extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `CUSTOMER_SCHEDULE_REPORT_${dtnow}.csv`;
+        const fileName = `BUSINESS_SCHEDULE_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();
@@ -290,53 +288,6 @@ class CustomerManagementSchedulePayments extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-
-                  {/* <CCol xl={3}>
-                    <CFormGroup row>
-                      <CCol xs="12">
-                        <CLabel htmlFor="start_date">Start Date</CLabel>
-                        <div className="datepicker-container">
-                          <DatePicker
-                            placeholderText="Start date"
-                            selected={this.state.fields.start_date_in}
-                            onChange={(date) =>
-                              this.handleStartDateChange(date)
-                            }
-                            name="start_date"
-                            dateCaption=""
-                            dateFormat="dd/MM/yyyy"
-                            popperClassName="my-custom-datepicker-popper"
-                            className="form-control"
-                            onKeyDown={(e) => {
-                              e.preventDefault();
-                            }}
-                          />
-                        </div>
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol xl={3}>
-                    <CFormGroup row>
-                      <CCol xs="12">
-                        <CLabel htmlFor="name">End Date</CLabel>
-                        <div className="datepicker-container">
-                          <DatePicker
-                            placeholderText="End date"
-                            minDate={this.state.fields.start_date_in}
-                            selected={this.state.fields.end_date_in}
-                            onChange={(date) => this.handleEndDateChange(date)}
-                            dateCaption=""
-                            dateFormat="dd/MM/yyyy"
-                            popperClassName="my-custom-datepicker-popper"
-                            className="form-control"
-                            onKeyDown={(e) => {
-                              e.preventDefault();
-                            }}
-                          />
-                        </div>
-                      </CCol>
-                    </CFormGroup>
-                  </CCol> */}
                 </CRow>
                 <CRow>
                   <CCol xl={2}>
@@ -370,7 +321,7 @@ class CustomerManagementSchedulePayments extends React.Component {
               <CCardHeader>
                 <strong>Schedule Payments</strong>
                 <div className="card-header-actions">
-                  {_canAccess("personal_customers", "view") && (
+                  {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.EXPORT_REPORT}>
                       <CLink
                         className={`btn btn-dark btn-block ${
@@ -571,4 +522,4 @@ class CustomerManagementSchedulePayments extends React.Component {
   }
 }
 
-export default CustomerManagementSchedulePayments;
+export default Business_Customers_Schedule_Payments;

@@ -20,6 +20,7 @@ import {
 } from "@coreui/react";
 import {
   faEye,
+  faFileExport,
   faSort,
   faSortDown,
   faSortUp,
@@ -258,6 +259,27 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
   }
 
   render() {
+    const downloadFile = async () => {
+      try {
+        const { data, message, success } =
+          await customersManagementService.downloadReportData(
+            this.state.fields
+          );
+        if (!success) throw message;
+        if (typeof message === "string") notify.success(message);
+        const base64csv = data;
+        const dtnow = new Date().toISOString();
+        const csvContent = atob(base64csv);
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const downloadLink = document.createElement("a");
+        const fileName = `CUSTOMER_RECURRING_REPORT_${dtnow}.csv`;
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = fileName;
+        downloadLink.click();
+      } catch (error) {
+        if (typeof error === "string") notify.error(error);
+      }
+    };
     return (
       <>
         <CRow>
@@ -377,6 +399,30 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
             <CCard>
               <CCardHeader>
                 <strong>Recurring Payments</strong>
+                <div className="card-header-actions">
+                  {_canAccess("personal_customers", "view") && (
+                    <CTooltip content={globalConstants.EXPORT_REPORT}>
+                      <CLink
+                        className={`btn btn-dark btn-block ${
+                          this.state.schedule_payments_list?.length === 0 ||
+                          this.state.schedule_payments_list?.length ===
+                            undefined
+                            ? "disabled"
+                            : ""
+                        }`}
+                        aria-current="page"
+                        onClick={
+                          this.state.schedule_payments_list?.length > 0
+                            ? downloadFile
+                            : null
+                        }
+                        to="#"
+                      >
+                        <FontAwesomeIcon icon={faFileExport} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -642,7 +688,7 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
                 <p>
                   <strong>Occurrence:</strong> {this.state.res.no_of_occurrence}
                 </p>
-                <p>
+                {/* <p>
                   <strong>Start Date:</strong>{" "}
                   {formatDate(this.state.res.recurring_start_date)}
                 </p>
@@ -652,7 +698,7 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
                 </p>
                 <p>
                   <strong>Created Date:</strong> {this.state.res.created_date}
-                </p>
+                </p> */}
                 <p>
                   <strong>Amount:</strong>
                   {typeof parseFloat(this.state.res.amount) === "number"
@@ -665,10 +711,10 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
                     ? parseFloat(this.state.res.fees_total).toFixed(2)
                     : this.state.res.fees_total}
                 </p>
-                <p>
+                {/* <p>
                   <strong>Is Group?:</strong>{" "}
                   {this.state.res.is_group?.toString() === "1" ? "Yes" : "No"}
-                </p>
+                </p> */}
                 <p>
                   <table>
                     <tr>

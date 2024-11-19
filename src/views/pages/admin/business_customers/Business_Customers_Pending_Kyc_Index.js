@@ -33,6 +33,7 @@ import {
   faBan,
   faBell,
   faBomb,
+  faEye,
   faSort,
   faSortDown,
   faSortUp,
@@ -680,7 +681,7 @@ class BusinessCustomerPendingKycIndex extends React.Component {
                               {(_canAccess("business_customers", "update") ||
                                 _canAccess("business_customers", "delete")) && (
                                 <>
-                                  <td>
+                                  <td className="d-flex">
                                     {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
                                       c._id
                                     ) === -1 && (
@@ -721,7 +722,7 @@ class BusinessCustomerPendingKycIndex extends React.Component {
                                             </button>
                                           </CTooltip>
                                         )}
-                                        &nbsp;
+                                        {/* &nbsp;
                                         {_canAccess(
                                           "business_customers",
                                           "update"
@@ -742,6 +743,35 @@ class BusinessCustomerPendingKycIndex extends React.Component {
                                               >
                                                 <CIcon name="cil-trash"></CIcon>
                                               </button>
+                                            </CTooltip>
+                                          )} */}
+                                        &nbsp;
+                                        {current_user.user_group_id !== c._id &&
+                                          _canAccess(
+                                            "business_customers",
+                                            "view"
+                                          ) && (
+                                            <CTooltip
+                                              content={
+                                                globalConstants.REPORT_BTN
+                                              }
+                                            >
+                                              <CLink
+                                                className="btn btn-dark btn-block w-auto"
+                                                aria-current="page"
+                                                to={{
+                                                  pathname: `/admin/business_customers/${c.account_number}/basic_details`,
+                                                  state: {
+                                                    route: "pending_kyc",
+                                                    mobile_number:
+                                                      c.mobile_number,
+                                                  },
+                                                }}
+                                              >
+                                                <FontAwesomeIcon
+                                                  icon={faEye}
+                                                ></FontAwesomeIcon>
+                                              </CLink>
                                             </CTooltip>
                                           )}
                                       </>

@@ -33,6 +33,7 @@ export const globalConstants = {
   VIEW_CUSTOMER_DETAILS: "View customer details",
   EXPORT_CUSTOMER_DATA: "Export customer data",
   EXPORT_AGENT_DATA: "Export recharge details",
+  EXPORT_REPORT: "Export report",
   EXPORT_TRANSACTION_DATA: "Export transaction data",
   EXPORT_AGENT_DATA_INDEX: "Export agent details report",
   VIEW_WITHDRAW_DETAILS: "View withdraw request detail",

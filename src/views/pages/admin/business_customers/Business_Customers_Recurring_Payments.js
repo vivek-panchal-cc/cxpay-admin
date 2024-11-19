@@ -11,24 +11,37 @@ import {
   CLabel,
   CTooltip,
   CLink,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModal,
+  CModalFooter,
+  CButton,
 } from "@coreui/react";
 import {
+  faEye,
   faFileExport,
   faSort,
   faSortDown,
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { paymentsService } from "services/admin/payments.service";
-import { notify, history, _canAccess } from "../../../../_helpers/index";
+import {
+  notify,
+  history,
+  formatDate,
+  _canAccess,
+  capitalize,
+} from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../schedule_payments/page.css";
-import InputDateRange from "components/admin/InputDateRange";
-import { customersManagementService } from "services/admin/customers_management.service";
+import "../recurring_payments/page.css";
 import { globalConstants } from "constants/admin/global.constants";
+import InputDateRange from "components/admin/InputDateRange";
+import { businessCustomersService } from "services/admin/business_customers.service";
 
-class CustomerManagementSchedulePayments extends React.Component {
+class Business_Customers_Recurring_Payments extends React.Component {
   constructor(props) {
     super(props);
 
@@ -54,7 +67,7 @@ class CustomerManagementSchedulePayments extends React.Component {
       fields: {
         page: 1,
         sort_dir: "desc",
-        sort_field: "payment_schedule_date",
+        sort_field: "created_at",
         search: "",
         start_date: null,
         start_date_in: null,
@@ -65,21 +78,22 @@ class CustomerManagementSchedulePayments extends React.Component {
       },
       schedule_payments_list: [],
       _openPopup: false,
+      _openDetailsPopup: false,
       allCheckedbox: false,
     };
 
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/personal_customers");
+      history.push("/admin/business_customers");
     }
   }
 
   componentDidMount() {
-    this.getSchedulePaymentsList();
+    this.getRecurringPaymentsList();
   }
 
-  getSchedulePaymentsList() {
-    customersManagementService
+  getRecurringPaymentsList() {
+    businessCustomersService
       .getCustomerWiseDetails(this.state.fields)
       .then((res) => {
         if (res.success === false) {
@@ -114,7 +128,7 @@ class CustomerManagementSchedulePayments extends React.Component {
         },
       },
       () => {
-        this.getSchedulePaymentsList();
+        this.getRecurringPaymentsList();
       }
     );
   };
@@ -131,7 +145,7 @@ class CustomerManagementSchedulePayments extends React.Component {
         },
       },
       () => {
-        this.getSchedulePaymentsList();
+        this.getRecurringPaymentsList();
       }
     );
   }
@@ -158,7 +172,7 @@ class CustomerManagementSchedulePayments extends React.Component {
           fields: {
             page: 1,
             sort_dir: "desc",
-            sort_field: "payment_schedule_date",
+            sort_field: "created_at",
             search: "",
             start_date: null,
             end_date: null,
@@ -167,7 +181,7 @@ class CustomerManagementSchedulePayments extends React.Component {
           },
         },
         () => {
-          this.getSchedulePaymentsList(this.state.fields);
+          this.getRecurringPaymentsList(this.state.fields);
         }
       );
     } else {
@@ -179,7 +193,7 @@ class CustomerManagementSchedulePayments extends React.Component {
           },
         },
         () => {
-          this.getSchedulePaymentsList(this.state.fields);
+          this.getRecurringPaymentsList(this.state.fields);
         }
       );
     }
@@ -228,13 +242,27 @@ class CustomerManagementSchedulePayments extends React.Component {
     });
   };
 
+  openDetailsPopup(id) {
+    paymentsService
+      .recurringDetails({ recurring_payment_id: id })
+      .then((res) => {
+        if (res.success === false) {
+          notify.error(res.message);
+        } else {
+          this.setState({
+            _openDetailsPopup: true,
+            res: res.data,
+          });
+        }
+      });
+    // this.setState({ _openDetailsPopup: true, res: parsedResponse });
+  }
+
   render() {
     const downloadFile = async () => {
       try {
         const { data, message, success } =
-          await customersManagementService.downloadReportData(
-            this.state.fields
-          );
+          await businessCustomersService.downloadReportData(this.state.fields);
         if (!success) throw message;
         if (typeof message === "string") notify.success(message);
         const base64csv = data;
@@ -242,7 +270,7 @@ class CustomerManagementSchedulePayments extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `CUSTOMER_SCHEDULE_REPORT_${dtnow}.csv`;
+        const fileName = `BUSINESS_RECURRING_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();
@@ -290,53 +318,6 @@ class CustomerManagementSchedulePayments extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-
-                  {/* <CCol xl={3}>
-                    <CFormGroup row>
-                      <CCol xs="12">
-                        <CLabel htmlFor="start_date">Start Date</CLabel>
-                        <div className="datepicker-container">
-                          <DatePicker
-                            placeholderText="Start date"
-                            selected={this.state.fields.start_date_in}
-                            onChange={(date) =>
-                              this.handleStartDateChange(date)
-                            }
-                            name="start_date"
-                            dateCaption=""
-                            dateFormat="dd/MM/yyyy"
-                            popperClassName="my-custom-datepicker-popper"
-                            className="form-control"
-                            onKeyDown={(e) => {
-                              e.preventDefault();
-                            }}
-                          />
-                        </div>
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                  <CCol xl={3}>
-                    <CFormGroup row>
-                      <CCol xs="12">
-                        <CLabel htmlFor="name">End Date</CLabel>
-                        <div className="datepicker-container">
-                          <DatePicker
-                            placeholderText="End date"
-                            minDate={this.state.fields.start_date_in}
-                            selected={this.state.fields.end_date_in}
-                            onChange={(date) => this.handleEndDateChange(date)}
-                            dateCaption=""
-                            dateFormat="dd/MM/yyyy"
-                            popperClassName="my-custom-datepicker-popper"
-                            className="form-control"
-                            onKeyDown={(e) => {
-                              e.preventDefault();
-                            }}
-                          />
-                        </div>
-                      </CCol>
-                    </CFormGroup>
-                  </CCol> */}
                 </CRow>
                 <CRow>
                   <CCol xl={2}>
@@ -368,9 +349,9 @@ class CustomerManagementSchedulePayments extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                <strong>Schedule Payments</strong>
+                <strong>Recurring Payments</strong>
                 <div className="card-header-actions">
-                  {_canAccess("personal_customers", "view") && (
+                  {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.EXPORT_REPORT}>
                       <CLink
                         className={`btn btn-dark btn-block ${
@@ -449,25 +430,77 @@ class CustomerManagementSchedulePayments extends React.Component {
 
                         <th
                           onClick={() =>
-                            this.handleColumnSort("overall_specification")
+                            this.handleColumnSort("no_of_occurrence")
                           }
                         >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Overall Specification
+                              No. of Occurrence
                             </span>
                             {this.state.fields.sort_field !==
-                              "overall_specification" && (
+                              "no_of_occurrence" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
                               this.state.fields.sort_field ===
-                                "overall_specification" && (
+                                "no_of_occurrence" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
                               this.state.fields.sort_field ===
-                                "overall_specification" && (
+                                "no_of_occurrence" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("recurring_start_date")
+                          }
+                        >
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Start Date
+                            </span>
+                            {this.state.fields.sort_field !==
+                              "recurring_start_date" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field ===
+                                "recurring_start_date" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field ===
+                                "recurring_start_date" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("recurring_end_date")
+                          }
+                        >
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              End Date
+                            </span>
+                            {this.state.fields.sort_field !==
+                              "recurring_end_date" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field ===
+                                "recurring_end_date" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field ===
+                                "recurring_end_date" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -492,33 +525,32 @@ class CustomerManagementSchedulePayments extends React.Component {
                           </span>
                         </th>
 
-                        <th
-                          onClick={() =>
-                            this.handleColumnSort("payment_schedule_date")
-                          }
-                        >
+                        <th onClick={() => this.handleColumnSort("created_at")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Payment Date
+                              Created Date
                             </span>
-                            {this.state.fields.sort_field !==
-                              "payment_schedule_date" && (
+                            {this.state.fields.sort_field !== "created_at" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field ===
-                                "payment_schedule_date" && (
+                              this.state.fields.sort_field === "created_at" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field ===
-                                "payment_schedule_date" && (
+                              this.state.fields.sort_field === "created_at" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
 
                         <th>Is Group?</th>
+
+                        {_canAccess("recurring_payments", "view") && (
+                          <>
+                            <th>Action</th>
+                          </>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -532,16 +564,29 @@ class CustomerManagementSchedulePayments extends React.Component {
                             </td>
                             <td>{u.sender_name}</td>
                             <td>{u.receiver_name}</td>
-                            <td>{u.overall_specification}</td>
+                            <td>{u.no_of_occurrence}</td>
+                            <td>{formatDate(u.recurring_start_date)}</td>
+                            <td>{formatDate(u.recurring_end_date)}</td>
                             <td>
                               ANG&nbsp;
                               {typeof parseFloat(u.amount) === "number"
                                 ? parseFloat(u.amount).toFixed(2)
                                 : u.amount}
                             </td>
-                            <td>{u.payment_schedule_date}</td>
+                            <td>{formatDate(u.created_at)}</td>
                             <td>
                               {u.is_group.toString() === "1" ? "Yes" : "No"}
+                            </td>
+
+                            <td className="d-flex">
+                              {_canAccess("recurring_payments", "view") && (
+                                <button
+                                  className="btn btn-dark btn-block w-auto"
+                                  onClick={() => this.openDetailsPopup(u.id)}
+                                >
+                                  <FontAwesomeIcon icon={faEye} />
+                                </button>
+                              )}
                             </td>
                           </tr>
                         ))
@@ -566,9 +611,169 @@ class CustomerManagementSchedulePayments extends React.Component {
             </CCard>
           </CCol>
         </CRow>
+        <CModal
+          show={this.state._openDetailsPopup}
+          onClose={() => {
+            this.setState({
+              _openDetailsPopup: !this.state._openDetailsPopup,
+            });
+          }}
+          color="dark"
+        >
+          <CModalHeader closeButton className={"modal-close-button"}>
+            <CModalTitle>Recurring Details</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {this.state.res && (
+              <div cl>
+                <p>
+                  <strong>Sender Name:</strong> {this.state.res.sender_name}
+                </p>
+                <p>
+                  <strong>Receiver Name:</strong> {this.state.res.receiver_name}
+                </p>
+                <p>
+                  <strong>Frequence:</strong>{" "}
+                  {capitalize(this.state.res.frequency)}
+                </p>
+                <p>
+                  <strong>Occurrence:</strong> {this.state.res.no_of_occurrence}
+                </p>
+                {/* <p>
+                  <strong>Start Date:</strong>{" "}
+                  {formatDate(this.state.res.recurring_start_date)}
+                </p>
+                <p>
+                  <strong>End Date:</strong>{" "}
+                  {formatDate(this.state.res.recurring_end_date)}
+                </p>
+                <p>
+                  <strong>Created Date:</strong> {this.state.res.created_date}
+                </p> */}
+                <p>
+                  <strong>Amount:</strong>
+                  {typeof parseFloat(this.state.res.amount) === "number"
+                    ? parseFloat(this.state.res.amount).toFixed(2)
+                    : this.state.res.amount}
+                </p>
+                <p>
+                  <strong>Total Fees:</strong>{" "}
+                  {typeof parseFloat(this.state.res.fees_total) === "number"
+                    ? parseFloat(this.state.res.fees_total).toFixed(2)
+                    : this.state.res.fees_total}
+                </p>
+                {/* <p>
+                  <strong>Is Group?:</strong>{" "}
+                  {this.state.res.is_group?.toString() === "1" ? "Yes" : "No"}
+                </p> */}
+                <p>
+                  <table>
+                    <tr>
+                      <th className="align-top">Recurring Dates:</th>{" "}
+                      <td className="pl-5">
+                        {Array.isArray(this.state.res.recurring_dates) ? (
+                          <table className="nested-table">
+                            <thead style={{ borderBottom: "1px solid" }}>
+                              <tr>
+                                <th>Date</th>
+                                <th className="pl-4">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {this.state.res.recurring_dates?.map(
+                                (dateItem, index) => (
+                                  <tr key={index}>
+                                    <td>
+                                      {formatDate(dateItem.recurring_date)}
+                                    </td>
+                                    <td
+                                      className={`status-${dateItem.status.toLowerCase()} pl-4`}
+                                    >
+                                      {dateItem.status?.toLowerCase() ===
+                                      "pending"
+                                        ? "UPCOMING"
+                                        : dateItem.status?.toLowerCase() ===
+                                          "paid"
+                                        ? "SUCCESS"
+                                        : dateItem.status?.toUpperCase()}
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        ) : (
+                          this.state.res.recurring_dates
+                        )}
+                      </td>
+                    </tr>
+                  </table>
+                </p>
+                {/* <p>
+                  <li>
+                    <strong>Merchant ID:</strong>{" "}
+                    {this.state.res.data.sender_name}
+                  </li>
+                  <li>
+                    <strong>Merchant Transaction ID:</strong>{" "}
+                    {this.state.res.data.merchantTransactionId}
+                  </li>
+                  <li>
+                    <strong>Transaction ID:</strong>{" "}
+                    {this.state.res.data.transactionId}
+                  </li>
+                  <li>
+                    <strong>Amount:</strong>{" "}
+                    {(this.state.res.data.amount / 100)?.toFixed(2)}
+                  </li>
+                  <li>
+                    <strong>State:</strong> {this.state.res.data.state}
+                  </li>
+                  <li>
+                    <strong>Response Code:</strong>{" "}
+                    {this.state.res.data.responseCode}
+                  </li>
+                  {this.state.res.data.paymentInstrument && (
+                    <li>
+                      <strong>Payment Instrument:</strong>{" "}
+                      <ul>
+                        <li>
+                          <strong>Type:</strong>{" "}
+                          {this.state.res.data.paymentInstrument.type || "-"}
+                        </li>
+                        <li>
+                          <strong>UTR:</strong>{" "}
+                          {this.state.res.data.paymentInstrument.utr || "-"}
+                        </li>
+                        <li>
+                          <strong>Account Type:</strong>{" "}
+                          {this.state.res.data.paymentInstrument.accountType ||
+                            "-"}
+                        </li>
+                      </ul>
+                    </li>
+                  )}
+                </p> */}
+              </div>
+            )}
+          </CModalBody>
+
+          <CModalFooter>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                this.setState({
+                  _openDetailsPopup: !this.state._openDetailsPopup,
+                });
+              }}
+            >
+              Close
+            </CButton>
+          </CModalFooter>
+        </CModal>
       </>
     );
   }
 }
 
-export default CustomerManagementSchedulePayments;
+export default Business_Customers_Recurring_Payments;

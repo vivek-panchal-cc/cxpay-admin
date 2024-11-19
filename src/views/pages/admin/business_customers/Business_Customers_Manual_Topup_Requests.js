@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { globalConstants } from "constants/admin/global.constants";
-import useGetManualRequestsForReport from "./useGetManualRequestForReport";
+import useGetBusinessManualRequestForReport from "./useGetBusinessManualRequestForReport";
 import WrapAmount from "components/wrapper/WrapAmount";
 import {
   CCard,
@@ -21,9 +21,9 @@ import {
   CLink,
   CPagination,
 } from "@coreui/react";
-import { customersManagementService } from "services/admin/customers_management.service";
-import { _canAccess } from "_helpers";
+import { businessCustomersService } from "services/admin/business_customers.service";
 import { notify } from "_helpers";
+import { _canAccess } from "_helpers";
 
 const REQUEST_ITEM_HEADERS = [
   { label: "Request From", field: "name" },
@@ -33,7 +33,7 @@ const REQUEST_ITEM_HEADERS = [
   { label: "Status", field: "status" },
 ];
 
-const Customer_Management_Manual_Topup_Requests = (props) => {
+const Business_Customers_Manual_Topup_Requests = (props) => {
   const [currentPage, setCurrentPage] = useState();
   const [filters, setFilters] = useState({
     search: "",
@@ -45,7 +45,7 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
     account_number: props.account_number,
     detail_type: props.activeTab,
   });
-  const [pagination, manualRequests] = useGetManualRequestsForReport({
+  const [pagination, manualRequests] = useGetBusinessManualRequestForReport({
     page: currentPage,
     search: filters.search,
     status: filters.status,
@@ -93,7 +93,7 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
   const downloadFile = async () => {
     try {
       const { data, message, success } =
-        await customersManagementService.downloadReportData(filters);
+        await businessCustomersService.downloadReportData(filters);
       if (!success) throw message;
       if (typeof message === "string") notify.success(message);
       const base64csv = data;
@@ -101,7 +101,7 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
       const csvContent = atob(base64csv);
       const blob = new Blob([csvContent], { type: "text/csv" });
       const downloadLink = document.createElement("a");
-      const fileName = `CUSTOMER_WITHDRAW_REQUEST_REPORT_${dtnow}.csv`;
+      const fileName = `BUSINESS_WITHDRAW_REQUEST_REPORT_${dtnow}.csv`;
       downloadLink.href = URL.createObjectURL(blob);
       downloadLink.download = fileName;
       downloadLink.click();
@@ -122,7 +122,7 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
             <CCardHeader>
               <strong>Manual Top Up Requests</strong>
               <div className="card-header-actions">
-                {_canAccess("personal_customers", "view") && (
+                {_canAccess("business_customers", "view") && (
                   <CTooltip content={globalConstants.EXPORT_REPORT}>
                     <CLink
                       className={`btn btn-dark btn-block ${
@@ -251,4 +251,4 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
   );
 };
 
-export default Customer_Management_Manual_Topup_Requests;
+export default Business_Customers_Manual_Topup_Requests;

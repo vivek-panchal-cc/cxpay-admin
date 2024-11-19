@@ -17,13 +17,14 @@ export const customersManagementService = {
   changeBulkCustomerStatus,
   getCountry,
   getPersonalKycDocument,
+  downloadReportData,
 };
 
 function getCustomersManagementList(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("personal_customers", "view"),
     body: JSON.stringify(postData),
   };
   return fetch(`${API_URL}api/customers/personal-customers`, requestOptions)
@@ -52,7 +53,7 @@ function getCustomer(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("personal_customers", "view"),
     body: JSON.stringify(postData),
   };
 
@@ -69,7 +70,7 @@ async function getCustomerWiseDetails(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("personal_customers", "view"),
     body: JSON.stringify(postData),
   };
 
@@ -115,7 +116,7 @@ function deleteCustomer(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "delete"),
+    headers: authHeader("personal_customers", "delete"),
     body: JSON.stringify(postData),
   };
   return fetch(`${API_URL}api/customers/delete-customers`, requestOptions)
@@ -131,7 +132,7 @@ function deleteMultipleCustomer(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "delete"),
+    headers: authHeader("personal_customers", "delete"),
     body: JSON.stringify(postData),
   };
 
@@ -148,7 +149,7 @@ function changeCustomerStatus(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("personal_customers", "update"),
     body: JSON.stringify(postData),
   };
 
@@ -165,7 +166,7 @@ function changeBulkCustomerStatus(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("personal_customers", "update"),
     body: JSON.stringify(postData),
   };
 
@@ -182,7 +183,7 @@ function getCountry() {
   setLoading(true);
   const requestOptions = {
     method: "GET",
-    headers: authHeader("customers", "update"),
+    headers: authHeader("personal_customers", "update"),
   };
 
   return fetch(`${API_URL}api/customers/get-country`, requestOptions)
@@ -198,7 +199,7 @@ async function getPersonalKycDocument(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("customers", "view"),
+    headers: authHeader("personal_customers", "view"),
     body: JSON.stringify(postData),
   };
   let response;
@@ -211,6 +212,26 @@ async function getPersonalKycDocument(postData) {
     notify.error("Something went wrong");
     setLoading(false);
     response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function downloadReportData(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("personal_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/export-detailed-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
   }
   return handleResponse(response);
 }

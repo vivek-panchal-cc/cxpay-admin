@@ -140,6 +140,11 @@ const SMS_Template_Edit = React.lazy(() =>
 const Business_Customers_Index = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Index")
 );
+const Business_Management_Details_Report = React.lazy(() =>
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Details_Report"
+  )
+);
 const Business_Customers_Admin_Approval_Index = React.lazy(() =>
   import(
     "./views/pages/admin/business_customers/Business_Customers_Admin_Approval_Index"
@@ -832,6 +837,14 @@ const routes = [
     name: "Reports",
     component: Customers_Management_Details_Report,
     module_name: "personal_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/business_customers/:account_number/:typeId",
+    exact: true,
+    name: "Reports",
+    component: Business_Management_Details_Report,
+    module_name: "business_customers",
     action: "view",
   },
 ];

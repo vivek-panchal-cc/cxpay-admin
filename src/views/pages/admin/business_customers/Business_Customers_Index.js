@@ -33,6 +33,7 @@ import {
   faBan,
   faBell,
   faBomb,
+  faEye,
   faSort,
   faSortDown,
   faSortUp,
@@ -183,17 +184,19 @@ class Business_Customers_Index extends React.Component {
   }
 
   getPendingKycCustomerList() {
-    businessCustomersService.getPendingKycCustomerList({customer_type: "1"}).then((res) => {
-      if (!res.success) {
-        this.setState({
-          pendingKycCustomers: [],
-        });
-      } else {
-        this.setState({
-          pendingKycCustomers: res.data.blocked_users,
-        });
-      }
-    });
+    businessCustomersService
+      .getPendingKycCustomerList({ customer_type: "1" })
+      .then((res) => {
+        if (!res.success) {
+          this.setState({
+            pendingKycCustomers: [],
+          });
+        } else {
+          this.setState({
+            pendingKycCustomers: res.data.blocked_users,
+          });
+        }
+      });
   }
 
   pageChange = (newPage) => {
@@ -769,9 +772,13 @@ class Business_Customers_Index extends React.Component {
                                   />
                                 )}
                               </td>
-                              <td>{this.state.fields.page >= 2
-                                ? index + 1 + 10 * (this.state.fields.page - 1)
-                                : index + 1}</td>
+                              <td>
+                                {this.state.fields.page >= 2
+                                  ? index +
+                                    1 +
+                                    10 * (this.state.fields.page - 1)
+                                  : index + 1}
+                              </td>
                               <td>{c.company_name}</td>
                               <td>{c.email}</td>
                               <td>{`+${c.mobile}`}</td>
@@ -797,7 +804,7 @@ class Business_Customers_Index extends React.Component {
                               {(_canAccess("business_customers", "update") ||
                                 _canAccess("business_customers", "delete")) && (
                                 <>
-                                  <td>
+                                  <td className="d-flex">
                                     {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
                                       c._id
                                     ) === -1 && (
@@ -836,7 +843,7 @@ class Business_Customers_Index extends React.Component {
                                             </button>
                                           </CTooltip>
                                         )}
-                                        &nbsp;
+                                        {/* &nbsp;
                                         {_canAccess(
                                           "business_customers",
                                           "update"
@@ -857,6 +864,34 @@ class Business_Customers_Index extends React.Component {
                                               >
                                                 <CIcon name="cil-trash"></CIcon>
                                               </button>
+                                            </CTooltip>
+                                          )} */}
+                                        &nbsp;
+                                        {current_user.user_group_id !== c._id &&
+                                          _canAccess(
+                                            "business_customers",
+                                            "view"
+                                          ) && (
+                                            <CTooltip
+                                              content={
+                                                globalConstants.REPORT_BTN
+                                              }
+                                            >
+                                              <CLink
+                                                className="btn btn-dark btn-block w-auto"
+                                                aria-current="page"
+                                                to={{
+                                                  pathname: `/admin/business_customers/${c.account_number}/basic_details`,
+                                                  state: {
+                                                    route: "basic_details",
+                                                    mobile_number: c.mobile,
+                                                  },
+                                                }}
+                                              >
+                                                <FontAwesomeIcon
+                                                  icon={faEye}
+                                                ></FontAwesomeIcon>
+                                              </CLink>
                                             </CTooltip>
                                           )}
                                       </>

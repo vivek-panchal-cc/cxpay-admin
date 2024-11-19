@@ -5,6 +5,7 @@ require("dotenv").config();
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const businessCustomersService = {
+  getCustomerWiseDetails,
   getCustomersManagementList,
   getCustomer,
   updateCustomer,
@@ -19,7 +20,30 @@ export const businessCustomersService = {
   getPendingKycCustomerList,
   getAdminApprovalCustomerList,
   getBusinessKycDocument,
+  downloadReportData,
 };
+
+async function getCustomerWiseDetails(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-customer-wise-details`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
 
 function getCustomersManagementList(postData) {
   setLoading(true);
@@ -273,6 +297,26 @@ async function getBusinessKycDocument(postData) {
     notify.error("Something went wrong");
     setLoading(false);
     response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function downloadReportData(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/export-detailed-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
   }
   return handleResponse(response);
 }

@@ -32,13 +32,13 @@ import {
 import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import InputDateRange from "components/admin/InputDateRange";
+import { businessCustomersService } from "services/admin/business_customers.service";
 import "../business_customers/kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
-import { customersManagementService } from "services/admin/customers_management.service";
 import { globalConstants } from "constants/admin/global.constants";
 
-class Customer_Management_Transactions_Report extends React.Component {
+class Business_Customers_Transactions_Report extends React.Component {
   constructor(props) {
     super(props);
 
@@ -84,7 +84,7 @@ class Customer_Management_Transactions_Report extends React.Component {
 
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/personal_customers");
+      history.push("/admin/business_customers");
     }
   }
 
@@ -93,7 +93,7 @@ class Customer_Management_Transactions_Report extends React.Component {
   }
 
   getTransactionList() {
-    customersManagementService
+    businessCustomersService
       .getCustomerWiseDetails(this.state.fields)
       .then((res) => {
         if (res.success === false) {
@@ -224,16 +224,16 @@ class Customer_Management_Transactions_Report extends React.Component {
     });
   };
 
-  downloadFile = async () => {
-    const { search, txn_type, status, from_date, to_date } = this.state.fields;
-    reportsService
-      .downloadTransactionCSV({ search, txn_type, status, from_date, to_date })
-      .then((res) => {
-        //if (res.success) {
-        notify.success("Successfully send report logged in user mail");
-        //}
-      });
-  };
+  //   downloadFile = async () => {
+  //     const { search, txn_type, status, from_date, to_date } = this.state.fields;
+  //     reportsService
+  //       .downloadTransactionCSV({ search, txn_type, status, from_date, to_date })
+  //       .then((res) => {
+  //         //if (res.success) {
+  //         notify.success("Successfully send report logged in user mail");
+  //         //}
+  //       });
+  //   };
 
   handledateChange = (date) => {
     this.setState({
@@ -278,10 +278,19 @@ class Customer_Management_Transactions_Report extends React.Component {
 
     const downloadFile = async () => {
       try {
+        // const { search, status, start_date, end_date, sort_field, sort_dir } =
+        //   this.state.fields;
+        // const reqParams = {
+        //   filter_search: search,
+        //   filter_start_date: start_date,
+        //   filter_end_date: end_date,
+        //   filter_sort_dir: sort_dir,
+        //   filter_sort_field: sort_field,
+        //   filter_status: status,
+        // };
+
         const { data, message, success } =
-          await customersManagementService.downloadReportData(
-            this.state.fields
-          );
+          await businessCustomersService.downloadReportData(this.state.fields);
         if (!success) throw message;
         if (typeof message === "string") notify.success(message);
         const base64csv = data;
@@ -289,7 +298,7 @@ class Customer_Management_Transactions_Report extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `CUSTOMER_TRANSACTION_REPORT_${dtnow}.csv`;
+        const fileName = `BUSINESS_TRANSACTION_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();
@@ -480,8 +489,22 @@ class Customer_Management_Transactions_Report extends React.Component {
             <CCard>
               <CCardHeader>
                 <strong>Transaction Details</strong>
+                {/* <div className="card-header-actions">
+                  {_canAccess("transaction_reports", "view") && (
+                    <CTooltip content={globalConstants.EXPORT_TRANSACTION_DATA}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        onClick={this.downloadFile}
+                        to="#"
+                      >
+                        <FontAwesomeIcon icon={faFileExport} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div> */}
                 <div className="card-header-actions">
-                  {_canAccess("personal_customers", "view") && (
+                  {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.EXPORT_REPORT}>
                       <CLink
                         className={`btn btn-dark btn-block ${
@@ -796,4 +819,4 @@ class Customer_Management_Transactions_Report extends React.Component {
   }
 }
 
-export default Customer_Management_Transactions_Report;
+export default Business_Customers_Transactions_Report;
