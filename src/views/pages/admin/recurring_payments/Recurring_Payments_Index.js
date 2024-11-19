@@ -538,7 +538,7 @@ class RecurringPaymentsIndex extends React.Component {
                             <td>{formatDate(u.recurring_start_date)}</td>
                             <td>{formatDate(u.recurring_end_date)}</td>
                             <td>
-                              ANG&nbsp;
+                              {globalConstants.CURRENCY_SYMBOL}&nbsp;
                               {typeof parseFloat(u.amount) === "number"
                                 ? parseFloat(u.amount).toFixed(2)
                                 : u.amount}

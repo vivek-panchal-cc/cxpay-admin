@@ -26,6 +26,7 @@ import {
   CTextarea,
 } from "@coreui/react";
 import { notify } from "_helpers";
+import { globalConstants } from "constants/admin/global.constants";
 
 const Manual_Topup_Detail = () => {
   const params = useParams();
@@ -217,7 +218,11 @@ const Manual_Topup_Detail = () => {
                       heading={details?.name}
                       subHeading={details?.user_type}
                       status={details?.status}
-                      amount={(details?.amount - details?.fees) + " ANG"}
+                      amount={
+                        details?.amount -
+                        details?.fees +
+                        ` ${globalConstants.CURRENCY_SYMBOL}`
+                      }
                       specification={details?.specification}
                     />
                     <div className="wcr-divider-wrap"></div>

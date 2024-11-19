@@ -617,7 +617,7 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
                             <td>{formatDate(u.recurring_start_date)}</td>
                             <td>{formatDate(u.recurring_end_date)}</td>
                             <td>
-                              ANG&nbsp;
+                              {globalConstants.CURRENCY_SYMBOL}&nbsp;
                               {typeof parseFloat(u.amount) === "number"
                                 ? parseFloat(u.amount).toFixed(2)
                                 : u.amount}
@@ -700,13 +700,15 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
                   <strong>Created Date:</strong> {this.state.res.created_date}
                 </p> */}
                 <p>
-                  <strong>Amount:</strong>
+                  <strong>Amount:</strong> {globalConstants.CURRENCY_SYMBOL}
+                  &nbsp;
                   {typeof parseFloat(this.state.res.amount) === "number"
                     ? parseFloat(this.state.res.amount).toFixed(2)
                     : this.state.res.amount}
                 </p>
                 <p>
-                  <strong>Total Fees:</strong>{" "}
+                  <strong>Total Fees:</strong> {globalConstants.CURRENCY_SYMBOL}
+                  &nbsp;
                   {typeof parseFloat(this.state.res.fees_total) === "number"
                     ? parseFloat(this.state.res.fees_total).toFixed(2)
                     : this.state.res.fees_total}

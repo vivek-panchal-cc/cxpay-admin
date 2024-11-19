@@ -11,6 +11,7 @@ import { dashboardService } from "../../services/admin/dashboard.service";
 import { notify } from "../../_helpers/index";
 import { setLoading } from "../../_helpers/";
 import "./dashboard.css";
+import { globalConstants } from "constants/admin/global.constants";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -180,7 +181,7 @@ class Dashboard extends React.Component {
                 </CCardTitle>
                 <CCardText>
                   <h4 className="dashboard-card-number">
-                    ANG{" "}
+                    {globalConstants.CURRENCY_SYMBOL}&nbsp;
                     {this.state.total_credit_amount
                       ? this.state.total_credit_amount
                       : "0"}
@@ -200,7 +201,7 @@ class Dashboard extends React.Component {
                 </CCardTitle>
                 <CCardText>
                   <h4 className="dashboard-card-number">
-                    ANG{" "}
+                    {globalConstants.CURRENCY_SYMBOL}&nbsp;
                     {this.state.total_debit_amount
                       ? this.state.total_debit_amount
                       : "0"}

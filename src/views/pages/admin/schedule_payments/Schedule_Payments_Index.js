@@ -22,6 +22,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./page.css";
 import InputDateRange from "components/admin/InputDateRange";
+import { globalConstants } from "constants/admin/global.constants";
 
 class SchedulePaymentsIndex extends React.Component {
   constructor(props) {
@@ -476,7 +477,7 @@ class SchedulePaymentsIndex extends React.Component {
                             <td>{u.receiver_name}</td>
                             <td>{u.overall_specification}</td>
                             <td>
-                              ANG&nbsp;
+                              {globalConstants.CURRENCY_SYMBOL}&nbsp;
                               {typeof parseFloat(u.amount) === "number"
                                 ? parseFloat(u.amount).toFixed(2)
                                 : u.amount}

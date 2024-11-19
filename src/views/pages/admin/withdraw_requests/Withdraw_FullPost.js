@@ -19,6 +19,7 @@ import { FILE_SIZE } from "constants/frontend/schema.constants";
 import { withdrawRequestService } from "services/admin/withdraw_request.service";
 import { notify } from "../../../../_helpers";
 import { useHistory } from "react-router-dom";
+import { globalConstants } from "constants/admin/global.constants";
 
 const Fullpage = (props) => {
   const {
@@ -297,7 +298,9 @@ const Fullpage = (props) => {
                             </div>
                             <div className="wcr-card-amt wbr-card-amt">
                               <p className="green font-bold">{status}</p>
-                              <h2>{amount} ANG</h2>
+                              <h2>
+                                {amount} {globalConstants.CURRENCY_SYMBOL}
+                              </h2>
                             </div>
                           </div>
                         </div>
@@ -328,11 +331,15 @@ const Fullpage = (props) => {
                           <table>
                             <tr>
                               <td>Amount</td>
-                              <td>{total_amount} ANG</td>
+                              <td>
+                                {total_amount} {globalConstants.CURRENCY_SYMBOL}
+                              </td>
                             </tr>
                             <tr>
                               <td>Fees</td>
-                              <td>{fees} ANG</td>
+                              <td>
+                                {fees} {globalConstants.CURRENCY_SYMBOL}
+                              </td>
                             </tr>
                             <tr>
                               <td>Status</td>

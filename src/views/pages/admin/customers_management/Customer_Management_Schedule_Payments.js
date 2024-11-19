@@ -534,7 +534,7 @@ class CustomerManagementSchedulePayments extends React.Component {
                             <td>{u.receiver_name}</td>
                             <td>{u.overall_specification}</td>
                             <td>
-                              ANG&nbsp;
+                              {globalConstants.CURRENCY_SYMBOL}&nbsp;
                               {typeof parseFloat(u.amount) === "number"
                                 ? parseFloat(u.amount).toFixed(2)
                                 : u.amount}
