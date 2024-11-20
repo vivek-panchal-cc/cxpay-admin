@@ -31,7 +31,10 @@ import Business_Customers_Manual_Topup_Requests from "./Business_Customers_Manua
 class Business_Customers_Details_Report extends React.Component {
   constructor(props) {
     super(props);
+    const { state } = this.props.location || {};
+    const initialRoute = state?.route || "basic_details";
     this.state = {
+      initialRoute, // Preserve the initial route
       activeTab: this.props.match.params.typeId,
       countryData: [],
       customerDetails: [],
@@ -57,27 +60,25 @@ class Business_Customers_Details_Report extends React.Component {
     }
   };
 
-  render() {
-    const { state } = this.props.location; // Access state
-    const mobile_number = state?.mobile_number;
-    const route = state?.route;
-    let routePath;
-    switch (route) {
+  getBackRoute = () => {
+    const { initialRoute } = this.state;
+    switch (initialRoute) {
       case "pending_kyc":
-        routePath = "/admin/business_customers/pending_kyc";
-        break;
+        return "/admin/business_customers/pending_kyc";
       case "admin_approval":
-        routePath = "/admin/business_customers/admin_approval";
-        break;
+        return "/admin/business_customers/admin_approval";
       case "basic_details":
-        routePath = "/admin/business_customers";
-        break;
       default:
-        routePath = "/admin/business_customers";
-        break;
+        return "/admin/business_customers";
     }
+  };
 
+  render() {
+    const { state } = this.props.location || {};
+    const mobile_number = state?.mobile_number;
     const { activeTab } = this.state;
+
+    const backRoute = this.getBackRoute();
     return (
       <>
         <CCard>
@@ -204,7 +205,7 @@ class Business_Customers_Details_Report extends React.Component {
             <CLink
               className="btn btn-danger btn-sm"
               aria-current="page"
-              to={routePath}
+              to={backRoute}
             >
               {" "}
               <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back

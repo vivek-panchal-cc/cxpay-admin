@@ -41,6 +41,9 @@ const CMS_Page_Edit = React.lazy(() =>
 const CMS_Page_Detail = React.lazy(() =>
   import("./views/pages/admin/Cms_Pages/Cms_Pages_Detail")
 );
+const CMS_Change_Sequence = React.lazy(() =>
+  import("./views/pages/admin/Cms_Pages/Cms_Change_Sequence")
+);
 
 const Faq_Add = React.lazy(() => import("./views/pages/admin/faq/Faq_Add"));
 const Faq_Index = React.lazy(() => import("./views/pages/admin/faq/Faq_Index"));
@@ -392,6 +395,14 @@ const routes = [
     component: CMS_Page_Detail,
     module_name: "cms_pages",
     action: "view",
+  },
+  {
+    path: "/admin/cms_pages/change-sequence",
+    exact: true,
+    name: "Change Sequence",
+    component: CMS_Change_Sequence,
+    module_name: "cms_pages",
+    action: "update",
   },
 
   {

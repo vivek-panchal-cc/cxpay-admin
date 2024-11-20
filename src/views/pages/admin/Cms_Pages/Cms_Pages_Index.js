@@ -35,6 +35,7 @@ import {
   _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
+import IconSwap from "assets/icons/IconSwap";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -345,7 +346,7 @@ class Page_list extends React.Component {
             <CCard>
               <CCardHeader>
                 Pages
-                <div className="card-header-actions">
+                <div className="card-header-actions px-2">
                   {_canAccess("cms_pages", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
                       <CLink
@@ -358,6 +359,19 @@ class Page_list extends React.Component {
                     </CTooltip>
                   )}
                 </div>
+                {/* <div className="card-header-actions">
+                  {_canAccess("cms_pages", "update") && (
+                    <CTooltip content={globalConstants.UPDATE_SEQUENCE}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to="/admin/cms_pages/change-sequence"
+                      >
+                        <IconSwap stroke={"#ffffff"} /> Update Sequence
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div> */}
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -436,9 +450,13 @@ class Page_list extends React.Component {
                               />
                             </td>
 
-                            <td>{this.state.fields.pageNo >= 2
-                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
-                                : index + 1}</td>
+                            <td>
+                              {this.state.fields.pageNo >= 2
+                                ? index +
+                                  1 +
+                                  10 * (this.state.fields.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>
                               {" "}
                               {_canAccess("cms_pages", "view") && (

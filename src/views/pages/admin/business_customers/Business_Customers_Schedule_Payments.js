@@ -240,7 +240,7 @@ class Business_Customers_Schedule_Payments extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `BUSINESS_SCHEDULE_REPORT_${dtnow}.csv`;
+        const fileName = `${this.state.fields.account_number}_SCHEDULE_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();

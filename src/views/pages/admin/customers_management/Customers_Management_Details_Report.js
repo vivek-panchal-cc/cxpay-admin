@@ -31,7 +31,10 @@ import Customer_Management_Manual_Topup_Requests from "./Customer_Management_Man
 class Customers_Management_Details_Report extends React.Component {
   constructor(props) {
     super(props);
+    const { state } = this.props.location || {};
+    const initialRoute = state?.route || "basic_details";
     this.state = {
+      initialRoute, // Preserve the initial route
       activeTab: this.props.match.params.typeId,
       countryData: [],
       customerDetails: [],
@@ -57,24 +60,23 @@ class Customers_Management_Details_Report extends React.Component {
     }
   };
 
-  render() {
-    const { state } = this.props.location; // Access state
-    const mobile_number = state?.mobile_number;
-    const route = state?.route;
-    let routePath;
-    switch (route) {
+  getBackRoute = () => {
+    const { initialRoute } = this.state;
+    switch (initialRoute) {
       case "pending_kyc":
-        routePath = "/admin/personal_customers/pending_kyc";
-        break;
+        return "/admin/personal_customers/pending_kyc";
       case "basic_details":
-        routePath = "/admin/personal_customers";
-        break;
       default:
-        routePath = "/admin/personal_customers";
-        break;
+        return "/admin/personal_customers";
     }
+  };
 
+  render() {
+    const { state } = this.props.location || {};
+    const mobile_number = state?.mobile_number;
     const { activeTab } = this.state;
+
+    const backRoute = this.getBackRoute();
     return (
       <>
         <CCard>
@@ -201,7 +203,7 @@ class Customers_Management_Details_Report extends React.Component {
             <CLink
               className="btn btn-danger btn-sm"
               aria-current="page"
-              to={routePath}
+              to={backRoute}
             >
               {" "}
               <FontAwesomeIcon icon={faArrowLeft} className="mr-1" /> Back

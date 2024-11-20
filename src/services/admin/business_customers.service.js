@@ -311,7 +311,7 @@ async function downloadReportData(postData) {
   let response;
   try {
     response = await fetch(
-      `${API_URL}api/export-detailed-report`,
+      `${API_URL}api/customers/export-customer-wise-details`,
       requestOptions
     );
   } catch (error) {

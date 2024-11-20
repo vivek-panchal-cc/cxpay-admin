@@ -40,6 +40,7 @@ import "../recurring_payments/page.css";
 import { globalConstants } from "constants/admin/global.constants";
 import InputDateRange from "components/admin/InputDateRange";
 import { customersManagementService } from "services/admin/customers_management.service";
+import "../recurring_payments/details.css";
 
 class CustomerManagementRecurringPaymentsIndex extends React.Component {
   constructor(props) {
@@ -272,7 +273,7 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `CUSTOMER_RECURRING_REPORT_${dtnow}.csv`;
+        const fileName = `${this.state.fields.account_number}_RECURRING_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();
@@ -679,49 +680,48 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
                   <strong>Sender Name:</strong> {this.state.res.sender_name}
                 </p>
                 <p>
-                  <strong>Receiver Name:</strong> {this.state.res.receiver_name}
+                  <table>
+                    <tr>
+                      <th className="align-top">Receiver Name:</th>
+                      {Array.isArray(this.state.res.receiver_name) ? (
+                        <td className="pl-5">
+                          <table className="nested-table">
+                            <thead style={{ borderBottom: "1px solid" }}>
+                              <tr>
+                                <th>Member Name</th>
+                                <th className="pl-4">Specification</th>
+                                <th className="pl-4">Amount</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {this.state.res.receiver_name?.map(
+                                (item, index) => (
+                                  <tr key={index}>
+                                    <td>{item.member_name}</td>
+                                    <td className="pl-4">
+                                      {item.specification}
+                                    </td>
+                                    <td className="pl-4">
+                                      {globalConstants.CURRENCY_SYMBOL}&nbsp;
+                                      {item.amount?.toFixed(2)}
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        </td>
+                      ) : (
+                        <td>{this.state.res.receiver_name}</td>
+                      )}
+                    </tr>
+                  </table>
                 </p>
-                <p>
-                  <strong>Frequence:</strong>{" "}
-                  {capitalize(this.state.res.frequency)}
-                </p>
-                <p>
-                  <strong>Occurrence:</strong> {this.state.res.no_of_occurrence}
-                </p>
-                {/* <p>
-                  <strong>Start Date:</strong>{" "}
-                  {formatDate(this.state.res.recurring_start_date)}
-                </p>
-                <p>
-                  <strong>End Date:</strong>{" "}
-                  {formatDate(this.state.res.recurring_end_date)}
-                </p>
-                <p>
-                  <strong>Created Date:</strong> {this.state.res.created_date}
-                </p> */}
-                <p>
-                  <strong>Amount:</strong> {globalConstants.CURRENCY_SYMBOL}
-                  &nbsp;
-                  {typeof parseFloat(this.state.res.amount) === "number"
-                    ? parseFloat(this.state.res.amount).toFixed(2)
-                    : this.state.res.amount}
-                </p>
-                <p>
-                  <strong>Total Fees:</strong> {globalConstants.CURRENCY_SYMBOL}
-                  &nbsp;
-                  {typeof parseFloat(this.state.res.fees_total) === "number"
-                    ? parseFloat(this.state.res.fees_total).toFixed(2)
-                    : this.state.res.fees_total}
-                </p>
-                {/* <p>
-                  <strong>Is Group?:</strong>{" "}
-                  {this.state.res.is_group?.toString() === "1" ? "Yes" : "No"}
-                </p> */}
                 <p>
                   <table>
                     <tr>
                       <th className="align-top">Recurring Dates:</th>{" "}
-                      <td className="pl-5">
+                      <td style={{ paddingLeft: "40px" }}>
                         {Array.isArray(this.state.res.recurring_dates) ? (
                           <table className="nested-table">
                             <thead style={{ borderBottom: "1px solid" }}>
@@ -760,6 +760,48 @@ class CustomerManagementRecurringPaymentsIndex extends React.Component {
                     </tr>
                   </table>
                 </p>
+                <div className="d-flex">
+                  <p style={{ flexBasis: "50%" }}>
+                    <strong>Frequence:</strong>{" "}
+                    {capitalize(this.state.res.frequency)}
+                  </p>
+                  <p>
+                    <strong>Occurrence:</strong>{" "}
+                    {this.state.res.no_of_occurrence}
+                  </p>
+                </div>
+                {/* <p>
+                  <strong>Start Date:</strong>{" "}
+                  {formatDate(this.state.res.recurring_start_date)}
+                </p>
+                <p>
+                  <strong>End Date:</strong>{" "}
+                  {formatDate(this.state.res.recurring_end_date)}
+                </p>
+                <p>
+                  <strong>Created Date:</strong> {this.state.res.created_date}
+                </p> */}
+                <div className="d-flex">
+                  <p style={{ flexBasis: "50%" }}>
+                    <strong>Amount:</strong> {globalConstants.CURRENCY_SYMBOL}
+                    &nbsp;
+                    {typeof parseFloat(this.state.res.amount) === "number"
+                      ? parseFloat(this.state.res.amount).toFixed(2)
+                      : this.state.res.amount}
+                  </p>
+                  <p>
+                    <strong>Total Fees:</strong>{" "}
+                    {globalConstants.CURRENCY_SYMBOL}
+                    &nbsp;
+                    {typeof parseFloat(this.state.res.fees_total) === "number"
+                      ? parseFloat(this.state.res.fees_total).toFixed(2)
+                      : this.state.res.fees_total}
+                  </p>
+                </div>
+                {/* <p>
+                  <strong>Is Group?:</strong>{" "}
+                  {this.state.res.is_group?.toString() === "1" ? "Yes" : "No"}
+                </p> */}
                 {/* <p>
                   <li>
                     <strong>Merchant ID:</strong>{" "}
