@@ -33,9 +33,11 @@ class Business_Customers_Details_Report extends React.Component {
     super(props);
     const { state } = this.props.location || {};
     const initialRoute = state?.route || "basic_details";
+    const mobile_number = state?.mobile_number || "";
     this.state = {
       initialRoute, // Preserve the initial route
       activeTab: this.props.match.params.typeId,
+      mobile_number,
       countryData: [],
       customerDetails: [],
     };
@@ -53,7 +55,7 @@ class Business_Customers_Details_Report extends React.Component {
         pathname: `/admin/business_customers/${this.props.match.params.account_number}/${tab}`,
         state: {
           ...this.props.location.state,
-          route: tab,
+          // route: tab,
         },
       });
       this.setState({ activeTab: tab });
@@ -74,8 +76,8 @@ class Business_Customers_Details_Report extends React.Component {
   };
 
   render() {
-    const { state } = this.props.location || {};
-    const mobile_number = state?.mobile_number;
+    // const { state } = this.props.location || {};
+    // const mobile_number = state?.mobile_number;
     const { activeTab } = this.state;
 
     const backRoute = this.getBackRoute();
@@ -143,7 +145,7 @@ class Business_Customers_Details_Report extends React.Component {
               <CTabPane active={activeTab === "basic_details"}>
                 {activeTab === "basic_details" && (
                   <Business_Customers_Details
-                    mobile_number={mobile_number}
+                    mobile_number={this.state.mobile_number}
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />

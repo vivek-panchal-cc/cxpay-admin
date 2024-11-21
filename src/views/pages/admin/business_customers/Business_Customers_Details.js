@@ -63,7 +63,7 @@ class Business_Customers_Details extends React.Component {
       .getCustomerWiseDetails(this.state.fields)
       .then((res) => {
         if (res.success === false) {
-          notify.error(res.message);
+          // notify.error(res.message);
           history.push("/admin/business_customers");
         } else {
           this.setState({

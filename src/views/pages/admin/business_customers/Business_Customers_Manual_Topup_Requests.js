@@ -22,8 +22,7 @@ import {
   CPagination,
 } from "@coreui/react";
 import { businessCustomersService } from "services/admin/business_customers.service";
-import { notify } from "_helpers";
-import { _canAccess } from "_helpers";
+import { _canAccess, notify } from "_helpers";
 
 const REQUEST_ITEM_HEADERS = [
   { label: "Request From", field: "name" },
@@ -101,7 +100,7 @@ const Business_Customers_Manual_Topup_Requests = (props) => {
       const csvContent = atob(base64csv);
       const blob = new Blob([csvContent], { type: "text/csv" });
       const downloadLink = document.createElement("a");
-      const fileName = `${this.state.fields.account_number}_WITHDRAW_REQUEST_REPORT_${dtnow}.csv`;
+      const fileName = `${filters.account_number}_WITHDRAW_REQUEST_REPORT_${dtnow}.csv`;
       downloadLink.href = URL.createObjectURL(blob);
       downloadLink.download = fileName;
       downloadLink.click();

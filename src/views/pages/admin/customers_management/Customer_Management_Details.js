@@ -61,7 +61,7 @@ class Customers_Management_Details extends React.Component {
       .getCustomerWiseDetails(this.state.fields)
       .then((res) => {
         if (res.success === false) {
-          notify.error(res.message);
+          // notify.error(res.message);
           history.push("/admin/personal_customers");
         } else {
           this.setState({

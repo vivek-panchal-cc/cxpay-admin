@@ -346,6 +346,7 @@ class Customer_Management_Transactions_Report extends React.Component {
                           <option value="REQ">Request</option>
                           <option value="WW">Wallet to Wallet</option>
                           <option value="AGENT TOPUP">Agent Top Up</option>
+                          <option value="MF">Manual Add Fund</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -384,6 +385,13 @@ class Customer_Management_Transactions_Report extends React.Component {
                               <option value="FAILED">Failed</option>
                               <option value="PAID">Paid</option>
                               <option value="PENDING">Pending</option>
+                            </>
+                          )}
+                          {this.state.fields.txn_type == "MF" && (
+                            <>
+                              <option value="APPROVED">Approved</option>
+                              <option value="PENDING">Pending</option>
+                              <option value="REJECTED">Rejected</option>
                             </>
                           )}
                         </CSelect>
