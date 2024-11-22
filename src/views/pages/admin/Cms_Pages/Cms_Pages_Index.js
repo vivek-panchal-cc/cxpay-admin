@@ -359,7 +359,7 @@ class Page_list extends React.Component {
                     </CTooltip>
                   )}
                 </div>
-                {/* <div className="card-header-actions">
+                <div className="card-header-actions">
                   {_canAccess("cms_pages", "update") && (
                     <CTooltip content={globalConstants.UPDATE_SEQUENCE}>
                       <CLink
@@ -371,7 +371,7 @@ class Page_list extends React.Component {
                       </CLink>
                     </CTooltip>
                   )}
-                </div> */}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">

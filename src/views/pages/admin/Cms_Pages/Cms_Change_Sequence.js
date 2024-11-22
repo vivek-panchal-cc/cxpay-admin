@@ -25,8 +25,8 @@ import {
   _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
-import { faqService } from "services/admin/faq.service";
 import IconDragAndDrop from "assets/icons/IconDragAndDrop";
+import { pageService } from "../../../../services/admin/page.service";
 
 class Cms_Change_Sequence extends React.Component {
   constructor(props) {
@@ -46,19 +46,19 @@ class Cms_Change_Sequence extends React.Component {
   }
 
   componentDidMount() {
-    this.getFaqList();
+    this.getCMSList();
   }
 
-  getFaqList(callback) {
-    faqService.getFaqList().then((res) => {
+  getCMSList(callback) {
+    pageService.getCMSList().then((res) => {
       if (!res.success) {
         notify.error(res.message);
       } else {
         this.setState({
-          cms_list: res.result,
+          cms_list: res.data.cms_pages,
         });
         if (typeof callback === "function") {
-          const sequenceData = res.result?.map((item, index) => ({
+          const sequenceData = res.data.cms_pages?.map((item, index) => ({
             id: item.id,
             sequence: index + 1,
           }));
@@ -111,14 +111,14 @@ class Cms_Change_Sequence extends React.Component {
   }
 
   changeSequence(sequenceData) {
-    faqService
+    pageService
       .changeSequenceData({ sequence_data: sequenceData })
       .then((res) => {
         if (!res.success) {
           notify.error(res.message);
         } else {
           // notify.success(res.message);
-          this.getFaqList();
+          this.getCMSList();
         }
       });
   }
@@ -130,7 +130,7 @@ class Cms_Change_Sequence extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                Change Sequence
+                <strong>Change Sequence</strong>
                 <div className="card-header-actions">
                   <CTooltip content={globalConstants.BACK_MSG}>
                     <CLink
@@ -187,7 +187,7 @@ class Cms_Change_Sequence extends React.Component {
                                       </CTooltip>
                                     </td>
                                     <td>{cms.sequence}</td>
-                                    <td>{cms.faq_question}</td>
+                                    <td>{cms.title}</td>
                                     <td>
                                       {cms.status ? "Active" : "Deactive"}
                                     </td>
@@ -197,7 +197,9 @@ class Cms_Change_Sequence extends React.Component {
                             ))}
                             {this.state.cms_list?.length === 0 && (
                               <tr>
-                                <td colSpan="5">No records found</td>
+                                <td className="text-center" colSpan="5">
+                                  No records found
+                                </td>
                               </tr>
                             )}
                           </tbody>
