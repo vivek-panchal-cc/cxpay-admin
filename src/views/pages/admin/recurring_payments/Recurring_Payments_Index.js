@@ -24,6 +24,7 @@ import {
   history,
   formatDate,
   _canAccess,
+  formatToDDMMYYYY,
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DatePicker from "react-datepicker";
@@ -207,12 +208,12 @@ class RecurringPaymentsIndex extends React.Component {
 
   handleChangeDateFilter = (params) => {
     const [startDate, endDate] = params;
-    // if (!startDate || !endDate) return;
+
     this.setState({
       fields: {
         ...this.state.fields,
-        start_date: startDate?.toLocaleDateString("en-US"),
-        end_date: endDate?.toLocaleDateString("en-US"),
+        start_date: formatToDDMMYYYY(startDate),
+        end_date: formatToDDMMYYYY(endDate),
       },
       filters: {
         startDate: startDate,

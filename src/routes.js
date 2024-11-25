@@ -177,6 +177,10 @@ const Fee_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/fee_management/Fee_Management_Edit")
 );
 
+const Business_Category_Index = React.lazy(() =>
+  import("./views/pages/admin/business_categories/Business_Category_Index")
+);
+
 //Import File Settings (system options)
 const Settings_Update = React.lazy(() =>
   import("./views/pages/admin/settings/Settings_Update")
@@ -644,6 +648,16 @@ const routes = [
     name: "Delete Requests",
     component: Business_Delete_Requests,
     module_name: "business_customers",
+    action: "view",
+  },
+
+  // Business Category
+  {
+    path: "/admin/business_category",
+    exact: true,
+    name: "Business Categories",
+    component: Business_Category_Index,
+    module_name: "business_category",
     action: "view",
   },
 

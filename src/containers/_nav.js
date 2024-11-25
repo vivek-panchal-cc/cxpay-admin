@@ -24,7 +24,8 @@ import {
   faUserTie,
   faStopwatch,
   faSyncAlt,
-  faQuestion
+  faQuestion,
+  faStore,
 } from "@fortawesome/free-solid-svg-icons";
 import IconFlorin from "assets/icons/IconFlorin";
 
@@ -77,9 +78,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Admin Users",
     to: "/admin/users",
-    icon: (
-      <FontAwesomeIcon icon={faUsers} className="c-sidebar-nav-icon" />
-    ),
+    icon: <FontAwesomeIcon icon={faUsers} className="c-sidebar-nav-icon" />,
     module_name: "users",
     id: "users_sidebar_id",
   },
@@ -87,9 +86,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Business Customers",
     to: "/admin/business_customers",
-    icon: (
-      <FontAwesomeIcon icon={faBuilding} className="c-sidebar-nav-icon" />
-    ),
+    icon: <FontAwesomeIcon icon={faBuilding} className="c-sidebar-nav-icon" />,
     module_name: "business_customers",
     id: "business_customers_sidebar_id",
   },
@@ -97,9 +94,7 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Personal Customers",
     to: "/admin/personal_customers",
-    icon: (
-      <FontAwesomeIcon icon={faUser} className="c-sidebar-nav-icon" />
-    ),
+    icon: <FontAwesomeIcon icon={faUser} className="c-sidebar-nav-icon" />,
     module_name: "personal_customers",
     id: "personal_customers_sidebar_id",
   },
@@ -111,6 +106,14 @@ const _nav = [
     module_name: "agent_customers",
     id: "agent_customers_sidebar_id",
   },
+  // {
+  //   _tag: "CSidebarNavItem",
+  //   name: "Business Categories",
+  //   to: "/admin/business_category",
+  //   icon: <FontAwesomeIcon icon={faStore} className="c-sidebar-nav-icon" />,
+  //   module_name: "business_category",
+  //   id: "business_category_sidebar_id",
+  // },
   {
     _tag: "CSidebarNavItem",
     name: "Email Templates",
@@ -174,7 +177,9 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Customers Reports",
     to: "/admin/customer_reports",
-    icon: <FontAwesomeIcon icon={faClipboardList} className="c-sidebar-nav-icon" />,
+    icon: (
+      <FontAwesomeIcon icon={faClipboardList} className="c-sidebar-nav-icon" />
+    ),
     module_name: "customer_reports",
     id: "customer_reports_sidebar_id",
   },
@@ -198,7 +203,9 @@ const _nav = [
     _tag: "CSidebarNavItem",
     name: "Manual Top Up Requests",
     to: "/admin/manual_requests",
-    icon: <FontAwesomeIcon icon={faHandHoldingUsd} className="c-sidebar-nav-icon" />,
+    icon: (
+      <FontAwesomeIcon icon={faHandHoldingUsd} className="c-sidebar-nav-icon" />
+    ),
     module_name: "manual_requests",
     id: "manual_requests_sidebar_id",
   },
