@@ -315,6 +315,5 @@ export const formatToDDMMYYYY = (date) => {
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is 0-based
   const day = date.getDate().toString().padStart(2, "0");
   const year = date.getFullYear();
-  console.log("dd/mm/yyy ", month, day, year);
   return `${day}/${month}/${year}`;
 };
