@@ -54,9 +54,6 @@ const ActionBar = React.lazy(() =>
 class Business_Category_Index extends React.Component {
   constructor(props) {
     super(props);
-
-    /************************** * Bind Method with class *******************************/
-
     this.handleColumnSort = this.handleColumnSort.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -71,9 +68,9 @@ class Business_Category_Index extends React.Component {
         pageNo: 1,
         sort_dir: "desc",
         sort_field: "created_at",
+        search_name: "",
         totalPage: 1,
-        fee_label: "",
-        fee_type: "",
+        operation_type: "category_list",
       },
       editFormId: "",
       showAddForm: false,
@@ -96,29 +93,29 @@ class Business_Category_Index extends React.Component {
 
   getCategoryList() {
     businessCategoryManagementService
-      .getFeeStructures(this.state.fields)
+      .businessCategoryBulkAction(this.state.fields)
       .then((res) => {
-        if (res.status === false) {
+        if (!res.success) {
           notify.error(res.message);
+          this.setState({ category_list: [] });
         } else {
           this.setState({
-            totalRecords: res.totalRecords,
+            totalRecords: res.data?.pagination?.total,
             fields: {
               ...this.state.fields,
-              totalPage: res.totalPage,
+              totalPage: res.data?.pagination?.last_page,
             },
-            category_list: res.result,
+            category_list: res.data?.category,
           });
 
-          /*multi delete cms pages */
-          if (res.result && res.result?.length > 0) {
-            let pages = res.result;
+          if (res?.data && res?.data?.category?.length > 0) {
+            let categories = res?.data?.category;
             let multiaction = [];
-            for (var key in pages) {
-              multiaction[pages[key]._id] = false;
+            for (var key in categories) {
+              multiaction[categories[key].id] = false;
             }
             this.setState({ multiaction: multiaction });
-          } else if (res.result && res.result?.length === 0) {
+          } else if (res.data?.category?.length === 0) {
             this.setState({ multiaction: [] });
           }
         }
@@ -168,20 +165,29 @@ class Business_Category_Index extends React.Component {
         {
           fields: {
             pageNo: 1,
-            sort_dir: "asc",
-            sort_field: "fee_label",
+            sort_dir: "desc",
+            sort_field: "created_at",
             search_name: "",
             totalPage: 1,
-            fee_label: "",
-            fee_type: "",
+            operation_type: "category_list",
           },
+          showEditForm: false,
+          showAddForm: false,
+          editFormId: "",
+          multiaction: [],
+          allCheckedbox: false,
         },
         () => {
           this.getCategoryList();
         }
       );
     } else {
-      this.getCategoryList();
+      this.setState(
+        { showEditForm: false, showAddForm: false, editFormId: "" },
+        () => {
+          this.getCategoryList();
+        }
+      );
     }
   }
 
@@ -192,23 +198,32 @@ class Business_Category_Index extends React.Component {
   deleteUser() {
     this.setState({ _openPopup: false, deleteId: undefined });
 
-    var postData = { id: [this.state.deleteId] };
+    var postData = {
+      id: [this.state.deleteId],
+      operation_type: "category_delete",
+    };
 
-    businessCategoryManagementService.deletepage(postData).then((res) => {
-      if (res.status === "error") {
-        notify.error(res.message);
-      } else {
-        notify.success(res.message);
-        this.getCategoryList();
-      }
-    });
+    businessCategoryManagementService
+      .businessCategoryBulkAction(postData)
+      .then((res) => {
+        if (!res.success) {
+          notify.error(res.message);
+        } else {
+          notify.success(res.message);
+          this.getCategoryList();
+        }
+      });
   }
 
-  PageStatusChangedHandler(page_id, status) {
+  categoryStatusChangedHandler(id, status) {
     businessCategoryManagementService
-      .changeFeeStatus({ id: [page_id], status: status == false ? 1 : 0 })
+      .businessCategoryBulkAction({
+        id: [id],
+        status: status == false ? true : false,
+        operation_type: "category_status_change",
+      })
       .then((res) => {
-        if (res.status === "error") {
+        if (!res.success) {
           notify.error(res.message);
         } else {
           notify.success(res.message);
@@ -243,11 +258,12 @@ class Business_Category_Index extends React.Component {
     this.setState({ allCheckedbox: false });
   }
 
-  bulkPageStatusChangeHandler(postData) {
+  bulkCategoryStatusChangeHandler(postData) {
+    this.setState({ showAddForm: false, showEditForm: false, editFormId: "" });
     businessCategoryManagementService
-      .changeBulkFeeStatus(postData)
+      .businessCategoryBulkAction(postData)
       .then((res) => {
-        if (res.status === "error") {
+        if (!res.success) {
           notify.error(res.message);
         } else {
           notify.success(res.message);
@@ -269,16 +285,18 @@ class Business_Category_Index extends React.Component {
       this.resetCheckedBox();
       switch (actionValue) {
         case "active": {
-          this.bulkPageStatusChangeHandler({
+          this.bulkCategoryStatusChangeHandler({
             id: appliedActionId,
-            status: 1,
+            status: true,
+            operation_type: "category_status_change",
           });
           break;
         }
         case "deactive": {
-          this.bulkPageStatusChangeHandler({
+          this.bulkCategoryStatusChangeHandler({
             id: appliedActionId,
-            status: 0,
+            status: false,
+            operation_type: "category_status_change",
           });
           break;
         }
@@ -289,15 +307,18 @@ class Business_Category_Index extends React.Component {
   };
 
   handleShowAddForm(show) {
-    this.setState({ showAddForm: show, showEditForm: false }, () => {
-      if (show) {
-        // Scroll to the edit form section
-        window.scroll({
-          top: 0,
-          behavior: "smooth", // Smooth scrolling effect
-        });
+    this.setState(
+      { showAddForm: show, showEditForm: false, editFormId: "" },
+      () => {
+        if (show) {
+          // Scroll to the edit form section
+          window.scroll({
+            top: 0,
+            behavior: "smooth", // Smooth scrolling effect
+          });
+        }
       }
-    });
+    );
   }
 
   handleShowEditForm(show, id = "") {
@@ -335,6 +356,7 @@ class Business_Category_Index extends React.Component {
           <CRow>
             <CCol xl={12}>
               <Business_Category_Edit
+                key={editFormId}
                 id={editFormId}
                 onApiSuccess={this.getCategoryList}
                 cancel={this.handleShowEditForm}
@@ -342,6 +364,7 @@ class Business_Category_Index extends React.Component {
             </CCol>
           </CRow>
         )}
+
         <CRow>
           <CCol xl={12}>
             <CCard>
@@ -371,11 +394,16 @@ class Business_Category_Index extends React.Component {
                           >
                             <CCol xs="12" className="p-0">
                               <CInput
-                                id="fee_type"
-                                placeholder="Search Fee Type"
-                                name="fee_type"
-                                value={this.state.fields.fee_type}
+                                id="search_name"
+                                placeholder="Search Category"
+                                name="search_name"
+                                value={this.state.fields.search_name}
                                 onChange={this.handleChange}
+                                onKeyPress={(event) => {
+                                  if (event.key === "Enter") {
+                                    this.handleSearch("search_name");
+                                  }
+                                }}
                               />
                             </CCol>
                           </CFormGroup>
@@ -417,35 +445,32 @@ class Business_Category_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
+                        {this.state.category_list?.length > 0 && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
                         <th>#</th>
-                        <th
-                          onClick={() => this.handleColumnSort("payment_type")}
-                        >
+                        <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Payment Type
+                              Category Name
                             </span>
-                            {this.state.fields.sort_field !==
-                              "payment_type" && (
+                            {this.state.fields.sort_field !== "name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field ===
-                                "payment_type" && (
+                              this.state.fields.sort_field === "name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field ===
-                                "payment_type" && (
+                              this.state.fields.sort_field === "name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -481,14 +506,14 @@ class Business_Category_Index extends React.Component {
                       {this.state.category_list &&
                         this.state.category_list?.length > 0 &&
                         this.state.category_list?.map((u, index) => (
-                          <tr key={u._id}>
+                          <tr key={u.id}>
                             <td>
                               <CheckBoxes
                                 handleCheckChieldElement={
                                   this.handleCheckChieldElement
                                 }
-                                _id={u._id}
-                                _isChecked={this.state.multiaction[u._id]}
+                                _id={u.id}
+                                _isChecked={this.state.multiaction[u.id]}
                               />
                             </td>
 
@@ -499,27 +524,30 @@ class Business_Category_Index extends React.Component {
                                   10 * (this.state.fields.pageNo - 1)
                                 : index + 1}
                             </td>
-                            <td>{u.payment_type}</td>
+                            <td>{u.name}</td>
 
                             <td>
-                              {_canAccess("business_category", "update") && (
+                              {_canAccess("business_category", "update") &&
+                              editFormId !== u.id ? (
                                 <CLink
                                   onClick={() =>
-                                    this.PageStatusChangedHandler(
-                                      u._id,
+                                    this.categoryStatusChangedHandler(
+                                      u.id,
                                       u.status
                                     )
                                   }
                                 >
-                                  {u.status == false
-                                    ? "Activate"
-                                    : "Deactivate"}
+                                  {u.status == false ? "Activate" : "Deactive"}
                                 </CLink>
+                              ) : (
+                                <>
+                                  {u.status == false ? "Activate" : "Deactive"}
+                                </>
                               )}
                               {_canAccess("business_category", "update") ===
                                 false && (
                                 <>
-                                  {u.status == true ? "Activate" : "Deactivate"}
+                                  {u.status == true ? "Activate" : "Deactive"}
                                 </>
                               )}
                             </td>
@@ -537,9 +565,9 @@ class Business_Category_Index extends React.Component {
                                       <button
                                         className="btn  btn-md btn-primary"
                                         onClick={() =>
-                                          this.handleShowEditForm(true, u._id)
+                                          this.handleShowEditForm(true, u.id)
                                         }
-                                        disabled={showEditForm}
+                                        disabled={editFormId === u.id}
                                       >
                                         <CIcon name="cil-pencil"></CIcon>{" "}
                                       </button>
@@ -556,8 +584,9 @@ class Business_Category_Index extends React.Component {
                                       <button
                                         className="btn btn-md btn-danger "
                                         onClick={() =>
-                                          this.openDeletePopup(u._id)
+                                          this.openDeletePopup(u.id)
                                         }
+                                        disabled={editFormId === u.id}
                                       >
                                         <CIcon name="cil-trash"></CIcon>
                                       </button>
@@ -576,13 +605,15 @@ class Business_Category_Index extends React.Component {
                         )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={this.state.fields.pageNo}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {this.state.category_list?.length > 0 && (
+                    <CPagination
+                      activePage={this.state.fields.pageNo}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>
@@ -597,7 +628,7 @@ class Business_Category_Index extends React.Component {
           color="danger"
         >
           <CModalHeader closeButton>
-            <CModalTitle>Delete Page</CModalTitle>
+            <CModalTitle>Delete Category</CModalTitle>
           </CModalHeader>
           <CModalBody>Are you sure you want to delete this record?</CModalBody>
           <CModalFooter>

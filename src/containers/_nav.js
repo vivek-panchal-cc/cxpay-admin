@@ -106,14 +106,14 @@ const _nav = [
     module_name: "agent_customers",
     id: "agent_customers_sidebar_id",
   },
-  // {
-  //   _tag: "CSidebarNavItem",
-  //   name: "Business Categories",
-  //   to: "/admin/business_category",
-  //   icon: <FontAwesomeIcon icon={faStore} className="c-sidebar-nav-icon" />,
-  //   module_name: "business_category",
-  //   id: "business_category_sidebar_id",
-  // },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Business Categories",
+    to: "/admin/business_category",
+    icon: <FontAwesomeIcon icon={faStore} className="c-sidebar-nav-icon" />,
+    module_name: "business_category",
+    id: "business_category_sidebar_id",
+  },
   {
     _tag: "CSidebarNavItem",
     name: "Email Templates",

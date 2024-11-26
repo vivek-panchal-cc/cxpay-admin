@@ -26,7 +26,7 @@ class Business_Category_Add extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fields: { fee_label: "", status: false },
+      fields: { category_name: "", status: false },
     };
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,12 +53,13 @@ class Business_Category_Add extends Component {
   checkValidation(event) {
     if (this.validator.allValid()) {
       businessCategoryManagementService
-        .createFeeStructure({
-          fee_label: this.state.fields.fee_label,
-          status: this.state.fields.status == false ? 0 : 1,
+        .businessCategoryBulkAction({
+          category_name: this.state.fields.category_name,
+          status: this.state.fields.status === false ? false : true,
+          operation_type: "category_add",
         })
         .then((res) => {
-          if (res.status === "error") {
+          if (!res.success) {
             notify.error(res.message);
           } else {
             notify.success(res.message);
@@ -88,19 +89,19 @@ class Business_Category_Add extends Component {
         </CCardHeader>
         <CCardBody>
           <CFormGroup>
-            <CLabel htmlFor="nf-name">Fee Label</CLabel>
+            <CLabel htmlFor="nf-name">Category</CLabel>
             <CInput
               type="text"
-              id="fee_label"
-              name="fee_label"
-              placeholder="Enter Fee Label"
-              autoComplete="fee_label"
+              id="category_name"
+              name="category_name"
+              placeholder="Enter Category"
+              autoComplete="category_name"
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
               {this.validator.message(
-                "fee_label",
-                this.state.fields.fee_label,
+                "category_name",
+                this.state.fields.category_name,
                 "required",
                 {
                   className: "text-danger",

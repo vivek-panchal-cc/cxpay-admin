@@ -18,17 +18,18 @@ import { businessCategoryManagementService } from "services/admin/business_categ
 import { notify, _canAccess } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan } from "@fortawesome/free-solid-svg-icons";
-
 class Business_Category_Edit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
-      id: this.props.id,
-      initialValue: "",
-      status: false,
-      activeTab: 1,
-      _openPopup: false,
+      fields: {
+        name: "",
+        id: this.props.id,
+        initialValue: "",
+        status: false,
+        activeTab: 1,
+        _openPopup: false,
+      },
     };
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -49,31 +50,44 @@ class Business_Category_Edit extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      if (
-        _canAccess(
-          this.props.module_name,
-          this.props.action,
-          "/admin/business_category"
-        )
-      ) {
-        var postData = { id: this.state.id };
-        businessCategoryManagementService.getFeeDetail(postData).then((res) => {
+    this.fetchCategoryDetails();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.id !== this.props.id) {
+      this.setState({ fields: { id: this.props.id } });
+      this.fetchCategoryDetails();
+    }
+  }
+
+  fetchCategoryDetails() {
+    if (
+      _canAccess(
+        this.props.module_name,
+        this.props.action,
+        "/admin/business_category"
+      )
+    ) {
+      const postData = {
+        id: this.state.fields.id,
+        operation_type: "category_detail",
+      };
+      businessCategoryManagementService
+        .businessCategoryBulkAction(postData)
+        .then((res) => {
           if (res.status === false) {
             notify.error(res.message);
           } else {
-            if (res.result == null) {
-              notify.error("Category not found.");
-            } else {
-              this.setState({
-                fee_label: res.result.fee_label,
-                status: res.result.status,
-              });
-            }
+            this.setState({
+              fields: {
+                id: res.data.id,
+                category_name: res.data.category_name,
+                status: res.data.status,
+              },
+            });
           }
         });
-      }
-    }, 300);
+    }
   }
 
   handleSubmit(event) {
@@ -83,12 +97,13 @@ class Business_Category_Edit extends Component {
   checkValidation(event) {
     if (this.validator.allValid()) {
       var postData = {
-        fee_label: this.state.fee_label,
-        status: this.state.status === false ? 0 : 1,
-        id: this.state.id,
+        category_name: this.state.fields.category_name,
+        status: this.state.fields.status === false ? false : true,
+        id: this.state.fields.id,
+        operation_type: "category_update",
       };
       businessCategoryManagementService
-        .updateFeeStructure(postData)
+        .businessCategoryBulkAction(postData)
         .then((res) => {
           if (!res.success) {
             notify.error(res.message);
@@ -116,24 +131,24 @@ class Business_Category_Edit extends Component {
     return (
       <CCard>
         <CCardHeader>
-          <strong>Edit Category </strong>
+          <strong>Update Category</strong>
         </CCardHeader>
         <CCardBody>
           <CFormGroup>
-            <CLabel htmlFor="nf-name">Fee Label</CLabel>
+            <CLabel htmlFor="nf-name">Category</CLabel>
             <CInput
               type="text"
-              id="fee_label"
-              name="fee_label"
-              placeholder="Enter Fee Label"
-              autoComplete="fee_label"
-              value={this.state.fee_label}
+              id="category_name"
+              name="category_name"
+              placeholder="Enter Category"
+              autoComplete="category_name"
+              value={this.state.fields.category_name}
               onChange={this.handleChange}
             />
             <CFormText className="help-block">
               {this.validator.message(
-                "fee_label",
-                this.state.fee_label,
+                "category_name",
+                this.state.fields.category_name,
                 "required",
                 {
                   className: "text-danger",
@@ -149,23 +164,23 @@ class Business_Category_Edit extends Component {
 
             <CCol sm="11">
               <CFormGroup variant="custom-checkbox" inline>
-                {this.state.status && (
+                {this.state.fields.status && (
                   <CSwitch
                     className="mr-1"
                     color="primary"
                     name="status"
-                    value={this.state.status}
+                    value={this.state.fields.status}
                     defaultChecked
                     onChange={this.handleChange}
                   />
                 )}
 
-                {this.state.status === false && (
+                {this.state.fields.status === false && (
                   <CSwitch
                     className="mr-1"
                     color="primary"
                     name="status"
-                    value={this.state.status}
+                    value={this.state.fields.status}
                     onChange={this.handleChange}
                   />
                 )}
