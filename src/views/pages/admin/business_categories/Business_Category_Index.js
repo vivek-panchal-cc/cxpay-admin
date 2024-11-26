@@ -42,9 +42,8 @@ import {
   _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
-import SimpleReactValidator from "simple-react-validator";
-import { feeManagementService } from "services/admin/fee_management.service";
-import slugify from "react-slugify";
+import Business_Category_Add from "./Business_Category_Add";
+import Business_Category_Edit from "./Business_Category_Edit";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -63,10 +62,9 @@ class Business_Category_Index extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.openDeletePopup = this.openDeletePopup.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
-    this.validator = new SimpleReactValidator({ autoForceUpdate: this });
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleAddChange = this.handleAddChange.bind(this);
-    // this._handleCancelAction = this._handleCancelAction.bind(this);
+    this.getCategoryList = this.getCategoryList.bind(this);
+    this.handleShowAddForm = this.handleShowAddForm.bind(this);
+    this.handleShowEditForm = this.handleShowEditForm.bind(this);
 
     this.state = {
       fields: {
@@ -77,10 +75,9 @@ class Business_Category_Index extends React.Component {
         fee_label: "",
         fee_type: "",
       },
-      fieldsData: {
-        fee_label: "",
-        status: false,
-      },
+      editFormId: "",
+      showAddForm: false,
+      showEditForm: false,
       _openPopup: false,
       category_list: [],
       multiaction: [],
@@ -165,18 +162,6 @@ class Business_Category_Index extends React.Component {
     this.setState({ fields: { ...this.state.fields, [name]: value } });
   }
 
-  handleAddChange(event) {
-    const { name, type, value, checked } = event.target;
-    const updatedValue = type === "checkbox" ? checked : value;
-
-    this.setState((prevState) => ({
-      fieldsData: {
-        ...prevState.fieldsData,
-        [name]: updatedValue,
-      },
-    }));
-  }
-
   handleSearch(type) {
     if (type === "reset") {
       this.setState(
@@ -203,6 +188,7 @@ class Business_Category_Index extends React.Component {
   openDeletePopup(id) {
     this.setState({ _openPopup: true, deleteId: id });
   }
+
   deleteUser() {
     this.setState({ _openPopup: false, deleteId: undefined });
 
@@ -302,154 +288,60 @@ class Business_Category_Index extends React.Component {
     }
   };
 
-  handleSubmit(event) {
-    this.checkValidation(event);
-  }
-
-  checkValidation(event) {
-    if (this.validator.allValid()) {
-      feeManagementService
-        .createFeeStructure({
-          fee_label: this.state.fieldsData.fee_label,
-          status: this.state.fieldsData.status == false ? 0 : 1,
-        })
-        .then((res) => {
-          if (res.status === "error") {
-            notify.error(res.message);
-          } else {
-            notify.success(res.message);
-            history.push("/admin/business_category");
-            event.preventDefault();
-          }
+  handleShowAddForm(show) {
+    this.setState({ showAddForm: show, showEditForm: false }, () => {
+      if (show) {
+        // Scroll to the edit form section
+        window.scroll({
+          top: 0,
+          behavior: "smooth", // Smooth scrolling effect
         });
-    } else {
-      this.validator.showMessages();
-    }
+      }
+    });
   }
 
-  /****************** * Render Data To Dom ************************/
+  handleShowEditForm(show, id = "") {
+    this.setState(
+      { showEditForm: show, showAddForm: false, editFormId: id },
+      () => {
+        if (show) {
+          // Scroll to the edit form section
+          window.scroll({
+            top: 0,
+            behavior: "smooth", // Smooth scrolling effect
+          });
+        }
+      }
+    );
+  }
 
   render() {
     const current_user = _loginUsersDetails();
+    const { showAddForm, showEditForm, editFormId } = this.state;
     return (
       <>
-        <CRow>
-          <CCol xl={12}>
-            <CCard>
-              <CCardHeader>
-                <strong>Add Business Category</strong>
-              </CCardHeader>
-              <CCardBody>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Fee Label</CLabel>
-                  <CInput
-                    type="text"
-                    id="fee_label"
-                    name="fee_label"
-                    placeholder="Enter Fee Label"
-                    autoComplete="fee_label"
-                    onChange={this.handleAddChange}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "fee_label",
-                      this.state.fieldsData.fee_label,
-                      "required",
-                      {
-                        className: "text-danger",
-                      }
-                    )}
-                  </CFormText>
-                </CFormGroup>
+        {showAddForm && (
+          <CRow>
+            <CCol xl={12}>
+              <Business_Category_Add
+                onApiSuccess={this.getCategoryList}
+                cancel={this.handleShowAddForm}
+              />
+            </CCol>
+          </CRow>
+        )}
 
-                <CFormGroup row>
-                  <CCol tag="label" sm="1" className="col-form-label">
-                    Status
-                  </CCol>
-                  <CCol sm="11">
-                    <CFormGroup variant="custom-checkbox" inline>
-                      <CSwitch
-                        name="status"
-                        className="mr-1"
-                        color="primary"
-                        defaultChecked={this.state.fieldsData.status}
-                        onClick={this.handleAddChange}
-                      />
-                    </CFormGroup>
-                  </CCol>
-                </CFormGroup>
-              </CCardBody>
-              <CCardFooter>
-                <CButton
-                  type="button"
-                  size="sm"
-                  color="primary"
-                  onClick={this.handleSubmit}
-                >
-                  {" "}
-                  <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
-                </CButton>
-              </CCardFooter>
-            </CCard>
-          </CCol>
-        </CRow>
-        <CRow>
-          <CCol xl={12}>
-            <CCard>
-              <CCardHeader>
-                <strong>Search Business Category</strong>
-              </CCardHeader>
-              <CCardBody>
-                <CRow>
-                  <CCol xl={3}>
-                    <CFormGroup row>
-                      <CCol xs="12">
-                        <CLabel htmlFor="name">Fee Type</CLabel>
-                        <CInput
-                          id="fee_type"
-                          placeholder="Search Fee Type"
-                          name="fee_type"
-                          value={this.state.fields.fee_type}
-                          onChange={this.handleChange}
-                        />
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                </CRow>
-                <CRow>
-                  <CCol xl={12}>
-                    <CFormGroup row>
-                      <CCol xs="1">
-                        <button
-                          className="btn btn-dark btn-md"
-                          onClick={() => this.handleSearch()}
-                        >
-                          Search
-                        </button>
-                      </CCol>
-                      <CCol xs="2">
-                        <button
-                          className="btn btn-dark btn-md"
-                          onClick={() => this.handleSearch("reset")}
-                        >
-                          Clear
-                        </button>
-                      </CCol>
-                    </CFormGroup>
-                  </CCol>
-                </CRow>
-
-                <CRow>
-                  <CCol xl={12}>
-                    <CFormGroup row>
-                      <CCol xs="1"></CCol>
-                    </CFormGroup>
-                  </CCol>
-                </CRow>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
+        {showEditForm && editFormId && (
+          <CRow>
+            <CCol xl={12}>
+              <Business_Category_Edit
+                id={editFormId}
+                onApiSuccess={this.getCategoryList}
+                cancel={this.handleShowEditForm}
+              />
+            </CCol>
+          </CRow>
+        )}
         <CRow>
           <CCol xl={12}>
             <CCard>
@@ -458,16 +350,62 @@ class Business_Category_Index extends React.Component {
                 <div className="card-header-actions">
                   {_canAccess("business_category", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
-                      <CLink
+                      <button
                         className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to="/admin/business_category/add"
+                        onClick={() => this.handleShowAddForm(true)}
+                        disabled={showAddForm}
                       >
                         <FontAwesomeIcon icon={faPlus} />
-                      </CLink>
+                      </button>
                     </CTooltip>
                   )}
                 </div>
+                <CRow>
+                  <CCol xl={12} className="p-0">
+                    <CCardBody>
+                      <CRow style={{ flexWrap: "nowrap" }}>
+                        <CCol xl={3}>
+                          <CFormGroup
+                            row
+                            className="flex flex-wrap nowrap mb-0"
+                          >
+                            <CCol xs="12" className="p-0">
+                              <CInput
+                                id="fee_type"
+                                placeholder="Search Fee Type"
+                                name="fee_type"
+                                value={this.state.fields.fee_type}
+                                onChange={this.handleChange}
+                              />
+                            </CCol>
+                          </CFormGroup>
+                        </CCol>
+                        <CCol xl={9}>
+                          <CFormGroup
+                            row
+                            className="flex flex-wrap nowrap mb-0"
+                          >
+                            <CCol xs="12">
+                              <button
+                                className="btn btn-dark btn-md mr-2"
+                                onClick={() => this.handleSearch()}
+                              >
+                                Search
+                              </button>
+                              <button
+                                className="btn btn-dark btn-md"
+                                onClick={() => this.handleSearch("reset")}
+                              >
+                                Clear
+                              </button>
+                            </CCol>
+                          </CFormGroup>
+                        </CCol>
+                      </CRow>
+                      <CRow></CRow>
+                    </CCardBody>
+                  </CCol>
+                </CRow>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -588,7 +526,7 @@ class Business_Category_Index extends React.Component {
                             {(_canAccess("business_category", "update") ||
                               _canAccess("business_category", "delete")) && (
                               <>
-                                <td>
+                                <td className="d-flex">
                                   {_canAccess(
                                     "business_category",
                                     "update"
@@ -596,16 +534,35 @@ class Business_Category_Index extends React.Component {
                                     <CTooltip
                                       content={globalConstants.EDIT_BTN}
                                     >
-                                      <CLink
+                                      <button
                                         className="btn  btn-md btn-primary"
-                                        aria-current="page"
-                                        to={`/admin/business_category/edit/${u._id}`}
+                                        onClick={() =>
+                                          this.handleShowEditForm(true, u._id)
+                                        }
+                                        disabled={showEditForm}
                                       >
                                         <CIcon name="cil-pencil"></CIcon>{" "}
-                                      </CLink>
+                                      </button>
                                     </CTooltip>
                                   )}
-                                  &nbsp;
+                                  &nbsp; &nbsp;
+                                  {_canAccess(
+                                    "business_category",
+                                    "delete"
+                                  ) && (
+                                    <CTooltip
+                                      content={globalConstants.DELETE_BTN}
+                                    >
+                                      <button
+                                        className="btn btn-md btn-danger "
+                                        onClick={() =>
+                                          this.openDeletePopup(u._id)
+                                        }
+                                      >
+                                        <CIcon name="cil-trash"></CIcon>
+                                      </button>
+                                    </CTooltip>
+                                  )}
                                 </td>
                               </>
                             )}

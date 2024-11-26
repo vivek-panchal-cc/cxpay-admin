@@ -100,7 +100,7 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
       const csvContent = atob(base64csv);
       const blob = new Blob([csvContent], { type: "text/csv" });
       const downloadLink = document.createElement("a");
-      const fileName = `${filters.account_number}_WITHDRAW_REQUEST_REPORT_${dtnow}.csv`;
+      const fileName = `${filters.account_number}_MANUAL_TOPUP_REQUEST_REPORT_${dtnow}.csv`;
       downloadLink.href = URL.createObjectURL(blob);
       downloadLink.download = fileName;
       downloadLink.click();
