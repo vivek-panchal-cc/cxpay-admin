@@ -65,7 +65,7 @@ class Business_Category_Index extends React.Component {
 
     this.state = {
       fields: {
-        pageNo: 1,
+        page: 1,
         sort_dir: "desc",
         sort_field: "created_at",
         search_name: "",
@@ -128,7 +128,7 @@ class Business_Category_Index extends React.Component {
       {
         fields: {
           ...this.state.fields,
-          pageNo: newPage,
+          page: newPage,
         },
       },
       () => {
@@ -164,7 +164,7 @@ class Business_Category_Index extends React.Component {
       this.setState(
         {
           fields: {
-            pageNo: 1,
+            page: 1,
             sort_dir: "desc",
             sort_field: "created_at",
             search_name: "",
@@ -518,10 +518,8 @@ class Business_Category_Index extends React.Component {
                             </td>
 
                             <td>
-                              {this.state.fields.pageNo >= 2
-                                ? index +
-                                  1 +
-                                  10 * (this.state.fields.pageNo - 1)
+                              {this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
                                 : index + 1}
                             </td>
                             <td>{u.name}</td>
@@ -554,7 +552,7 @@ class Business_Category_Index extends React.Component {
                             {(_canAccess("business_category", "update") ||
                               _canAccess("business_category", "delete")) && (
                               <>
-                                <td className="d-flex">
+                                <td>
                                   {_canAccess(
                                     "business_category",
                                     "update"
@@ -573,7 +571,7 @@ class Business_Category_Index extends React.Component {
                                       </button>
                                     </CTooltip>
                                   )}
-                                  &nbsp; &nbsp;
+                                  &nbsp;
                                   {_canAccess(
                                     "business_category",
                                     "delete"
@@ -607,7 +605,7 @@ class Business_Category_Index extends React.Component {
                   </table>
                   {this.state.category_list?.length > 0 && (
                     <CPagination
-                      activePage={this.state.fields.pageNo}
+                      activePage={this.state.fields.page}
                       onActivePageChange={this.pageChange}
                       pages={this.state.fields.totalPage}
                       doubleArrows={true}
