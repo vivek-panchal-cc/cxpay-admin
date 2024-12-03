@@ -21,6 +21,7 @@ import {
 } from "../../../../_helpers/index";
 import SectionKycDetails from "components/admin/sections/SectionKycDetails";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
+import { businessCategoryManagementService } from "services/admin/business_category_management.service";
 import "../business_customers/kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
@@ -35,6 +36,7 @@ class Business_Customers_Details extends React.Component {
       // account_number: this.props.match.params.account_number,
       countryData: [],
       customerDetails: [],
+      categoryName: "",
       fields: {
         mobile_number: mobile_number,
         account_number: account_number,
@@ -66,9 +68,33 @@ class Business_Customers_Details extends React.Component {
           // notify.error(res.message);
           history.push("/admin/business_customers");
         } else {
-          this.setState({
-            customerDetails: res.data,
-          });
+          this.setState(
+            {
+              customerDetails: res.data,
+            },
+            () => {
+              businessCategoryManagementService
+                .businessCategoryBulkAction({ operation_type: "category_list" })
+                .then((res) => {
+                  if (!res.success) {
+                    // notify.error(res.message);
+                    this.setState({ category_list: [] });
+                  } else {
+                    const category_list = res.data?.category || [];
+                    const selectedCategory = category_list?.find(
+                      (category) =>
+                        category.id ===
+                        this.state.customerDetails.business_category_id
+                    );
+                    this.setState({
+                      categoryName: selectedCategory
+                        ? selectedCategory.name
+                        : "",
+                    });
+                  }
+                });
+            }
+          );
         }
       });
     businessCustomersService.getCountry().then((res) => {
@@ -161,10 +187,12 @@ class Business_Customers_Details extends React.Component {
                               <b>Business ID: </b>
                               {this.state.customerDetails.business_id || "-"}
                             </p>
-                            <p>
-                              <b>KYC Type: </b>
-                              {this.state.customerDetails.kyc_type || "-"}
-                            </p>
+                            {this.state.categoryName && (
+                              <p>
+                                <b>Business Category: </b>
+                                {capitalize(this.state.categoryName)}
+                              </p>
+                            )}
                           </CCol>
                           <CCol xs="6">
                             <p>
@@ -209,6 +237,10 @@ class Business_Customers_Details extends React.Component {
                               <b>KYC Attempt Count: </b>
                               {this.state.customerDetails.kyc_attempt_count ||
                                 0}
+                            </p>
+                            <p>
+                              <b>KYC Type: </b>
+                              {this.state.customerDetails.kyc_type || "-"}
                             </p>
                             {this.state.customerDetails.updated_at && (
                               <p>

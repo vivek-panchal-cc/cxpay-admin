@@ -28,6 +28,7 @@ import {
   calculateDurationLeft,
   formatDateByConditional,
   capitalizeWordByWord,
+  capitalize,
 } from "../../../../_helpers/index";
 import $ from "jquery";
 import { globalConstants } from "../../../../constants/admin/global.constants";
@@ -39,6 +40,7 @@ import SectionKycDetails from "components/admin/sections/SectionKycDetails";
 import "./kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
+import { businessCategoryManagementService } from "services/admin/business_category_management.service";
 
 class Business_Customers_Edit extends React.Component {
   constructor(props) {
@@ -60,11 +62,13 @@ class Business_Customers_Edit extends React.Component {
         renew_kyc_data: {
           renew_kyc_approved_status: "",
         },
+        business_category_id: "",
       },
       is_kyc_approved_status: "",
       module_permission: {},
       countryData: {},
       cityData: [],
+      category_list: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
       site_logo: null,
@@ -85,6 +89,7 @@ class Business_Customers_Edit extends React.Component {
   }
 
   componentDidMount() {
+    this.getCountry();
     setTimeout(() => {
       if (
         _canAccess(
@@ -98,14 +103,10 @@ class Business_Customers_Edit extends React.Component {
         };
 
         businessCustomersService.getCustomer(postData).then((res) => {
-          if (res.status === false) {
+          if (!res.success) {
             notify.error(res.message);
+            history.push("/admin/business_customers");
           } else {
-            if (res.data == null) {
-              notify.error("Customer not found");
-              history.push("/admin/business_customers");
-            }
-
             this.setState({ ...this.state.fields, fields: res.data });
 
             const country_index = this.state.countryData.country_list.findIndex(
@@ -133,9 +134,24 @@ class Business_Customers_Edit extends React.Component {
             });
           }
         });
+
+        businessCategoryManagementService
+          .businessCategoryBulkAction({ operation_type: "category_list" })
+          .then((res) => {
+            if (!res.success) {
+              // notify.error(res.message);
+              this.setState({ category_list: [] });
+            } else {
+              this.setState({
+                category_list: res.data?.category,
+              });
+            }
+          });
       }
     }, 100);
+  }
 
+  getCountry() {
     businessCustomersService.getCountry().then((res) => {
       if (res.status === false) {
         notify.error(res.message);
@@ -404,6 +420,10 @@ class Business_Customers_Edit extends React.Component {
       formData.append("status", this.state.status);
       // formData.append("kyc_status", this.state.is_kyc);
       formData.append("admin_approved", this.state.admin_approved);
+      formData.append(
+        "business_category_id",
+        this.state.fields.business_category_id
+      );
       formData.append(
         "kyc_approved_status",
         this.state.fields.kyc_approved_status
@@ -735,6 +755,38 @@ class Business_Customers_Edit extends React.Component {
                     onChange={this.handleChange}
                     disabled={false}
                   />
+                </CFormGroup>
+                <CFormGroup>
+                  <CLabel htmlFor="nf-name">Business Category</CLabel>
+                  <CSelect
+                    custom
+                    name="business_category_id"
+                    id="select"
+                    onChange={this.handleChange}
+                    value={this.state.fields.business_category_id}
+                  >
+                    <option value="" disabled>
+                      -- Enter Business Category --
+                    </option>
+                    ;
+                    {this.state.category_list?.map((ct, key) => {
+                      return (
+                        <option key={key} value={ct.id}>
+                          {capitalize(ct.name)}
+                        </option>
+                      );
+                    })}
+                  </CSelect>
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      "business_category_id",
+                      this.state.fields.business_category_id,
+                      "required",
+                      {
+                        className: "text-danger",
+                      }
+                    )}
+                  </CFormText>
                 </CFormGroup>
                 <CFormGroup>
                   <CLabel htmlFor="nf-name">Business URL</CLabel>
