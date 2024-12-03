@@ -21,6 +21,7 @@ import {
   _canAccess,
   history,
   _loginUsersDetails,
+  capitalize,
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -66,7 +67,6 @@ class Customer_Reports_Index extends React.Component {
 
   getCustomersList() {
     reportsService.getCustomersList(this.state.fields).then((res) => {
-      console.log(res);
       if (res.success === false) {
         this.setState({
           totalRecords: res.data?.pagination?.total,
@@ -77,7 +77,6 @@ class Customer_Reports_Index extends React.Component {
         });
         notify.error(res.message);
       } else {
-        console.log("res.data", res.data);
         this.setState({
           totalRecords: res.data?.pagination?.total,
           fields: {
@@ -145,7 +144,17 @@ class Customer_Reports_Index extends React.Component {
         }
       );
     } else {
-      this.getCustomersList(this.state.fields);
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            page: 1,
+          },
+        },
+        () => {
+          this.getCustomersList(this.state.fields);
+        }
+      );
     }
   }
 
@@ -169,11 +178,14 @@ class Customer_Reports_Index extends React.Component {
   };
 
   downloadFile = async () => {
-    reportsService.downloadCustomerCSV().then((res) => {
-    //  if (res.success) {
+    const { search, filter_user_type } = this.state.fields;
+    reportsService
+      .downloadCustomerCSV({ search, filter_user_type })
+      .then((res) => {
+        //  if (res.success) {
         notify.success("Successfully send report logged in user mail");
-     // }
-    });
+        // }
+      });
   };
 
   render() {
@@ -223,9 +235,11 @@ class Customer_Reports_Index extends React.Component {
                             }
                           }}
                         >
-                          <option value="">-- Select Type --</option>
-                          <option value="personal">Personal</option>
+                          {/* <option value="">-- Select Type --</option> */}
+                          <option value="">All</option>
+                          <option value="agent">Agent</option>
                           <option value="business">Business</option>
+                          <option value="personal">Personal</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -445,8 +459,8 @@ class Customer_Reports_Index extends React.Component {
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>
-                              {"+"}
-                              {u.country_code} {u.mobile}
+                              {/* {"+"}{u.mobile} */}
+                              {`+${u.mobile}`}
                             </td>
                             <td>
                               {typeof parseFloat(u.available_balance) ===
@@ -454,7 +468,7 @@ class Customer_Reports_Index extends React.Component {
                                 ? parseFloat(u.available_balance).toFixed(2)
                                 : u.available_balance}
                             </td>
-                            <td>{u.user_type}</td>
+                            <td>{capitalize(u.user_type)}</td>
                             <td>{u.country}</td>
                             <td>
                               {_canAccess("customer_reports", "view") && (

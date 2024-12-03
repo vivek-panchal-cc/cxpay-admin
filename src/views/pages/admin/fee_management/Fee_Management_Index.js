@@ -102,14 +102,14 @@ class Fee_Management_Index extends React.Component {
         });
 
         /*multi delete cms pages */
-        if (res.result && res.result.length > 0) {
+        if (res.result && res.result?.length > 0) {
           let pages = res.result;
           let multiaction = [];
           for (var key in pages) {
             multiaction[pages[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result && res.result.length === 0) {
+        } else if (res.result && res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -210,7 +210,6 @@ class Fee_Management_Index extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    //console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }
@@ -224,6 +223,11 @@ class Fee_Management_Index extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction?.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   resetCheckedBox() {
@@ -494,8 +498,8 @@ class Fee_Management_Index extends React.Component {
 
                     <tbody>
                       {this.state.page_list &&
-                        this.state.page_list.length > 0 &&
-                        this.state.page_list.map((u, index) => (
+                        this.state.page_list?.length > 0 &&
+                        this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               <CheckBoxes
@@ -514,30 +518,26 @@ class Fee_Management_Index extends React.Component {
                             <td>{u.fee_label}</td>
 
                             <td>
-                              {current_user.id !== u._id &&
-                                _canAccess("fee_management", "update") && (
-                                  <CLink
-                                    onClick={() =>
-                                      this.PageStatusChangedHandler(
-                                        u._id,
-                                        u.status
-                                      )
-                                    }
-                                  >
-                                    {u.status == false
-                                      ? "Activate"
-                                      : "Deactivate"}
-                                  </CLink>
-                                )}
-                              {current_user.id !== u._id &&
-                                _canAccess("fee_management", "update") ===
-                                  false && (
-                                  <>
-                                    {u.status == true
-                                      ? "Activate"
-                                      : "Deactivate"}
-                                  </>
-                                )}
+                              {_canAccess("fee_management", "update") && (
+                                <CLink
+                                  onClick={() =>
+                                    this.PageStatusChangedHandler(
+                                      u._id,
+                                      u.status
+                                    )
+                                  }
+                                >
+                                  {u.status == false
+                                    ? "Activate"
+                                    : "Deactivate"}
+                                </CLink>
+                              )}
+                              {_canAccess("fee_management", "update") ===
+                                false && (
+                                <>
+                                  {u.status == true ? "Activate" : "Deactivate"}
+                                </>
+                              )}
                             </td>
                             {(_canAccess("fee_management", "update") ||
                               _canAccess("fee_management", "delete")) && (
@@ -563,7 +563,7 @@ class Fee_Management_Index extends React.Component {
                           </tr>
                         ))}
                       {this.state.page_list &&
-                        this.state.page_list.length === 0 && (
+                        this.state.page_list?.length === 0 && (
                           <tr>
                             <td colSpan="5">No records found</td>
                           </tr>

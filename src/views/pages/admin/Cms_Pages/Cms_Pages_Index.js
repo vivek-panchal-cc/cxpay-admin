@@ -35,6 +35,7 @@ import {
   _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
+import IconSwap from "assets/icons/IconSwap";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -154,7 +155,7 @@ class Page_list extends React.Component {
           fields: {
             pageNo: 1,
             sort_dir: "asc",
-            sort_field: "name",
+            sort_field: "title",
             search_page_title_name: "",
             totalPage: 1,
           },
@@ -196,7 +197,6 @@ class Page_list extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    //console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }
@@ -210,6 +210,11 @@ class Page_list extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   resetCheckedBox() {
@@ -285,9 +290,9 @@ class Page_list extends React.Component {
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
-                        <CLabel htmlFor="name">Title</CLabel>
+                        <CLabel htmlFor="title">Title</CLabel>
                         <CInput
-                          id="name"
+                          id="title"
                           placeholder="Search Title"
                           name="search_page_title_name"
                           value={this.state.fields.search_page_title_name}
@@ -341,7 +346,7 @@ class Page_list extends React.Component {
             <CCard>
               <CCardHeader>
                 Pages
-                <div className="card-header-actions">
+                <div className="card-header-actions px-2">
                   {_canAccess("cms_pages", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
                       <CLink
@@ -350,6 +355,19 @@ class Page_list extends React.Component {
                         to="/admin/cms_pages/add"
                       >
                         <FontAwesomeIcon icon={faPlus} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
+                <div className="card-header-actions">
+                  {_canAccess("cms_pages", "update") && (
+                    <CTooltip content={globalConstants.UPDATE_SEQUENCE}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to="/admin/cms_pages/change-sequence"
+                      >
+                        <IconSwap stroke={"#ffffff"} /> Update Sequence
                       </CLink>
                     </CTooltip>
                   )}
@@ -375,25 +393,18 @@ class Page_list extends React.Component {
                           />
                         </th>
                         <th>#</th>
-                        <th
-                          onClick={() =>
-                            this.handleColumnSort("user_title_name")
-                          }
-                        >
+                        <th onClick={() => this.handleColumnSort("title")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">Title</span>
-                            {this.state.fields.sort_field !==
-                              "user_title_name" && (
+                            {this.state.fields.sort_field !== "title" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field ===
-                                "user_title_name" && (
+                              this.state.fields.sort_field === "title" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field ===
-                                "user_title_name" && (
+                              this.state.fields.sort_field === "title" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
@@ -439,7 +450,13 @@ class Page_list extends React.Component {
                               />
                             </td>
 
-                            <td>{index + 1}</td>
+                            <td>
+                              {this.state.fields.pageNo >= 2
+                                ? index +
+                                  1 +
+                                  10 * (this.state.fields.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>
                               {" "}
                               {_canAccess("cms_pages", "view") && (
@@ -451,23 +468,21 @@ class Page_list extends React.Component {
                               )}
                             </td>
                             <td>
-                              {current_user.id !== u._id &&
-                                _canAccess("cms_pages", "update") && (
-                                  <CLink
-                                    onClick={() =>
-                                      this.PageStatusChangedHandler(
-                                        u._id,
-                                        u.status
-                                      )
-                                    }
-                                  >
-                                    {u.status ? "Active" : "Deactive"}
-                                  </CLink>
-                                )}
-                              {current_user.id !== u._id &&
-                                _canAccess("cms_pages", "update") === false && (
-                                  <>{u.status ? "Active" : "Deactive"}</>
-                                )}
+                              {_canAccess("cms_pages", "update") && (
+                                <CLink
+                                  onClick={() =>
+                                    this.PageStatusChangedHandler(
+                                      u._id,
+                                      u.status
+                                    )
+                                  }
+                                >
+                                  {u.status ? "Active" : "Deactive"}
+                                </CLink>
+                              )}
+                              {_canAccess("cms_pages", "update") === false && (
+                                <>{u.status ? "Active" : "Deactive"}</>
+                              )}
                             </td>
                             {(_canAccess("cms_pages", "update") ||
                               _canAccess("cms_pages", "delete")) && (
@@ -536,7 +551,9 @@ class Page_list extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Page</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>
+            Are you sure you want to delete this CMS page?
+          </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

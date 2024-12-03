@@ -18,7 +18,7 @@ class MessagePopup extends React.Component {
           onMouseLeave={this.togglePopup}
           style={{ cursor: "pointer" }}
         >
-          {message.slice(0, 25) + (message.length > 25 ? "..." : "")}
+          {message.slice(0, 25) + (message?.length > 25 ? "..." : "")}
           {showPopup && (
             <div
               style={{

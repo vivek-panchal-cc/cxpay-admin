@@ -3,6 +3,7 @@ import { notify, handleResponse, setLoading } from '../../_helpers/';
 
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const bannerManagementser = {
 
@@ -28,7 +29,7 @@ function createbanner(postData) {
          body: postData
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/banner/add`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/banner/add`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -43,7 +44,7 @@ function getbannerlist(postData) {
         headers: authHeader('banner_management', 'view'),
         body: JSON.stringify(postData),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/banner/index`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/banner/index`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -57,7 +58,7 @@ function deletebanner(id) {
         method: 'DELETE',
         headers: authHeader('banner_management', 'delete'),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/banner/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/banner/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -74,7 +75,7 @@ function update_banner_menu(postData) {
         body: postData
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/banner/edit`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/banner/edit`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -90,7 +91,7 @@ function get_banner_single(id) {
         headers:authHeaderMutlipart('banner_management', 'view')
     };
    
-    return fetch(`${process.env.REACT_APP_API_URL}api/banner/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/banner/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -104,7 +105,7 @@ function changebannerStatus(id,postData) {
         headers: authHeader('banner_management', 'edit'),
         body: JSON.stringify(postData)
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/banner/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/banner/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -119,7 +120,7 @@ function deleteMultiplebanner(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/delete_multiple_banner`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/delete_multiple_banner`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -134,7 +135,7 @@ function changeBulkBannerStatus(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/banner/change_bulk_banner_status`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/banner/change_bulk_banner_status`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();

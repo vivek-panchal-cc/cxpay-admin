@@ -3,6 +3,8 @@ import { notify, handleResponse, setLoading } from "../../_helpers";
 import moment from "moment";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const pushNotificationService = {
   getPushNotificationList,
   deleteNotification,
@@ -23,7 +25,7 @@ async function getPushNotificationList(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/notifications`,
+      `${API_URL}api/notifications`,
       requestOptions
     );
   } catch (error) {
@@ -41,7 +43,7 @@ async function getUserList(){
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/notifications/active-customers`,
+      `${API_URL}api/notifications/active-customers`,
       requestOptions
     );
   } catch (error) {
@@ -60,7 +62,7 @@ async function deleteNotification(id) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/notifications/${id}`,
+      `${API_URL}api/notifications/${id}`,
       requestOptions
     );
   } catch (error) {
@@ -82,7 +84,7 @@ async function updateNotification(postData, id) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/notifications/${id}`,
+      `${API_URL}api/notifications/${id}`,
       requestOptions
     );
   } catch (error) {
@@ -104,7 +106,7 @@ async function createNotification(postData) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/notifications/add`,
+      `${API_URL}api/notifications/add`,
       requestOptions
     );
   } catch (error) {
@@ -124,7 +126,7 @@ async function getNotifications(id) {
   let response;
   try {
     response = await fetch(
-      `${process.env.REACT_APP_API_URL}api/notifications/${id}`,
+      `${API_URL}api/notifications/${id}`,
       requestOptions
     );
   } catch (error) {

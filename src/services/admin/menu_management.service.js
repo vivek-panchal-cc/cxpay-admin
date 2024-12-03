@@ -2,6 +2,8 @@ import { authHeader } from '../../_helpers';
 import { notify, handleResponse, setLoading } from '../../_helpers/';
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const menuManagementservice = {
 
     createmenu,
@@ -27,7 +29,7 @@ function createmenu(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_managenent/add`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_managenent/add`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -42,7 +44,7 @@ function getMenucategory(postData) {
         headers: authHeader('menu_management', 'view'),
         body: JSON.stringify(postData),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_managenent/index`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_managenent/index`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -56,7 +58,7 @@ function deletemenucategory(id) {
         method: 'DELETE',
         headers: authHeader('menu_management', 'delete'),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_managenent/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_managenent/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -73,7 +75,7 @@ function update_category_menu(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_managenent/edit`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_managenent/edit`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -89,7 +91,7 @@ function get_category_signle(id) {
         headers: authHeader('menu_management', 'view')
     };
    
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_managenent/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_managenent/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -104,7 +106,7 @@ function changemenucategoryStatus(id,postData) {
         headers: authHeader('menu_managenent', 'edit'),
         body: JSON.stringify(postData)
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_managenent/${id}`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_managenent/${id}`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -119,7 +121,7 @@ function deleteMultiplemenucategory(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/delete_multiple_menucategory`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/delete_multiple_menucategory`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();
@@ -134,7 +136,7 @@ function changeBulkMenucategoryStatus(postData) {
         body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/menu_managenent/change_bulk_menucategory_status`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/menu_managenent/change_bulk_menucategory_status`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
         return Promise.reject();

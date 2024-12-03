@@ -42,9 +42,9 @@ import Dropzone from "react-dropzone-uploader";
 import { mediaService } from "../../../../services/admin/media.service";
 import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
 import "react-dropzone-uploader/dist/styles.css";
-
 import "./Draft.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
 class Email_Template_Add extends Component {
   constructor(props) {
     super(props);
@@ -129,7 +129,7 @@ class Email_Template_Add extends Component {
 
   _handleApplyAction = (event, editor) => {
     const img_src = `${
-      process.env.REACT_APP_API_URL +
+      API_URL +
       "uploads/media/" +
       this.state.selectedMediaFile
     }`;
@@ -211,7 +211,7 @@ class Email_Template_Add extends Component {
     body.append("media_path", file);
     return {
       headers: authHeaderMutlipart("", ""),
-      url: `${process.env.REACT_APP_API_URL}api/media/upload`,
+      url: `${API_URL}api/media/upload`,
       body,
     };
   };
@@ -261,7 +261,7 @@ class Email_Template_Add extends Component {
     }
   }
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
+    ev.target.src = `${API_URL + "uploads/default.jpg"}`;
   }
   // Rendering Html To Dom
   render() {
@@ -394,8 +394,8 @@ class Email_Template_Add extends Component {
                             xl={this.state.selectedMediaFile !== "" ? 9 : 12}
                           >
                             <CRow className="pt-4 media-popup">
-                              {this.state.media.length > 0 &&
-                                this.state.media.map((u, index) => (
+                              {this.state.media?.length > 0 &&
+                                this.state.media?.map((u, index) => (
                                   <CCol xs="12" sm="6" lg="3" key={index}>
                                     <div
                                       className="card bg-gradient-info text-white"
@@ -406,7 +406,7 @@ class Email_Template_Add extends Component {
                                         id={u._id}
                                         onError={this.addDefaultSrc}
                                         src={`${
-                                          process.env.REACT_APP_API_URL +
+                                          API_URL +
                                           "uploads/media/" +
                                           u.media_path
                                         }`}
@@ -426,7 +426,7 @@ class Email_Template_Add extends Component {
                                 className="mt-4 mediaLibraryPreview"
                                 onError={this.addDefaultSrc}
                                 src={`${
-                                  process.env.REACT_APP_API_URL +
+                                  API_URL +
                                   "uploads/media/" +
                                   this.state.selectedMediaFile
                                 }`}
@@ -550,14 +550,14 @@ class Email_Template_Add extends Component {
             />
 
             <Editor
-              apiKey="kb557exdqag66gcq1mmiq3hfeki32ge6lkoj8giccxlcrie0"
+              apiKey={process.env.REACT_APP_TINY_API_KEY}
               //initialValue=""
               value={this.state.initialValue}
               init={{
                 placeholder: "Enter Description",
                 height: 500,
 
-                // tinydrive_upload_path: `${process.env.REACT_APP_API_URL}`,
+                // tinydrive_upload_path: `${API_URL}`,
 
                 plugins: [
                   "advlist autolink lists link  charmap print preview anchor preview",
@@ -566,7 +566,7 @@ class Email_Template_Add extends Component {
                 ],
 
                 toolbar:
-                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link  preview myCustomToolbarButton ",
+                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link  preview",
 
                 file_browser_callback_types: "image",
 
@@ -578,7 +578,6 @@ class Email_Template_Add extends Component {
                       var file = input.files[0];
                       var reader = new FileReader();
                       reader.onload = function (e) {
-                        console.log("name", e.target.result);
                         callback(e.target.result, {
                           alt: file.name,
                         });

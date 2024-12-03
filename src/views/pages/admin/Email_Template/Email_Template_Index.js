@@ -95,14 +95,14 @@ class Email_list extends React.Component {
         });
 
         /*multi delete cms pages */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let pages = res.result;
           let multiaction = [];
           for (var key in pages) {
             multiaction[pages[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -208,7 +208,6 @@ class Email_list extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }
@@ -222,6 +221,11 @@ class Email_list extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction?.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   resetCheckedBox() {
@@ -445,8 +449,8 @@ class Email_list extends React.Component {
                     </thead>
 
                     <tbody>
-                      {this.state.page_list.length > 0 &&
-                        this.state.page_list.map((u, index) => (
+                      {this.state.page_list?.length > 0 &&
+                        this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               <CheckBoxes
@@ -458,7 +462,9 @@ class Email_list extends React.Component {
                               />
                             </td>
 
-                            <td>{index + 1}</td>
+                            <td>{this.state.fields.pageNo >= 2
+                                ? index + 1 + 15 * (this.state.fields.pageNo - 1)
+                                : index + 1}</td>
                             <td>{u.name}</td>
                             <td>{u.subject}</td>
                             <td>
@@ -520,7 +526,7 @@ class Email_list extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.page_list.length === 0 && (
+                      {this.state.page_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
@@ -550,7 +556,7 @@ class Email_list extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Page</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>Are you sure you want to delete this template?</CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

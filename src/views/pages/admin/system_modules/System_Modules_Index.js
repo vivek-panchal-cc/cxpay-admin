@@ -75,14 +75,14 @@ class System_Modules_Index extends React.Component {
           module_list: res.result
         });
         /* Multi delete checkbox code */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let modules = res.result;
           let multiaction = [];
           for (var key in modules) {
             multiaction[modules[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -272,11 +272,13 @@ class System_Modules_Index extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.module_list.length > 0 &&
-                      this.state.module_list.map((u, index) => (
+                    {this.state.module_list?.length > 0 &&
+                      this.state.module_list?.map((u, index) => (
                         <tr key={u._id}>
                           <td><CheckBoxes handleCheckChieldElement={this.handleCheckChieldElement} _id={u._id} _isChecked={this.state.multiaction[u._id]} /></td>
-                          <td>{index + 1}</td>
+                          <td>{this.state.fields.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
+                                : index + 1}</td>
                           <td>{u.module_name}</td>
                           <td>
                           <CTooltip content={globalConstants.EDIT_BTN} ><CLink className="btn  btn-md btn-primary" aria-current="page" to={`/admin/system_modules/edit/${u._id}`} ><CIcon name="cil-pencil"></CIcon>  </CLink></CTooltip>
@@ -286,7 +288,7 @@ class System_Modules_Index extends React.Component {
                         </tr>
                       ))
                     }
-                    {this.state.module_list.length === 0 && <tr><td colSpan='5'>No records found</td></tr>}
+                    {this.state.module_list?.length === 0 && <tr><td colSpan='5'>No records found</td></tr>}
                   </tbody>
                 </table>
                 <CPagination

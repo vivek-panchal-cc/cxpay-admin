@@ -1,0 +1,24 @@
+.c-sidebar .c-sidebar-minimizer:hover {
+  background-color: #2a3445;
+}
+.c-sidebar .c-sidebar-minimizer {
+  background-color: #303c53;
+}
+// .c-sidebar-minimized.c-sidebar-fixed:hover {
+//     width: 256px !important;
+// }
+.c-sidebar-minimized a {
+  width: 56px !important;
+}
+
+.c-sidebar-nav-dropdown-toggle::after {
+  height: 14px !important;
+}
+
+html:not([dir="rtl"]) .c-sidebar-nav-dropdown-toggle::after {
+  transform: rotate(-180deg);
+}
+
+html:not([dir="rtl"]) .c-sidebar-nav-dropdown-items .c-sidebar-nav-link {
+  padding-left: 70px;
+}

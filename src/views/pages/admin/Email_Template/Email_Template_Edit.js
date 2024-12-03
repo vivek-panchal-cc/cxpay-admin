@@ -44,6 +44,8 @@ import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
 import "react-dropzone-uploader/dist/styles.css";
 import "./Draft.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 class Email_Template_Edit extends Component {
   constructor(props) {
     super(props);
@@ -114,7 +116,7 @@ class Email_Template_Edit extends Component {
   /******** media Modal gallery  ************/
   _handleApplyAction = (event) => {
     const img_src = `${
-      process.env.REACT_APP_API_URL +
+      API_URL +
       "uploads/media/" +
       this.state.selectedMediaFile
     }`;
@@ -200,7 +202,7 @@ class Email_Template_Edit extends Component {
     body.append("media_path", file);
     return {
       headers: authHeaderMutlipart("", ""),
-      url: `${process.env.REACT_APP_API_URL}api/media/upload`,
+      url: `${API_URL}api/media/upload`,
       body,
     };
   };
@@ -219,7 +221,7 @@ class Email_Template_Edit extends Component {
   };
 
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
+    ev.target.src = `${API_URL + "uploads/default.jpg"}`;
   }
 
   /********** Retrieve Data very first time render to dom  ************************/
@@ -422,8 +424,8 @@ class Email_Template_Edit extends Component {
                             xl={this.state.selectedMediaFile !== "" ? 9 : 12}
                           >
                             <CRow className="pt-4 media-popup">
-                              {this.state.media.length > 0 &&
-                                this.state.media.map((u, index) => (
+                              {this.state.media?.length > 0 &&
+                                this.state.media?.map((u, index) => (
                                   <CCol xs="12" sm="6" lg="3" key={index}>
                                     <div
                                       className="card bg-gradient-info text-white"
@@ -434,7 +436,7 @@ class Email_Template_Edit extends Component {
                                         id={u._id}
                                         onError={this.addDefaultSrc}
                                         src={`${
-                                          process.env.REACT_APP_API_URL +
+                                          API_URL +
                                           "uploads/media/" +
                                           u.media_path
                                         }`}
@@ -454,7 +456,7 @@ class Email_Template_Edit extends Component {
                                 className="mt-4 mediaLibraryPreview"
                                 onError={this.addDefaultSrc}
                                 src={`${
-                                  process.env.REACT_APP_API_URL +
+                                  API_URL +
                                   "uploads/media/" +
                                   this.state.selectedMediaFile
                                 }`}
@@ -577,8 +579,8 @@ class Email_Template_Edit extends Component {
               style={{ display: "none" }}
             />
             <Editor
-              apiKey="kb557exdqag66gcq1mmiq3hfeki32ge6lkoj8giccxlcrie0"
-             // initialValue={this.state.initialValue}
+              apiKey={process.env.REACT_APP_TINY_API_KEY}
+              // initialValue={this.state.initialValue}
               value={this.state.initialValue}
               init={{
                 placeholder: "Enter Description",
@@ -591,7 +593,7 @@ class Email_Template_Edit extends Component {
                 ],
 
                 toolbar:
-                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link myCustomToolbarButton ",
+                  "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link",
 
                 file_browser_callback_types: "image",
 
@@ -603,7 +605,6 @@ class Email_Template_Edit extends Component {
                       var file = input.files[0];
                       var reader = new FileReader();
                       reader.onload = function (e) {
-                        console.log("name", e.target.result);
                         callback(e.target.result, {
                           alt: file.name,
                         });

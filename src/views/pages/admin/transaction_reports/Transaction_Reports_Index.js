@@ -45,6 +45,7 @@ import { globalConstants } from "../../../../constants/admin/global.constants";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import InputDateRange from "components/admin/InputDateRange";
 
 class Transaction_Reports_Index extends React.Component {
   constructor(props) {
@@ -56,10 +57,21 @@ class Transaction_Reports_Index extends React.Component {
     this.openDeletePopup = this.openDeletePopup.bind(this);
 
     this.state = {
+      filters: {
+        fromDate: "",
+        toDate: "",
+      },
+      showDateFilter: false,
+      filtersChanged: false,
+      allFilters: {
+        from_date: "",
+        to_date: "",
+        status: "",
+      },
       fields: {
         page: 1,
         direction: "desc",
-        sort: "ref_id",
+        sort: "created_at",
         name: "",
         txn_type: "",
         type: "",
@@ -150,10 +162,20 @@ class Transaction_Reports_Index extends React.Component {
     if (type === "reset") {
       this.setState(
         {
+          allFilters: {
+            from_date: "",
+            to_date: "",
+            status: "",
+          },
+          filters: {
+            fromDate: "",
+            toDate: "",
+          },
+          filtersChanged: false,
           fields: {
             page: 1,
             direction: "desc",
-            sort: "ref_id",
+            sort: "created_at",
             search: "",
             txn_type: "",
             type: "",
@@ -170,7 +192,17 @@ class Transaction_Reports_Index extends React.Component {
         }
       );
     } else {
-      this.getTransactionList(this.state.fields);
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            page: 1,
+          },
+        },
+        () => {
+          this.getTransactionList(this.state.fields);
+        }
+      );
     }
   }
 
@@ -194,16 +226,17 @@ class Transaction_Reports_Index extends React.Component {
   };
 
   downloadFile = async () => {
-    reportsService.downloadTransactionCSV().then((res) => {
-      console.log(res);
-      //if (res.success) {
-      notify.success("Successfully send report logged in user mail");
-      //}
-    });
+    const { search, txn_type, status, from_date, to_date } = this.state.fields;
+    reportsService
+      .downloadTransactionCSV({ search, txn_type, status, from_date, to_date })
+      .then((res) => {
+        //if (res.success) {
+        notify.success("Successfully send report logged in user mail");
+        //}
+      });
   };
 
   handledateChange = (date) => {
-    console.log(date);
     this.setState({
       fields: {
         ...this.state.fields,
@@ -220,6 +253,24 @@ class Transaction_Reports_Index extends React.Component {
         to_date1: date,
         to_date: date.toLocaleDateString("en-US"),
       },
+    });
+  };
+
+  handleChangeDateFilter = (params) => {
+    const [fromDate, toDate] = params;
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        from_date: fromDate?.toLocaleDateString("en-US"),
+        to_date: toDate?.toLocaleDateString("en-US"),
+      },
+      filters: {
+        fromDate: fromDate,
+        toDate: toDate,
+      },
+      page: 1,
+      showDateFilter: false,
+      filtersChanged: true,
     });
   };
 
@@ -270,9 +321,11 @@ class Transaction_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Type --</option>
+                          <option value="PL">Deposit</option>
                           <option value="REQ">Request</option>
-                          <option value="PL">Deposite</option>
                           <option value="WW">Wallet to Wallet</option>
+                          <option value="AGENT TOPUP">Agent Top Up</option>
+                          <option value="MF">Manual Add Fund</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -296,20 +349,28 @@ class Transaction_Reports_Index extends React.Component {
                         >
                           <option value="">-- Select Status --</option>
                           {(this.state.fields.txn_type == "PL" ||
-                            this.state.fields.txn_type == "WW") && (
+                            this.state.fields.txn_type == "WW" ||
+                            this.state.fields.txn_type == "AGENT TOPUP") && (
                             <>
-                              <option value="PENDING">Pending</option>
-                              <option value="PAID">Paid</option>
                               <option value="FAILED">Failed</option>
+                              <option value="PAID">Paid</option>
+                              <option value="PENDING">Pending</option>
                             </>
                           )}
                           {this.state.fields.txn_type == "REQ" && (
                             <>
-                              <option value="PENDING">Pending</option>
                               <option value="CANCELLED">Cancelled</option>
                               <option value="DECLINED">Declined</option>
-                              <option value="PAID">Paid</option>
                               <option value="FAILED">Failed</option>
+                              <option value="PAID">Paid</option>
+                              <option value="PENDING">Pending</option>
+                            </>
+                          )}
+                          {this.state.fields.txn_type == "MF" && (
+                            <>
+                              <option value="APPROVED">Approved</option>
+                              <option value="PENDING">Pending</option>
+                              <option value="REJECTED">Rejected</option>
                             </>
                           )}
                         </CSelect>
@@ -318,6 +379,21 @@ class Transaction_Reports_Index extends React.Component {
                   </CCol>
                 </CRow>
                 <CRow>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
+                        <CLabel htmlFor="name">Date</CLabel>
+                        <InputDateRange
+                          className=""
+                          startDate={this.state.filters.fromDate}
+                          endDate={this.state.filters.toDate}
+                          onChange={this.handleChangeDateFilter}
+                        />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+                {/* <CRow>
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
@@ -358,7 +434,8 @@ class Transaction_Reports_Index extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                </CRow>
+                </CRow> */}
+
                 <CRow>
                   <CCol xl={12}>
                     <CFormGroup row>
@@ -660,8 +737,8 @@ class Transaction_Reports_Index extends React.Component {
                             <td>{u.rname}</td>
                             <td>{u.sender_account_number}</td>
                             <td>{u.sname}</td>
-                            <td>{u.amount}</td>
-                            <td>{u.fees}</td>
+                            <td>{parseFloat(u.amount).toFixed(2)}</td>
+                            <td>{parseFloat(u.fees).toFixed(2)}</td>
                             <td>{u.type}</td>
                             <td>{u.narration}</td>
                             <td>{u.status}</td>

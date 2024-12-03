@@ -28,6 +28,7 @@ import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
+import "./../recurring_payments/page.css";
 
 class Push_Notification_Add extends React.Component {
   constructor(props) {
@@ -47,7 +48,7 @@ class Push_Notification_Add extends React.Component {
         { value: "strawberry", label: "Strawberry" },
         { value: "vanilla", label: "Vanilla" },
       ],
-      selectedCustomer:[]
+      selectedCustomer: [],
     };
     if (this.props._renderAccess === false) {
       history.push("/admin/notifications");
@@ -57,9 +58,24 @@ class Push_Notification_Add extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // handleChange(e) {
+  //   const { name, value } = e.target;
+  //   this.setState({ fields: { ...this.state.fields, [name]: value } });
+  // }
+
   handleChange(e) {
     const { name, value } = e.target;
-    this.setState({ fields: { ...this.state.fields, [name]: value } });
+    this.setState({ fields: { ...this.state.fields, [name]: value } }, () => {
+      if (name === "type" && value === "schedule") {
+        const currentDateTime = new Date();
+        const roundedMinutes =
+          Math.ceil(currentDateTime.getMinutes() / 15) * 15; // This rounds to the next 15 minute interval.
+        currentDateTime.setMinutes(roundedMinutes);
+        this.setState({
+          fields: { ...this.state.fields, schedule_time: currentDateTime },
+        });
+      }
+    });
   }
 
   handleSubmit() {
@@ -130,13 +146,28 @@ class Push_Notification_Add extends React.Component {
     return [mySQLDate, mySQLTime].join(" ");
   }
 
-  handledateChange = (date) => {
+  // handleDateChange = (date) => {
+  //   this.setState({ fields: { ...this.state.fields, schedule_time: date } });
+  // };
+
+  handleDateChange = (date) => {
+    const now = new Date();
+    if (date?.toDateString() === now?.toDateString()) {
+      if (date <= now) {
+        const currentMinutes = now?.getMinutes();
+        const remainder = 15 - (currentMinutes % 15);
+        const roundedMinutes = currentMinutes + remainder;
+        now?.setMinutes(roundedMinutes);
+        now?.setSeconds(0); // Reset seconds to 0
+        date = new Date(now); // Update the date object to ensure it has the updated time.
+      }
+    }
     this.setState({ fields: { ...this.state.fields, schedule_time: date } });
   };
 
   selectedCustomerData(customer) {
-    if (customer.filter((x) => x.value == "all").length > 0) {
-       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
+    if (customer.filter((x) => x.value == "all")?.length > 0) {
+      this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];
       customer.forEach((x) => {
@@ -145,11 +176,34 @@ class Push_Notification_Add extends React.Component {
       this.setState({
         fields: { ...this.state.fields, account_numbers: selectedCustomer },
       });
-      this.setState({ selectedCustomer: customer});
+      this.setState({ selectedCustomer: customer });
     }
   }
 
+  getExcludedTimes() {
+    const times = [];
+    const now = new Date();
+
+    // Check if the selected date is today
+    if (
+      this.state.fields.schedule_time?.toDateString() === now?.toDateString()
+    ) {
+      for (let i = 0; i < now?.getHours(); i++) {
+        times?.push(new Date().setHours(i, 0, 0, 0));
+        times?.push(new Date().setHours(i, 15, 0, 0));
+        times?.push(new Date().setHours(i, 30, 0, 0));
+        times?.push(new Date().setHours(i, 45, 0, 0));
+      }
+      for (let i = 0; i <= now?.getMinutes(); i += 15) {
+        times?.push(new Date().setHours(now?.getHours(), i, 0, 0));
+      }
+    }
+    return times;
+  }
+
   render() {
+    const { type } = this.state.fields;
+    const submitButton = type === "schedule" ? "Schedule" : "Send";
     return (
       <>
         <CRow>
@@ -282,28 +336,38 @@ class Push_Notification_Add extends React.Component {
                 </CFormGroup>
                 {this.state.fields.type === "schedule" && (
                   <>
-                    <CFormGroup>
-                      <CLabel htmlFor="name">Schedule Time</CLabel>
-                      <DatePicker
-                        selected={this.state.fields.schedule_time}
-                        onChange={(date) => this.handledateChange(date)}
-                        showTimeSelect
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        dateCaption=""
-                        timeCaption="Time"
-                        dateFormat="dd/MM/yyyy HH:mm"
-                        className="form-control"
-                      />
-                      <CFormText className="help-block">
-                        {this.validator.message(
-                          "schedule_time",
-                          this.state.fields.schedule_time,
-                          "required",
-                          { className: "text-danger" }
-                        )}
-                      </CFormText>
-                    </CFormGroup>
+                    <CCol
+                      xl={6}
+                      style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    >
+                      <CFormGroup>
+                        <CLabel htmlFor="name">Schedule Time</CLabel>
+                        <div className="datepicker-container">
+                          <DatePicker
+                            selected={this.state.fields.schedule_time}
+                            onChange={(date) => this.handleDateChange(date)}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            dateCaption=""
+                            timeCaption="Time"
+                            dateFormat="dd/MM/yyyy HH:mm"
+                            popperClassName="my-custom-datepicker-popper"
+                            className="form-control"
+                            minDate={new Date()}
+                            excludeTimes={this.getExcludedTimes()}
+                          />
+                        </div>
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "schedule_time",
+                            this.state.fields.schedule_time,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CFormGroup>
+                    </CCol>
                   </>
                 )}
               </CCardBody>
@@ -314,7 +378,8 @@ class Push_Notification_Add extends React.Component {
                   color="primary"
                   onClick={this.handleSubmit}
                 >
-                  <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
+                  <FontAwesomeIcon icon={faSave} className="mr-1" />{" "}
+                  {submitButton}
                 </CButton>
                 &nbsp;
                 <CLink
