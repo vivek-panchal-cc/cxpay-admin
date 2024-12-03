@@ -40,6 +40,7 @@ import {
   history,
   _canAccess,
   _loginUsersDetails,
+  capitalize,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import Business_Category_Add from "./Business_Category_Add";
@@ -522,7 +523,7 @@ class Business_Category_Index extends React.Component {
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
                                 : index + 1}
                             </td>
-                            <td>{u.name}</td>
+                            <td>{capitalize(u.name)}</td>
 
                             <td>
                               {_canAccess("business_category", "update") &&

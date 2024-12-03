@@ -31,14 +31,17 @@ const TheSidebar = (props) => {
     );
   }, 200);
   const sidebarNavStyle = {
-    overflowY: "auto", /* Enable vertical scrollbar */
-    scrollbarWidth: "none", /* Width of the scrollbar */
-    scrollbarColor: "#3c4b64 #3c4b64", /* Color of the scrollbar thumb and track */
-    scrollbarTrackColor: "#3c4b64", /* Color of the scrollbar track */
-    scrollbarTrackHoverColor: "#3c4b64", /* Color of the scrollbar track on hover */
-    scrollbarHandleColor: "#3c4b64", /* Color of the scrollbar handle */
-    scrollbarHandleHoverColor: "#3c4b64", /* Color of the scrollbar handle on hover */
-    scrollbarCornerColor: "transparent", /* Color of the scrollbar corner */
+    overflowY: "auto" /* Enable vertical scrollbar */,
+    scrollbarWidth: "none" /* Width of the scrollbar */,
+    scrollbarColor:
+      "#3c4b64 #3c4b64" /* Color of the scrollbar thumb and track */,
+    scrollbarTrackColor: "#3c4b64" /* Color of the scrollbar track */,
+    scrollbarTrackHoverColor:
+      "#3c4b64" /* Color of the scrollbar track on hover */,
+    scrollbarHandleColor: "#3c4b64" /* Color of the scrollbar handle */,
+    scrollbarHandleHoverColor:
+      "#3c4b64" /* Color of the scrollbar handle on hover */,
+    scrollbarCornerColor: "transparent" /* Color of the scrollbar corner */,
   };
 
   return (

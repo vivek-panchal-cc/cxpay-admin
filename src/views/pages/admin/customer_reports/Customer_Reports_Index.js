@@ -21,6 +21,7 @@ import {
   _canAccess,
   history,
   _loginUsersDetails,
+  capitalize,
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -178,11 +179,13 @@ class Customer_Reports_Index extends React.Component {
 
   downloadFile = async () => {
     const { search, filter_user_type } = this.state.fields;
-    reportsService.downloadCustomerCSV({ search, filter_user_type }).then((res) => {
-      //  if (res.success) {
-      notify.success("Successfully send report logged in user mail");
-      // }
-    });
+    reportsService
+      .downloadCustomerCSV({ search, filter_user_type })
+      .then((res) => {
+        //  if (res.success) {
+        notify.success("Successfully send report logged in user mail");
+        // }
+      });
   };
 
   render() {
@@ -465,7 +468,7 @@ class Customer_Reports_Index extends React.Component {
                                 ? parseFloat(u.available_balance).toFixed(2)
                                 : u.available_balance}
                             </td>
-                            <td>{u.user_type}</td>
+                            <td>{capitalize(u.user_type)}</td>
                             <td>{u.country}</td>
                             <td>
                               {_canAccess("customer_reports", "view") && (
