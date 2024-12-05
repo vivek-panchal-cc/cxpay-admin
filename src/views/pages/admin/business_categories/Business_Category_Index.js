@@ -67,8 +67,8 @@ class Business_Category_Index extends React.Component {
     this.state = {
       fields: {
         page: 1,
-        sort_dir: "desc",
-        sort_field: "created_at",
+        sort_dir: "asc",
+        sort_field: "name",
         search_name: "",
         totalPage: 1,
         operation_type: "category_list",
@@ -166,8 +166,8 @@ class Business_Category_Index extends React.Component {
         {
           fields: {
             page: 1,
-            sort_dir: "desc",
-            sort_field: "created_at",
+            sort_dir: "asc",
+            sort_field: "name",
             search_name: "",
             totalPage: 1,
             operation_type: "category_list",
