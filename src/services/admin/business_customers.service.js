@@ -3,6 +3,7 @@ import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL;
+const API_CUSTOMER_ONBOARD = process.env.REACT_APP_API_CUSTOMER_ONBOARD;
 
 export const businessCustomersService = {
   getCustomerWiseDetails,
@@ -21,6 +22,7 @@ export const businessCustomersService = {
   getAdminApprovalCustomerList,
   getBusinessKycDocument,
   downloadReportData,
+  businessCategory,
 };
 
 async function getCustomerWiseDetails(postData) {
@@ -316,6 +318,28 @@ async function downloadReportData(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
+    setLoading(false);
+  }
+  return handleResponse(response);
+}
+
+async function businessCategory(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    // headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_CUSTOMER_ONBOARD}list-active-business-category`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    const response = undefined;
+  } finally {
     setLoading(false);
   }
   return handleResponse(response);

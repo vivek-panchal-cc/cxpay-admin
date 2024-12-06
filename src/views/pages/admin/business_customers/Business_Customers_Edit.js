@@ -135,18 +135,16 @@ class Business_Customers_Edit extends React.Component {
           }
         });
 
-        businessCategoryManagementService
-          .businessCategoryBulkAction({ operation_type: "category_list" })
-          .then((res) => {
-            if (!res.success) {
-              // notify.error(res.message);
-              this.setState({ category_list: [] });
-            } else {
-              this.setState({
-                category_list: res.data?.category,
-              });
-            }
-          });
+        businessCustomersService.businessCategory().then((res) => {
+          if (!res.success) {
+            // notify.error(res.message);
+            this.setState({ category_list: [] });
+          } else {
+            this.setState({
+              category_list: res.data?.category,
+            });
+          }
+        });
       }
     }, 100);
   }
