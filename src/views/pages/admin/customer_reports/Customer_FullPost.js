@@ -166,7 +166,7 @@ const Fullpage = (props) => {
               </CCardHeader>
               <CCardBody>
                 <div className="d-flex">
-                  <div>
+                  <div style={{ width: "50%" }}>
                     <div className="d-flex">
                       <div style={{ paddingRight: "20px" }}>
                         {props.customer.profile_image !== null &&
