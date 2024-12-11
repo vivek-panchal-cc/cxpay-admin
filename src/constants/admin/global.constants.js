@@ -32,6 +32,7 @@ export const globalConstants = {
   MULTI_DEACTIVE_MSG: "Are you sure you want to deactive these records?",
   MEDIA_LIBRARY: "Click to select media from library",
   VIEW_CUSTOMER_DETAILS: "View customer details",
+  EXPORT: "Export",
   EXPORT_CUSTOMER_DATA: "Export customer data",
   EXPORT_AGENT_DATA: "Export recharge details",
   EXPORT_REPORT: "Export report",
