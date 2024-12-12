@@ -270,7 +270,7 @@ class Agent_Delete_Requests extends React.Component {
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
-                  {/* {(_canAccess("agent_customers", "delete")) && (
+                  {/* {(_canAccess("agent_customers", "update")) && (
                             <MultiActionBar
                                 onClick={this.handleApplyAction}
                                 checkBoxData={this.state.multiaction}
@@ -369,15 +369,15 @@ class Agent_Delete_Requests extends React.Component {
                             </span>
                           </span>
                         </th>
-                        {_canAccess("agent_customers", "delete") && (
-                          <th>
+                        <th>
+                          {_canAccess("agent_customers", "update") && (
                             <span className="sortCls">
                               <span className="table-header-text-mrg">
                                 Action
                               </span>
                             </span>
-                          </th>
-                        )}
+                          )}
+                        </th>
                       </tr>
                     </thead>
 
@@ -385,9 +385,11 @@ class Agent_Delete_Requests extends React.Component {
                       {this.state?.agents?.length > 0 &&
                         this.state.agents.map((u, index) => (
                           <tr key={u.mobile_number}>
-                            <td>{this.state.fields.page >= 2
+                            <td>
+                              {this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
-                                : index + 1}</td>
+                                : index + 1}
+                            </td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>{`+${u.mobile_number}`}</td>
@@ -395,42 +397,52 @@ class Agent_Delete_Requests extends React.Component {
                             <td>{u.agent_total_commission}</td>
                             <td>{u.system_total_commission}</td>
 
-                            {_canAccess("agent_customers", "delete") && (
+                            {_canAccess("agent_customers", "update") && (
                               <>
-                                <td className="d-flex">
-                                  {_canAccess("agent_customers", "delete") && (
-                                    <CTooltip
-                                      content={globalConstants.APPR_DEL_REQ}
-                                    >
-                                      <button
-                                        className="btn  btn-md btn-primary "
-                                        onClick={() =>
-                                          this.openDeletePopup(u.mobile_number)
-                                        }
+                                <td>
+                                  <div className="d-flex">
+                                    {_canAccess(
+                                      "agent_customers",
+                                      "update"
+                                    ) && (
+                                      <CTooltip
+                                        content={globalConstants.APPR_DEL_REQ}
                                       >
-                                        <CIcon name="cil-check"></CIcon>
-                                      </button>
-                                    </CTooltip>
-                                  )}
-                                  &nbsp;
-                                  {_canAccess("agent_customers", "delete") && (
-                                    <CTooltip
-                                      content={globalConstants.REJ_DEL_REQ}
-                                    >
-                                      <button
-                                        className="btn  btn-md btn-danger "
-                                        onClick={
-                                          () =>
-                                            this.openRejReqPopup(
+                                        <button
+                                          className="btn  btn-md btn-primary "
+                                          onClick={() =>
+                                            this.openDeletePopup(
                                               u.mobile_number
                                             )
-                                          // this.rejectDelRequest(u.mobile_number)
-                                        }
+                                          }
+                                        >
+                                          <CIcon name="cil-check"></CIcon>
+                                        </button>
+                                      </CTooltip>
+                                    )}
+                                    &nbsp;
+                                    {_canAccess(
+                                      "agent_customers",
+                                      "update"
+                                    ) && (
+                                      <CTooltip
+                                        content={globalConstants.REJ_DEL_REQ}
                                       >
-                                        <CIcon name="cil-x"></CIcon>
-                                      </button>
-                                    </CTooltip>
-                                  )}
+                                        <button
+                                          className="btn  btn-md btn-danger "
+                                          onClick={
+                                            () =>
+                                              this.openRejReqPopup(
+                                                u.mobile_number
+                                              )
+                                            // this.rejectDelRequest(u.mobile_number)
+                                          }
+                                        >
+                                          <CIcon name="cil-x"></CIcon>
+                                        </button>
+                                      </CTooltip>
+                                    )}
+                                  </div>
                                 </td>
                               </>
                             )}

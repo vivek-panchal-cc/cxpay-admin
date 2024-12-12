@@ -566,7 +566,7 @@ class Business_Customers_Index extends React.Component {
                 }
               </div> */}
                 <div className="card-header-actions px-2">
-                  {_canAccess("business_customers", "delete") && (
+                  {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.DELETE_REQ_BTN}>
                       <CLink
                         className="btn btn-dark btn-block"

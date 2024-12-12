@@ -553,7 +553,7 @@ class Agent_list extends React.Component {
                   )}
                 </div>
                 <div className="card-header-actions px-2">
-                  {_canAccess("agent_customers", "delete") && (
+                  {_canAccess("agent_customers", "view") && (
                     <CTooltip content={globalConstants.DELETE_REQ_BTN}>
                       <CLink
                         className="btn btn-dark btn-block"
