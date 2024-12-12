@@ -44,6 +44,7 @@ import InputDateRange from "components/admin/InputDateRange";
 import "./../agent_customers/notification.css";
 import ResetPassword from "components/admin/Reset_Password";
 import IconMaster from "assets/icons/IconMaster";
+import { agentService } from "services/admin/agent.service";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -86,6 +87,7 @@ class Business_Customers_Index extends React.Component {
       _openPopup: false,
       _openResetPassPopup: false,
       customers_management_list: [],
+      blockedBusinessCustomers: [],
       deleteBusinessCustomers: [],
       adminApprovalCustomers: [],
       pendingKycCustomers: [],
@@ -103,6 +105,7 @@ class Business_Customers_Index extends React.Component {
     this.getDeleteRequests();
     this.getAdminApprovalCustomerList();
     this.getPendingKycCustomerList();
+    this.getBlockedRequests();
   }
 
   getUserGroupsList() {
@@ -197,6 +200,21 @@ class Business_Customers_Index extends React.Component {
           });
         }
       });
+  }
+
+  getBlockedRequests() {
+    agentService.getBlockedRequests({ customer_type: "1" }).then((res) => {
+      if (!res.success) {
+        this.setState({
+          blockedBusinessCustomers: [],
+        });
+        // notify.error(res.message);
+      } else {
+        this.setState({
+          blockedBusinessCustomers: res.data.blocked_users,
+        });
+      }
+    });
   }
 
   pageChange = (newPage) => {
@@ -576,6 +594,13 @@ class Business_Customers_Index extends React.Component {
                         aria-current="page"
                         to={`/admin/business_customers/blocked_requests/1`}
                       >
+                        <span
+                          className={`${
+                            this.state.blockedBusinessCustomers?.length > 0
+                              ? "notification-badge-pending-customers"
+                              : ""
+                          }`}
+                        ></span>
                         <FontAwesomeIcon icon={faBan} />
                       </CLink>
                     </CTooltip>

@@ -82,6 +82,7 @@ class Agent_list extends React.Component {
       },
       _openPopup: false,
       agents: [],
+      blockedBusinessCustomers: [],
       deleteAgents: [],
       multiaction: [],
       allCheckedbox: false,
@@ -98,6 +99,7 @@ class Agent_list extends React.Component {
   componentDidMount() {
     this.getAgentList();
     this.getDeleteRequests();
+    this.getBlockedRequests();
   }
 
   getAgentList() {
@@ -147,6 +149,21 @@ class Agent_list extends React.Component {
             totalPage: res.data.pagination.last_page,
             totalRecords: res.data.pagination.total,
           },
+        });
+      }
+    });
+  }
+
+  getBlockedRequests() {
+    agentService.getBlockedRequests({ customer_type: "3" }).then((res) => {
+      if (!res.success) {
+        this.setState({
+          blockedBusinessCustomers: [],
+        });
+        // notify.error(res.message);
+      } else {
+        this.setState({
+          blockedBusinessCustomers: res.data.blocked_users,
         });
       }
     });
@@ -564,6 +581,13 @@ class Agent_list extends React.Component {
                         aria-current="page"
                         to={`/admin/agent_customers/blocked_requests/3`}
                       >
+                        <span
+                          className={`${
+                            this.state.blockedBusinessCustomers?.length > 0
+                              ? "notification-badge-pending-customers"
+                              : ""
+                          }`}
+                        ></span>
                         <FontAwesomeIcon icon={faBan} />
                       </CLink>
                     </CTooltip>

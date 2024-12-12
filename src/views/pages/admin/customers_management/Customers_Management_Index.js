@@ -44,6 +44,7 @@ import CIcon from "@coreui/icons-react";
 import InputDateRange from "components/admin/InputDateRange";
 import { businessCustomersService } from "services/admin/business_customers.service";
 import "./../agent_customers/notification.css";
+import { agentService } from "services/admin/agent.service";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -89,6 +90,7 @@ class Customers_Management_Index extends React.Component {
       },
       _openPopup: false,
       customers_management_list: [],
+      blockedBusinessCustomers: [],
       pendingKycCustomers: [],
       multiaction: [],
       allCheckedbox: false,
@@ -102,6 +104,7 @@ class Customers_Management_Index extends React.Component {
   componentDidMount() {
     this.getUserGroupsList();
     this.getPendingKycCustomerList();
+    this.getBlockedRequests();
   }
 
   getUserGroupsList() {
@@ -163,6 +166,21 @@ class Customers_Management_Index extends React.Component {
           });
         }
       });
+  }
+
+  getBlockedRequests() {
+    agentService.getBlockedRequests({ customer_type: "2" }).then((res) => {
+      if (!res.success) {
+        this.setState({
+          blockedBusinessCustomers: [],
+        });
+        // notify.error(res.message);
+      } else {
+        this.setState({
+          blockedBusinessCustomers: res.data.blocked_users,
+        });
+      }
+    });
   }
 
   pageChange = (newPage) => {
@@ -493,6 +511,13 @@ class Customers_Management_Index extends React.Component {
                         aria-current="page"
                         to={`/admin/personal_customers/blocked_requests/2`}
                       >
+                        <span
+                          className={`${
+                            this.state.blockedBusinessCustomers?.length > 0
+                              ? "notification-badge-pending-customers"
+                              : ""
+                          }`}
+                        ></span>
                         <FontAwesomeIcon icon={faBan} />
                       </CLink>
                     </CTooltip>
