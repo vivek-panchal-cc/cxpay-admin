@@ -529,15 +529,18 @@ class Customers_Management_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
+                        {(_canAccess("personal_customers", "update") ||
+                          _canAccess("personal_customers", "delete")) && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -644,9 +647,9 @@ class Customers_Management_Index extends React.Component {
                         this.state.customers_management_list?.map(
                           (c, index) => (
                             <tr key={c.mobile}>
-                              <td>
-                                {this.state.multiaction[c.mobile] !==
-                                  undefined && (
+                              {(_canAccess("personal_customers", "update") ||
+                                _canAccess("personal_customers", "delete")) && (
+                                <td>
                                   <CheckBoxes
                                     handleCheckChieldElement={
                                       this.handleCheckChieldElement
@@ -656,8 +659,8 @@ class Customers_Management_Index extends React.Component {
                                       this.state.multiaction[c.mobile]
                                     }
                                   />
-                                )}
-                              </td>
+                                </td>
+                              )}
                               <td>
                                 {this.state.fields.page >= 2
                                   ? index +

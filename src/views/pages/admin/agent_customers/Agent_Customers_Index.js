@@ -599,15 +599,18 @@ class Agent_list extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
+                        {(_canAccess("agent_customers", "update") ||
+                          _canAccess("agent_customers", "delete")) && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -717,9 +720,9 @@ class Agent_list extends React.Component {
                       {this.state?.agents?.length > 0 &&
                         this.state.agents.map((u, index) => (
                           <tr key={u.email}>
-                            <td>
-                              {this.state.multiaction[u.mobile_number] !==
-                                undefined && (
+                            {(_canAccess("agent_customers", "update") ||
+                              _canAccess("agent_customers", "delete")) && (
+                              <td>
                                 <CheckBoxes
                                   handleCheckChieldElement={
                                     this.handleCheckChieldElement
@@ -729,9 +732,8 @@ class Agent_list extends React.Component {
                                     this.state.multiaction[u.mobile_number]
                                   }
                                 />
-                              )}
-                            </td>
-
+                              </td>
+                            )}
                             <td>
                               {this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)

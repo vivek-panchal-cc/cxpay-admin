@@ -375,7 +375,7 @@ class BlockedRequests extends React.Component {
                           </span>
                         </th>
 
-                        {_canAccess(this.props.module_name, "view") && (
+                        {_canAccess(this.props.module_name, "update") && (
                           <th>
                             <span className="sortCls">
                               <span className="table-header-text-mrg">
@@ -391,32 +391,43 @@ class BlockedRequests extends React.Component {
                       {this.state?.blockedCustomers?.length > 0 &&
                         this.state.blockedCustomers.map((u, index) => (
                           <tr key={u.account_number || index}>
-                            <td>{this.state.fields.page >= 2
+                            <td>
+                              {this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
-                                : index + 1}</td>
+                                : index + 1}
+                            </td>
                             <td>{u.user_name}</td>
                             <td>{u.account_number}</td>
                             <td>{`+${u.mobile_number}`}</td>
-                            <td>{formatDateFullWithTimeStamp(u.suspended_at)}</td>
+                            <td>
+                              {formatDateFullWithTimeStamp(u.suspended_at)}
+                            </td>
                             <td>{u.suspension_reasons}</td>
 
-                            {_canAccess(this.props.module_name, "view") && (
-                              <td className="d-flex">
-                                {_canAccess(this.props.module_name, "view") && (
-                                  <CTooltip content={globalConstants.REL_CUST}>
-                                    <button
-                                      className="btn btn-md btn-primary"
-                                      onClick={() =>
-                                        this.openReleaseRequestPopup(
-                                          u.account_number,
-                                          u.user_name
-                                        )
-                                      }
+                            {_canAccess(this.props.module_name, "update") && (
+                              <td>
+                                <div className="d-flex">
+                                  {_canAccess(
+                                    this.props.module_name,
+                                    "update"
+                                  ) && (
+                                    <CTooltip
+                                      content={globalConstants.REL_CUST}
                                     >
-                                      <FontAwesomeIcon icon={faArrowRight} />
-                                    </button>
-                                  </CTooltip>
-                                )}
+                                      <button
+                                        className="btn btn-md btn-primary"
+                                        onClick={() =>
+                                          this.openReleaseRequestPopup(
+                                            u.account_number,
+                                            u.user_name
+                                          )
+                                        }
+                                      >
+                                        <FontAwesomeIcon icon={faArrowRight} />
+                                      </button>
+                                    </CTooltip>
+                                  )}
+                                </div>
                               </td>
                             )}
                           </tr>
