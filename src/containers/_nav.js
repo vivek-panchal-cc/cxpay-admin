@@ -64,7 +64,7 @@ const _nav = [
     name: "Admin",
     route: "/admin/admin",
     icon: <IconAdminGear className="c-sidebar-nav-icon" />,
-    module_name: "admin_group",
+    // module_name: "admin_group",
     id: "admin_group_sidebar_id",
     _children: [
       {
@@ -122,7 +122,7 @@ const _nav = [
     name: "Customers Management",
     route: "/admin/customers",
     icon: <FontAwesomeIcon icon={faUsers} className="c-sidebar-nav-icon" />,
-    module_name: "customers_group",
+    // module_name: "customers_group",
     id: "customers_group_sidebar_id",
     _children: [
       {
@@ -160,7 +160,7 @@ const _nav = [
     name: "Pages Management",
     route: "/admin/pages",
     icon: <FontAwesomeIcon icon={faFileCode} className="c-sidebar-nav-icon" />,
-    module_name: "pages_group",
+    // module_name: "pages_group",
     id: "pages_group_sidebar_id",
     _children: [
       {
@@ -197,7 +197,7 @@ const _nav = [
     name: "Payments Management",
     route: "/admin/payments",
     icon: <IconMoneyTransactions className="c-sidebar-nav-icon" />,
-    module_name: "payments_group",
+    // module_name: "payments_group",
     id: "payments_group_sidebar_id",
     _children: [
       {
@@ -250,7 +250,7 @@ const _nav = [
     name: "Reports Management",
     route: "/admin/reports",
     icon: <FontAwesomeIcon icon={faFile} className="c-sidebar-nav-icon" />,
-    module_name: "reports_group",
+    // module_name: "reports_group",
     id: "reports_group_sidebar_id",
     _children: [
       {

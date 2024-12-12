@@ -383,15 +383,18 @@ class Page_list extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
+                        {(_canAccess("cms_pages", "update") ||
+                          _canAccess("cms_pages", "delete")) && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("title")}>
                           <span className="sortCls">
@@ -440,15 +443,18 @@ class Page_list extends React.Component {
                       {this.state.page_list.length > 0 &&
                         this.state.page_list.map((u, index) => (
                           <tr key={u._id}>
-                            <td>
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u._id}
-                                _isChecked={this.state.multiaction[u._id]}
-                              />
-                            </td>
+                            {(_canAccess("cms_pages", "update") ||
+                              _canAccess("cms_pages", "delete")) && (
+                              <td>
+                                <CheckBoxes
+                                  handleCheckChieldElement={
+                                    this.handleCheckChieldElement
+                                  }
+                                  _id={u._id}
+                                  _isChecked={this.state.multiaction[u._id]}
+                                />
+                              </td>
+                            )}
 
                             <td>
                               {this.state.fields.pageNo >= 2
@@ -468,7 +474,7 @@ class Page_list extends React.Component {
                               )}
                             </td>
                             <td>
-                              {_canAccess("cms_pages", "update") && (
+                              {_canAccess("cms_pages", "update") ? (
                                 <CLink
                                   onClick={() =>
                                     this.PageStatusChangedHandler(
@@ -477,10 +483,9 @@ class Page_list extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status ? "Active" : "Deactive"}
+                                  {u.status ? "Deactive" : "Active"}
                                 </CLink>
-                              )}
-                              {_canAccess("cms_pages", "update") === false && (
+                              ) : (
                                 <>{u.status ? "Active" : "Deactive"}</>
                               )}
                             </td>

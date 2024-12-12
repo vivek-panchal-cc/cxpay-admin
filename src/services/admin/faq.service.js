@@ -58,7 +58,7 @@ async function deleteFaq(id) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("faqs", "view"),
+    headers: authHeader("faqs", "delete"),
     body: JSON.stringify(id),
   };
   let response;
@@ -82,10 +82,7 @@ async function getFaq(id) {
 
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/faq/get-detail`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/faq/get-detail`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -153,16 +150,13 @@ async function changeSequenceData(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeader("faqs", "delete"),
+    headers: authHeader("faqs", "update"),
     body: JSON.stringify(postData),
   };
 
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/faq/change-sequence`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/faq/change-sequence`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);

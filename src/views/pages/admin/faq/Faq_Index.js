@@ -194,18 +194,26 @@ class FaqIndex extends React.Component {
                 </div>
               </CCardHeader>
               <CCardBody>
-                <DragDropContext onDragEnd={this.onDragEnd}>
+                <DragDropContext
+                  onDragEnd={
+                    _canAccess("faqs", "update") ? this.onDragEnd : () => {}
+                  }
+                >
                   <Droppable droppableId="faq_list">
                     {(provided) => (
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         <table className="table">
                           <thead>
                             <tr>
-                              <th></th>
+                              {(_canAccess("faqs", "update") ||
+                                _canAccess("faqs", "delete")) && <th></th>}
                               <th>Sequence</th>
                               <th>Question</th>
                               <th>Status</th>
-                              {_canAccess("faqs", "update") && <th>Action</th>}
+                              {(_canAccess("faqs", "update") ||
+                                _canAccess("faqs", "delete")) && (
+                                <th>Action</th>
+                              )}
                             </tr>
                           </thead>
 
@@ -225,13 +233,16 @@ class FaqIndex extends React.Component {
                                       snapshot.isDragging ? "dragging" : ""
                                     }
                                   >
-                                    <td>
-                                      <CTooltip
-                                        content={globalConstants.DRAG_DROP}
-                                      >
-                                        <IconDragAndDrop />
-                                      </CTooltip>
-                                    </td>
+                                    {(_canAccess("faqs", "update") ||
+                                      _canAccess("faqs", "delete")) && (
+                                      <td>
+                                        <CTooltip
+                                          content={globalConstants.DRAG_DROP}
+                                        >
+                                          <IconDragAndDrop />
+                                        </CTooltip>
+                                      </td>
+                                    )}
                                     <td>{faq.sequence}</td>
                                     <td>
                                       {_canAccess("faqs", "view") ? (
@@ -254,7 +265,7 @@ class FaqIndex extends React.Component {
                                             )
                                           }
                                         >
-                                          {faq.status ? "Active" : "Deactive"}
+                                          {faq.status ? "Deactive" : "Active"}
                                         </CLink>
                                       ) : faq.status ? (
                                         "Active"
@@ -262,7 +273,8 @@ class FaqIndex extends React.Component {
                                         "Deactive"
                                       )}
                                     </td>
-                                    {_canAccess("faqs", "update") && (
+                                    {(_canAccess("faqs", "update") ||
+                                      _canAccess("faqs", "delete")) && (
                                       <td>
                                         <CLink
                                           className="btn  btn-md btn-primary"

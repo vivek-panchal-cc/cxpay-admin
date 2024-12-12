@@ -377,15 +377,18 @@ class SMS_list extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
+                        {_canAccess("sms_templates", "update") ||
+                          (_canAccess("sms_templates", "delete") && (
+                            <th>
+                              <input
+                                type="checkbox"
+                                onClick={this.handleAllChecked}
+                                value="checkedall"
+                                onChange={(e) => {}}
+                                checked={this.state.allCheckedbox}
+                              />
+                            </th>
+                          ))}
                         {/* <th>#</th> */}
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -450,15 +453,18 @@ class SMS_list extends React.Component {
                       {this.state.page_list?.length > 0 &&
                         this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
-                            <td>
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u._id}
-                                _isChecked={this.state.multiaction[u._id]}
-                              />
-                            </td>
+                            {_canAccess("sms_templates", "update") ||
+                              (_canAccess("sms_templates", "delete") && (
+                                <td>
+                                  <CheckBoxes
+                                    handleCheckChieldElement={
+                                      this.handleCheckChieldElement
+                                    }
+                                    _id={u._id}
+                                    _isChecked={this.state.multiaction[u._id]}
+                                  />
+                                </td>
+                              ))}
 
                             {/* <td>{index + 1}</td> */}
                             <td>{u.name}</td>

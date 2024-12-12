@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FILE_SIZE } from "constants/frontend/schema.constants";
 import { withdrawRequestService } from "services/admin/withdraw_request.service";
-import { notify } from "../../../../_helpers";
+import { _canAccess, notify } from "../../../../_helpers";
 import { useHistory } from "react-router-dom";
 import { globalConstants } from "constants/admin/global.constants";
 
@@ -375,7 +375,8 @@ const Fullpage = (props) => {
                             Transaction Receipt
                           </div>
                           <div className="wr-dwld-wrap">
-                            {showEdits ? (
+                            {showEdits &&
+                            _canAccess("withdraw_requests", "update") ? (
                               <>
                                 <ul className="pl-0">
                                   <li>
@@ -595,7 +596,8 @@ const Fullpage = (props) => {
                           Admin Comments
                         </div>
                         <p className="font-12 dark_blue">{comment}</p>
-                        {showEdits ? (
+                        {showEdits &&
+                        _canAccess("withdraw_requests", "update") ? (
                           <>
                             <CTextarea
                               id="cxp-admin-wd-comment"
@@ -629,7 +631,7 @@ const Fullpage = (props) => {
                   <FontAwesomeIcon icon={faBan} className="mr-1" />
                   Cancel
                 </CLink>
-                {showEdits ? (
+                {showEdits && _canAccess("withdraw_requests", "update") ? (
                   <>
                     <CButton
                       className={"btn btn-danger btn-md ml-3"}

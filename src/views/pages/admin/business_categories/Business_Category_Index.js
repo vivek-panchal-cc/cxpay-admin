@@ -446,17 +446,18 @@ class Business_Category_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        {this.state.category_list?.length > 0 && (
-                          <th>
-                            <input
-                              type="checkbox"
-                              onClick={this.handleAllChecked}
-                              value="checkedall"
-                              onChange={(e) => {}}
-                              checked={this.state.allCheckedbox}
-                            />
-                          </th>
-                        )}
+                        {_canAccess("business_category", "update") ||
+                          (_canAccess("business_category", "delete") && (
+                            <th>
+                              <input
+                                type="checkbox"
+                                onClick={this.handleAllChecked}
+                                value="checkedall"
+                                onChange={(e) => {}}
+                                checked={this.state.allCheckedbox}
+                              />
+                            </th>
+                          ))}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -508,15 +509,18 @@ class Business_Category_Index extends React.Component {
                         this.state.category_list?.length > 0 &&
                         this.state.category_list?.map((u, index) => (
                           <tr key={u.id}>
-                            <td>
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u.id}
-                                _isChecked={this.state.multiaction[u.id]}
-                              />
-                            </td>
+                            {_canAccess("business_category", "update") ||
+                              (_canAccess("business_category", "delete") && (
+                                <td>
+                                  <CheckBoxes
+                                    handleCheckChieldElement={
+                                      this.handleCheckChieldElement
+                                    }
+                                    _id={u.id}
+                                    _isChecked={this.state.multiaction[u.id]}
+                                  />
+                                </td>
+                              ))}
 
                             <td>
                               {this.state.fields.page >= 2
@@ -539,16 +543,14 @@ class Business_Category_Index extends React.Component {
                                   {u.status == false ? "Activate" : "Deactive"}
                                 </CLink>
                               ) : (
-                                <>
-                                  {u.status == false ? "Activate" : "Deactive"}
-                                </>
+                                <>{u.status == false ? "Deactive" : "Active"}</>
                               )}
-                              {_canAccess("business_category", "update") ===
+                              {/* {_canAccess("business_category", "update") ===
                                 false && (
                                 <>
                                   {u.status == true ? "Activate" : "Deactive"}
                                 </>
-                              )}
+                              )} */}
                             </td>
                             {(_canAccess("business_category", "update") ||
                               _canAccess("business_category", "delete")) && (

@@ -534,27 +534,27 @@ class Withdraw_Requests_Index extends React.Component {
                                 <>{c.status ? "Active" : "Deactive"}</>
                               )}
                             </td>
-                            {_canAccess("withdraw_requests", "update") && (
-                              <>
-                                <td>
-                                  {_canAccess("customer_reports", "view") && (
-                                    <CTooltip
-                                      content={
-                                        globalConstants.VIEW_WITHDRAW_DETAILS
-                                      }
+                            {/* {_canAccess("withdraw_requests", "update") && ( */}
+                            <>
+                              <td>
+                                {_canAccess("withdraw_requests", "view") && (
+                                  <CTooltip
+                                    content={
+                                      globalConstants.VIEW_WITHDRAW_DETAILS
+                                    }
+                                  >
+                                    <CLink
+                                      className="btn btn-dark btn-block"
+                                      aria-current="page"
+                                      to={`/admin/withdraw_requests/detailview/${c.transaction_id}`}
                                     >
-                                      <CLink
-                                        className="btn btn-dark btn-block"
-                                        aria-current="page"
-                                        to={`/admin/withdraw_requests/detailview/${c.transaction_id}`}
-                                      >
-                                        <FontAwesomeIcon icon={faEye} />
-                                      </CLink>
-                                    </CTooltip>
-                                  )}
-                                </td>
-                              </>
-                            )}
+                                      <FontAwesomeIcon icon={faEye} />
+                                    </CLink>
+                                  </CTooltip>
+                                )}
+                              </td>
+                            </>
+                            {/* )} */}
                           </tr>
                         ))}
                       {this.state.withdraw_requests?.length === 0 && (

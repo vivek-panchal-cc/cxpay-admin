@@ -617,7 +617,8 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                           </span>
                         </th>
                         {(_canAccess("business_customers", "update") ||
-                          _canAccess("business_customers", "delete")) && (
+                          _canAccess("business_customers", "delete") ||
+                          _canAccess("business_customers", "view")) && (
                           <th>Action</th>
                         )}
                       </tr>
@@ -672,48 +673,52 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                                 {c.status === "1" ? "Active" : "Deactive"}
                               </td>
                               {(_canAccess("business_customers", "update") ||
-                                _canAccess("business_customers", "delete")) && (
+                                _canAccess("business_customers", "delete") ||
+                                _canAccess("business_customers", "view")) && (
                                 <>
-                                  <td className="d-flex">
-                                    {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
-                                      c._id
-                                    ) === -1 && (
-                                      <>
-                                        {_canAccess(
-                                          "business_customers",
-                                          "update"
-                                        ) && (
-                                          <CTooltip
-                                            content={globalConstants.EDIT_BTN}
-                                          >
-                                            <CLink
-                                              className="btn  btn-md btn-primary"
-                                              aria-current="page"
-                                              to={`/admin/business_customers/edit/${c.mobile}`}
+                                  <td>
+                                    <div className="d-flex">
+                                      {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
+                                        c._id
+                                      ) === -1 && (
+                                        <>
+                                          {_canAccess(
+                                            "business_customers",
+                                            "update"
+                                          ) && (
+                                            <CTooltip
+                                              content={globalConstants.EDIT_BTN}
                                             >
-                                              <CIcon name="cil-pencil"></CIcon>{" "}
-                                            </CLink>
-                                          </CTooltip>
-                                        )}
-                                        &nbsp;
-                                        {_canAccess(
-                                          "business_customers",
-                                          "delete"
-                                        ) && (
-                                          <CTooltip
-                                            content={globalConstants.DELETE_BTN}
-                                          >
-                                            <button
-                                              className="btn  btn-md btn-danger "
-                                              onClick={() =>
-                                                this.openDeletePopup(c.mobile)
+                                              <CLink
+                                                className="btn  btn-md btn-primary"
+                                                aria-current="page"
+                                                to={`/admin/business_customers/edit/${c.mobile}`}
+                                              >
+                                                <CIcon name="cil-pencil"></CIcon>{" "}
+                                              </CLink>
+                                            </CTooltip>
+                                          )}
+                                          &nbsp;
+                                          {_canAccess(
+                                            "business_customers",
+                                            "delete"
+                                          ) && (
+                                            <CTooltip
+                                              content={
+                                                globalConstants.DELETE_BTN
                                               }
                                             >
-                                              <CIcon name="cil-trash"></CIcon>
-                                            </button>
-                                          </CTooltip>
-                                        )}
-                                        {/* &nbsp;
+                                              <button
+                                                className="btn  btn-md btn-danger "
+                                                onClick={() =>
+                                                  this.openDeletePopup(c.mobile)
+                                                }
+                                              >
+                                                <CIcon name="cil-trash"></CIcon>
+                                              </button>
+                                            </CTooltip>
+                                          )}
+                                          {/* &nbsp;
                                         {_canAccess(
                                           "business_customers",
                                           "update"
@@ -736,36 +741,38 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
                                               </button>
                                             </CTooltip>
                                           )} */}
-                                        &nbsp;
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "business_customers",
-                                            "view"
-                                          ) && (
-                                            <CTooltip
-                                              content={
-                                                globalConstants.REPORT_BTN
-                                              }
-                                            >
-                                              <CLink
-                                                className="btn btn-dark btn-block w-auto"
-                                                aria-current="page"
-                                                to={{
-                                                  pathname: `/admin/business_customers/${c.account_number}/basic_details`,
-                                                  state: {
-                                                    route: "admin_approval",
-                                                    mobile_number: c.mobile,
-                                                  },
-                                                }}
+                                          &nbsp;
+                                          {current_user.user_group_id !==
+                                            c._id &&
+                                            _canAccess(
+                                              "business_customers",
+                                              "view"
+                                            ) && (
+                                              <CTooltip
+                                                content={
+                                                  globalConstants.REPORT_BTN
+                                                }
                                               >
-                                                <FontAwesomeIcon
-                                                  icon={faEye}
-                                                ></FontAwesomeIcon>
-                                              </CLink>
-                                            </CTooltip>
-                                          )}
-                                      </>
-                                    )}
+                                                <CLink
+                                                  className="btn btn-dark btn-block w-auto"
+                                                  aria-current="page"
+                                                  to={{
+                                                    pathname: `/admin/business_customers/${c.account_number}/basic_details`,
+                                                    state: {
+                                                      route: "admin_approval",
+                                                      mobile_number: c.mobile,
+                                                    },
+                                                  }}
+                                                >
+                                                  <FontAwesomeIcon
+                                                    icon={faEye}
+                                                  ></FontAwesomeIcon>
+                                                </CLink>
+                                              </CTooltip>
+                                            )}
+                                        </>
+                                      )}
+                                    </div>
                                   </td>
                                 </>
                               )}

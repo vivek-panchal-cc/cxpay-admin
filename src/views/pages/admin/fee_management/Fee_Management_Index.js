@@ -382,16 +382,18 @@ class Fee_Management_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
-                        {/* <th>#</th> */}
+                        {_canAccess("fee_management", "update") && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
+                        <th>#</th>
                         <th
                           onClick={() => this.handleColumnSort("payment_type")}
                         >
@@ -501,17 +503,19 @@ class Fee_Management_Index extends React.Component {
                         this.state.page_list?.length > 0 &&
                         this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
-                            <td>
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u._id}
-                                _isChecked={this.state.multiaction[u._id]}
-                              />
-                            </td>
+                            {_canAccess("fee_management", "update") && (
+                              <td>
+                                <CheckBoxes
+                                  handleCheckChieldElement={
+                                    this.handleCheckChieldElement
+                                  }
+                                  _id={u._id}
+                                  _isChecked={this.state.multiaction[u._id]}
+                                />
+                              </td>
+                            )}
 
-                            {/* <td>{index + 1}</td> */}
+                            <td>{index + 1}</td>
                             <td>{u.payment_type}</td>
                             <td>{u.fee_type}</td>
                             <td>{u.amount}</td>
@@ -527,7 +531,7 @@ class Fee_Management_Index extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status == false
+                                  {parseFloat(u.status) === 0
                                     ? "Activate"
                                     : "Deactivate"}
                                 </CLink>
@@ -535,7 +539,9 @@ class Fee_Management_Index extends React.Component {
                               {_canAccess("fee_management", "update") ===
                                 false && (
                                 <>
-                                  {u.status == true ? "Activate" : "Deactivate"}
+                                  {parseFloat(u.status) === 0
+                                    ? "Deactive"
+                                    : "Active"}
                                 </>
                               )}
                             </td>

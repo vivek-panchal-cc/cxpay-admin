@@ -588,7 +588,8 @@ class CustomerManagementPendingKycIndex extends React.Component {
                           </span>
                         </th> */}
                         {(_canAccess("personal_customers", "update") ||
-                          _canAccess("personal_customers", "delete")) && (
+                          _canAccess("personal_customers", "delete") ||
+                          _canAccess("personal_customers", "view")) && (
                           <>
                             <th>Action</th>
                           </>
@@ -644,84 +645,92 @@ class CustomerManagementPendingKycIndex extends React.Component {
                                 )}
                               </td> */}
                               {(_canAccess("personal_customers", "update") ||
-                                _canAccess("personal_customers", "delete")) && (
+                                _canAccess("personal_customers", "delete") ||
+                                _canAccess("personal_customers", "view")) && (
                                 <>
-                                  <td className="d-flex">
-                                    {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
-                                      c._id
-                                    ) === -1 && (
-                                      <>
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "personal_customers",
-                                            "update"
-                                          ) && (
-                                            <CTooltip
-                                              content={globalConstants.EDIT_BTN}
-                                            >
-                                              <CLink
-                                                className="btn  btn-md btn-primary"
-                                                aria-current="page"
-                                                to={`/admin/personal_customers/edit/${c.mobile_number}`}
-                                              >
-                                                <CIcon name="cil-pencil"></CIcon>{" "}
-                                              </CLink>
-                                            </CTooltip>
-                                          )}
-                                        &nbsp;
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "personal_customers",
-                                            "delete"
-                                          ) && (
-                                            <CTooltip
-                                              content={
-                                                globalConstants.DELETE_BTN
-                                              }
-                                            >
-                                              <button
-                                                className="btn  btn-md btn-danger "
-                                                onClick={() =>
-                                                  this.openDeletePopup(
-                                                    c.mobile_number
-                                                  )
+                                  <td>
+                                    <div className="d-flex">
+                                      {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
+                                        c._id
+                                      ) === -1 && (
+                                        <>
+                                          {current_user.user_group_id !==
+                                            c._id &&
+                                            _canAccess(
+                                              "personal_customers",
+                                              "update"
+                                            ) && (
+                                              <CTooltip
+                                                content={
+                                                  globalConstants.EDIT_BTN
                                                 }
                                               >
-                                                <CIcon name="cil-trash"></CIcon>
-                                              </button>
-                                            </CTooltip>
-                                          )}
-                                        &nbsp;
-                                        {current_user.user_group_id !== c._id &&
-                                          _canAccess(
-                                            "personal_customers",
-                                            "view"
-                                          ) && (
-                                            <CTooltip
-                                              content={
-                                                globalConstants.REPORT_BTN
-                                              }
-                                            >
-                                              <CLink
-                                                className="btn btn-dark btn-block w-auto"
-                                                aria-current="page"
-                                                to={{
-                                                  pathname: `/admin/personal_customers/${c.account_number}/basic_details`,
-                                                  state: {
-                                                    route: "pending_kyc",
-                                                    mobile_number:
-                                                      c.mobile_number,
-                                                  },
-                                                }}
+                                                <CLink
+                                                  className="btn  btn-md btn-primary"
+                                                  aria-current="page"
+                                                  to={`/admin/personal_customers/edit/${c.mobile_number}`}
+                                                >
+                                                  <CIcon name="cil-pencil"></CIcon>{" "}
+                                                </CLink>
+                                              </CTooltip>
+                                            )}
+                                          &nbsp;
+                                          {current_user.user_group_id !==
+                                            c._id &&
+                                            _canAccess(
+                                              "personal_customers",
+                                              "delete"
+                                            ) && (
+                                              <CTooltip
+                                                content={
+                                                  globalConstants.DELETE_BTN
+                                                }
                                               >
-                                                <FontAwesomeIcon
-                                                  icon={faEye}
-                                                ></FontAwesomeIcon>
-                                              </CLink>
-                                            </CTooltip>
-                                          )}
-                                      </>
-                                    )}
+                                                <button
+                                                  className="btn  btn-md btn-danger "
+                                                  onClick={() =>
+                                                    this.openDeletePopup(
+                                                      c.mobile_number
+                                                    )
+                                                  }
+                                                >
+                                                  <CIcon name="cil-trash"></CIcon>
+                                                </button>
+                                              </CTooltip>
+                                            )}
+                                          &nbsp;
+                                          {current_user.user_group_id !==
+                                            c._id &&
+                                            _canAccess(
+                                              "personal_customers",
+                                              "view"
+                                            ) && (
+                                              <CTooltip
+                                                content={
+                                                  globalConstants.REPORT_BTN
+                                                }
+                                              >
+                                                <CLink
+                                                  className="btn btn-dark btn-block w-auto"
+                                                  aria-current="page"
+                                                  to={{
+                                                    pathname: `/admin/personal_customers/${c.account_number}/basic_details`,
+                                                    state: {
+                                                      route: "pending_kyc",
+                                                      mobile_number:
+                                                        c.mobile_number,
+                                                    },
+                                                  }}
+                                                >
+                                                  <FontAwesomeIcon
+                                                    icon={faEye}
+                                                  ></FontAwesomeIcon>
+                                                </CLink>
+                                              </CTooltip>
+                                            )}
+                                        </>
+                                      )}
+                                    </div>
                                   </td>
                                 </>
                               )}

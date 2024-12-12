@@ -20,6 +20,7 @@ import {
   CLink,
   CPagination,
 } from "@coreui/react";
+import { _canAccess } from "_helpers";
 
 const REQUEST_ITEM_HEADERS = [
   { label: "Request From", field: "name" },
@@ -129,7 +130,11 @@ const Manual_Topup_Request = () => {
                           </th>
                         );
                       })}
-                      <th>Action</th>
+                      {_canAccess("manual_requests", "view") && (
+                        <>
+                          <th>Action</th>
+                        </>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -157,20 +162,22 @@ const Manual_Topup_Request = () => {
                           </td>
                           <td>{status}</td>
                           <td>
-                            <CTooltip
-                              content={
-                                globalConstants.VIEW_MANUAL_TOPUP_DETAILS
-                              }
-                            >
-                              <CLink
-                                className="btn btn-dark btn-block"
-                                style={{ width: "fit-content" }}
-                                aria-current="page"
-                                to={`/admin/manual_requests/detailview/${transaction_id}`}
+                            {_canAccess("manual_requests", "view") && (
+                              <CTooltip
+                                content={
+                                  globalConstants.VIEW_MANUAL_TOPUP_DETAILS
+                                }
                               >
-                                <FontAwesomeIcon icon={faEye} />
-                              </CLink>
-                            </CTooltip>
+                                <CLink
+                                  className="btn btn-dark btn-block"
+                                  style={{ width: "fit-content" }}
+                                  aria-current="page"
+                                  to={`/admin/manual_requests/detailview/${transaction_id}`}
+                                >
+                                  <FontAwesomeIcon icon={faEye} />
+                                </CLink>
+                              </CTooltip>
+                            )}
                           </td>
                         </tr>
                       );

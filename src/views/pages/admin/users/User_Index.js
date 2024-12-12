@@ -134,7 +134,7 @@ class User_Index extends React.Component {
     } else {
       this.setState(
         {
-          pageNo: 1
+          pageNo: 1,
         },
         () => {
           this.props.getUsersList(this.state);
@@ -454,9 +454,11 @@ class User_Index extends React.Component {
                                 />
                               )}{" "}
                             </td>
-                            <td>{this.state.pageNo >= 2
+                            <td>
+                              {this.state.pageNo >= 2
                                 ? index + 1 + 10 * (this.state.pageNo - 1)
-                                : index + 1}</td>
+                                : index + 1}
+                            </td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>
@@ -476,7 +478,7 @@ class User_Index extends React.Component {
                                       )
                                     }
                                   >
-                                    {u.status ? "Active" : "Deactive"}
+                                    {u.status ? "Deactivate" : "Activate"}
                                   </CLink>
                                 )}
                               {current_user.id !== u._id &&

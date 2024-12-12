@@ -549,22 +549,24 @@ class RecurringPaymentsIndex extends React.Component {
                               {u.is_group.toString() === "1" ? "Yes" : "No"}
                             </td>
 
-                            <td className="d-flex">
-                              {_canAccess("recurring_payments", "view") && (
-                                <CTooltip
-                                  content={
-                                    globalConstants.VIEW_RECURRING_DETAILS
-                                  }
-                                >
-                                  <CLink
-                                    className="btn btn-dark btn-block w-auto"
-                                    aria-current="page"
-                                    to={`/admin/recurring_payments/detailview/${u.id}`}
+                            <td>
+                              <div className="d-flex">
+                                {_canAccess("recurring_payments", "view") && (
+                                  <CTooltip
+                                    content={
+                                      globalConstants.VIEW_RECURRING_DETAILS
+                                    }
                                   >
-                                    <FontAwesomeIcon icon={faEye} />
-                                  </CLink>
-                                </CTooltip>
-                              )}
+                                    <CLink
+                                      className="btn btn-dark btn-block w-auto"
+                                      aria-current="page"
+                                      to={`/admin/recurring_payments/detailview/${u.id}`}
+                                    >
+                                      <FontAwesomeIcon icon={faEye} />
+                                    </CLink>
+                                  </CTooltip>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         ))

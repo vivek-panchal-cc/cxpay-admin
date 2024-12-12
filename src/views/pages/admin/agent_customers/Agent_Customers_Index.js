@@ -704,7 +704,8 @@ class Agent_list extends React.Component {
                           </span>
                         </th>
                         {(_canAccess("agent_customers", "update") ||
-                          _canAccess("agent_customers", "delete")) && (
+                          _canAccess("agent_customers", "delete") ||
+                          _canAccess("agent_customers", "view")) && (
                           <>
                             <th>Action</th>
                           </>
@@ -759,63 +760,79 @@ class Agent_list extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status == "0" ? "Active" : "Deactive"}
+                                  {parseFloat(u.status) === 0
+                                    ? "Activate"
+                                    : "Deactivate"}
                                 </CLink>
                               )}
                               {_canAccess("agent_customers", "update") ===
                                 false && (
-                                <>{u.status ? "Active" : "Deactive"}</>
+                                <>
+                                  {parseFloat(u.status) === 0
+                                    ? "Deactive"
+                                    : "Active"}
+                                </>
                               )}
                             </td>
                             {(_canAccess("agent_customers", "update") ||
                               _canAccess("agent_customers", "delete") ||
                               _canAccess("agent_customers", "view")) && (
                               <>
-                                <td className="d-flex">
-                                  {_canAccess("agent_customers", "update") && (
-                                    <CTooltip
-                                      content={globalConstants.EDIT_BTN}
-                                    >
-                                      <CLink
-                                        className="btn  btn-md btn-primary"
-                                        aria-current="page"
-                                        to={`/admin/agent_customers/edit/${u.account_number}`}
+                                <td>
+                                  <div className="d-flex">
+                                    {_canAccess(
+                                      "agent_customers",
+                                      "update"
+                                    ) && (
+                                      <CTooltip
+                                        content={globalConstants.EDIT_BTN}
                                       >
-                                        <CIcon name="cil-pencil"></CIcon>{" "}
-                                      </CLink>
-                                    </CTooltip>
-                                  )}
-                                  &nbsp;
-                                  {_canAccess("agent_customers", "delete") && (
-                                    <CTooltip
-                                      content={globalConstants.DELETE_BTN}
-                                    >
-                                      <button
-                                        className="btn  btn-md btn-danger "
-                                        onClick={() =>
-                                          this.openDeletePopup(u.mobile_number)
+                                        <CLink
+                                          className="btn  btn-md btn-primary"
+                                          aria-current="page"
+                                          to={`/admin/agent_customers/edit/${u.account_number}`}
+                                        >
+                                          <CIcon name="cil-pencil"></CIcon>{" "}
+                                        </CLink>
+                                      </CTooltip>
+                                    )}
+                                    &nbsp;
+                                    {_canAccess(
+                                      "agent_customers",
+                                      "delete"
+                                    ) && (
+                                      <CTooltip
+                                        content={globalConstants.DELETE_BTN}
+                                      >
+                                        <button
+                                          className="btn  btn-md btn-danger "
+                                          onClick={() =>
+                                            this.openDeletePopup(
+                                              u.mobile_number
+                                            )
+                                          }
+                                        >
+                                          <CIcon name="cil-trash"></CIcon>
+                                        </button>
+                                      </CTooltip>
+                                    )}
+                                    &nbsp;
+                                    {_canAccess("agent_customers", "view") && (
+                                      <CTooltip
+                                        content={
+                                          globalConstants.VIEW_RECHARGE_DETAILS
                                         }
                                       >
-                                        <CIcon name="cil-trash"></CIcon>
-                                      </button>
-                                    </CTooltip>
-                                  )}
-                                  &nbsp;
-                                  {_canAccess("agent_customers", "view") && (
-                                    <CTooltip
-                                      content={
-                                        globalConstants.VIEW_RECHARGE_DETAILS
-                                      }
-                                    >
-                                      <CLink
-                                        className="btn btn-dark btn-block w-auto"
-                                        aria-current="page"
-                                        to={`/admin/agent_customers/detailview/${u.account_number}`}
-                                      >
-                                        <FontAwesomeIcon icon={faEye} />
-                                      </CLink>
-                                    </CTooltip>
-                                  )}
+                                        <CLink
+                                          className="btn btn-dark btn-block w-auto"
+                                          aria-current="page"
+                                          to={`/admin/agent_customers/detailview/${u.account_number}`}
+                                        >
+                                          <FontAwesomeIcon icon={faEye} />
+                                        </CLink>
+                                      </CTooltip>
+                                    )}
+                                  </div>
                                 </td>
                               </>
                             )}

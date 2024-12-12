@@ -377,15 +377,18 @@ class Email_list extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
+                        {_canAccess("email_templates", "update") ||
+                          (_canAccess("email_templates", "delete") && (
+                            <th>
+                              <input
+                                type="checkbox"
+                                onClick={this.handleAllChecked}
+                                value="checkedall"
+                                onChange={(e) => {}}
+                                checked={this.state.allCheckedbox}
+                              />
+                            </th>
+                          ))}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -452,19 +455,26 @@ class Email_list extends React.Component {
                       {this.state.page_list?.length > 0 &&
                         this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
-                            <td>
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u._id}
-                                _isChecked={this.state.multiaction[u._id]}
-                              />
-                            </td>
+                            {(_canAccess("email_templates", "update") ||
+                              _canAccess("email_templates", "delete")) && (
+                              <td>
+                                <CheckBoxes
+                                  handleCheckChieldElement={
+                                    this.handleCheckChieldElement
+                                  }
+                                  _id={u._id}
+                                  _isChecked={this.state.multiaction[u._id]}
+                                />
+                              </td>
+                            )}
 
-                            <td>{this.state.fields.pageNo >= 2
-                                ? index + 1 + 15 * (this.state.fields.pageNo - 1)
-                                : index + 1}</td>
+                            <td>
+                              {this.state.fields.pageNo >= 2
+                                ? index +
+                                  1 +
+                                  15 * (this.state.fields.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.name}</td>
                             <td>{u.subject}</td>
                             <td>
@@ -484,9 +494,7 @@ class Email_list extends React.Component {
                               )}
                               {_canAccess("email_templates", "update") ===
                                 false && (
-                                <>
-                                  {u.status == true ? "Activate" : "Deactivate"}
-                                </>
+                                <>{u.status == true ? "Active" : "Deactive"}</>
                               )}
                             </td>
                             {(_canAccess("email_templates", "update") ||
@@ -556,7 +564,9 @@ class Email_list extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Page</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this template?</CModalBody>
+          <CModalBody>
+            Are you sure you want to delete this template?
+          </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

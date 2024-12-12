@@ -27,6 +27,7 @@ import {
 } from "@coreui/react";
 import { notify } from "_helpers";
 import { globalConstants } from "constants/admin/global.constants";
+import { _canAccess } from "_helpers";
 
 const Manual_Topup_Detail = () => {
   const params = useParams();
@@ -272,7 +273,7 @@ const Manual_Topup_Detail = () => {
                 <FontAwesomeIcon icon={faBan} className="mr-1" />
                 Cancel
               </CLink>
-              {showActions && (
+              {showActions && _canAccess("manual_requests", "update") && (
                 <CButton
                   className={"btn btn-danger btn-md ml-3"}
                   onClick={() => handleConfirmation(false)}
@@ -280,7 +281,7 @@ const Manual_Topup_Detail = () => {
                   Reject
                 </CButton>
               )}
-              {showActions && (
+              {showActions && _canAccess("manual_requests", "update") && (
                 <CButton
                   className={"btn btn-success btn-md ml-3"}
                   onClick={() => handleConfirmation(true)}
