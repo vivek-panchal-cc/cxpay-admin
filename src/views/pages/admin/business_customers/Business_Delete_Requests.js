@@ -363,7 +363,11 @@ class BusinessDeleteRequests extends React.Component {
                             <td>{u.email}</td>
                             <td>{`+${u.mobile_number}`}</td>
                             <td>{u.account_number}</td>
-                            <td>{u.available_balance}</td>
+                            <td>{`${
+                              globalConstants.CURRENCY_SYMBOL
+                            } ${parseFloat(u.available_balance).toFixed(
+                              2
+                            )}`}</td>
 
                             {_canAccess("business_customers", "update") && (
                               <>
