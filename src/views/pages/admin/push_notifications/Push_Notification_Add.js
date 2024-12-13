@@ -323,7 +323,7 @@ class Push_Notification_Add extends React.Component {
                   >
                     <option value="">-- Select Type --</option>
                     <option value="instant">Instant</option>
-                    <option value="schedule">Schedule</option>
+                    {/* <option value="schedule">Schedule</option> */}
                   </CSelect>
                   <CFormText className="help-block">
                     {this.validator.message(

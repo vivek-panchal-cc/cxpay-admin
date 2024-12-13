@@ -23,6 +23,7 @@ export const businessCustomersService = {
   getBusinessKycDocument,
   downloadReportData,
   businessCategory,
+  createBusinessUser,
 };
 
 async function getCustomerWiseDetails(postData) {
@@ -334,6 +335,28 @@ async function businessCategory(postData) {
   try {
     response = await fetch(
       `${API_CUSTOMER_ONBOARD}list-active-business-category`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    const response = undefined;
+  } finally {
+    setLoading(false);
+  }
+  return handleResponse(response);
+}
+
+async function createBusinessUser(postData, timeZone) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: { "User-Timezone": timeZone, "Device-Type": "web" },
+    body: postData,
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_CUSTOMER_ONBOARD}register-user`,
       requestOptions
     );
   } catch (error) {

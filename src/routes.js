@@ -140,6 +140,9 @@ const SMS_Template_Add = React.lazy(() =>
 const SMS_Template_Edit = React.lazy(() =>
   import("./views/pages/admin/SMS_Template/SMS_Template_Edit")
 );
+const Business_Customers_Add = React.lazy(() =>
+  import("./views/pages/admin/business_customers/Business_Customer_Add")
+);
 const Business_Customers_Index = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Index")
 );
@@ -609,6 +612,14 @@ const routes = [
     component: SMS_Template_Edit,
     module_name: "sms_templates",
     action: "update",
+  },
+  {
+    path: "/admin/business_customers/add",
+    exact: true,
+    name: "Add Business Customer",
+    component: Business_Customers_Add,
+    module_name: "business_customers",
+    action: "create",
   },
   {
     path: "/admin/business_customers",

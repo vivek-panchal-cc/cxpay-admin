@@ -34,6 +34,7 @@ import {
   faBell,
   faBomb,
   faEye,
+  faPlus,
   faSort,
   faSortDown,
   faSortUp,
@@ -553,18 +554,19 @@ class Business_Customers_Index extends React.Component {
             <CCard>
               <CCardHeader>
                 Business Customers
-                {/* <div className="card-header-actions">
-                {_canAccess('customers', 'create') &&
-                  <CTooltip content={globalConstants.ADD_BTN} >
-                    <CLink
-                      className="btn btn-dark btn-block"
-                      aria-current="page"
-                      to="/admin/user_groups/add"
-                    ><FontAwesomeIcon icon={faPlus} />
-                    </CLink>
-                  </CTooltip>
-                }
-              </div> */}
+                <div className="card-header-actions px-2">
+                  {_canAccess("business_customers", "create") && (
+                    <CTooltip content={globalConstants.ADD_BTN}>
+                      <CLink
+                        className="btn btn-dark btn-block"
+                        aria-current="page"
+                        to="/admin/business_customers/add"
+                      >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </CLink>
+                    </CTooltip>
+                  )}
+                </div>
                 <div className="card-header-actions px-2">
                   {_canAccess("business_customers", "view") && (
                     <CTooltip content={globalConstants.DELETE_REQ_BTN}>

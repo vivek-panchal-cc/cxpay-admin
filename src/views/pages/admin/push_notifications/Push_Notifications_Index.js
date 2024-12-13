@@ -189,7 +189,7 @@ class Push_Notifications_Index extends React.Component {
         {
           fields: {
             ...this.state.fields,
-            page: 1
+            page: 1,
           },
         },
         () => {
@@ -468,16 +468,18 @@ class Push_Notifications_Index extends React.Component {
                       {this.state?.notification_list?.length > 0 ? (
                         this.state.notification_list.map((u, index) => (
                           <tr key={u.id}>
-                            <td>{this.state.fields.page >= 2
+                            <td>
+                              {this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
-                                : index + 1}</td>
+                                : index + 1}
+                            </td>
                             <td>{u.title}</td>
                             <td>
                               <MessagePopup message={u.description} />
                             </td>
                             <td>
-                              {u.customer_type.charAt(0).toUpperCase() +
-                                u.customer_type.slice(1)}
+                              {u.customer_type?.charAt(0).toUpperCase() +
+                                u.customer_type?.slice(1)}
                             </td>
                             {/* <td>
                               {(() => {
@@ -494,7 +496,8 @@ class Push_Notifications_Index extends React.Component {
                               })()}
                             </td> */}
                             <td>
-                              {u.type.charAt(0).toUpperCase() + u.type.slice(1)}
+                              {u.type?.charAt(0).toUpperCase() +
+                                u.type?.slice(1)}
                             </td>
                             {(_canAccess("notifications", "update") ||
                               _canAccess("notifications", "delete")) && (
@@ -565,7 +568,9 @@ class Push_Notifications_Index extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Notification</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this notification?</CModalBody>
+          <CModalBody>
+            Are you sure you want to delete this notification?
+          </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteNotification()}>
               Delete
