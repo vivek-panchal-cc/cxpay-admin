@@ -5,6 +5,7 @@ export const globalConstants = {
   BULK_APPLY_BTN: "Click to perform bulk action.",
   UPDATE_SEQUENCE: "Click to update sequence.",
   ADD_BTN: "Click to add new record.",
+  ADD_MERCHANT: "Add new merchant.",
   EDIT_BTN: "Click to edit record.",
   DELETE_BTN: "Click to delete record.",
   REPORT_BTN: "Click to view report.",

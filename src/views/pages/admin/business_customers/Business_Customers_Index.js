@@ -556,7 +556,7 @@ class Business_Customers_Index extends React.Component {
                 Business Customers
                 <div className="card-header-actions px-2">
                   {_canAccess("business_customers", "create") && (
-                    <CTooltip content={globalConstants.ADD_BTN}>
+                    <CTooltip content={globalConstants.ADD_MERCHANT}>
                       <CLink
                         className="btn btn-dark btn-block"
                         aria-current="page"
