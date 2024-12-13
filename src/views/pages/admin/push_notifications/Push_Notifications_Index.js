@@ -300,7 +300,7 @@ class Push_Notifications_Index extends React.Component {
                         >
                           <option value="">-- Select Status --</option>
                           <option value="instant">Instant</option>
-                          <option value="schedule">Schedule</option>
+                          {/* <option value="schedule">Schedule</option> */}
                         </CSelect>
                       </CCol>
                     </CFormGroup>
