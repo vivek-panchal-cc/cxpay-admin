@@ -40,6 +40,7 @@ import { businessCustomersService } from "services/admin/business_customers.serv
 import "react-dropzone-uploader/dist/styles.css";
 import "../agent_customers/page.css";
 import "../agent_customers/Draft.css";
+import "./kycTable.css"
 
 class Business_Customer_Add extends Component {
     constructor(props) {
