@@ -109,8 +109,8 @@ class Agent_Customers_Add extends Component {
   /********** Retrive Data of Country and City  *****************/
   getCountryCity() {
     agentService.getCountry().then((res) => {
-      if (res.status === false) {
-        notify.error(res.message);
+      if (!res.success) {
+        this.setState({ countryCityRes: [] });
       } else {
         const countryList = res?.data?.country_list || [];
         this.setState({
@@ -422,7 +422,7 @@ class Agent_Customers_Add extends Component {
                   id="select"
                   // onChange={this.handleChange}
                   onChange={this.handleCountryChange}
-                  // value={this.state.fields.country}
+                // value={this.state.fields.country}
                 >
                   <option value="">-- Country Code--</option>;
                   {this.state?.countryData?.map((e, key) => {
@@ -502,8 +502,8 @@ class Agent_Customers_Add extends Component {
               name="city"
               id="city"
               onChange={this.handleChange}
-              // onChange={this.handleCityChange}
-              // value={this.state.fields.city}
+            // onChange={this.handleCityChange}
+            // value={this.state.fields.city}
             >
               <option value="">-- City --</option>;
               {this.state?.cityData?.map((e, key) => {
@@ -553,7 +553,7 @@ class Agent_Customers_Add extends Component {
               name="commission_type"
               id="commission_type"
               onChange={this.handleChange}
-              // value={this.state.fields.city}
+            // value={this.state.fields.city}
             >
               <option value={""}>{"Select Commission Type"}</option>
               <option value={"fixed"}>{"Fixed"}</option>
@@ -794,7 +794,7 @@ class Agent_Customers_Add extends Component {
                         ? this.state.fields.card_commission[index].type
                         : ""
                     }
-                    // id="system_commission_type"
+                  // id="system_commission_type"
                   >
                     <option value={""}>{"Select Type"}</option>
                     <option value={"fixed"}>{"Fixed"}</option>

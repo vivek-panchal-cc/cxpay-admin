@@ -109,8 +109,8 @@ class Business_Customer_Add extends Component {
     /********** Retrive Data of Country and City  *****************/
     getCountryCity() {
         businessCustomersService.getCountry().then((res) => {
-            if (res.status === false) {
-                notify.error(res.message);
+            if (!res.success) {
+                this.setState({ countryCityRes: [] });
             } else {
                 const countryList = res?.data?.country_list || [];
                 this.setState({
