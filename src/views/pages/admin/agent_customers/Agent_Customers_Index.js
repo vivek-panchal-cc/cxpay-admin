@@ -554,43 +554,46 @@ class Agent_list extends React.Component {
                 </div>
                 <div className="card-header-actions px-2">
                   {_canAccess("agent_customers", "view") && (
-                    <CTooltip content={globalConstants.DELETE_REQ_BTN}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to="/admin/agent_customers/delete_requests"
-                      >
-                        <span
-                          className={`${
-                            this.state.deleteAgents?.length > 0
-                              ? "notification-badge"
-                              : ""
-                          }`}
+                    <>
+                      <CTooltip content={globalConstants.DELETE_REQ_BTN}>
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          to="/admin/agent_customers/delete_requests"
                         >
                           Delete Requests
-                        </span>{" "}
-                      </CLink>
-                    </CTooltip>
+                        </CLink>
+                      </CTooltip>
+                      <span
+                        className={`${
+                          this.state.deleteAgents?.length > 0
+                            ? "notification-badge"
+                            : ""
+                        }`}
+                      ></span>{" "}
+                    </>
                   )}
                 </div>
                 <div className="card-header-actions px-2">
                   {_canAccess("agent_customers", "view") && (
-                    <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to={`/admin/agent_customers/blocked_requests/3`}
-                      >
-                        <span
-                          className={`${
-                            this.state.blockedBusinessCustomers?.length > 0
-                              ? "notification-badge-pending-customers"
-                              : ""
-                          }`}
-                        ></span>
-                        <FontAwesomeIcon icon={faBan} />
-                      </CLink>
-                    </CTooltip>
+                    <>
+                      <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          to={`/admin/agent_customers/blocked_requests/3`}
+                        >
+                          <FontAwesomeIcon icon={faBan} />
+                        </CLink>
+                      </CTooltip>
+                      <span
+                        className={`${
+                          this.state.blockedBusinessCustomers?.length > 0
+                            ? "notification-badge-pending-customers"
+                            : ""
+                        }`}
+                      ></span>
+                    </>
                   )}
                 </div>
                 {this.state.agents?.length > 0 ? (

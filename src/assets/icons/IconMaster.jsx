@@ -2,8 +2,8 @@ import * as React from "react";
 
 const IconMaster = (props) => (
   <svg
-    width={15}
-    height={20}
+    width={14}
+    height={14}
     viewBox="0 0 1000 1000"
     xmlns="http://www.w3.org/2000/svg"
     fill="white" // Set fill to white to make the icon color white

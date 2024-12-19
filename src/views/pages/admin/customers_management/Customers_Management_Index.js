@@ -505,42 +505,46 @@ class Customers_Management_Index extends React.Component {
                 Personal Customers
                 <div className="card-header-actions px-2">
                   {_canAccess("personal_customers", "view") && (
-                    <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to={`/admin/personal_customers/blocked_requests/2`}
-                      >
-                        <span
-                          className={`${
-                            this.state.blockedBusinessCustomers?.length > 0
-                              ? "notification-badge-pending-customers"
-                              : ""
-                          }`}
-                        ></span>
-                        <FontAwesomeIcon icon={faBan} />
-                      </CLink>
-                    </CTooltip>
+                    <>
+                      <CTooltip content={globalConstants.BLOCKED_REQ_BTN}>
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          to={`/admin/personal_customers/blocked_requests/2`}
+                        >
+                          <FontAwesomeIcon icon={faBan} />
+                        </CLink>
+                      </CTooltip>
+                      <span
+                        className={`${
+                          this.state.blockedBusinessCustomers?.length > 0
+                            ? "notification-badge-pending-customers"
+                            : ""
+                        }`}
+                      ></span>
+                    </>
                   )}
                 </div>
                 <div className="card-header-actions px-2">
                   {_canAccess("business_customers", "view") && (
-                    <CTooltip content={globalConstants.KYC_PENDING}>
-                      <CLink
-                        className="btn btn-dark btn-block"
-                        aria-current="page"
-                        to={`/admin/personal_customers/pending_kyc`}
-                      >
-                        <span
-                          className={`${
-                            this.state.pendingKycCustomers?.length > 0
-                              ? "notification-badge-pending-customers"
-                              : ""
-                          }`}
-                        ></span>
-                        <FontAwesomeIcon icon={faArchive} />
-                      </CLink>
-                    </CTooltip>
+                    <>
+                      <CTooltip content={globalConstants.KYC_PENDING}>
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          to={`/admin/personal_customers/pending_kyc`}
+                        >
+                          <FontAwesomeIcon icon={faArchive} />
+                        </CLink>
+                      </CTooltip>
+                      <span
+                        className={`${
+                          this.state.pendingKycCustomers?.length > 0
+                            ? "notification-badge-pending-customers"
+                            : ""
+                        }`}
+                      ></span>
+                    </>
                   )}
                 </div>
               </CCardHeader>
