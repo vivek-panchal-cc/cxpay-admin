@@ -377,18 +377,18 @@ class Email_list extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        {_canAccess("email_templates", "update") ||
-                          (_canAccess("email_templates", "delete") && (
-                            <th>
-                              <input
-                                type="checkbox"
-                                onClick={this.handleAllChecked}
-                                value="checkedall"
-                                onChange={(e) => {}}
-                                checked={this.state.allCheckedbox}
-                              />
-                            </th>
-                          ))}
+                        {(_canAccess("email_templates", "update") ||
+                          _canAccess("email_templates", "delete")) && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
