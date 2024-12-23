@@ -191,7 +191,7 @@ class User_Edit extends React.Component {
                     id="password"
                     name="password"
                     placeholder="Enter Password "
-                    autoComplete="false"
+                    autoComplete="new-password"
                     onChange={this.handleChange}
                   />
                   <CFormText className="help-block"></CFormText>
