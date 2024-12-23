@@ -458,7 +458,10 @@ class Business_Category_Index extends React.Component {
                               checked={this.state.allCheckedbox}
                             />
                           </th>
-                        ) : (
+                        ) : !(
+                            _canAccess("business_category", "update") ||
+                            _canAccess("business_category", "delete")
+                          ) ? null : (
                           <th></th>
                         )}
                         <th>#</th>
@@ -524,7 +527,10 @@ class Business_Category_Index extends React.Component {
                                   _isChecked={this.state.multiaction[u.id]}
                                 />
                               </td>
-                            ) : (
+                            ) : !(
+                                _canAccess("business_category", "update") ||
+                                _canAccess("business_category", "delete")
+                              ) ? null : (
                               <th></th>
                             )}
 
