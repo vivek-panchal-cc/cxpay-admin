@@ -446,8 +446,9 @@ class Business_Category_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        {(_canAccess("business_category", "update") ||
-                          _canAccess("business_category", "delete")) && (
+                        {!showEditForm &&
+                        (_canAccess("business_category", "update") ||
+                          _canAccess("business_category", "delete")) ? (
                           <th>
                             <input
                               type="checkbox"
@@ -457,6 +458,8 @@ class Business_Category_Index extends React.Component {
                               checked={this.state.allCheckedbox}
                             />
                           </th>
+                        ) : (
+                          <th></th>
                         )}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
@@ -509,8 +512,9 @@ class Business_Category_Index extends React.Component {
                         this.state.category_list?.length > 0 &&
                         this.state.category_list?.map((u, index) => (
                           <tr key={u.id}>
-                            {(_canAccess("business_category", "update") ||
-                              _canAccess("business_category", "delete")) && (
+                            {editFormId !== u.id &&
+                            (_canAccess("business_category", "update") ||
+                              _canAccess("business_category", "delete")) ? (
                               <td>
                                 <CheckBoxes
                                   handleCheckChieldElement={
@@ -520,6 +524,8 @@ class Business_Category_Index extends React.Component {
                                   _isChecked={this.state.multiaction[u.id]}
                                 />
                               </td>
+                            ) : (
+                              <th></th>
                             )}
 
                             <td>
