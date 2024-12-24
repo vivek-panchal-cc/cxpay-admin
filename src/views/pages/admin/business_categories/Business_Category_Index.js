@@ -541,7 +541,9 @@ class Business_Category_Index extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status === false ? "Activate" : "Deactive"}
+                                  {u.status === false
+                                    ? "Activate"
+                                    : "Deactivate"}
                                 </CLink>
                               ) : (
                                 <>
