@@ -18,12 +18,7 @@ import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {
-  notify,
-  history,
-  _canAccess,
-  _loginUsersDetails,
-} from "../../../../_helpers/index";
+import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { faqService } from "services/admin/faq.service";
 import IconDragAndDrop from "assets/icons/IconDragAndDrop";
@@ -120,7 +115,7 @@ class FaqIndex extends React.Component {
     if (!result.destination) {
       return;
     }
-    const formData = new FormData();
+    // const formData = new FormData();
     const { source, destination } = result;
     const faqList = [...this.state.faq_list];
     let sequenceData = [];

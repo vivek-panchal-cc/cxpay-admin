@@ -15,18 +15,13 @@ import {
 
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  _canAccess,
-  _loginUsersDetails,
-  history,
-  notify,
-} from "../../../../_helpers/index";
-import Customer_Management_Transactions_Report from "./Customer_Management_Transactions_Report";
+import { history, notify } from "../../../../_helpers/index";
+import CustomerManagementTransactionReport from "./Customer_Management_Transactions_Report";
 import CustomerManagementSchedulePayments from "./Customer_Management_Schedule_Payments";
 import CustomerManagementRecurringPaymentsIndex from "./Customer_Management_Recurring_Payments";
-import Customers_Management_Details from "./Customer_Management_Details";
-import Customer_Management_Withdraw_Requests from "./Customer_Management_Withdraw_Requests";
-import Customer_Management_Manual_Topup_Requests from "./Customer_Management_Manual_Topup_Requests";
+import CustomerManagementDetails from "./Customer_Management_Details";
+import CustomerManagementWithdrawRequests from "./Customer_Management_Withdraw_Requests";
+import CustomerManagementManualTopupRequests from "./Customer_Management_Manual_Topup_Requests";
 
 class Customers_Management_Details_Report extends React.Component {
   constructor(props) {
@@ -142,7 +137,7 @@ class Customers_Management_Details_Report extends React.Component {
             <CTabContent>
               <CTabPane active={activeTab === "basic_details"}>
                 {activeTab === "basic_details" && (
-                  <Customers_Management_Details
+                  <CustomerManagementDetails
                     mobile_number={this.state.mobile_number}
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
@@ -151,7 +146,7 @@ class Customers_Management_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "transaction_details"}>
                 {activeTab === "transaction_details" && (
-                  <Customer_Management_Transactions_Report
+                  <CustomerManagementTransactionReport
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
@@ -175,7 +170,7 @@ class Customers_Management_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "withdraw_request_details"}>
                 {activeTab === "withdraw_request_details" && (
-                  <Customer_Management_Withdraw_Requests
+                  <CustomerManagementWithdrawRequests
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
@@ -183,7 +178,7 @@ class Customers_Management_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "manual_topup_request_details"}>
                 {activeTab === "manual_topup_request_details" && (
-                  <Customer_Management_Manual_Topup_Requests
+                  <CustomerManagementManualTopupRequests
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />

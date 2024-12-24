@@ -15,13 +15,8 @@ import {
   CLink,
 } from "@coreui/react";
 // import { agentService } from "../../../../services/admin/agent.service";
-import { reportsService } from "../../../../services/admin/reports.service";
-import {
-  notify,
-  _canAccess,
-  history,
-  _loginUsersDetails,
-} from "../../../../_helpers/index";
+// import { reportsService } from "../../../../services/admin/reports.service";
+import { notify, _canAccess, history } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFileExport,
@@ -274,8 +269,6 @@ class Business_Customers_Transactions_Report extends React.Component {
   };
 
   render() {
-    const current_user = _loginUsersDetails();
-
     const downloadFile = async () => {
       try {
         // const { search, status, start_date, end_date, sort_field, sort_dir } =
@@ -378,16 +371,16 @@ class Business_Customers_Transactions_Report extends React.Component {
                           }}
                         >
                           <option value="">-- Select Status --</option>
-                          {(this.state.fields.txn_type == "PL" ||
-                            this.state.fields.txn_type == "WW" ||
-                            this.state.fields.txn_type == "AGENT TOPUP") && (
+                          {(this.state.fields.txn_type === "PL" ||
+                            this.state.fields.txn_type === "WW" ||
+                            this.state.fields.txn_type === "AGENT TOPUP") && (
                             <>
                               <option value="FAILED">Failed</option>
                               <option value="PAID">Paid</option>
                               <option value="PENDING">Pending</option>
                             </>
                           )}
-                          {this.state.fields.txn_type == "REQ" && (
+                          {this.state.fields.txn_type === "REQ" && (
                             <>
                               <option value="CANCELLED">Cancelled</option>
                               <option value="DECLINED">Declined</option>
@@ -396,7 +389,7 @@ class Business_Customers_Transactions_Report extends React.Component {
                               <option value="PENDING">Pending</option>
                             </>
                           )}
-                          {this.state.fields.txn_type == "MF" && (
+                          {this.state.fields.txn_type === "MF" && (
                             <>
                               <option value="APPROVED">Approved</option>
                               <option value="PENDING">Pending</option>

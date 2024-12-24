@@ -33,9 +33,7 @@ import {
   faSort,
   faSortDown,
   faSortUp,
-  faPlus,
   faBan,
-  faBomb,
   faArchive,
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
@@ -363,7 +361,7 @@ class Customers_Management_Index extends React.Component {
   StatusChangedHandler(_id, status) {
     var postData = {
       mobile_number: [_id],
-      status: status == 0 ? 1 : 0,
+      status: status === 0 ? 1 : 0,
     };
 
     customersManagementService.changeCustomerStatus(postData).then((res) => {
@@ -719,7 +717,7 @@ class Customers_Management_Index extends React.Component {
                                 {_canAccess("personal_customers", "update") ===
                                   false && (
                                   <>
-                                    {parseFloat(c.status) == 0
+                                    {parseFloat(c.status) === 0
                                       ? "Deactive"
                                       : "Active"}
                                   </>

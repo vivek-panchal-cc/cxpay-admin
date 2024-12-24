@@ -32,12 +32,7 @@ import {
   faFileExport,
 } from "@fortawesome/free-solid-svg-icons";
 import { agentService } from "../../../../services/admin/agent.service";
-import {
-  notify,
-  history,
-  _canAccess,
-  _loginUsersDetails,
-} from "../../../../_helpers/index";
+import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import "./notification.css";
 const CheckBoxes = React.lazy(() =>
@@ -262,7 +257,7 @@ class Agent_list extends React.Component {
   PageStatusChangedHandler(id, status) {
     var postData = {
       mobile_number: [id],
-      status: status == 0 ? 1 : 0,
+      status: status === 0 ? 1 : 0,
       user_type: "agent",
     };
     agentService.changeAgentStatus(postData).then((res) => {
@@ -408,8 +403,6 @@ class Agent_list extends React.Component {
   /****************** * Render Data To Dom ************************/
 
   render() {
-    const current_user = _loginUsersDetails();
-
     const downloadFile = async () => {
       try {
         const { search, status, start_date, end_date, sort_field, sort_dir } =

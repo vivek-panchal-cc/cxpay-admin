@@ -61,13 +61,7 @@ class Business_Category_Edit extends Component {
   }
 
   fetchCategoryDetails() {
-    if (
-      _canAccess(
-        this.props.module_name,
-        this.props.action,
-        "/admin/business_category"
-      )
-    ) {
+    if (_canAccess("business_category", "update", "/admin/business_category")) {
       const postData = {
         id: this.state.fields.id,
         operation_type: "category_detail",
@@ -75,8 +69,9 @@ class Business_Category_Edit extends Component {
       businessCategoryManagementService
         .businessCategoryBulkAction(postData)
         .then((res) => {
-          if (res.status === false) {
+          if (!res.success) {
             notify.error(res.message);
+            this.props.cancel(false);
           } else {
             this.setState({
               fields: {
@@ -122,7 +117,7 @@ class Business_Category_Edit extends Component {
   }
 
   handleCancel() {
-    if (typeof this.props.onApiSuccess === "function") {
+    if (typeof this.props.cancel === "function") {
       this.props.cancel(false);
     }
   }

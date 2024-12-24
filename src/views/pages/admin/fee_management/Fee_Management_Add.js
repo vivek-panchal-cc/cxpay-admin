@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import slugify from "react-slugify";
 import { _canAccess } from "../../../../_helpers/index";
 
 import {
@@ -100,7 +99,7 @@ class Fee_Management_Add extends Component {
 
   checkValidation(event) {
     if (this.validator.allValid()) {
-      const slug = slugify(this.state.payment_type, { delimiter: "-" });
+      // const slug = slugify(this.state.payment_type, { delimiter: "-" });
 
       feeManagementService
         .createFeeStructure({
@@ -108,7 +107,7 @@ class Fee_Management_Add extends Component {
           fee_type: this.state.fee_type,
           amount: this.state.amount,
           fee_label: this.state.fee_label,
-          status: this.state.status == false ? 0 : 1,
+          status: this.state.status === false ? 0 : 1,
         })
         .then((res) => {
           if (res.status === "error") {

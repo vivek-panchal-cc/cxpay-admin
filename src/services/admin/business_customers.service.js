@@ -79,7 +79,7 @@ async function getPendingKycCustomerList(postData) {
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
-    const response = undefined;
+    // const response = undefined;
   }
   return handleResponse(response);
 }
@@ -100,7 +100,7 @@ async function getAdminApprovalCustomerList(postData) {
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
-    const response = undefined;
+    // const response = undefined;
   }
   return handleResponse(response);
 }
@@ -339,7 +339,7 @@ async function businessCategory(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    const response = undefined;
+    // const response = undefined;
   } finally {
     setLoading(false);
   }
@@ -361,7 +361,7 @@ async function createBusinessUser(postData, timeZone) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    const response = undefined;
+    // const response = undefined;
   } finally {
     setLoading(false);
   }

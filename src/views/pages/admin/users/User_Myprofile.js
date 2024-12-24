@@ -115,9 +115,9 @@ class User_Myprofile extends React.Component {
             history.push("/admin/my-profile");
           }
 
-          this.setState({ fields: { ...this.state.fields, ["password"]: "" } });
+          this.setState({ fields: { ...this.state.fields, password: "" } });
           this.setState({
-            fields: { ...this.state.fields, ["confirm_password"]: "" },
+            fields: { ...this.state.fields, confirm_password: "" },
           });
         });
       }

@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { _canAccess } from "../../../../_helpers/index";
-
 import {
   CButton,
   CFormGroup,
@@ -76,7 +74,7 @@ class Business_Category_Add extends Component {
   }
 
   handleCancel() {
-    if (typeof this.props.onApiSuccess === "function") {
+    if (typeof this.props.cancel === "function") {
       this.props.cancel(false);
     }
   }

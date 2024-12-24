@@ -23,7 +23,7 @@ async function businessCategoryBulkAction(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    const response = undefined;
+    // const response = undefined;
   } finally {
     setLoading(false);
   }

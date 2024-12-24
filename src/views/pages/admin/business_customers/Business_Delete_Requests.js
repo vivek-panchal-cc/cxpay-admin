@@ -133,7 +133,7 @@ class BusinessDeleteRequests extends React.Component {
   }
 
   handleChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState({ fields: { ...this.state.fields, search: value } });
   };
 

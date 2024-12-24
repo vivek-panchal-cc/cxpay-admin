@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
 import {
@@ -14,7 +14,7 @@ import {
   CTextarea,
 } from "@coreui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
 import { FILE_SIZE } from "constants/frontend/schema.constants";
 import { withdrawRequestService } from "services/admin/withdraw_request.service";
 import { _canAccess, notify } from "../../../../_helpers";
@@ -28,17 +28,12 @@ const Fullpage = (props) => {
     bank_account_number = "",
     bank_name = "",
     comment = "",
-    customer_account_number = "",
     date = "",
     fees = "",
-    id = "",
     name = "",
     narration = "",
     receipt_images = [],
-    request_receive_date = "",
-    specification = "",
     status = "",
-    swift_code = "",
     time = "",
     total_amount = "",
     transaction_id = "",
@@ -157,7 +152,7 @@ const Fullpage = (props) => {
 
   const handleWithdrawRequestAction = async (params = {}) => {
     try {
-      const { data, message, success } =
+      const { message, success } =
         await withdrawRequestService.withdrawRequestAction(params);
       if (!success) throw message;
       notify.success(message);

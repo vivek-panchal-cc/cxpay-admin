@@ -25,7 +25,6 @@ import {
   _canAccess,
   formatDateFull,
   calculateDuration,
-  calculateDurationLeft,
   formatDateByConditional,
   capitalizeWordByWord,
   capitalize,
@@ -40,7 +39,6 @@ import SectionKycDetails from "components/admin/sections/SectionKycDetails";
 import "./kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
-import { businessCategoryManagementService } from "services/admin/business_category_management.service";
 
 class Business_Customers_Edit extends React.Component {
   constructor(props) {
@@ -109,14 +107,14 @@ class Business_Customers_Edit extends React.Component {
           } else {
             this.setState({ ...this.state.fields, fields: res.data });
 
-            const country_index = this.state.countryData.country_list.findIndex(
-              (e) => e.iso === res.data.country
-            );
+            // const country_index = this.state.countryData.country_list.findIndex(
+            //   (e) => e.iso === res.data.country
+            // );
             const { iso } =
               this.state.countryData.country_list.find(
                 (e) => e.iso === res.data.country
               ) || {};
-            const statustmp = res.data.status == 0 ? 0 : 1;
+            const statustmp = res.data.status === 0 ? 0 : 1;
             // const kyctmp = res.data.is_kyc === false ? false : true;
             const isApprovedtmp =
               res.data.admin_approved === false ? false : true;
@@ -171,7 +169,7 @@ class Business_Customers_Edit extends React.Component {
   }
 
   handleCityChange(e) {
-    const tmp = e.target.value;
+    // const tmp = e.target.value;
     this.setState({ city: e.target.value });
     // const cityCode = this.state.countryData.country_list[e.target.value].iso;
     // const tmp = [...this.state.countryData.city_list[cityCode]];
@@ -224,7 +222,7 @@ class Business_Customers_Edit extends React.Component {
 
   handleUpload(event) {
     const file = event.target.files[0];
-    const filename = event.target.files[0].name;
+    // const filename = event.target.files[0].name;
 
     if (file && file.name.match(/\.(jpg|jpeg|png)$/)) {
       this.setState({ imageTypeValidation: false });

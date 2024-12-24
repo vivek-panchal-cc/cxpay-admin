@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  formatDate,
+  // formatDate,
   formatDateFullWithTimeStamp,
   formatMobileNumber,
   notify,
 } from "../../../../_helpers";
 import { agentService } from "../../../../services/admin/agent.service";
-import Fullpage from "./Cms_Pages_FullPost";
+// import Fullpage from "./Cms_Pages_FullPost";
 import {
   CCard,
   CCardBody,
@@ -27,18 +27,18 @@ import {
   CTooltip,
   CCardFooter,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+// import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,
   faSortDown,
   faSortUp,
-  faPlus,
-  faEye,
+  // faPlus,
+  // faEye,
   faArrowLeft,
   faFileExport,
 } from "@fortawesome/free-solid-svg-icons";
-import { _canAccess, _loginUsersDetails } from "../../../../_helpers/index";
+import { _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { reportsService } from "../../../../services/admin/reports.service";
 class Agent_Detail extends React.Component {
@@ -138,7 +138,7 @@ class Agent_Detail extends React.Component {
   }
 
   handleChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState({ fields: { ...this.state.fields, search: value } });
   };
 

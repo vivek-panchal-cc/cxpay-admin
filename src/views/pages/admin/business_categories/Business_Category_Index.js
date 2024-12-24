@@ -10,7 +10,6 @@ import {
   CLink,
   CFormGroup,
   CInput,
-  CLabel,
   CModal,
   CModalBody,
   CModalFooter,
@@ -18,10 +17,6 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  CSelect,
-  CFormText,
-  CSwitch,
-  CCardFooter,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,21 +25,17 @@ import {
   faSortDown,
   faSortUp,
   faPlus,
-  faArrowLeft,
-  faSave,
-  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 import { businessCategoryManagementService } from "../../../../services/admin/business_category_management.service";
 import {
   notify,
   history,
   _canAccess,
-  _loginUsersDetails,
   capitalize,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
-import Business_Category_Add from "./Business_Category_Add";
-import Business_Category_Edit from "./Business_Category_Edit";
+import BusinessCategoryAdd from "./Business_Category_Add";
+import BusinessCategoryEdit from "./Business_Category_Edit";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -220,7 +211,7 @@ class Business_Category_Index extends React.Component {
     businessCategoryManagementService
       .businessCategoryBulkAction({
         id: [id],
-        status: status == false ? true : false,
+        status: status === false ? true : false,
         operation_type: "category_status_change",
       })
       .then((res) => {
@@ -338,14 +329,14 @@ class Business_Category_Index extends React.Component {
   }
 
   render() {
-    const current_user = _loginUsersDetails();
+    // const current_user = _loginUsersDetails();
     const { showAddForm, showEditForm, editFormId } = this.state;
     return (
       <>
         {showAddForm && (
           <CRow>
             <CCol xl={12}>
-              <Business_Category_Add
+              <BusinessCategoryAdd
                 onApiSuccess={this.getCategoryList}
                 cancel={this.handleShowAddForm}
               />
@@ -356,7 +347,7 @@ class Business_Category_Index extends React.Component {
         {showEditForm && editFormId && (
           <CRow>
             <CCol xl={12}>
-              <Business_Category_Edit
+              <BusinessCategoryEdit
                 key={editFormId}
                 id={editFormId}
                 onApiSuccess={this.getCategoryList}
@@ -447,8 +438,7 @@ class Business_Category_Index extends React.Component {
                     <thead>
                       <tr>
                         {!showEditForm &&
-                        (_canAccess("business_category", "update") ||
-                          _canAccess("business_category", "delete")) ? (
+                        _canAccess("business_category", "update") ? (
                           <th>
                             <input
                               type="checkbox"
@@ -458,9 +448,9 @@ class Business_Category_Index extends React.Component {
                               checked={this.state.allCheckedbox}
                             />
                           </th>
-                        ) : !(
-                            _canAccess("business_category", "update") ||
-                            _canAccess("business_category", "delete")
+                        ) : !_canAccess(
+                            "business_category",
+                            "update"
                           ) ? null : (
                           <th></th>
                         )}
@@ -516,8 +506,7 @@ class Business_Category_Index extends React.Component {
                         this.state.category_list?.map((u, index) => (
                           <tr key={u.id}>
                             {editFormId !== u.id &&
-                            (_canAccess("business_category", "update") ||
-                              _canAccess("business_category", "delete")) ? (
+                            _canAccess("business_category", "update") ? (
                               <td>
                                 <CheckBoxes
                                   handleCheckChieldElement={
@@ -527,9 +516,9 @@ class Business_Category_Index extends React.Component {
                                   _isChecked={this.state.multiaction[u.id]}
                                 />
                               </td>
-                            ) : !(
-                                _canAccess("business_category", "update") ||
-                                _canAccess("business_category", "delete")
+                            ) : !_canAccess(
+                                "business_category",
+                                "update"
                               ) ? null : (
                               <th></th>
                             )}
@@ -552,10 +541,12 @@ class Business_Category_Index extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status == false ? "Activate" : "Deactive"}
+                                  {u.status === false ? "Activate" : "Deactive"}
                                 </CLink>
                               ) : (
-                                <>{u.status == false ? "Deactive" : "Active"}</>
+                                <>
+                                  {u.status === false ? "Deactive" : "Active"}
+                                </>
                               )}
                               {/* {_canAccess("business_category", "update") ===
                                 false && (

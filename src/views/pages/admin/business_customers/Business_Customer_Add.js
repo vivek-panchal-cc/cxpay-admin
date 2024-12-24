@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { _canAccess } from "../../../../_helpers/index";
+// import { _canAccess } from "../../../../_helpers/index";
 import {
-  addObjToFormData,
+  // addObjToFormData,
   capitalize,
 } from "../../../../_helpers/common-utility";
 import {
@@ -129,14 +129,14 @@ class Business_Customer_Add extends Component {
     const dataValue = selectedOption.getAttribute("data-iso");
 
     const timeZoneSet =
-      value != "" ? this.state?.countryCityRes?.country_list : [];
+      value !== "" ? this.state?.countryCityRes?.country_list : [];
     const timeZoneObject = timeZoneSet.find((item) => item.iso === dataValue);
     const timeZone = timeZoneObject
       ? timeZoneObject.time_zone
       : Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     const city =
-      value != "" ? this.state?.countryCityRes?.city_list[dataValue] : [];
+      value !== "" ? this.state?.countryCityRes?.city_list[dataValue] : [];
     this.setState({ cityData: city, timeZone: timeZone });
     this.setState({
       fields: {
@@ -270,7 +270,7 @@ class Business_Customer_Add extends Component {
   checkIsCardSelected(selectedPaymentType) {
     let $returnVal = false;
     selectedPaymentType.forEach((ele) => {
-      if (ele.status == "1") {
+      if (ele.status === 1) {
         $returnVal = true;
       }
     });
@@ -655,6 +655,7 @@ class Business_Customer_Add extends Component {
                     ? URL.createObjectURL(this.state.fields.profile_image)
                     : "/avatars/default-avatar.png"
                 }
+                alt="Profile"
                 className=""
                 width={100}
               />

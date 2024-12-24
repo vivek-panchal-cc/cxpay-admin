@@ -1,6 +1,6 @@
-import { authHeader, authHeaderFile } from "../../_helpers";
+import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";
-import moment from "moment";
+// import moment from "moment";
 require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -24,10 +24,7 @@ async function getPushNotificationList(postData) {
 
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/notifications`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/notifications`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -35,7 +32,7 @@ async function getPushNotificationList(postData) {
   return handleResponse(response);
 }
 
-async function getUserList(){
+async function getUserList() {
   const requestOptions = {
     method: "POST",
     headers: authHeader("notifications", "create"),
@@ -61,10 +58,7 @@ async function deleteNotification(id) {
   };
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/notifications/${id}`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/notifications/${id}`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -83,10 +77,7 @@ async function updateNotification(postData, id) {
 
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/notifications/${id}`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/notifications/${id}`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -105,10 +96,7 @@ async function createNotification(postData) {
 
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/notifications/add`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/notifications/add`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);
@@ -125,10 +113,7 @@ async function getNotifications(id) {
 
   let response;
   try {
-    response = await fetch(
-      `${API_URL}api/notifications/${id}`,
-      requestOptions
-    );
+    response = await fetch(`${API_URL}api/notifications/${id}`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);

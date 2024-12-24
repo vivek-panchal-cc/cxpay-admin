@@ -13,7 +13,6 @@ import {
   CCardFooter,
   CButton,
   CLink,
-  CInputCheckbox,
   CTooltip,
   CSwitch,
   CSelect,
@@ -21,16 +20,10 @@ import {
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import {
-  systemModulesService,
-  userGroupsService,
-} from "../../../../services/admin/";
-import {
   notify,
   history,
-  capitalize,
   _canAccess,
   formatDateFull,
-  calculateDurationLeft,
   calculateDuration,
   capitalizeWordByWord,
   formatDateByConditional,
@@ -111,14 +104,14 @@ class Customers_Management_Edit extends React.Component {
 
             this.setState({ ...this.state.fields, fields: res.data });
 
-            const country_index = this.state.countryData.country_list.findIndex(
-              (e) => e.iso === res.data.country
-            );
+            // const country_index = this.state.countryData.country_list.findIndex(
+            //   (e) => e.iso === res.data.country
+            // );
             const { iso } =
               this.state.countryData.country_list.find(
                 (e) => e.iso === res.data.country
               ) || {};
-            const statustmp = res.data.status == 0 ? 0 : 1;
+            const statustmp = res.data.status === 0 ? 0 : 1;
             // const kyctmp = res.data.is_kyc === false ? false : true;
             this.setState({
               cityData: iso ? [...this.state.countryData.city_list[iso]] : [],
@@ -181,7 +174,7 @@ class Customers_Management_Edit extends React.Component {
   }
 
   handleCityChange(e) {
-    const tmp = e.target.value;
+    // const tmp = e.target.value;
     this.setState({ city: e.target.value });
     // const cityCode = this.state.countryData.country_list[e.target.value].iso;
     // const tmp = [...this.state.countryData.city_list[cityCode]];
@@ -223,7 +216,7 @@ class Customers_Management_Edit extends React.Component {
 
   handleUpload(event) {
     const file = event.target.files[0];
-    const filename = event.target.files[0].name;
+    // const filename = event.target.files[0].name;
 
     if (file && file.name.match(/\.(jpg|jpeg|png)$/)) {
       this.setState({ imageTypeValidation: false });

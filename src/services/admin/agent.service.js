@@ -1,7 +1,7 @@
 import {
   authHeader,
-  authHeaderTimezoneDevice,
-  authHeaderMutlipart,
+  // authHeaderTimezoneDevice,
+  // authHeaderMutlipart,
   authHeaderMutlipartAgent,
 } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";

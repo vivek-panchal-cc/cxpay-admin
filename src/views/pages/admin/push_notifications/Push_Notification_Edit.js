@@ -14,22 +14,18 @@ import {
   CButton,
   CLink,
   CTooltip,
-  CSwitch,
   CTextarea,
   CSelect,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
-import { agentService } from "../../../../services/admin";
 import { pushNotificationService } from "../../../../services/admin/push_notification.service";
 import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CIcon from "@coreui/icons-react";
 import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
-import moment from "moment";
 import "./../recurring_payments/page.css";
 
 class PushNotificationEdit extends React.Component {
@@ -93,14 +89,16 @@ class PushNotificationEdit extends React.Component {
                   let selectedCustomer = [];
                   this.state.options?.filter((x) => {
                     if (userData.includes(x.value)) {
-                      return selectedCustomer.push(x);
+                      selectedCustomer.push(x);
+                      return true;
                     }
+                    return false;
                   });
 
                   this.setState({ selectedCustomer: selectedCustomer });
                 } else if (
-                  res.data.customer_notifications?.length == 0 &&
-                  res.data.customer_type == "all"
+                  res.data.customer_notifications?.length === 0 &&
+                  res.data.customer_type === "all"
                 ) {
                   this.setState({
                     selectedCustomer: { value: "all", label: "All" },
@@ -155,7 +153,7 @@ class PushNotificationEdit extends React.Component {
   }
 
   selectedCustomerData(customer) {
-    if (customer?.filter((x) => x.value == "all")?.length > 0) {
+    if (customer?.filter((x) => x.value === "all")?.length > 0) {
       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];
@@ -193,7 +191,7 @@ class PushNotificationEdit extends React.Component {
   }
 
   convertDatePickerTime(str) {
-    var month, day, year, hours, minutes, seconds;
+    var hours, minutes, seconds;
     var date = new Date(str),
       month = ("0" + (date.getMonth() + 1)).slice(-2),
       day = ("0" + date.getDate()).slice(-2);

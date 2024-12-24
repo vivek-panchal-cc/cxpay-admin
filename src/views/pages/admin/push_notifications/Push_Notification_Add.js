@@ -14,7 +14,6 @@ import {
   CCardFooter,
   CButton,
   CLink,
-  CSwitch,
   CTooltip,
   CTextarea,
   CSelect,
@@ -133,7 +132,7 @@ class Push_Notification_Add extends React.Component {
   }
 
   convertDatePickerTime(str) {
-    var month, day, year, hours, minutes, seconds;
+    var hours, minutes, seconds;
     var date = new Date(str),
       month = ("0" + (date.getMonth() + 1)).slice(-2),
       day = ("0" + date.getDate()).slice(-2);
@@ -166,7 +165,7 @@ class Push_Notification_Add extends React.Component {
   };
 
   selectedCustomerData(customer) {
-    if (customer.filter((x) => x.value == "all")?.length > 0) {
+    if (customer.filter((x) => x.value === "all")?.length > 0) {
       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];

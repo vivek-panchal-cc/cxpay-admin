@@ -6,23 +6,23 @@ import {
   CCol,
   CRow,
   CLink,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CButton,
+  // CModal,
+  // CModalBody,
+  // CModalFooter,
+  // CModalHeader,
+  // CModalTitle,
+  // CButton,
   CTooltip,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+// import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   notify,
   history,
-  _canAccess,
-  _loginUsersDetails,
+  // _canAccess,
+  // _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import IconDragAndDrop from "assets/icons/IconDragAndDrop";
@@ -72,7 +72,7 @@ class Cms_Change_Sequence extends React.Component {
     if (!result.destination) {
       return;
     }
-    const formData = new FormData();
+    // const formData = new FormData();
     const { source, destination } = result;
     const cmsList = [...this.state.cms_list];
     let sequenceData = [];

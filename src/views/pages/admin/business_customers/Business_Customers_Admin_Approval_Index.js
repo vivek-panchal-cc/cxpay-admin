@@ -18,7 +18,6 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  CSelect,
 } from "@coreui/react";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
 import {
@@ -29,9 +28,6 @@ import {
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBan,
-  faBell,
-  faBomb,
   faEye,
   faSort,
   faSortDown,
@@ -39,15 +35,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
-import InputDateRange from "components/admin/InputDateRange";
 import "./../agent_customers/notification.css";
 import ResetPassword from "components/admin/Reset_Password";
-const CheckBoxes = React.lazy(() =>
-  import("../../../../components/admin/Checkboxes")
-);
-const MultiActionBar = React.lazy(() =>
-  import("../../../../components/admin/MultiActionBar")
-);
 
 class BusinessCustomerAdminApprovalIndex extends React.Component {
   constructor(props) {
@@ -381,7 +370,7 @@ class BusinessCustomerAdminApprovalIndex extends React.Component {
   StatusChangedHandler(_id, status) {
     var postData = {
       mobile_number: [_id],
-      status: status == 0 ? 1 : 0,
+      status: status === 0 ? 1 : 0,
     };
 
     businessCustomersService.changeCustomerStatus(postData).then((res) => {

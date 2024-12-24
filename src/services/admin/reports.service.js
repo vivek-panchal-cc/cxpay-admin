@@ -1,6 +1,6 @@
-import { authHeader, authHeaderFile } from "../../_helpers";
+import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";
-import moment from "moment";
+// import moment from "moment";
 require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -124,7 +124,10 @@ async function downloadAgentCSV(postData) {
   };
   let response;
   try {
-    response = await fetch(`${API_URL}api/export-agent-commission-report`, requestOptions);
+    response = await fetch(
+      `${API_URL}api/export-agent-commission-report`,
+      requestOptions
+    );
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(false);

@@ -1,7 +1,7 @@
 import React from "react";
 import { notify } from "../../../../_helpers";
 import { agentService } from "../../../../services/admin/agent.service";
-import Fullpage from "./Cms_Pages_FullPost";
+// import Fullpage from "./Cms_Pages_FullPost";
 import {
   CCard,
   CCardBody,
@@ -20,7 +20,7 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  faCheck,
+  // faCheck,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,16 +28,16 @@ import {
   faSort,
   faSortDown,
   faSortUp,
-  faPlus,
-  faEye,
+  // faPlus,
+  // faEye,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import { _canAccess, _loginUsersDetails } from "../../../../_helpers/index";
+import { _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 
-const MultiActionBar = React.lazy(() =>
-  import("../../../../components/admin/MultiActionBar")
-);
+// const MultiActionBar = React.lazy(() =>
+//   import("../../../../components/admin/MultiActionBar")
+// );
 
 class Agent_Delete_Requests extends React.Component {
   /*********** Define Initial Satte ****************/
@@ -146,7 +146,7 @@ class Agent_Delete_Requests extends React.Component {
   }
 
   handleChange = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState({ fields: { ...this.state.fields, search: value } });
   };
 

@@ -1,6 +1,6 @@
 import {
   authHeader,
-  authHeaderMutlipart,
+  // authHeaderMutlipart,
   authHeaderMutlipartFormData,
 } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers/";
@@ -23,10 +23,7 @@ function getWithdrawRequestData(postData) {
     headers: authHeader("withdraw_requests", "view"),
     body: JSON.stringify(postData),
   };
-  return fetch(
-    `${API_URL}api/withdraw-list`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/withdraw-list`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -42,10 +39,7 @@ function withdrawDetails(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/withdraw-details`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/withdraw-details`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -62,10 +56,7 @@ function withdrawRequestAction(postData) {
     body: postData,
   };
 
-  return fetch(
-    `${API_URL}api/withdraw-request-action`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/withdraw-request-action`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -81,10 +72,7 @@ function chnageWithdrawStatus(postData) {
     headers: authHeader("withdraw_requests", "update"),
     body: JSON.stringify(postData),
   };
-  return fetch(
-    `${API_URL}api/request-status-change`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/request-status-change`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -101,10 +89,7 @@ function downloadReciept(postData) {
     body: postData,
   };
 
-  return fetch(
-    `${API_URL}api/view-bank-withdraw-receipt`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/view-bank-withdraw-receipt`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);

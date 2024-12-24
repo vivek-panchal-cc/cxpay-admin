@@ -34,7 +34,7 @@ const InputDropdown = (props) => {
       else updatedList.splice(valueList.indexOf(value), 1);
       if (onChange) onChange(updatedList);
     },
-    [valueList]
+    [valueList, onChange]
   );
 
   // Get the titles of the selected statuses

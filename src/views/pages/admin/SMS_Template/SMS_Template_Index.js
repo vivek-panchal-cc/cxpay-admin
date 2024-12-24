@@ -33,7 +33,7 @@ import {
   notify,
   history,
   _canAccess,
-  _loginUsersDetails,
+  // _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 const CheckBoxes = React.lazy(() =>
@@ -195,7 +195,7 @@ class SMS_list extends React.Component {
 
   PageStatusChangedHandler(page_id, status) {
     smsTemplateService
-      .changePageStatus({ id: [page_id], status: status == 0 ? 1 : 0 })
+      .changePageStatus({ id: [page_id], status: status === 0 ? 1 : 0 })
       .then((res) => {
         if (res.status === "error") {
           notify.error(res.message);
@@ -290,7 +290,7 @@ class SMS_list extends React.Component {
   /****************** * Render Data To Dom ************************/
 
   render() {
-    const current_user = _loginUsersDetails();
+    // const current_user = _loginUsersDetails();
     return (
       <>
         <CRow>
@@ -377,18 +377,18 @@ class SMS_list extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        {_canAccess("sms_templates", "update") ||
-                          (_canAccess("sms_templates", "delete") && (
-                            <th>
-                              <input
-                                type="checkbox"
-                                onClick={this.handleAllChecked}
-                                value="checkedall"
-                                onChange={(e) => {}}
-                                checked={this.state.allCheckedbox}
-                              />
-                            </th>
-                          ))}
+                        {(_canAccess("sms_templates", "update") ||
+                          _canAccess("sms_templates", "delete")) && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
                         {/* <th>#</th> */}
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -453,18 +453,18 @@ class SMS_list extends React.Component {
                       {this.state.page_list?.length > 0 &&
                         this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
-                            {_canAccess("sms_templates", "update") ||
-                              (_canAccess("sms_templates", "delete") && (
-                                <td>
-                                  <CheckBoxes
-                                    handleCheckChieldElement={
-                                      this.handleCheckChieldElement
-                                    }
-                                    _id={u._id}
-                                    _isChecked={this.state.multiaction[u._id]}
-                                  />
-                                </td>
-                              ))}
+                            {(_canAccess("sms_templates", "update") ||
+                              _canAccess("sms_templates", "delete")) && (
+                              <td>
+                                <CheckBoxes
+                                  handleCheckChieldElement={
+                                    this.handleCheckChieldElement
+                                  }
+                                  _id={u._id}
+                                  _isChecked={this.state.multiaction[u._id]}
+                                />
+                              </td>
+                            )}
 
                             {/* <td>{index + 1}</td> */}
                             <td>{u.name}</td>
@@ -479,12 +479,12 @@ class SMS_list extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status == false ? "Active" : "Deactive"}
+                                  {u.status === false ? "Active" : "Deactive"}
                                 </CLink>
                               )}
                               {_canAccess("sms_templates", "update") ===
                                 false && (
-                                <>{u.status == true ? "Active" : "Deactive"}</>
+                                <>{u.status === true ? "Active" : "Deactive"}</>
                               )}
                             </td>
                             {(_canAccess("sms_templates", "update") ||

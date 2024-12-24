@@ -18,7 +18,6 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  CSelect,
 } from "@coreui/react";
 // import { userGroupsService } from "../../../../services/admin/user_groups.service";
 import { customersManagementService } from "../../../../services/admin/customers_management.service";
@@ -34,21 +33,11 @@ import {
   faSort,
   faSortDown,
   faSortUp,
-  faPlus,
-  faBan,
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import CIcon from "@coreui/icons-react";
-import InputDateRange from "components/admin/InputDateRange";
 import { businessCustomersService } from "services/admin/business_customers.service";
-const CheckBoxes = React.lazy(() =>
-  import("../../../../components/admin/Checkboxes")
-);
-const MultiActionBar = React.lazy(() =>
-  import("../../../../components/admin/MultiActionBar")
-);
-
 class CustomerManagementPendingKycIndex extends React.Component {
   constructor(props) {
     super(props);
@@ -328,7 +317,7 @@ class CustomerManagementPendingKycIndex extends React.Component {
   StatusChangedHandler(_id, status) {
     var postData = {
       mobile_number: [_id],
-      status: status == 0 ? 1 : 0,
+      status: status === 0 ? 1 : 0,
     };
 
     customersManagementService.changeCustomerStatus(postData).then((res) => {

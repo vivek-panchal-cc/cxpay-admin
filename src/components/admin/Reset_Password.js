@@ -3,7 +3,7 @@ import { CFormGroup, CLabel, CFormText, CButton, CInput } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faSave } from "@fortawesome/free-solid-svg-icons";
-import Select from "react-select";
+// import Select from "react-select";
 
 class ResetPassword extends React.Component {
   constructor(props) {

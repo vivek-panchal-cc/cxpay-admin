@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import slugify from "react-slugify";
+// import slugify from "react-slugify";
 import { _canAccess } from "../../../../_helpers/index";
 import { addObjToFormData } from "../../../../_helpers/common-utility";
 import "./page.css";
@@ -12,38 +12,38 @@ import {
   CInput,
   CCol,
   CLink,
-  CSwitch,
+  // CSwitch,
   CCardHeader,
   CCard,
   CCardBody,
   CCardFooter,
   CTooltip,
-  CRow,
-  CTabPane,
-  CModalBody,
-  CModalHeader,
-  CModalTitle,
-  CModalFooter,
-  CNavItem,
-  CNavLink,
-  CTabContent,
-  CNav,
-  CTabs,
-  CModal,
-  CInputRadio,
+  // CRow,
+  // CTabPane,
+  // CModalBody,
+  // CModalHeader,
+  // CModalTitle,
+  // CModalFooter,
+  // CNavItem,
+  // CNavLink,
+  // CTabContent,
+  // CNav,
+  // CTabs,
+  // CModal,
+  // CInputRadio,
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { pageService } from "../../../../services/admin/page.service";
+// import { pageService } from "../../../../services/admin/page.service";
 import { notify, history } from "../../../../_helpers/index";
 import $ from "jquery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { Editor } from "@tinymce/tinymce-react";
+// import { Editor } from "@tinymce/tinymce-react";
 import { globalConstants } from "../../../../constants/admin/global.constants";
-import Dropzone from "react-dropzone-uploader";
-import { mediaService } from "../../../../services/admin/media.service";
-import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
+// import Dropzone from "react-dropzone-uploader";
+// import { mediaService } from "../../../../services/admin/media.service";
+// import { authHeaderMutlipart } from "../../../../_helpers/auth-header";
 import "react-dropzone-uploader/dist/styles.css";
 
 import "./Draft.css";
@@ -135,7 +135,7 @@ class Agent_Customers_Add extends Component {
 
         this.setState({ collectionData: res.data });
 
-        res.data.map((ele, index) => {
+        res.data?.forEach((ele, index) => {
           this.setState((prevState) => {
             const newState = [...prevState.fields.card_commission];
             newState[index] = {
@@ -163,7 +163,7 @@ class Agent_Customers_Add extends Component {
     const selectedOption = e.target.options[e.target.selectedIndex];
     const dataValue = selectedOption.getAttribute("data-iso");
     const city =
-      value != "" ? this.state?.countryCityRes?.city_list[dataValue] : [];
+      value !== "" ? this.state?.countryCityRes?.city_list[dataValue] : [];
     this.setState({ cityData: city });
     this.setState({
       fields: {
@@ -214,7 +214,7 @@ class Agent_Customers_Add extends Component {
 
   handleUpload(event) {
     const file = event.target.files[0];
-    const filename = event.target.files[0].name;
+    // const filename = event.target.files[0].name;
 
     if (file && file.name.match(/\.(jpg|jpeg|png)$/)) {
       this.setState({ imageTypeValidation: false });
@@ -239,7 +239,7 @@ class Agent_Customers_Add extends Component {
   checkIsCardSelected(selectedPaymentType) {
     let $returnVal = false;
     selectedPaymentType.forEach((ele) => {
-      if (ele.status == "1") {
+      if (ele.status === 1) {
         $returnVal = true;
       }
     });
@@ -281,9 +281,9 @@ class Agent_Customers_Add extends Component {
       for (const fieldName in fields) {
         if (fields.hasOwnProperty(fieldName)) {
           const fieldValue = fields[fieldName];
-          if (fieldName == "card_commission") {
+          if (fieldName === "card_commission") {
             for (const key in fields) {
-              if (key == "card_commission")
+              if (key === "card_commission")
                 addObjToFormData(fields[fieldName], key, formData);
             }
           } else {
@@ -422,7 +422,7 @@ class Agent_Customers_Add extends Component {
                   id="select"
                   // onChange={this.handleChange}
                   onChange={this.handleCountryChange}
-                // value={this.state.fields.country}
+                  // value={this.state.fields.country}
                 >
                   <option value="">-- Country Code--</option>;
                   {this.state?.countryData?.map((e, key) => {
@@ -502,8 +502,8 @@ class Agent_Customers_Add extends Component {
               name="city"
               id="city"
               onChange={this.handleChange}
-            // onChange={this.handleCityChange}
-            // value={this.state.fields.city}
+              // onChange={this.handleCityChange}
+              // value={this.state.fields.city}
             >
               <option value="">-- City --</option>;
               {this.state?.cityData?.map((e, key) => {
@@ -553,7 +553,7 @@ class Agent_Customers_Add extends Component {
               name="commission_type"
               id="commission_type"
               onChange={this.handleChange}
-            // value={this.state.fields.city}
+              // value={this.state.fields.city}
             >
               <option value={""}>{"Select Commission Type"}</option>
               <option value={"fixed"}>{"Fixed"}</option>
@@ -648,6 +648,7 @@ class Agent_Customers_Add extends Component {
                     ? URL.createObjectURL(this.state.fields.profile_image)
                     : "/avatars/default-avatar.png"
                 }
+                alt="Profile"
                 className=""
                 width={100}
               />
@@ -794,14 +795,14 @@ class Agent_Customers_Add extends Component {
                         ? this.state.fields.card_commission[index].type
                         : ""
                     }
-                  // id="system_commission_type"
+                    // id="system_commission_type"
                   >
                     <option value={""}>{"Select Type"}</option>
                     <option value={"fixed"}>{"Fixed"}</option>
                     <option value={"percentage"}>{"Percentage"}</option>
                   </CSelect>
                   <CFormText className="help-block">
-                    {this.state.fields?.card_commission[index]?.status == 1 &&
+                    {this.state.fields?.card_commission[index]?.status === 1 &&
                       this.validator.message(
                         "type",
                         this.state.fields?.card_commission[index]?.type,
@@ -835,7 +836,7 @@ class Agent_Customers_Add extends Component {
                     }
                   />
                   <CFormText className="help-block">
-                    {this.state.fields?.card_commission[index]?.status == 1 &&
+                    {this.state.fields?.card_commission[index]?.status === 1 &&
                       this.validator.message(
                         "amount",
                         this.state.fields?.card_commission[index]?.amount,

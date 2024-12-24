@@ -11,30 +11,13 @@ import {
   CFormGroup,
   CInput,
   CLabel,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CButton,
   CTooltip,
   CSelect,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import {
-  faEye,
-  faFileDownload,
-  faFileExport,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFileExport } from "@fortawesome/free-solid-svg-icons";
 // import { agentService } from "../../../../services/admin/agent.service";
 import { reportsService } from "../../../../services/admin/reports.service";
-import {
-  notify,
-  _canAccess,
-  history,
-  _loginUsersDetails,
-} from "../../../../_helpers/index";
+import { notify, _canAccess, history } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,
@@ -43,7 +26,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import moment from "moment";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import InputDateRange from "components/admin/InputDateRange";
 
@@ -244,7 +226,7 @@ class Transaction_Reports_Index extends React.Component {
     const { search, txn_type, status, from_date, to_date } = this.state.fields;
     reportsService
       .downloadTransactionCSV({ search, txn_type, status, from_date, to_date })
-      .then((res) => {
+      .then(() => {
         //if (res.success) {
         notify.success("Successfully send report logged in user mail");
         //}
@@ -290,8 +272,6 @@ class Transaction_Reports_Index extends React.Component {
   };
 
   render() {
-    const current_user = _loginUsersDetails();
-
     return (
       <>
         <CRow>
@@ -363,16 +343,16 @@ class Transaction_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Status --</option>
-                          {(this.state.fields.txn_type == "PL" ||
-                            this.state.fields.txn_type == "WW" ||
-                            this.state.fields.txn_type == "AGENT TOPUP") && (
+                          {(this.state.fields.txn_type === "PL" ||
+                            this.state.fields.txn_type === "WW" ||
+                            this.state.fields.txn_type === "AGENT TOPUP") && (
                             <>
                               <option value="FAILED">Failed</option>
                               <option value="PAID">Paid</option>
                               <option value="PENDING">Pending</option>
                             </>
                           )}
-                          {this.state.fields.txn_type == "REQ" && (
+                          {this.state.fields.txn_type === "REQ" && (
                             <>
                               <option value="CANCELLED">Cancelled</option>
                               <option value="DECLINED">Declined</option>
@@ -381,7 +361,7 @@ class Transaction_Reports_Index extends React.Component {
                               <option value="PENDING">Pending</option>
                             </>
                           )}
-                          {this.state.fields.txn_type == "MF" && (
+                          {this.state.fields.txn_type === "MF" && (
                             <>
                               <option value="APPROVED">Approved</option>
                               <option value="PENDING">Pending</option>

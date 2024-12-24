@@ -18,7 +18,6 @@ import {
 import { paymentsService } from "services/admin/payments.service";
 import { notify, history } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./page.css";
 import InputDateRange from "components/admin/InputDateRange";

@@ -482,9 +482,13 @@ class Banner_list extends React.Component {
                               />
                             </td>
 
-                            <td>{this.state.fields.pageNo >= 2
-                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
-                                : index + 1}</td>
+                            <td>
+                              {this.state.fields.pageNo >= 2
+                                ? index +
+                                  1 +
+                                  10 * (this.state.fields.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.title}</td>
                             <td style={cursor}>
                               {/* <img onError={this.addDefaultSrc} src={`${API_URL + 'uploads/' + u.image_path}`} alt="Banner Image " style={styles} onClick={() => this.openimgpop(u.image_path)} /> */}
@@ -499,7 +503,7 @@ class Banner_list extends React.Component {
                                           "uploads/media/" +
                                           u.media_id.media_path
                                         }`}
-                                        alt="Banner Image "
+                                        alt="Banner"
                                         style={styles}
                                         onClick={() =>
                                           this.openimgpop(
@@ -516,11 +520,8 @@ class Banner_list extends React.Component {
                                   {
                                     <img
                                       onError={this.addDefaultSrc}
-                                      src={`${
-                                        API_URL +
-                                        "uploads/media/"
-                                      }`}
-                                      alt="Banner Image "
+                                      src={`${API_URL + "uploads/media/"}`}
+                                      alt="Banner"
                                       style={styles}
                                       onClick={() =>
                                         this.openimgpop(this.addDefaultSrc)
@@ -652,12 +653,8 @@ class Banner_list extends React.Component {
             <img
               style={responsive}
               onError={this.addDefaultSrc}
-              src={`${
-                API_URL +
-                "uploads/" +
-                this.state.image_path
-              }`}
-              alt="Banner Image "
+              src={`${API_URL + "uploads/" + this.state.image_path}`}
+              alt="Banner"
             />
           </CModalBody>
         </CModal>

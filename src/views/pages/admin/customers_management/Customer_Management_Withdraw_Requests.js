@@ -18,13 +18,11 @@ import {
   CModalTitle,
   CButton,
   CTooltip,
-  CSwitch,
 } from "@coreui/react";
 import { withdrawRequestService } from "../../../../services/admin/withdraw_request.service";
 import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEye,
   faFileExport,
   faSort,
   faSortDown,

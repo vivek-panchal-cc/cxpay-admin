@@ -18,10 +18,8 @@ import {
   faSortDown,
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { paymentsService } from "services/admin/payments.service";
 import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../schedule_payments/page.css";
 import InputDateRange from "components/admin/InputDateRange";

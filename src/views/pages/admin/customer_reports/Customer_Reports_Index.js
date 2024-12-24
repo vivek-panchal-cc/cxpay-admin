@@ -25,7 +25,6 @@ import {
   notify,
   _canAccess,
   history,
-  _loginUsersDetails,
   capitalize,
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -229,8 +228,6 @@ class Customer_Reports_Index extends React.Component {
   };
 
   render() {
-    const current_user = _loginUsersDetails();
-
     return (
       <>
         <CRow>

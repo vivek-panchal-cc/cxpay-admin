@@ -27,7 +27,6 @@ import {
   formatToDDMMYYYY,
 } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./page.css";
 import { globalConstants } from "constants/admin/global.constants";

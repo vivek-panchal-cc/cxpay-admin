@@ -195,7 +195,7 @@ async function getCMSList(postData) {
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(true);
-    const response = undefined;
+    // const response = undefined;
   }
   return handleResponse(response);
 }

@@ -1,6 +1,5 @@
 import React from "react";
 import { notify } from "../../../../_helpers";
-import { pageService } from "../../../../services/admin";
 import Fullpage from "./Withdraw_FullPost";
 import { withdrawRequestService } from "services/admin/withdraw_request.service";
 

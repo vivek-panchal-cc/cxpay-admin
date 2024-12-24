@@ -43,7 +43,7 @@ class Settings_Update extends Component {
   }
 
   /*************** * Bind Method For Form Editor **********************/
-  handleEditorChange = (content, editor) => {
+  handleEditorChange = (content) => {
     this.setState({
       initialValue: content,
     });
@@ -51,7 +51,7 @@ class Settings_Update extends Component {
 
   /************************ Define  Method For Form Field **************************/
   handleChange(event, index) {
-    const { name, value, type } = event.target;
+    const { value, type } = event.target;
     const page_list = [...this.state.page_list];
 
     if (type === "radio") {

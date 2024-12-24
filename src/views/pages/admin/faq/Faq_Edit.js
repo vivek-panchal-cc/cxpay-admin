@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import $ from "jquery";
-import slugify from "react-slugify";
-
 import {
   CButton,
   CFormGroup,
@@ -289,7 +286,7 @@ class FaqEdit extends Component {
         height: "110px",
       };
     } else {
-      var responsive = {
+      responsive = {
         width: "100%",
         height: "160px",
       };
@@ -401,7 +398,7 @@ class FaqEdit extends Component {
                                           "uploads/media/" +
                                           u.media_path
                                         }`}
-                                        alt="Media Image"
+                                        alt="Media"
                                         onClick={(event) => {
                                           this.selectMedia(u._id, u.media_path);
                                         }}
@@ -421,7 +418,7 @@ class FaqEdit extends Component {
                                   "uploads/media/" +
                                   this.state.selectedMediaFile
                                 }`}
-                                alt="Media Image"
+                                alt="Media"
                               />
                               <CFormGroup>
                                 <CLabel className="mt-3">Alt Text</CLabel>
@@ -560,7 +557,7 @@ class FaqEdit extends Component {
                 file_browser_callback_types: "image",
 
                 file_picker_callback: function (callback, value, meta) {
-                  if (meta.filetype == "image") {
+                  if (meta.filetype === "image") {
                     var input = document.getElementById("my-file");
                     input.click();
                     input.onchange = function () {
@@ -594,7 +591,7 @@ class FaqEdit extends Component {
 
                       // When the user clicks anywhere outside of the modal, close it
                       window.onclick = function (event) {
-                        if (event.target == modal) {
+                        if (event.target === modal) {
                           modal.style.display = "none";
                         }
                       };

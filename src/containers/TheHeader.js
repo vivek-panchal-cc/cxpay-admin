@@ -81,6 +81,7 @@ const TheHeader = () => {
         <img
           src={require("assets/img/cxpay-logo.mobile.png").default}
           className="cc-logo-styles-mobile"
+          alt="cxpay logo"
         />
       </CHeaderBrand>
 

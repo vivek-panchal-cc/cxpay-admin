@@ -15,18 +15,13 @@ import {
 
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  _canAccess,
-  _loginUsersDetails,
-  history,
-  notify,
-} from "../../../../_helpers/index";
-import Business_Customers_Details from "./Business_Customers_Details";
-import Business_Customers_Transactions_Report from "./Business_Customers_Transactions_Report";
-import Business_Customers_Schedule_Payments from "./Business_Customers_Schedule_Payments";
-import Business_Customers_Recurring_Payments from "./Business_Customers_Recurring_Payments";
-import Business_Customers_Withdraw_Requests from "./Business_Customers_Withdraw_Requests";
-import Business_Customers_Manual_Topup_Requests from "./Business_Customers_Manual_Topup_Requests";
+import { history, notify } from "../../../../_helpers/index";
+import BusinessCustomersDetails from "./Business_Customers_Details";
+import BusinessCustomersTransactionsReport from "./Business_Customers_Transactions_Report";
+import BusinessCustomersSchedulePayments from "./Business_Customers_Schedule_Payments";
+import BusinessCustomersRecurringPayments from "./Business_Customers_Recurring_Payments";
+import BusinessCustomersWithdrawRequests from "./Business_Customers_Withdraw_Requests";
+import BusinessCustomersManualTopupRequests from "./Business_Customers_Manual_Topup_Requests";
 
 class Business_Customers_Details_Report extends React.Component {
   constructor(props) {
@@ -144,7 +139,7 @@ class Business_Customers_Details_Report extends React.Component {
             <CTabContent>
               <CTabPane active={activeTab === "basic_details"}>
                 {activeTab === "basic_details" && (
-                  <Business_Customers_Details
+                  <BusinessCustomersDetails
                     mobile_number={this.state.mobile_number}
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
@@ -153,7 +148,7 @@ class Business_Customers_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "transaction_details"}>
                 {activeTab === "transaction_details" && (
-                  <Business_Customers_Transactions_Report
+                  <BusinessCustomersTransactionsReport
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
@@ -161,7 +156,7 @@ class Business_Customers_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "schedule_details"}>
                 {activeTab === "schedule_details" && (
-                  <Business_Customers_Schedule_Payments
+                  <BusinessCustomersSchedulePayments
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
@@ -169,7 +164,7 @@ class Business_Customers_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "recurring_details"}>
                 {activeTab === "recurring_details" && (
-                  <Business_Customers_Recurring_Payments
+                  <BusinessCustomersRecurringPayments
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
@@ -177,7 +172,7 @@ class Business_Customers_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "withdraw_request_details"}>
                 {activeTab === "withdraw_request_details" && (
-                  <Business_Customers_Withdraw_Requests
+                  <BusinessCustomersWithdrawRequests
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
@@ -185,7 +180,7 @@ class Business_Customers_Details_Report extends React.Component {
               </CTabPane>
               <CTabPane active={activeTab === "manual_topup_request_details"}>
                 {activeTab === "manual_topup_request_details" && (
-                  <Business_Customers_Manual_Topup_Requests
+                  <BusinessCustomersManualTopupRequests
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />

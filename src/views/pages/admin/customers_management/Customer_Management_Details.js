@@ -10,8 +10,6 @@ import {
 } from "@coreui/react";
 
 import {
-  _canAccess,
-  _loginUsersDetails,
   capitalize,
   capitalizeWordByWord,
   formatDate,

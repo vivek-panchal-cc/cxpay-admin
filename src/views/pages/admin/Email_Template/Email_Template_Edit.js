@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import $ from "jquery";
 import slugify from "react-slugify";
 
@@ -116,9 +116,7 @@ class Email_Template_Edit extends Component {
   /******** media Modal gallery  ************/
   _handleApplyAction = (event) => {
     const img_src = `${
-      API_URL +
-      "uploads/media/" +
-      this.state.selectedMediaFile
+      API_URL + "uploads/media/" + this.state.selectedMediaFile
     }`;
     let content = this.state.initialValue;
     if (
@@ -299,7 +297,7 @@ class Email_Template_Edit extends Component {
         height: "110px",
       };
     } else {
-      var responsive = {
+      responsive = {
         width: "100%",
         height: "160px",
       };
@@ -440,7 +438,7 @@ class Email_Template_Edit extends Component {
                                           "uploads/media/" +
                                           u.media_path
                                         }`}
-                                        alt="Media Image"
+                                        alt="Media"
                                         onClick={(event) => {
                                           this.selectMedia(u._id, u.media_path);
                                         }}
@@ -460,7 +458,7 @@ class Email_Template_Edit extends Component {
                                   "uploads/media/" +
                                   this.state.selectedMediaFile
                                 }`}
-                                alt="Media Image"
+                                alt="Media"
                               />
                               <CFormGroup>
                                 <CLabel className="mt-3">Alt Text</CLabel>
@@ -598,7 +596,7 @@ class Email_Template_Edit extends Component {
                 file_browser_callback_types: "image",
 
                 file_picker_callback: function (callback, value, meta) {
-                  if (meta.filetype == "image") {
+                  if (meta.filetype === "image") {
                     var input = document.getElementById("my-file");
                     input.click();
                     input.onchange = function () {
@@ -632,7 +630,7 @@ class Email_Template_Edit extends Component {
 
                       // When the user clicks anywhere outside of the modal, close it
                       window.onclick = function (event) {
-                        if (event.target == modal) {
+                        if (event.target === modal) {
                           modal.style.display = "none";
                         }
                       };

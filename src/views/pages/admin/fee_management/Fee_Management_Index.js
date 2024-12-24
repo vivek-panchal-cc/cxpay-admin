@@ -28,12 +28,7 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { feeManagementService } from "../../../../services/admin/fee_management.service";
-import {
-  notify,
-  history,
-  _canAccess,
-  _loginUsersDetails,
-} from "../../../../_helpers/index";
+import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
@@ -197,7 +192,7 @@ class Fee_Management_Index extends React.Component {
 
   PageStatusChangedHandler(page_id, status) {
     feeManagementService
-      .changeFeeStatus({ id: [page_id], status: status == false ? 1 : 0 })
+      .changeFeeStatus({ id: [page_id], status: status === false ? 1 : 0 })
       .then((res) => {
         if (res.status === "error") {
           notify.error(res.message);
@@ -280,7 +275,6 @@ class Fee_Management_Index extends React.Component {
   /****************** * Render Data To Dom ************************/
 
   render() {
-    const current_user = _loginUsersDetails();
     return (
       <>
         <CRow>

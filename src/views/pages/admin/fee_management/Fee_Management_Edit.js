@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import $ from "jquery";
-import slugify from "react-slugify";
 
 import {
   CButton,
@@ -17,18 +15,6 @@ import {
   CCardBody,
   CCardFooter,
   CTooltip,
-  CRow,
-  CTabPane,
-  CModalBody,
-  CModalHeader,
-  CModalTitle,
-  CModalFooter,
-  CNavItem,
-  CNavLink,
-  CTabContent,
-  CNav,
-  CTabs,
-  CModal,
   CSelect,
 } from "@coreui/react";
 
@@ -64,7 +50,7 @@ class Fee_Management_Edit extends Component {
   }
 
   /*************** * Bind Method For Form Editor **********************/
-  handleEditorChange = (content, editor) => {
+  handleEditorChange = (content) => {
     this.setState({
       initialValue: content,
     });

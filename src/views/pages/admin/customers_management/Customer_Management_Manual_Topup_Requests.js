@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import FilterContainer from "components/admin/FilterContainer";
 import {
-  faEye,
   faFileExport,
   faSort,
   faSortDown,
@@ -154,7 +153,7 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
                             <span
                               className="sortCls"
                               onClick={
-                                header?.field != "bank_name"
+                                header?.field !== "bank_name"
                                   ? () => handleApplySorting(header.field)
                                   : ""
                               }
@@ -162,16 +161,16 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
                               <span className="table-header-text-mrg">
                                 {header?.label || ""}
                               </span>
-                              {!isSort && header?.field != "bank_name" && (
+                              {!isSort && header?.field !== "bank_name" && (
                                 <FontAwesomeIcon icon={faSort} />
                               )}
                               {isSort &&
-                                header?.field != "bank_name" &&
+                                header?.field !== "bank_name" &&
                                 sortDirect === "desc" && (
                                   <FontAwesomeIcon icon={faSortUp} />
                                 )}
                               {isSort &&
-                                header?.field != "bank_name" &&
+                                header?.field !== "bank_name" &&
                                 sortDirect === "asc" && (
                                   <FontAwesomeIcon icon={faSortDown} />
                                 )}
@@ -184,14 +183,8 @@ const Customer_Management_Manual_Topup_Requests = (props) => {
                   </thead>
                   <tbody>
                     {manualRequests?.map((item, index) => {
-                      const {
-                        amount,
-                        bank_name,
-                        date,
-                        name,
-                        status,
-                        transaction_id,
-                      } = item || {};
+                      const { amount, date, name, status, transaction_id } =
+                        item || {};
                       return (
                         <tr key={transaction_id || index}>
                           <td>

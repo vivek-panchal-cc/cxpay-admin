@@ -253,8 +253,6 @@ class Push_Notifications_Index extends React.Component {
   // }
 
   render() {
-    const current_user = _loginUsersDetails();
-
     return (
       <>
         <CRow>

@@ -32,7 +32,7 @@ import {
   notify,
   history,
   _canAccess,
-  _loginUsersDetails,
+  // _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import IconSwap from "assets/icons/IconSwap";
@@ -279,7 +279,7 @@ class Page_list extends React.Component {
   /****************** * Render Data To Dom ************************/
 
   render() {
-    const current_user = _loginUsersDetails();
+    // const current_user = _loginUsersDetails();
     return (
       <>
         <CRow>

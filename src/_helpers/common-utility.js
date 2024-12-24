@@ -79,14 +79,14 @@ export const menuPermission = (navigation) => {
   if (user.user_group_id === "60227751e2e5152364d34551") {
     return navigation;
   } else if (user.user_group === "Super Users") {
-    for (var key in navigation) {
+    for (let key in navigation) {
       if (navigation[key].module_name !== "system_modules") {
         permission_nav.push(navigation[key]);
       }
     }
     return permission_nav;
   } else {
-    for (var key in navigation) {
+    for (let key in navigation) {
       if (navigation[key].module_name !== "system_modules") {
         if (
           user.user_permission[navigation[key].module_name] !== undefined ||

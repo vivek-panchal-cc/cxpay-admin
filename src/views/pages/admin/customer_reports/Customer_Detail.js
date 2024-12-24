@@ -1,6 +1,5 @@
 import React from "react";
 import { notify } from "../../../../_helpers";
-import { pageService } from "../../../../services/admin";
 import Fullpage from "./Customer_FullPost";
 import { reportsService } from "services/admin/reports.service";
 class Detailview extends React.Component {

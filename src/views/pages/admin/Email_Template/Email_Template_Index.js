@@ -32,7 +32,7 @@ import {
   notify,
   history,
   _canAccess,
-  _loginUsersDetails,
+  // _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 const CheckBoxes = React.lazy(() =>
@@ -195,7 +195,7 @@ class Email_list extends React.Component {
 
   PageStatusChangedHandler(page_id, status) {
     emailTemplateService
-      .changePageStatus({ id: page_id, status: status == false ? 1 : 0 })
+      .changePageStatus({ id: page_id, status: status === false ? 1 : 0 })
       .then((res) => {
         if (res.status === "error") {
           notify.error(res.message);
@@ -290,7 +290,7 @@ class Email_list extends React.Component {
   /****************** * Render Data To Dom ************************/
 
   render() {
-    const current_user = _loginUsersDetails();
+    // const current_user = _loginUsersDetails();
     return (
       <>
         <CRow>
@@ -487,14 +487,14 @@ class Email_list extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status == false
+                                  {u.status === false
                                     ? "Activate"
                                     : "Deactivate"}
                                 </CLink>
                               )}
                               {_canAccess("email_templates", "update") ===
                                 false && (
-                                <>{u.status == true ? "Active" : "Deactive"}</>
+                                <>{u.status === true ? "Active" : "Deactive"}</>
                               )}
                             </td>
                             {(_canAccess("email_templates", "update") ||

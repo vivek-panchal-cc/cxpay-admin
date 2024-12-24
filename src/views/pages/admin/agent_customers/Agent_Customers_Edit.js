@@ -16,7 +16,7 @@ import {
   CTooltip,
   CSwitch,
   CSelect,
-  CInputRadio,
+  // CInputRadio,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import { notify, history, _canAccess } from "../../../../_helpers/index";
@@ -27,10 +27,10 @@ import {
   faArrowLeft,
   faBan,
   faSave,
-  faSlash,
+  // faSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { agentService } from "../../../../services/admin/agent.service";
-import { number } from "prop-types";
+// import { number } from "prop-types";
 import {
   addObjToFormData,
   setLoading,
@@ -100,7 +100,7 @@ class Agent_Customers_Edit extends React.Component {
     });
 
     agentService.getCollectionType().then((res) => {
-      if (res.status === false) {
+      if (!res.success) {
         notify.error(res.message);
       } else {
         if (res.data == null) {
@@ -110,7 +110,7 @@ class Agent_Customers_Edit extends React.Component {
 
         this.setState({ collectionData: res.data });
         let arrayObj = [];
-        res?.data?.map((e, i) => {
+        res?.data?.forEach((e, i) => {
           let obj = {
             id: e.id,
             status: "",
@@ -150,15 +150,15 @@ class Agent_Customers_Edit extends React.Component {
               fields: res.data,
             });
 
-            const country_index = this.state.countryData.country_list.findIndex(
-              (e) => e.iso === res.data.country
-            );
+            // const country_index = this.state.countryData.country_list.findIndex(
+            //   (e) => e.iso === res.data.country
+            // );
 
             const { iso } =
               this.state.countryData.country_list.find(
                 (e) => e.iso === res.data.country
               ) || {};
-            const statustmp = res.data.status == 0 ? 0 : 1;
+            const statustmp = res.data.status === 0 ? 0 : 1;
             // const kyctmp = res.data.is_kyc === false ? false : true;
             this.setState({
               cityData: [...this.state.countryData.city_list[iso]],
@@ -263,7 +263,7 @@ class Agent_Customers_Edit extends React.Component {
     ) {
       // if(this.state.collectionType !== prevState.collectionType){
       setTimeout(() => {
-        const abc = this.handleMergeArrays(this.state.collectionType);
+        this.handleMergeArrays(this.state.collectionType);
       }, 1500);
     }
   }
@@ -340,7 +340,7 @@ class Agent_Customers_Edit extends React.Component {
   handleUpload(event) {
     setLoading(true);
     const file = event.target.files[0];
-    const filename = event.target.files[0].name;
+    // const filename = event.target.files[0].name;
 
     if (file && file.name.match(/\.(jpg|jpeg|png)$/)) {
       this.setState({ imageTypeValidation: false });
@@ -382,7 +382,7 @@ class Agent_Customers_Edit extends React.Component {
       ...updatedCardCommission[index],
       [objField]: value,
     };
-    if (target.type === "checkbox" && value == 0) {
+    if (target.type === "checkbox" && value === 0) {
       updatedCardCommission[index] = {
         ...updatedCardCommission[index],
         type: "",
@@ -436,7 +436,7 @@ class Agent_Customers_Edit extends React.Component {
   checkIsCardSelected(selectedPaymentType) {
     let $returnVal = false;
     selectedPaymentType.forEach((ele) => {
-      if (ele.status == "1") {
+      if (ele.status === 1) {
         $returnVal = true;
       }
     });
@@ -521,7 +521,7 @@ class Agent_Customers_Edit extends React.Component {
 
       for (const key in newData) {
         // if(key == 'card_commission')
-        if (newData[key].type != "" && newData[key].amount != "")
+        if (newData[key].type !== "" && newData[key].amount !== "")
           addObjToFormData(newData[key], `card_commission[${key}]`, formData);
       }
 
@@ -546,7 +546,7 @@ class Agent_Customers_Edit extends React.Component {
   };
 
   render() {
-    var { module_permission, newProfileImage } = this.state;
+    var { newProfileImage } = this.state;
 
     return (
       <>
@@ -877,6 +877,7 @@ class Agent_Customers_Edit extends React.Component {
                           : this.state.fields.profile_image ||
                             "/avatars/default-avatar.png"
                       }
+                      alt="Profile"
                       className=""
                       width={100}
                     />
@@ -926,7 +927,7 @@ class Agent_Customers_Edit extends React.Component {
 
                   <CCol sm="10" style={{ paddingLeft: "10px" }}>
                     <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.status == 1 && (
+                      {this.state.fields.status === 1 && (
                         <CSwitch
                           className="mr-1"
                           color="primary"
@@ -938,7 +939,7 @@ class Agent_Customers_Edit extends React.Component {
                         />
                       )}
 
-                      {this.state.fields.status == 0 && (
+                      {this.state.fields.status === 0 && (
                         <CSwitch
                           className="mr-1"
                           color="primary"
@@ -1072,7 +1073,7 @@ class Agent_Customers_Edit extends React.Component {
                           <option value={"percentage"}>{"Percentage"}</option>
                         </CSelect>
                         <CFormText className="help-block">
-                          {ele.status == 1 &&
+                          {ele.status === 1 &&
                             this.validator.message(
                               "type",
                               ele.type,
@@ -1098,7 +1099,7 @@ class Agent_Customers_Edit extends React.Component {
                           disabled={ele.status === 1 ? false : true}
                         />
                         <CFormText className="help-block">
-                          {ele.status == 1 &&
+                          {ele.status === 1 &&
                             this.validator.message(
                               "amount",
                               ele.amount.toString(),

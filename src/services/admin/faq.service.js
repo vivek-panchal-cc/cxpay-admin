@@ -30,7 +30,7 @@ async function getFaqList(postData) {
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(true);
-    const response = undefined;
+    // const response = undefined;
   }
   return handleResponse(response);
 }
@@ -49,7 +49,7 @@ async function createFaq(postData) {
   } catch (error) {
     notify.error("Something went wrong");
     setLoading(true);
-    const response = undefined;
+    // const response = undefined;
   }
   return handleResponse(response);
 }

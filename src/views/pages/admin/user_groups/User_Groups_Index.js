@@ -427,9 +427,8 @@ class User_Groups_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        {(_canAccess("user_groups", "update") 
-                        // || _canAccess("user_groups", "delete")
-                        ) && (
+                        {_canAccess("user_groups", "update") && (
+                          // || _canAccess("user_groups", "delete")
                           <>
                             <th>Action</th>
                           </>
@@ -451,9 +450,13 @@ class User_Groups_Index extends React.Component {
                                 />
                               )}
                             </td>
-                            <td>{this.state.fields.pageNo >= 2
-                                ? index + 1 + 10 * (this.state.fields.pageNo - 1)
-                                : index + 1}</td>
+                            <td>
+                              {this.state.fields.pageNo >= 2
+                                ? index +
+                                  1 +
+                                  10 * (this.state.fields.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.user_group_name}</td>
                             <td>
                               {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
@@ -470,7 +473,7 @@ class User_Groups_Index extends React.Component {
                                           )
                                         }
                                       >
-                                        {u.status ? "Active" : "Deactive"}
+                                        {u.status ? "Deactivate" : "Activate"}
                                       </CLink>
                                     )}
                                   {current_user.user_group_id !== u._id &&

@@ -53,6 +53,7 @@ const TheSidebar = (props) => {
         <img
           src={require("assets/img/cxpay_me_logo.png").default}
           className="cc-logo-styles"
+          alt="cxpay logo"
         />
         {/* <CIcon
           className="c-sidebar-brand-full"
