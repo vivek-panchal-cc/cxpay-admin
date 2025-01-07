@@ -633,7 +633,7 @@ class Business_Customer_Add extends Component {
               {this.validator.message(
                 "address",
                 this.state.fields.address,
-                "required",
+                "required|max:55",
                 {
                   className: "text-danger",
                 }
