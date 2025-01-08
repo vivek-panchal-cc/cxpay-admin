@@ -690,16 +690,13 @@ class Business_Customer_Add extends Component {
 
               {this.state.imageTypeValidation && (
                 <small className="form-text text-muted help-block">
-                  <div className="text-danger">
-                    Select valid image. (jpg, jpeg or png)
-                  </div>
+                  <div className="text-danger">File type is not allowed</div>
                 </small>
               )}
               {this.state.imageSizeValidation && (
                 <small className="form-text text-muted help-block">
                   <div className="text-danger">
-                    Image size is greater than 5MB. Please upload image below
-                    5MB.
+                    Profile picture must not exceed 5 mb size.
                   </div>
                 </small>
               )}
