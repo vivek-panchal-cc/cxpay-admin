@@ -700,8 +700,14 @@ class Business_Customers_Edit extends React.Component {
                     {this.validator.message(
                       "company_name",
                       this.state.fields.company_name,
-                      "required",
-                      { className: "text-danger" }
+                      "required|regex:^[a-zA-Z.\\s]*$",
+                      {
+                        className: "text-danger",
+                        messages: {
+                          regex:
+                            "Only alphabets, spaces, and dots are allowed.",
+                        },
+                      }
                     )}
                   </CFormText>
                 </CFormGroup>
