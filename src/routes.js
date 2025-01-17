@@ -184,6 +184,22 @@ const Business_Category_Index = React.lazy(() =>
   import("./views/pages/admin/business_categories/Business_Category_Index")
 );
 
+const Saving_Jar_Index = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Index")
+);
+
+const Saving_Jar_Add = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Add")
+);
+
+const Saving_Jar_Edit = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Edit")
+);
+
+const Saving_Jar_Category_Details = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Category_Details")
+);
+
 //Import File Settings (system options)
 const Settings_Update = React.lazy(() =>
   import("./views/pages/admin/settings/Settings_Update")
@@ -671,6 +687,40 @@ const routes = [
     module_name: "business_category",
     action: "view",
   },
+
+  // Saving Jar
+  // {
+  //   path: "/admin/saving_jar",
+  //   exact: true,
+  //   name: "Saving Jar",
+  //   component: Saving_Jar_Index,
+  //   module_name: "saving_jar",
+  //   action: "view",
+  // },
+  // {
+  //   path: "/admin/saving_jar/add",
+  //   exact: true,
+  //   name: "Add Saving Jar",
+  //   component: Saving_Jar_Add,
+  //   module_name: "saving_jar",
+  //   action: "create",
+  // },
+  // {
+  //   path: "/admin/saving_jar/edit/:id",
+  //   exact: true,
+  //   name: "Update Saving Jar",
+  //   component: Saving_Jar_Edit,
+  //   module_name: "saving_jar",
+  //   action: "update",
+  // },
+  // {
+  //   path: "/admin/saving_jar/:id/:typeId",
+  //   exact: true,
+  //   name: "Details",
+  //   component: Saving_Jar_Category_Details,
+  //   module_name: "saving_jar",
+  //   action: "view",
+  // },
 
   //  module_name and action parameter used for ACL mechanisam its required column Fee  management
   {

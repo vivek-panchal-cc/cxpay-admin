@@ -29,6 +29,7 @@ import {
   faFile,
   // faCashRegister,
   faFileCode,
+  faPiggyBank,
 } from "@fortawesome/free-solid-svg-icons";
 import IconFlorin from "assets/icons/IconFlorin";
 import IconAdminGear from "assets/icons/IconAdminGear";
@@ -115,6 +116,16 @@ const _nav = [
         module_name: "business_category",
         id: "business_category_sidebar_id",
       },
+      // {
+      //   _tag: "CSidebarNavItem",
+      //   name: "Saving Jar Categories",
+      //   to: "/admin/saving_jar",
+      //   icon: (
+      //     <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
+      //   ),
+      //   module_name: "saving_jar",
+      //   id: "saving_jar_sidebar_id",
+      // },
     ],
   },
   {

@@ -43,6 +43,7 @@ export const globalConstants = {
   VIEW_MANUAL_TOPUP_DETAILS: "View manual top up details",
   VIEW_RECHARGE_DETAILS: "View recharge details",
   VIEW_RECURRING_DETAILS: "View recurring details",
+  VIEW_JAR_CATEGORY_DETAILS: "View jar category details",
   // Withdraw status filters list for bank transactions
   WITHDRAW_STATUS_FILTER_BANK: [
     { title: "APPROVED", status: "APPROVED" },
