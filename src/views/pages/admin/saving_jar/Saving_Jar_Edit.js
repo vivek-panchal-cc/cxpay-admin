@@ -16,7 +16,7 @@ import {
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { notify, _canAccess } from "../../../../_helpers/index";
+import { notify, _canAccess, history } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan } from "@fortawesome/free-solid-svg-icons";
 import { savingJarService } from "services/admin/savings_jar.service";
@@ -131,6 +131,7 @@ class Saving_Jar_Edit extends Component {
           notify.error(res.message);
         } else {
           notify.success(res.message);
+          history.push("/admin/saving_jar");
           event.preventDefault();
         }
       });

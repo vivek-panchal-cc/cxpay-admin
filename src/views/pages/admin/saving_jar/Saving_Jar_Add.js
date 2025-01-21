@@ -16,7 +16,7 @@ import {
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { notify } from "../../../../_helpers/index";
+import { history, notify } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-dropzone-uploader/dist/styles.css";
@@ -92,6 +92,7 @@ class Saving_Jar_Add extends Component {
           notify.error(res.message);
         } else {
           notify.success(res.message);
+          history.push("/admin/saving_jar");
           event.preventDefault();
         }
       });
