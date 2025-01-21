@@ -24,7 +24,6 @@ import {
   faSortDown,
   faSortUp,
   faPlus,
-  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   notify,
@@ -329,7 +328,7 @@ class System_Bank_Accounts_Index extends React.Component {
                             <CCol xs="12" className="p-0">
                               <CInput
                                 id="search_name"
-                                placeholder="Search Bank Name"
+                                placeholder="Search Account Name"
                                 name="search_name"
                                 value={this.state.fields.search_name}
                                 onChange={this.handleChange}
@@ -391,24 +390,30 @@ class System_Bank_Accounts_Index extends React.Component {
                           </th>
                         )}
                         <th>#</th>
-                        <th onClick={() => this.handleColumnSort("bank_name")}>
+                        <th
+                          onClick={() => this.handleColumnSort("account_name")}
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Bank Name
+                              Account Name
                             </span>
-                            {this.state.fields.sort_field !== "bank_name" && (
+                            {this.state.fields.sort_field !==
+                              "account_name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field === "bank_name" && (
+                              this.state.fields.sort_field ===
+                                "account_name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field === "bank_name" && (
+                              this.state.fields.sort_field ===
+                                "account_name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
+
                         <th
                           onClick={() =>
                             this.handleColumnSort("account_number")
@@ -434,29 +439,26 @@ class System_Bank_Accounts_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th
-                          onClick={() => this.handleColumnSort("account_name")}
-                        >
+
+                        <th onClick={() => this.handleColumnSort("bank_name")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Account Name
+                              Bank Name
                             </span>
-                            {this.state.fields.sort_field !==
-                              "account_name" && (
+                            {this.state.fields.sort_field !== "bank_name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.sort_dir === "asc" &&
-                              this.state.fields.sort_field ===
-                                "account_name" && (
+                              this.state.fields.sort_field === "bank_name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.sort_dir === "desc" &&
-                              this.state.fields.sort_field ===
-                                "account_name" && (
+                              this.state.fields.sort_field === "bank_name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
+
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -509,9 +511,9 @@ class System_Bank_Accounts_Index extends React.Component {
                                     10 * (this.state.fields.page - 1)
                                   : index + 1}
                               </td>
-                              <td>{capitalize(u.bank_name)}</td>
-                              <td>{u.account_number}</td>
                               <td>{u.account_name}</td>
+                              <td>{u.account_number}</td>
+                              <td>{capitalize(u.bank_name)}</td>
 
                               <td>
                                 {_canAccess(

@@ -184,21 +184,21 @@ const Business_Category_Index = React.lazy(() =>
   import("./views/pages/admin/business_categories/Business_Category_Index")
 );
 
-const Saving_Jar_Index = React.lazy(() =>
-  import("./views/pages/admin/saving_jar/Saving_Jar_Index")
-);
+// const Saving_Jar_Index = React.lazy(() =>
+//   import("./views/pages/admin/saving_jar/Saving_Jar_Index")
+// );
 
-const Saving_Jar_Add = React.lazy(() =>
-  import("./views/pages/admin/saving_jar/Saving_Jar_Add")
-);
+// const Saving_Jar_Add = React.lazy(() =>
+//   import("./views/pages/admin/saving_jar/Saving_Jar_Add")
+// );
 
-const Saving_Jar_Edit = React.lazy(() =>
-  import("./views/pages/admin/saving_jar/Saving_Jar_Edit")
-);
+// const Saving_Jar_Edit = React.lazy(() =>
+//   import("./views/pages/admin/saving_jar/Saving_Jar_Edit")
+// );
 
-const Saving_Jar_Category_Details = React.lazy(() =>
-  import("./views/pages/admin/saving_jar/Saving_Jar_Category_Details")
-);
+// const Saving_Jar_Category_Details = React.lazy(() =>
+//   import("./views/pages/admin/saving_jar/Saving_Jar_Category_Details")
+// );
 
 const System_Bank_Accounts_Index = React.lazy(() =>
   import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Index")

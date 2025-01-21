@@ -34,6 +34,7 @@ import {
 import IconFlorin from "assets/icons/IconFlorin";
 import IconAdminGear from "assets/icons/IconAdminGear";
 import IconMoneyTransactions from "assets/icons/IconMoneyTransactions";
+import IconBanks from "assets/icons/IconBanks";
 
 const _nav = [
   {
@@ -120,7 +121,7 @@ const _nav = [
         _tag: "CSidebarNavItem",
         name: "System Bank Accounts",
         to: "/admin/system_bank_accounts",
-        icon: <FontAwesomeIcon icon={faStore} className="c-sidebar-nav-icon" />,
+        icon: <IconBanks className="c-sidebar-nav-icon" />,
         module_name: "system_bank_accounts",
         id: "system_bank_accounts_sidebar_id",
       },

@@ -102,8 +102,17 @@ class System_Bank_Accounts_Edit extends Component {
   checkValidation(event) {
     event.preventDefault();
     if (this.validator.allValid()) {
+      const postData = {
+        id: +this.props.match.params.id,
+        bank_name: this.state.fields.bank_name,
+        account_number: this.state.fields.account_number,
+        account_name: this.state.fields.account_name,
+        country_code: this.state.fields.country_code,
+        status: this.state.fields.status,
+        operation_type: "system_bank_account_update",
+      };
       systemBankAccountsServices
-        .systemBankAccountsBulkAction(this.state.fields)
+        .systemBankAccountsBulkAction(postData)
         .then((res) => {
           if (!res.success) {
             notify.error(res.message);
@@ -119,7 +128,6 @@ class System_Bank_Accounts_Edit extends Component {
   }
 
   render() {
-    const { newJarIcon } = this.state;
     return (
       <CRow>
         <CCol xs="12">
@@ -272,7 +280,7 @@ class System_Bank_Accounts_Edit extends Component {
               <CLink
                 className="btn btn-danger btn-sm"
                 aria-current="page"
-                to="/admin/saving_jar"
+                to="/admin/system_bank_accounts"
               >
                 {" "}
                 <FontAwesomeIcon icon={faBan} className="mr-1" /> Cancel
