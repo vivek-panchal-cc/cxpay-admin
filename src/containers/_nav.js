@@ -116,6 +116,14 @@ const _nav = [
         module_name: "business_category",
         id: "business_category_sidebar_id",
       },
+      {
+        _tag: "CSidebarNavItem",
+        name: "System Bank Accounts",
+        to: "/admin/system_bank_accounts",
+        icon: <FontAwesomeIcon icon={faStore} className="c-sidebar-nav-icon" />,
+        module_name: "system_bank_accounts",
+        id: "system_bank_accounts_sidebar_id",
+      },
       // {
       //   _tag: "CSidebarNavItem",
       //   name: "Saving Jar Categories",

@@ -200,6 +200,18 @@ const Saving_Jar_Category_Details = React.lazy(() =>
   import("./views/pages/admin/saving_jar/Saving_Jar_Category_Details")
 );
 
+const System_Bank_Accounts_Index = React.lazy(() =>
+  import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Index")
+);
+
+const System_Bank_Accounts_Add = React.lazy(() =>
+  import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Add")
+);
+
+const System_Bank_Accounts_Edit = React.lazy(() =>
+  import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Edit")
+);
+
 //Import File Settings (system options)
 const Settings_Update = React.lazy(() =>
   import("./views/pages/admin/settings/Settings_Update")
@@ -721,6 +733,32 @@ const routes = [
   //   module_name: "saving_jar",
   //   action: "view",
   // },
+
+  // System Bank Accounts
+  {
+    path: "/admin/system_bank_accounts",
+    exact: true,
+    name: "System Bank Accounts",
+    component: System_Bank_Accounts_Index,
+    module_name: "system_bank_accounts",
+    action: "view",
+  },
+  {
+    path: "/admin/system_bank_accounts/add",
+    exact: true,
+    name: "Add System Bank Account",
+    component: System_Bank_Accounts_Add,
+    module_name: "system_bank_accounts",
+    action: "create",
+  },
+  {
+    path: "/admin/system_bank_accounts/edit/:id",
+    exact: true,
+    name: "Update System Bank Account",
+    component: System_Bank_Accounts_Edit,
+    module_name: "system_bank_accounts",
+    action: "update",
+  },
 
   //  module_name and action parameter used for ACL mechanisam its required column Fee  management
   {
