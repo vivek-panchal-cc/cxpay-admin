@@ -25,12 +25,7 @@ import {
   faSortUp,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  notify,
-  history,
-  _canAccess,
-  capitalize,
-} from "../../../../_helpers/index";
+import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { systemBankAccountsServices } from "services/admin/system_bank_accounts.service";
 
@@ -537,7 +532,7 @@ class System_Bank_Accounts_Index extends React.Component {
                               </td>
                               <td>{u.account_name}</td>
                               <td>{u.account_number}</td>
-                              <td>{capitalize(u.bank_name)}</td>
+                              <td>{u.bank_name}</td>
                               <td>{u.country_name}</td>
                               <td>
                                 {_canAccess(
