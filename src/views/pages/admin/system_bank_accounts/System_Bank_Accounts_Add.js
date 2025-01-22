@@ -129,7 +129,7 @@ class System_Bank_Accounts_Add extends Component {
               <CFormGroup>
                 <CLabel htmlFor="nf-name">Account Number</CLabel>
                 <CInput
-                  type="text"
+                  type="number"
                   id="account_number"
                   name="account_number"
                   placeholder="Enter Account Number"
@@ -140,7 +140,7 @@ class System_Bank_Accounts_Add extends Component {
                   {this.validator.message(
                     "account_number",
                     this.state.fields.account_number,
-                    "required",
+                    "required|numeric|max:18",
                     {
                       className: "text-danger",
                     }

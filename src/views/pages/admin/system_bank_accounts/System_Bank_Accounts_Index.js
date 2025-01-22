@@ -81,7 +81,6 @@ class System_Bank_Accounts_Index extends React.Component {
       .systemBankAccountsBulkAction(this.state.fields)
       .then((res) => {
         if (!res.success) {
-          notify.error(res.message);
           this.setState({ system_bank_accounts_list: [] });
         } else {
           this.setState({
