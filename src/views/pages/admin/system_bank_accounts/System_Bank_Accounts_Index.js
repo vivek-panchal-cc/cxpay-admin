@@ -458,6 +458,30 @@ class System_Bank_Accounts_Index extends React.Component {
                           </span>
                         </th>
 
+                        <th
+                          onClick={() => this.handleColumnSort("country_name")}
+                        >
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Country
+                            </span>
+                            {this.state.fields.sort_field !==
+                              "country_name" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field ===
+                                "country_name" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field ===
+                                "country_name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+
                         <th onClick={() => this.handleColumnSort("status")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -476,6 +500,7 @@ class System_Bank_Accounts_Index extends React.Component {
                               )}
                           </span>
                         </th>
+
                         {(_canAccess("system_bank_accounts", "update") ||
                           _canAccess("system_bank_accounts", "delete")) && (
                           <>
@@ -513,7 +538,7 @@ class System_Bank_Accounts_Index extends React.Component {
                               <td>{u.account_name}</td>
                               <td>{u.account_number}</td>
                               <td>{capitalize(u.bank_name)}</td>
-
+                              <td>{u.country_name}</td>
                               <td>
                                 {_canAccess(
                                   "system_bank_accounts",
