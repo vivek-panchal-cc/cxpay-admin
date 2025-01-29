@@ -139,6 +139,22 @@ class Business_Customers_Details extends React.Component {
     }
   };
 
+  fallbackCopyText = (text) => {
+    const tempInput = document.createElement("textarea");
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    try {
+      document.execCommand("copy"); // Older method (works in HTTP)
+      this.setState({ isCopied: true }, () => {
+        setTimeout(() => this.setState({ isCopied: false }), 2000);
+      });
+    } catch (err) {
+      console.error("Fallback copy failed:", err);
+    }
+    document.body.removeChild(tempInput);
+  };
+
   render() {
     return (
       <>
@@ -273,17 +289,39 @@ class Business_Customers_Details extends React.Component {
                                       cursor: "pointer",
                                     }}
                                     onClick={() => {
-                                      navigator.clipboard.writeText(
-                                        this.state.customerDetails
-                                          .merchant_token
-                                      );
-                                      this.setState({ isCopied: true }, () => {
-                                        setTimeout(
-                                          () =>
-                                            this.setState({ isCopied: false }),
-                                          2000
-                                        );
-                                      });
+                                      const { merchant_token } =
+                                        this.state.customerDetails;
+
+                                      if (!merchant_token) return;
+
+                                      if (
+                                        navigator.clipboard &&
+                                        navigator.clipboard.writeText
+                                      ) {
+                                        navigator.clipboard
+                                          .writeText(merchant_token)
+                                          .then(() => {
+                                            this.setState(
+                                              { isCopied: true },
+                                              () => {
+                                                setTimeout(
+                                                  () =>
+                                                    this.setState({
+                                                      isCopied: false,
+                                                    }),
+                                                  2000
+                                                );
+                                              }
+                                            );
+                                          })
+                                          .catch(() => {
+                                            this.fallbackCopyText(
+                                              merchant_token
+                                            );
+                                          });
+                                      } else {
+                                        this.fallbackCopyText(merchant_token);
+                                      }
                                     }}
                                   >
                                     {this.state.isCopied ? (
