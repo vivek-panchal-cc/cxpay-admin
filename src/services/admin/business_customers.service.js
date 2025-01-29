@@ -24,6 +24,7 @@ export const businessCustomersService = {
   downloadReportData,
   businessCategory,
   createBusinessUser,
+  refreshMerchantToken,
 };
 
 async function getCustomerWiseDetails(postData) {
@@ -364,6 +365,28 @@ async function createBusinessUser(postData, timeZone) {
     // const response = undefined;
   } finally {
     setLoading(false);
+  }
+  return handleResponse(response);
+}
+
+async function refreshMerchantToken(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "update"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/refresh-merchant-token`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
   }
   return handleResponse(response);
 }

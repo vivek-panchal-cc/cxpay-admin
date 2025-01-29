@@ -32,13 +32,19 @@ import {
 import $ from "jquery";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faBan,
+  faCheck,
+  faSave,
+} from "@fortawesome/free-solid-svg-icons";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
 import SectionKycDocument from "components/admin/sections/SectionKycDocument";
 import SectionKycDetails from "components/admin/sections/SectionKycDetails";
 import "./kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
+import IconClipBoard from "assets/icons/IconClipBoard";
 
 class Business_Customers_Edit extends React.Component {
   constructor(props) {
@@ -149,7 +155,7 @@ class Business_Customers_Edit extends React.Component {
 
   getCountry() {
     businessCustomersService.getCountry().then((res) => {
-      if (res.status === false) {
+      if (!res.success) {
         notify.error(res.message);
       } else {
         if (res.data == null) {
@@ -438,6 +444,7 @@ class Business_Customers_Edit extends React.Component {
       // );
       formData.append("country", this.state.country);
       formData.append("business_id", this.state.fields.business_id);
+      formData.append("merchant_token", this.state.fields.merchant_token);
       formData.append("business_url", this.state.fields.business_url);
       formData.append("country_code", this.state.fields.country_code);
       formData.append("mobile_number", this.state.fields.mobile_number);
@@ -483,7 +490,7 @@ class Business_Customers_Edit extends React.Component {
 
       // return
       businessCustomersService.updateCustomer(formData).then((res) => {
-        if (res.status === false) {
+        if (!res.success) {
           notify.error(res.message);
         } else {
           notify.success(res.message);
@@ -506,16 +513,23 @@ class Business_Customers_Edit extends React.Component {
     });
   };
 
-  // handleKycDocument = (file) => {
-  //   if (file) {
-  //     window.open(file, "_blank");
-  //   }
-  // };
+  handleRefreshMerchantToken = async () => {
+    try {
+      const postData = {
+        account_number: this.state.fields.account_number || "",
+      };
+      const data = await businessCustomersService.refreshMerchantToken(
+        postData
+      );
+      if (!data.success) throw data.message;
+      this.setState({
+        fields: { ...this.state.fields, merchant_token: data.data },
+      });
+    } catch (error) {
+      notify.error(error);
+    }
+  };
 
-  /**
-   * For downloading kyc document
-   * @param {string} account_number
-   */
   handleKycDocument = async (isRenewal = false) => {
     try {
       const values = {
@@ -853,6 +867,79 @@ class Business_Customers_Edit extends React.Component {
                     })}
                   </CSelect>
                 </CFormGroup>
+
+                {/* <CCol className="col-md-4 col flex-wrap"> */}
+                <CFormGroup>
+                  <CLabel htmlFor="nf-name">Merchant Token</CLabel>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{ position: "relative", flex: 1 }}>
+                      <CInput
+                        type="text"
+                        id="merchant_token"
+                        name="merchant_token"
+                        placeholder="Enter Merchant Token"
+                        autoComplete="name"
+                        value={this.state.fields.merchant_token}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+
+                      {this.state.fields.merchant_token && (
+                        <CTooltip
+                          content={
+                            this.state.isCopied
+                              ? globalConstants.COPIED_LABEL
+                              : globalConstants.COPY_TO_CLIPBOARD
+                          }
+                        >
+                          <span
+                            style={{
+                              position: "absolute",
+                              right: "10px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                this.state.fields.merchant_token
+                              );
+                              this.setState({ isCopied: true }, () => {
+                                setTimeout(
+                                  () => this.setState({ isCopied: false }),
+                                  2000
+                                );
+                              });
+                            }}
+                          >
+                            {this.state.isCopied ? (
+                              <FontAwesomeIcon icon={faCheck} />
+                            ) : (
+                              <IconClipBoard />
+                            )}
+                          </span>
+                        </CTooltip>
+                      )}
+                    </div>
+                    <CTooltip content={globalConstants.REFRESH_TOKEN}>
+                      <button
+                        className="btn btn-dark btn-md ml-3"
+                        onClick={this.handleRefreshMerchantToken}
+                      >
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                      </button>
+                    </CTooltip>
+                  </div>
+                  {/* <CFormText className="help-block">
+                    {this.validator.message(
+                      "merchant_token",
+                      this.state.fields.merchant_token,
+                      "required",
+                      { className: "text-danger" }
+                    )}
+                  </CFormText> */}
+                </CFormGroup>
+                {/* </CCol> */}
 
                 <CFormGroup row>
                   <CCol md="1">Profile Image</CCol>

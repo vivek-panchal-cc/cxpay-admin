@@ -7,6 +7,7 @@ import {
   CCol,
   CFormGroup,
   CRow,
+  CTooltip,
 } from "@coreui/react";
 
 import {
@@ -23,6 +24,10 @@ import { businessCategoryManagementService } from "services/admin/business_categ
 import "../business_customers/kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
+import { globalConstants } from "constants/admin/global.constants";
+import IconClipBoard from "assets/icons/IconClipBoard";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Business_Customers_Details extends React.Component {
   constructor(props) {
@@ -249,6 +254,48 @@ class Business_Customers_Details extends React.Component {
                               </p>
                             )}
                           </CCol>
+                          {this.state.customerDetails.merchant_token && (
+                            <CCol>
+                              <p>
+                                <b>Merchant Token: </b>
+                                {this.state.customerDetails.merchant_token}
+                                <CTooltip
+                                  content={
+                                    this.state.isCopied
+                                      ? globalConstants.COPIED_LABEL
+                                      : globalConstants.COPY_TO_CLIPBOARD
+                                  }
+                                >
+                                  <span
+                                    style={{
+                                      marginLeft: "15px",
+                                      transform: "translateY(-50%)",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(
+                                        this.state.customerDetails
+                                          .merchant_token
+                                      );
+                                      this.setState({ isCopied: true }, () => {
+                                        setTimeout(
+                                          () =>
+                                            this.setState({ isCopied: false }),
+                                          2000
+                                        );
+                                      });
+                                    }}
+                                  >
+                                    {this.state.isCopied ? (
+                                      <FontAwesomeIcon icon={faCheck} />
+                                    ) : (
+                                      <IconClipBoard />
+                                    )}
+                                  </span>
+                                </CTooltip>{" "}
+                              </p>
+                            </CCol>
+                          )}
                         </CFormGroup>
 
                         {this.state.customerDetails.kyc_document_type && (
