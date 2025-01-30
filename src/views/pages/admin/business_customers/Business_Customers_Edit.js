@@ -67,6 +67,9 @@ class Business_Customers_Edit extends React.Component {
           renew_kyc_approved_status: "",
         },
         business_category_id: "",
+        merchant_fees: "",
+        merchant_fees_type: "",
+        fees_deduct_account: "",
       },
       is_kyc_approved_status: "",
       module_permission: {},
@@ -266,6 +269,7 @@ class Business_Customers_Edit extends React.Component {
         fields: { ...this.state.fields, [name]: firstTwoDigits },
       });
     } else if (
+      name === "merchant_fees" ||
       name === "daily_add_fund_limit" ||
       name === "daily_wallet_transfer_limit" ||
       name === "daily_withdraw_limit" ||
@@ -366,6 +370,7 @@ class Business_Customers_Edit extends React.Component {
 
   handleSubmit() {
     const {
+      merchant_fees,
       daily_add_fund_limit,
       daily_wallet_transfer_limit,
       daily_withdraw_limit,
@@ -377,6 +382,7 @@ class Business_Customers_Edit extends React.Component {
     } = this.state.fields;
 
     const fieldsToValidate = [
+      { name: "Merchant Fees", value: merchant_fees },
       { name: "Daily Add Fund Limit", value: daily_add_fund_limit },
       {
         name: "Daily Wallet Transfer Limit",
@@ -448,6 +454,15 @@ class Business_Customers_Edit extends React.Component {
       formData.append("business_url", this.state.fields.business_url);
       formData.append("country_code", this.state.fields.country_code);
       formData.append("mobile_number", this.state.fields.mobile_number);
+      formData.append("merchant_fees", this.state.fields.merchant_fees);
+      formData.append(
+        "merchant_fees_type",
+        this.state.fields.merchant_fees_type
+      );
+      formData.append(
+        "fees_deduct_account",
+        this.state.fields.fees_deduct_account
+      );
       if (this.state.site_logo) {
         formData.append("profile_image", this.state.site_logo);
       }
@@ -1524,6 +1539,121 @@ class Business_Customers_Edit extends React.Component {
                       )}
                     </CFormGroup>
                   </CCol>
+                </CFormGroup>
+
+                <CFormGroup className="limits-wrap">
+                  <div className="row mb-3 mb-lg-4 limits-heading">
+                    <div className="col-md-6 col">
+                      <p>Merchant Fee Details</p>
+                    </div>
+                  </div>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="merchant_fees"
+                        className="col-form-label"
+                      >
+                        Merchant Fees
+                      </CLabel>
+
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="merchant_fees"
+                          name="merchant_fees"
+                          placeholder="Enter Merchant Fees"
+                          value={this.state.fields.merchant_fees}
+                          onChange={this.handleChange}
+                        />
+                      </CCol>
+                    </CCol>
+
+                    <CCol className="col-md-6 col col d-flex flex-wrap">
+                      <CLabel htmlFor="nf-name" className="col-form-label">
+                        Merchant Fees Type
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CSelect
+                          custom
+                          name="merchant_fees_type"
+                          id="merchant_fees_type"
+                          onChange={this.handleChange}
+                          value={this.state?.fields?.merchant_fees_type}
+                        >
+                          <option value={""}>
+                            {"Select Merchant Fees Type"}
+                          </option>
+                          <option value={"fixed"}>{"Fixed"}</option>
+                          <option value={"percentage"}>{"Percentage"}</option>
+                        </CSelect>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CCol className="col-sm-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_wallet_transfer"
+                        className="col-form-label"
+                      >
+                        Fees Deduct Account
+                      </CLabel>
+
+                      <CFormGroup
+                        className="mt-2 pl-3"
+                        variant="custom-checkbox"
+                        inline
+                      >
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "20px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="merchantRadio"
+                            name="fees_deduct_account"
+                            value={"merchant"}
+                            checked={
+                              this.state.fields.fees_deduct_account ===
+                              "merchant"
+                            }
+                            onChange={this.handleChange}
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="merchantRadio"
+                          >
+                            Merchant
+                          </CLabel>
+                        </CFormGroup>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "35px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="customerRadio"
+                            name="fees_deduct_account"
+                            value={"customer"}
+                            checked={
+                              this.state.fields.fees_deduct_account ===
+                              "customer"
+                            }
+                            onChange={this.handleChange}
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="customerRadio"
+                          >
+                            Customer
+                          </CLabel>
+                        </CFormGroup>
+                      </CFormGroup>
+                    </CCol>
+                  </CRow>
                 </CFormGroup>
 
                 <CFormGroup className="limits-wrap">
