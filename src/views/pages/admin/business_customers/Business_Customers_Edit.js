@@ -1612,10 +1612,9 @@ class Business_Customers_Edit extends React.Component {
                             className="form-check-input"
                             id="merchantRadio"
                             name="fees_deduct_account"
-                            value={"merchant"}
+                            value={"sender"}
                             checked={
-                              this.state.fields.fees_deduct_account ===
-                              "merchant"
+                              this.state.fields.fees_deduct_account === "sender"
                             }
                             onChange={this.handleChange}
                           />
@@ -1624,7 +1623,7 @@ class Business_Customers_Edit extends React.Component {
                             className="form-check-label"
                             htmlFor="merchantRadio"
                           >
-                            Merchant
+                            Sender
                           </CLabel>
                         </CFormGroup>
                         <CFormGroup
@@ -1636,10 +1635,10 @@ class Business_Customers_Edit extends React.Component {
                             className="form-check-input"
                             id="customerRadio"
                             name="fees_deduct_account"
-                            value={"customer"}
+                            value={"receiver"}
                             checked={
                               this.state.fields.fees_deduct_account ===
-                              "customer"
+                              "receiver"
                             }
                             onChange={this.handleChange}
                           />
@@ -1648,7 +1647,7 @@ class Business_Customers_Edit extends React.Component {
                             className="form-check-label"
                             htmlFor="customerRadio"
                           >
-                            Customer
+                            Receiver
                           </CLabel>
                         </CFormGroup>
                       </CFormGroup>
