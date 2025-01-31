@@ -57,10 +57,25 @@ class Fee_Management_Edit extends Component {
   };
 
   /************************ Define  Method For Form Field **************************/
+  // handleChange(event) {
+  //   const target = event.target;
+  //   const value = target.type === "checkbox" ? target.checked : target.value;
+  //   const name = target.name;
+  //   this.setState({
+  //     [name]: value,
+  //   });
+  // }
+
   handleChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
+
+    // Prevent status change when payment_type is "MC"
+    if (name === "status" && this.state.payment_type === "MC") {
+      return;
+    }
+
     this.setState({
       [name]: value,
     });
@@ -188,6 +203,10 @@ class Fee_Management_Edit extends Component {
                 Bank transfer
               </option>
               ;
+              <option key="MC" value="MC">
+                Merchant Commission
+              </option>
+              ;
             </CSelect>
             <CFormText className="help-block">
               {this.validator.message(
@@ -272,13 +291,13 @@ class Fee_Management_Edit extends Component {
           </CFormGroup>
 
           <CFormGroup row>
-            <CCol tag="label" sm="1" className="col-form-label">
+            <CCol tag="label" md="1">
               Status
             </CCol>
 
             <CCol sm="11">
               <CFormGroup variant="custom-checkbox" inline>
-                {this.state.status && (
+                {/* {this.state.status && (
                   <CSwitch
                     className="mr-1"
                     color="primary"
@@ -286,6 +305,7 @@ class Fee_Management_Edit extends Component {
                     value={this.state.status}
                     defaultChecked
                     onChange={this.handleChange}
+                    disabled={this.state.payment_type === "MC"}
                   />
                 )}
 
@@ -297,7 +317,16 @@ class Fee_Management_Edit extends Component {
                     value={this.state.status}
                     onChange={this.handleChange}
                   />
-                )}
+                )} */}
+                <CSwitch
+                  className="mr-1"
+                  color="primary"
+                  name="status"
+                  value={this.state.status ? 1 : 0}
+                  checked={this.state.status}
+                  onChange={this.handleChange}
+                  disabled={this.state.payment_type === "MC"}
+                />
               </CFormGroup>
             </CCol>
           </CFormGroup>

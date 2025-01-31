@@ -73,12 +73,38 @@ class Fee_Management_Add extends Component {
 
   preventMinusVal(e) {}
   // Method For Form Field
+  // handleChange(event) {
+  //   const target = event.target;
+  //   const value = target.type === "checkbox" ? target.checked : target.value;
+  //   const name = target.name;
+  //   this.setState(
+  //     {
+  //       [name]: value,
+  //     },
+  //     () => {
+  //       if (name === "payment_type" && value === "MC") {
+  //         this.setState({ status: true });
+  //       }
+  //     }
+  //   );
+  // }
+
   handleChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
-      [name]: value,
+    const { name, type, checked, value } = event.target;
+    const newValue = type === "checkbox" ? checked : value;
+
+    this.setState((prevState) => {
+      // Prevent status change if payment_type is MC
+      if (name === "status" && prevState.payment_type === "MC") {
+        return null; // Ignore the change
+      }
+
+      // Automatically enable status when selecting MC
+      if (name === "payment_type" && newValue === "MC") {
+        return { payment_type: newValue, status: true };
+      }
+
+      return { [name]: newValue };
     });
   }
 
@@ -172,6 +198,10 @@ class Fee_Management_Add extends Component {
                 Bank transfer
               </option>
               ;
+              <option key="MC" value="MC">
+                Merchant Commission
+              </option>
+              ;
             </CSelect>
             <CFormText className="help-block">
               {this.validator.message(
@@ -256,7 +286,7 @@ class Fee_Management_Add extends Component {
           </CFormGroup>
 
           <CFormGroup row>
-            <CCol tag="label" sm="1" className="col-form-label">
+            <CCol tag="label" md="1">
               Status
             </CCol>
             <CCol sm="11">
@@ -265,8 +295,9 @@ class Fee_Management_Add extends Component {
                   name="status"
                   className="mr-1"
                   color="primary"
-                  defaultChecked={this.state.status}
-                  onClick={this.handleChange}
+                  checked={this.state.status}
+                  onChange={this.handleChange}
+                  disabled={this.state.payment_type === "MC"}
                 />
               </CFormGroup>
             </CCol>

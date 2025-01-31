@@ -268,9 +268,18 @@ class Business_Category_Index extends React.Component {
     if (actionValue !== "") {
       let appliedActionId = [];
       let selectedIds = this.state.multiaction;
-      for (var key in selectedIds) {
-        if (selectedIds[key]) {
-          appliedActionId.push(key);
+      // for (var key in selectedIds) {
+      //   if (selectedIds[key]) {
+      //     appliedActionId.push(key);
+      //   }
+      // }
+      for (let category of this.state.category_list) {
+        // Check if the category is selected in selectedIds
+        if (selectedIds[category.id]) {
+          // Exclude pages with payment_type "Merchant Commission"
+          if (category.id !== this.state.editFormId) {
+            appliedActionId.push(category.id);
+          }
         }
       }
 
