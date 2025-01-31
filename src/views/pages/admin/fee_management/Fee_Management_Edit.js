@@ -67,17 +67,21 @@ class Fee_Management_Edit extends Component {
   // }
 
   handleChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+    const { name, type, checked, value } = event.target;
+    const newValue = type === "checkbox" ? checked : value;
 
-    // Prevent status change when payment_type is "MC"
-    if (name === "status" && this.state.payment_type === "MC") {
-      return;
-    }
+    this.setState((prevState) => {
+      // Prevent status change if payment_type is MC
+      if (name === "status" && prevState.payment_type === "MC") {
+        return null; // Ignore the change
+      }
 
-    this.setState({
-      [name]: value,
+      // Automatically enable status when selecting MC
+      if (name === "payment_type" && newValue === "MC") {
+        return { payment_type: newValue, status: true };
+      }
+
+      return { [name]: newValue };
     });
   }
 
@@ -183,7 +187,7 @@ class Fee_Management_Edit extends Component {
               custom
               name="payment_type"
               id="select"
-              onChange={this.handleChange}
+              // onChange={this.handleChange}
             >
               <option key="0" value="">
                 -- Payment Types --{" "}
