@@ -361,7 +361,7 @@ class Customers_Management_Index extends React.Component {
   StatusChangedHandler(_id, status) {
     var postData = {
       mobile_number: [_id],
-      status: status === 0 ? 1 : 0,
+      status: status === "0" ? "1" : "0",
     };
 
     customersManagementService.changeCustomerStatus(postData).then((res) => {
