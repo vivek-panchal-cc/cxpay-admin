@@ -257,7 +257,7 @@ class Agent_list extends React.Component {
   PageStatusChangedHandler(id, status) {
     var postData = {
       mobile_number: [id],
-      status: status === 0 ? 1 : 0,
+      status: status === "0" ? "1" : "0",
       user_type: "agent",
     };
     agentService.changeAgentStatus(postData).then((res) => {

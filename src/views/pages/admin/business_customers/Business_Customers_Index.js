@@ -434,7 +434,7 @@ class Business_Customers_Index extends React.Component {
   StatusChangedHandler(_id, status) {
     var postData = {
       mobile_number: [_id],
-      status: status === 0 ? 1 : 0,
+      status: status === "0" ? "1" : "0",
     };
 
     businessCustomersService.changeCustomerStatus(postData).then((res) => {
