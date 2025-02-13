@@ -291,12 +291,25 @@ class Business_Customers_Edit extends React.Component {
         return; // Prevent multiple decimal points from being entered
       }
 
-      // Take only the first two digits
-      const firstSixteenDigits = sanitizedValue.substring(0, 16);
+      if (name === "merchant_fees" || name === "merchant_fees_capacity") {
+        const [wholeNumber, decimal] = sanitizedValue.split(".");
 
-      this.setState({
-        fields: { ...this.state.fields, [name]: firstSixteenDigits },
-      });
+        // Take value like ######.## (max 6 wholeNumber, max 2 decimal)
+        const value = decimalCount
+          ? `${wholeNumber?.substring(0, 6)}.${decimal?.substring(0, 2)}`
+          : wholeNumber?.substring(0, 6);
+
+        this.setState({
+          fields: { ...this.state.fields, [name]: value },
+        });
+      } else {
+        // Take only the first two digits
+        const firstSixteenDigits = sanitizedValue.substring(0, 16);
+
+        this.setState({
+          fields: { ...this.state.fields, [name]: firstSixteenDigits },
+        });
+      }
     } else {
       // For other fields, proceed with the generic handling
       if (name === "status") {
