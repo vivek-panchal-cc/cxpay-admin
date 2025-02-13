@@ -198,9 +198,9 @@ class Fee_Management_Add extends Component {
                 Bank transfer
               </option>
               ;
-              <option key="MC" value="MC">
+              {/* <option key="MC" value="MC">
                 Merchant Commission
-              </option>
+              </option> */}
               ;
             </CSelect>
             <CFormText className="help-block">
