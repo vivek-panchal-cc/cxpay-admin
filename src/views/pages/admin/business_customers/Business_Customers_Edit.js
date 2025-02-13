@@ -70,6 +70,7 @@ class Business_Customers_Edit extends React.Component {
         merchant_fees: "",
         merchant_fees_type: "",
         fees_deduct_account: "",
+        merchant_fees_capacity: "",
       },
       is_kyc_approved_status: "",
       module_permission: {},
@@ -277,7 +278,8 @@ class Business_Customers_Edit extends React.Component {
       name === "monthly_wallet_transfer_limit" ||
       name === "monthly_withdraw_limit" ||
       name === "daily_agent_topup_limit" ||
-      name === "monthly_agent_topup_limit"
+      name === "monthly_agent_topup_limit" ||
+      name === "merchant_fees_capacity"
     ) {
       // Remove any non-digit characters
       const sanitizedValue = value.replace(/[^0-9.]/g, "");
@@ -379,6 +381,7 @@ class Business_Customers_Edit extends React.Component {
       monthly_withdraw_limit,
       daily_agent_topup_limit,
       monthly_agent_topup_limit,
+      merchant_fees_capacity,
     } = this.state.fields;
 
     const fieldsToValidate = [
@@ -397,6 +400,7 @@ class Business_Customers_Edit extends React.Component {
       { name: "Monthly Withdraw Limit", value: monthly_withdraw_limit },
       { name: "Daily Agent Topup Limit", value: daily_agent_topup_limit },
       { name: "Monthly Agent Topup Limit", value: monthly_agent_topup_limit },
+      { name: "Merchant Commission Capacity", value: merchant_fees_capacity },
     ];
     const invalidFields = fieldsToValidate?.find((field) => {
       return field.value && field.value?.endsWith(".");
@@ -501,6 +505,10 @@ class Business_Customers_Edit extends React.Component {
       formData.append(
         "monthly_agent_topup_limit",
         this.state.fields.monthly_agent_topup_limit
+      );
+      formData.append(
+        "merchant_fees_capacity",
+        this.state.fields.merchant_fees_capacity
       );
 
       // return
@@ -1652,6 +1660,29 @@ class Business_Customers_Edit extends React.Component {
                         </CFormGroup>
                       </CFormGroup>
                     </CCol>
+
+                    {this.state?.fields?.merchant_fees_type ===
+                      "percentage" && (
+                      <CCol className="col-md-6 col d-flex flex-wrap">
+                        <CLabel
+                          htmlFor="merchant_fees_capacity"
+                          className="col-form-label"
+                        >
+                          Merchant Commission Capacity
+                        </CLabel>
+
+                        <CCol className="limit-ip-col">
+                          <CInput
+                            type="text"
+                            id="merchant_fees_capacity"
+                            name="merchant_fees_capacity"
+                            placeholder="Enter Merchant Commission"
+                            value={this.state.fields.merchant_fees_capacity}
+                            onChange={this.handleChange}
+                          />
+                        </CCol>
+                      </CCol>
+                    )}
                   </CRow>
                 </CFormGroup>
 

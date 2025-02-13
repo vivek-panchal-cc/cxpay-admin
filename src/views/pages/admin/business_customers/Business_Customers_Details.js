@@ -310,6 +310,18 @@ class Business_Customers_Details extends React.Component {
                                 )}
                               </p>
                             )}
+                            {this.state.customerDetails.merchant_fees_type ===
+                              "percentage" &&
+                              this.state.customerDetails
+                                .merchant_fees_capacity && (
+                                <p>
+                                  <b>Merchant Commission Capacity: </b>
+                                  {capitalize(
+                                    this.state.customerDetails
+                                      .merchant_fees_capacity
+                                  )}
+                                </p>
+                              )}
                           </CCol>
                           {this.state.customerDetails.merchant_token && (
                             <CCol>
