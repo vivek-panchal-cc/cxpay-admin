@@ -71,7 +71,12 @@ class Fee_Management_Add extends Component {
     });
   };
 
-  preventMinusVal(e) {}
+  preventMinusVal(e) {
+    // Check if the pressed key is the minus key (key code 45)
+    if (e.keyCode === 45 || e.which === 45) {
+      e.preventDefault(); // Prevent the minus key from being entered
+    }
+  }
   // Method For Form Field
   // handleChange(event) {
   //   const target = event.target;
@@ -102,6 +107,27 @@ class Fee_Management_Add extends Component {
       // Automatically enable status when selecting MC
       if (name === "payment_type" && newValue === "MC") {
         return { payment_type: newValue, status: true };
+      }
+
+      if (name === "amount") {
+        // Remove any non-digit characters
+        const sanitizedValue = newValue.replace(/[^0-9.]/g, "");
+
+        // Ensure only one decimal point is allowed
+        const decimalCount = (sanitizedValue.match(/\./g) || [])?.length;
+
+        if (decimalCount > 1) {
+          return; // Prevent multiple decimal points from being entered
+        }
+
+        const [wholeNumber, decimal] = sanitizedValue.split(".");
+
+        // Take value like ######.## (max 6 wholeNumber, max 2 decimal)
+        const value = decimalCount
+          ? `${wholeNumber?.substring(0, 6)}.${decimal?.substring(0, 2)}`
+          : wholeNumber?.substring(0, 6);
+
+        return { amount: value };
       }
 
       return { [name]: newValue };
@@ -243,6 +269,24 @@ class Fee_Management_Add extends Component {
           <CFormGroup>
             <CLabel htmlFor="nf-name">Amount</CLabel>
             <CInput
+              type="text"
+              id="amount"
+              name="amount"
+              placeholder="Enter Amount"
+              value={this.state.amount}
+              onChange={this.handleChange}
+            />
+            <CFormText className="help-block">
+              {this.validator.message(
+                "amount",
+                this.state.amount,
+                "required",
+                {
+                  className: "text-danger", 
+                }
+              )}
+            </CFormText>
+            {/* <CInput
               type="number"
               min="0"
               id="amount"
@@ -261,7 +305,7 @@ class Fee_Management_Add extends Component {
                   className: "text-danger",
                 }
               )}
-            </CFormText>
+            </CFormText> */}
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Fee Label</CLabel>

@@ -81,6 +81,27 @@ class Fee_Management_Edit extends Component {
         return { payment_type: newValue, status: true };
       }
 
+      if (name === "amount") {
+        // Remove any non-digit characters
+        const sanitizedValue = newValue.replace(/[^0-9.]/g, "");
+
+        // Ensure only one decimal point is allowed
+        const decimalCount = (sanitizedValue.match(/\./g) || [])?.length;
+
+        if (decimalCount > 1) {
+          return; // Prevent multiple decimal points from being entered
+        }
+
+        const [wholeNumber, decimal] = sanitizedValue.split(".");
+
+        // Take value like ######.## (max 6 wholeNumber, max 2 decimal)
+        const value = decimalCount
+          ? `${wholeNumber?.substring(0, 6)}.${decimal?.substring(0, 2)}`
+          : wholeNumber?.substring(0, 6);
+
+        return { amount: value };
+      }
+
       return { [name]: newValue };
     });
   }
@@ -252,6 +273,19 @@ class Fee_Management_Edit extends Component {
           <CFormGroup>
             <CLabel htmlFor="nf-name">Amount</CLabel>
             <CInput
+              type="text"
+              id="amount"
+              name="amount"
+              placeholder="Enter Amount"
+              value={this.state.amount}
+              onChange={this.handleChange}
+            />
+            <CFormText className="help-block">
+              {this.validator.message("amount", this.state.amount, "required", {
+                className: "text-danger",
+              })}
+            </CFormText>
+            {/* <CInput
               type="number"
               id="amount"
               name="amount"
@@ -269,7 +303,7 @@ class Fee_Management_Edit extends Component {
                   className: "text-danger",
                 }
               )}
-            </CFormText>
+            </CFormText> */}
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Fee Label</CLabel>
