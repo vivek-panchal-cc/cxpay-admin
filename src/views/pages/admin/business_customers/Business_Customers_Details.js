@@ -315,7 +315,7 @@ class Business_Customers_Details extends React.Component {
                               this.state.customerDetails
                                 .merchant_fees_capacity && (
                                 <p>
-                                  <b>Merchant Commission Capacity: </b>
+                                  <b>Merchant Fees Capacity: </b>
                                   {capitalize(
                                     this.state.customerDetails
                                       .merchant_fees_capacity

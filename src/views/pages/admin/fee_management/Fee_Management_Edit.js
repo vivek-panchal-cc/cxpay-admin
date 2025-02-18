@@ -140,7 +140,7 @@ class Fee_Management_Edit extends Component {
               this.setState({
                 payment_type: res.result.payment_type,
                 fee_type: res.result.fee_type,
-                amount: res.result.amount,
+                amount: parseFloat(res.result.amount).toFixed(2),
                 fee_label: res.result.fee_label,
                 status: res.result.status,
               });

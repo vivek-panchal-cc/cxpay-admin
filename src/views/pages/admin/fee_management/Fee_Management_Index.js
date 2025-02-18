@@ -522,7 +522,7 @@ class Fee_Management_Index extends React.Component {
                             <td>{index + 1}</td>
                             <td>{u.payment_type}</td>
                             <td>{u.fee_type}</td>
-                            <td>{u.amount}</td>
+                            <td>{parseFloat(u.amount).toFixed(2)}</td>
                             <td>{u.fee_label}</td>
 
                             <td>

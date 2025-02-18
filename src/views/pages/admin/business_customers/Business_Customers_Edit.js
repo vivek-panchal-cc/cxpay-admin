@@ -413,7 +413,7 @@ class Business_Customers_Edit extends React.Component {
       { name: "Monthly Withdraw Limit", value: monthly_withdraw_limit },
       { name: "Daily Agent Topup Limit", value: daily_agent_topup_limit },
       { name: "Monthly Agent Topup Limit", value: monthly_agent_topup_limit },
-      { name: "Merchant Commission Capacity", value: merchant_fees_capacity },
+      { name: "Merchant Fees Capacity", value: merchant_fees_capacity },
     ];
     const invalidFields = fieldsToValidate?.find((field) => {
       return field.value && field.value?.endsWith(".");
@@ -1681,7 +1681,7 @@ class Business_Customers_Edit extends React.Component {
                           htmlFor="merchant_fees_capacity"
                           className="col-form-label"
                         >
-                          Merchant Commission Capacity
+                          Merchant Fees Capacity
                         </CLabel>
 
                         <CCol className="limit-ip-col">
@@ -1689,7 +1689,7 @@ class Business_Customers_Edit extends React.Component {
                             type="text"
                             id="merchant_fees_capacity"
                             name="merchant_fees_capacity"
-                            placeholder="Enter Merchant Commission"
+                            placeholder="Enter Merchant Fees"
                             value={this.state.fields.merchant_fees_capacity}
                             onChange={this.handleChange}
                           />
