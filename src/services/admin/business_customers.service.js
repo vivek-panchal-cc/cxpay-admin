@@ -25,6 +25,8 @@ export const businessCustomersService = {
   businessCategory,
   createBusinessUser,
   refreshMerchantToken,
+  getMerchantFeesReport,
+  downloadMerchantFeesReportData,
 };
 
 async function getCustomerWiseDetails(postData) {
@@ -387,6 +389,48 @@ async function refreshMerchantToken(postData) {
     notify.error("Something went wrong");
     setLoading(false);
     response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function getMerchantFeesReport(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-merchant-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function downloadMerchantFeesReportData(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/export-merchant-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
   }
   return handleResponse(response);
 }

@@ -18,6 +18,8 @@ export const customersManagementService = {
   getCountry,
   getPersonalKycDocument,
   downloadReportData,
+  getMerchantFeesReport,
+  downloadMerchantFeesReportData,
 };
 
 function getCustomersManagementList(postData) {
@@ -227,6 +229,48 @@ async function downloadReportData(postData) {
   try {
     response = await fetch(
       `${API_URL}api/customers/export-customer-wise-details`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+  }
+  return handleResponse(response);
+}
+
+async function getMerchantFeesReport(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("personal_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-merchant-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function downloadMerchantFeesReportData(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("personal_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/export-merchant-fees-report`,
       requestOptions
     );
   } catch (error) {

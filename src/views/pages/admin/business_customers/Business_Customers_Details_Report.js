@@ -22,6 +22,7 @@ import BusinessCustomersSchedulePayments from "./Business_Customers_Schedule_Pay
 import BusinessCustomersRecurringPayments from "./Business_Customers_Recurring_Payments";
 import BusinessCustomersWithdrawRequests from "./Business_Customers_Withdraw_Requests";
 import BusinessCustomersManualTopupRequests from "./Business_Customers_Manual_Topup_Requests";
+import BusinessCustomersMerchantFeesReport from "./Business_Customers_Merchant_Fees_Report";
 
 class Business_Customers_Details_Report extends React.Component {
   constructor(props) {
@@ -133,6 +134,14 @@ class Business_Customers_Details_Report extends React.Component {
                   Manual Topup Request Details
                 </CNavLink>
               </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  active={activeTab === "merchant_fees_report"}
+                  onClick={() => this.handleTabClick("merchant_fees_report")}
+                >
+                  Merchant Fees Report
+                </CNavLink>
+              </CNavItem>
             </CNav>
           </CCardHeader>
           <CCardBody>
@@ -181,6 +190,14 @@ class Business_Customers_Details_Report extends React.Component {
               <CTabPane active={activeTab === "manual_topup_request_details"}>
                 {activeTab === "manual_topup_request_details" && (
                   <BusinessCustomersManualTopupRequests
+                    account_number={this.props.match.params.account_number}
+                    activeTab={activeTab}
+                  />
+                )}
+              </CTabPane>
+              <CTabPane active={activeTab === "merchant_fees_report"}>
+                {activeTab === "merchant_fees_report" && (
+                  <BusinessCustomersMerchantFeesReport
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
