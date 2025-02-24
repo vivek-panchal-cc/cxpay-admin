@@ -386,7 +386,7 @@ class Customer_Management_Merchant_Fees_Report extends React.Component {
                         <th>Amount</th>
                         <th>Fees</th>
                         <th>Merchant Fees Capacity</th>
-                        <th>Narration</th>
+                        <th>Specification</th>
                         <th onClick={() => this.handleColumnSort("created_at")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
