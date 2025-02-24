@@ -383,83 +383,10 @@ class Customer_Management_Merchant_Fees_Report extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th onClick={() => this.handleColumnSort("amount")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              Amount
-                            </span>
-                            {this.state.fields.sort !== "amount" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "amount" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "amount" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-                        <th onClick={() => this.handleColumnSort("fees")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">Fees</span>
-                            {this.state.fields.sort !== "fees" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "fees" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "fees" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-                        <th
-                          onClick={() =>
-                            this.handleColumnSort("merchant_fees_capacity")
-                          }
-                        >
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              Merchant Fees Capacity
-                            </span>
-                            {this.state.fields.sort !==
-                              "merchant_fees_capacity" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort ===
-                                "merchant_fees_capacity" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort ===
-                                "merchant_fees_capacity" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-                        <th onClick={() => this.handleColumnSort("narration")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              Narration
-                            </span>
-                            {this.state.fields.sort !== "narration" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "narration" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "narration" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
+                        <th>Amount</th>
+                        <th>Fees</th>
+                        <th>Merchant Fees Capacity</th>
+                        <th>Narration</th>
                         <th onClick={() => this.handleColumnSort("created_at")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">

@@ -240,6 +240,11 @@ const Customer_Detail = React.lazy(() =>
 const Transaction_Reports_Index = React.lazy(() =>
   import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
 );
+const Merchant_Fees_Reports_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/merchant_fees_reports/Merchant_Fees_Reports_Index"
+  )
+);
 
 const Schedule_Payments_Index = React.lazy(() =>
   import("./views/pages/admin/schedule_payments/Schedule_Payments_Index")
@@ -867,6 +872,14 @@ const routes = [
     name: "Transaction Reports",
     component: Transaction_Reports_Index,
     module_name: "transaction_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/merchant_fees_reports",
+    exact: true,
+    name: "Merchant Reports",
+    component: Merchant_Fees_Reports_Index,
+    module_name: "merchant_fees_reports",
     action: "view",
   },
   //withdraw requests

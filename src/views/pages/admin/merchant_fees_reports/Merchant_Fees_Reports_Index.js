@@ -11,6 +11,7 @@ import {
   CLabel,
   CTooltip,
   CLink,
+  CSelect,
 } from "@coreui/react";
 import { notify, _canAccess, history } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,16 +21,16 @@ import {
   faSortDown,
   faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import InputDateRange from "components/admin/InputDateRange";
-import { businessCustomersService } from "services/admin/business_customers.service";
+import { reportsService } from "services/admin/reports.service";
 import "../business_customers/kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
 import { globalConstants } from "constants/admin/global.constants";
+import WrapAmount from "components/wrapper/WrapAmount";
 
-class Business_Customers_Merchant_Fees_Report extends React.Component {
+class Merchant_Fees_Reports_Index extends React.Component {
   constructor(props) {
     super(props);
 
@@ -38,8 +39,6 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
     this.handleChange = this.handleChange.bind(this);
 
     this.state = {
-      account_number: this.props.account_number,
-      activeTab: this.props.activeTab,
       filters: {
         fromDate: "",
         toDate: "",
@@ -49,7 +48,6 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
       allFilters: {
         from_date: "",
         to_date: "",
-        status: "",
       },
       fields: {
         page: 1,
@@ -59,10 +57,7 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
         totalPage: 1,
         from_date: null,
         to_date: null,
-        from_date1: null,
-        to_date1: null,
-        status: "",
-        account_number: this.props.account_number,
+        per_page: 10,
       },
       merchant_fees_report: [],
       _openPopup: false,
@@ -71,7 +66,7 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
 
     if (this.props._renderAccess === false) {
       notify.error("Access Denied Contact to Super User");
-      history.push("/admin/business_customers");
+      history.push("/admin/dashboard");
     }
   }
 
@@ -80,24 +75,23 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
   }
 
   getMerchantFeesReport() {
-    businessCustomersService
-      .getMerchantFeesReport(this.state.fields)
-      .then((res) => {
-        if (!res.success) {
-          this.setState({
-            merchant_fees_report: [],
-          });
-        } else {
-          this.setState({
-            totalRecords: res.data.pagination.total,
-            fields: {
-              ...this.state.fields,
-              totalPage: res?.data?.pagination?.last_page,
-            },
-            merchant_fees_report: res.data.transaction,
-          });
-        }
-      });
+    reportsService.getMerchantFeesReport(this.state.fields).then((res) => {
+      if (!res.success) {
+        this.setState({
+          merchant_fees_report: [],
+        });
+      } else {
+        this.setState({
+          totalRecords: res.data.pagination.total,
+          fields: {
+            ...this.state.fields,
+            totalPage: res?.data?.pagination?.last_page,
+          },
+          perPage: res?.data?.pagination?.per_page,
+          merchant_fees_report: res.data.transaction,
+        });
+      }
+    });
   }
 
   pageChange = (newPage) => {
@@ -132,10 +126,21 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
     );
   }
 
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ fields: { ...this.state.fields, [name]: value } });
-  }
+  //   handleChange(e) {
+  //     const { name, value } = e.target;
+  //     this.setState({ fields: { ...this.state.fields, [name]: value } });
+  //   }
+
+  handleChange = (event) => {
+    const { name, value } = event.target;
+
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [name]: name === "per_page" ? parseInt(value, 10) : value, // Convert 'per_page' to an integer
+      },
+    }));
+  };
 
   handleSearch(type) {
     if (type === "reset") {
@@ -144,7 +149,6 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
           allFilters: {
             from_date: "",
             to_date: "",
-            status: "",
           },
           filters: {
             fromDate: "",
@@ -157,12 +161,9 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
             sort: "created_at",
             search: "",
             totalPage: 1,
-            status: "",
             from_date: null,
             to_date: null,
-            from_date1: null,
-            to_date1: null,
-            account_number: this.props.account_number,
+            per_page: 10,
           },
         },
         () => {
@@ -206,7 +207,7 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
     const downloadFile = async () => {
       try {
         const { data, message, success } =
-          await businessCustomersService.downloadMerchantFeesReportData(
+          await reportsService.downloadMerchantFeesReportData(
             this.state.fields
           );
         if (!success) throw message;
@@ -216,7 +217,7 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `${this.state.fields.account_number}_MERCHANT_FEES_REPORT_${dtnow}.csv`;
+        const fileName = `MERCHANT_FEES_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();
@@ -251,9 +252,9 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                  <CCol xl={4}>
+                  <CCol xl={3}>
                     <CFormGroup row>
-                      <CCol xs="10">
+                      <CCol xs="12">
                         <CLabel htmlFor="name">Date</CLabel>
                         <InputDateRange
                           className=""
@@ -261,6 +262,33 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
                           endDate={this.state.filters.toDate}
                           onChange={this.handleChangeDateFilter}
                         />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
+                        <CLabel htmlFor="name">Per Page</CLabel>
+                        <CSelect
+                          id="per_page"
+                          className={""}
+                          placeholder="Per Page"
+                          name="per_page"
+                          value={this.state.fields.per_page}
+                          onChange={this.handleChange}
+                          style={{ cursor: "pointer" }}
+                          onKeyPress={(event) => {
+                            if (event.key === "Enter") {
+                              this.handleSearch("search");
+                            }
+                          }}
+                        >
+                          {/* <option value="">-- Select Type --</option> */}
+                          <option value={10}>10</option>
+                          <option value={50}>50</option>
+                          <option value={100}>100</option>
+                          <option value={200}>200</option>
+                        </CSelect>
                       </CCol>
                     </CFormGroup>
                   </CCol>
@@ -299,7 +327,7 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
                 <strong>Merchant Fees Report</strong>
                 <div className="card-header-actions">
                   {_canAccess("business_customers", "view") && (
-                    <CTooltip content={globalConstants.EXPORT_REPORT}>
+                    <CTooltip content={globalConstants.EXPORT_MERCHANT_DATA}>
                       <CLink
                         className={`btn btn-dark btn-block ${
                           this.state.merchant_fees_report?.length === 0 ||
@@ -327,85 +355,79 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
                     <thead>
                       <tr>
                         <th>Sr.no</th>
-                        <th onClick={() => this.handleColumnSort("ref_id")}>
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("receiver_account_number")
+                          }
+                        >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Reference ID
+                              Account Number
                             </span>
-                            {this.state.fields.sort !== "ref_id" && (
+                            {this.state.fields.sort !==
+                              "receiver_account_number" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "ref_id" && (
+                              this.state.fields.sort ===
+                                "receiver_account_number" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "ref_id" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
-
-                        <th onClick={() => this.handleColumnSort("sname")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              Sender Name
-                            </span>
-                            {this.state.fields.sort !== "sname" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "sname" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "sname" && (
+                              this.state.fields.sort ===
+                                "receiver_account_number" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
                         <th
-                          onClick={() => this.handleColumnSort("mobile_number")}
+                          onClick={() => this.handleColumnSort("merchant_name")}
+                        >
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Merchant Name
+                            </span>
+                            {this.state.fields.sort !== "merchant_name" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.direction === "asc" &&
+                              this.state.fields.sort === "merchant_name" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.direction === "desc" &&
+                              this.state.fields.sort === "merchant_name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("merchant_mobile_number")
+                          }
                         >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
                               Mobile Number
                             </span>
-                            {this.state.fields.sort !== "mobile_number" && (
+                            {this.state.fields.sort !==
+                              "merchant_mobile_number" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "mobile_number" && (
+                              this.state.fields.sort ===
+                                "merchant_mobile_number" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "mobile_number" && (
+                              this.state.fields.sort ===
+                                "merchant_mobile_number" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
                         <th>Amount</th>
-                        <th>Fees</th>
-                        <th>Merchant Fees Capacity</th>
-                        <th>Narration</th>
-                        <th onClick={() => this.handleColumnSort("created_at")}>
-                          <span className="sortCls">
-                            <span className="table-header-text-mrg">
-                              Created Date
-                            </span>
-                            {this.state.fields.sort !== "created_at" && (
-                              <FontAwesomeIcon icon={faSort} />
-                            )}
-                            {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "created_at" && (
-                                <FontAwesomeIcon icon={faSortUp} />
-                              )}
-                            {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "created_at" && (
-                                <FontAwesomeIcon icon={faSortDown} />
-                              )}
-                          </span>
-                        </th>
+                        <th>Total Fees</th>
+                        <th>Total Fees Capacity</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -417,17 +439,17 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
                                 : index + 1}
                             </td>
-                            <td>{u.ref_id}</td>
-                            <td>{u.sname}</td>
-                            <td>{`+${u.mobile_number}`}</td>
-                            <td>{parseFloat(u.amount).toFixed(2)}</td>
-                            <td>{parseFloat(u.fees).toFixed(2)}</td>
+                            <td>{u.receiver_account_number}</td>
+                            <td>{u.merchant_name}</td>
+                            <td>{`+${u.merchant_mobile_number}`}</td>
                             <td>
-                              {parseFloat(u.merchant_fees_capacity).toFixed(2)}
+                              <WrapAmount value={u.total_amount} />
                             </td>
-                            <td>{u.narration}</td>
                             <td>
-                              {moment(u.created_at).format("DD-MM-YYYY HH:mm")}
+                              <WrapAmount value={u.total_fees} />
+                            </td>
+                            <td>
+                              <WrapAmount value={u.total_fees_capacity} />
                             </td>
                           </tr>
                         ))
@@ -457,4 +479,4 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
   }
 }
 
-export default Business_Customers_Merchant_Fees_Report;
+export default Merchant_Fees_Reports_Index;

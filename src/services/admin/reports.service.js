@@ -12,6 +12,8 @@ export const reportsService = {
   getTransactionList,
   downloadTransactionCSV,
   downloadAgentCSV,
+  getMerchantFeesReport,
+  downloadMerchantFeesReportData,
 };
 
 async function getCustomersList(postData) {
@@ -126,6 +128,47 @@ async function downloadAgentCSV(postData) {
   try {
     response = await fetch(
       `${API_URL}api/export-agent-commission-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+  }
+  return handleResponse(response);
+}
+
+async function getMerchantFeesReport(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("merchant_fees_reports", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-merchants-general-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+  }
+
+  return handleResponse(response);
+}
+
+async function downloadMerchantFeesReportData(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("merchant_fees_reports", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/export-merchants-general-fees-report`,
       requestOptions
     );
   } catch (error) {

@@ -132,14 +132,14 @@ class Customers_Management_Details_Report extends React.Component {
                   Manual Topup Request Details
                 </CNavLink>
               </CNavItem>
-              <CNavItem>
+              {/* <CNavItem>
                 <CNavLink
                   active={activeTab === "merchant_fees_report"}
                   onClick={() => this.handleTabClick("merchant_fees_report")}
                 >
                   Merchant Fees Report
                 </CNavLink>
-              </CNavItem>
+              </CNavItem> */}
             </CNav>
           </CCardHeader>
           <CCardBody>
@@ -193,14 +193,14 @@ class Customers_Management_Details_Report extends React.Component {
                   />
                 )}
               </CTabPane>
-              <CTabPane active={activeTab === "merchant_fees_report"}>
+              {/* <CTabPane active={activeTab === "merchant_fees_report"}>
                 {activeTab === "merchant_fees_report" && (
                   <CustomerManagementMerchantFeesReport
                     account_number={this.props.match.params.account_number}
                     activeTab={activeTab}
                   />
                 )}
-              </CTabPane>
+              </CTabPane> */}
             </CTabContent>
           </CCardBody>
           <CCardFooter>

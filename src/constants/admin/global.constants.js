@@ -38,6 +38,7 @@ export const globalConstants = {
   EXPORT_AGENT_DATA: "Export recharge details",
   EXPORT_REPORT: "Export report",
   EXPORT_TRANSACTION_DATA: "Export transaction data",
+  EXPORT_MERCHANT_DATA: "Export merchant data",
   EXPORT_AGENT_DATA_INDEX: "Export agent details report",
   VIEW_WITHDRAW_DETAILS: "View withdraw request detail",
   VIEW_MANUAL_TOPUP_DETAILS: "View manual top up details",
