@@ -330,7 +330,7 @@ class Customer_Management_Merchant_Fees_Report extends React.Component {
                         <th onClick={() => this.handleColumnSort("ref_id")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Reference ID
+                              Transaction ID
                             </span>
                             {this.state.fields.sort !== "ref_id" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -383,14 +383,14 @@ class Customer_Management_Merchant_Fees_Report extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th>Amount</th>
+                        <th>Received Amount</th>
                         <th>Fees</th>
-                        <th>Merchant Fees Capacity</th>
+                        <th>Transaction Cap</th>
                         <th>Specification</th>
                         <th onClick={() => this.handleColumnSort("created_at")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Created Date
+                              Transaction Date
                             </span>
                             {this.state.fields.sort !== "created_at" && (
                               <FontAwesomeIcon icon={faSort} />

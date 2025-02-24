@@ -425,9 +425,9 @@ class Merchant_Fees_Reports_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        <th>Amount</th>
+                        <th>Total Received Amount</th>
                         <th>Total Fees</th>
-                        <th>Total Fees Capacity</th>
+                        <th>Total Transaction Cap</th>
                       </tr>
                     </thead>
                     <tbody>
