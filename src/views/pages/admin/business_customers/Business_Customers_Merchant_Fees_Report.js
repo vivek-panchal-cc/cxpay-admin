@@ -89,7 +89,7 @@ class Business_Customers_Merchant_Fees_Report extends React.Component {
           });
         } else {
           this.setState({
-            totalRecords: res.data.pagination.total,
+            totalRecords: res.data.pagination?.total,
             fields: {
               ...this.state.fields,
               totalPage: res?.data?.pagination?.last_page,
