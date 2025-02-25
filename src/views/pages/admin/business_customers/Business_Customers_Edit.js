@@ -708,68 +708,170 @@ class Business_Customers_Edit extends React.Component {
                   </CCol>
                 </CRow>
 
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Customer ID</CLabel>
-                  <CInput
-                    type="text"
-                    id="cust_id"
-                    name="cust_id"
-                    placeholder="Enter Customer ID "
-                    autoComplete="name"
-                    value={this.state.fields.cust_id}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Customer ID</CLabel>
+                      <CInput
+                        type="text"
+                        id="cust_id"
+                        name="cust_id"
+                        placeholder="Enter Customer ID "
+                        autoComplete="name"
+                        value={this.state.fields.cust_id}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "cust_id",
+                          this.state.fields.cust_id,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Mobile Number</CLabel>
+                      <CInput
+                        type="text"
+                        id="mobile_number"
+                        name="mobile_number"
+                        placeholder="Enter Mobile Number "
+                        autoComplete="name"
+                        value={this.state.fields.mobile_number}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "mobile_number",
+                          this.state.fields.mobile_number,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Merchant Token</CLabel>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <div style={{ position: "relative", flex: 1 }}>
+                          <CInput
+                            type="text"
+                            id="merchant_token"
+                            name="merchant_token"
+                            placeholder="Enter Merchant Token"
+                            autoComplete="name"
+                            value={this.state.fields.merchant_token}
+                            onChange={this.handleChange}
+                            disabled={true}
+                          />
+
+                          {this.state.fields.merchant_token && (
+                            <CTooltip
+                              content={
+                                this.state.isCopied
+                                  ? globalConstants.COPIED_LABEL
+                                  : globalConstants.COPY_TO_CLIPBOARD
+                              }
+                            >
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  right: "10px",
+                                  top: "50%",
+                                  transform: "translateY(-50%)",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                  const { merchant_token } = this.state.fields;
+
+                                  if (!merchant_token) return;
+
+                                  if (
+                                    navigator.clipboard &&
+                                    navigator.clipboard.writeText
+                                  ) {
+                                    navigator.clipboard
+                                      .writeText(merchant_token)
+                                      .then(() => {
+                                        this.setState(
+                                          { isCopied: true },
+                                          () => {
+                                            setTimeout(
+                                              () =>
+                                                this.setState({
+                                                  isCopied: false,
+                                                }),
+                                              2000
+                                            );
+                                          }
+                                        );
+                                      })
+                                      .catch(() => {
+                                        this.fallbackCopyText(merchant_token);
+                                      });
+                                  } else {
+                                    this.fallbackCopyText(merchant_token);
+                                  }
+                                }}
+                              >
+                                {this.state.isCopied ? (
+                                  <FontAwesomeIcon icon={faCheck} />
+                                ) : (
+                                  <IconClipBoard />
+                                )}
+                              </span>
+                            </CTooltip>
+                          )}
+                        </div>
+                        <CTooltip content={globalConstants.REFRESH_TOKEN}>
+                          <button
+                            className="btn btn-dark btn-md ml-3"
+                            onClick={this.handleRefreshMerchantToken}
+                          >
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                          </button>
+                        </CTooltip>
+                      </div>
+                      {/* <CFormText className="help-block">
                     {this.validator.message(
-                      "cust_id",
-                      this.state.fields.cust_id,
+                      "merchant_token",
+                      this.state.fields.merchant_token,
                       "required",
                       { className: "text-danger" }
                     )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Mobile Number</CLabel>
-                  <CInput
-                    type="text"
-                    id="mobile_number"
-                    name="mobile_number"
-                    placeholder="Enter Mobile Number "
-                    autoComplete="name"
-                    value={this.state.fields.mobile_number}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "mobile_number",
-                      this.state.fields.mobile_number,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Company Name</CLabel>
-                  <CInput
-                    type="text"
-                    id="company_name"
-                    name="company_name"
-                    placeholder="Enter Company Name "
-                    autoComplete="name"
-                    value={this.state.fields.company_name}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "company_name",
-                      this.state.fields.company_name,
-                      "required|max:64",
-                      { className: "text-danger" }
-                    )}
-                    {/* {this.validator.message(
+                  </CFormText> */}
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Company Name</CLabel>
+                      <CInput
+                        type="text"
+                        id="company_name"
+                        name="company_name"
+                        placeholder="Enter Company Name "
+                        autoComplete="name"
+                        value={this.state.fields.company_name}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "company_name",
+                          this.state.fields.company_name,
+                          "required|max:64",
+                          { className: "text-danger" }
+                        )}
+                        {/* {this.validator.message(
                       "company_name",
                       this.state.fields.company_name,
                       "required|regex:^[a-zA-Z.\\s]*$",
@@ -781,331 +883,303 @@ class Business_Customers_Edit extends React.Component {
                         },
                       }
                     )} */}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Email</CLabel>
-                  <CInput
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="Enter Email "
-                    autoComplete="name"
-                    value={this.state.fields.email}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "email",
-                      this.state.fields.email,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "email",
-                      this.state.fields.email,
-                      "email",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">
-                    Chamber of Commerce{" "}
-                    <span className="smaller-note">
-                      (not older than 2 months)
-                    </span>
-                  </CLabel>
-                  <CInput
-                    type="text"
-                    id="business_id"
-                    name="business_id"
-                    placeholder="Enter Chamber of Commerce"
-                    autoComplete="name"
-                    value={this.state.fields.business_id}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Business Category</CLabel>
-                  <CSelect
-                    custom
-                    name="business_category_id"
-                    id="select"
-                    onChange={this.handleChange}
-                    value={this.state.fields.business_category_id}
-                  >
-                    <option value="" disabled>
-                      -- Enter Business Category --
-                    </option>
-                    ;
-                    {this.state.category_list?.map((ct, key) => {
-                      return (
-                        <option key={key} value={ct.id}>
-                          {capitalize(ct.name)}
-                        </option>
-                      );
-                    })}
-                  </CSelect>
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "business_category_id",
-                      this.state.fields.business_category_id,
-                      "required",
-                      {
-                        className: "text-danger",
-                      }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Business URL</CLabel>
-                  <CInput
-                    type="text"
-                    id="business_url"
-                    name="business_url"
-                    placeholder="Enter Business URL "
-                    autoComplete="name"
-                    value={this.state.fields.business_url}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                </CFormGroup>
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Email</CLabel>
+                      <CInput
+                        type="text"
+                        id="email"
+                        name="email"
+                        placeholder="Enter Email "
+                        autoComplete="name"
+                        value={this.state.fields.email}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "email",
+                          this.state.fields.email,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "email",
+                          this.state.fields.email,
+                          "email",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">
+                        Chamber of Commerce{" "}
+                        <span className="smaller-note">
+                          (not older than 2 months)
+                        </span>
+                      </CLabel>
+                      <CInput
+                        type="text"
+                        id="business_id"
+                        name="business_id"
+                        placeholder="Enter Chamber of Commerce"
+                        autoComplete="name"
+                        value={this.state.fields.business_id}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
 
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Country</CLabel>
-                  <CSelect
-                    custom
-                    name="country"
-                    id="country"
-                    onChange={this.handleCountryChange}
-                    value={this.state.country}
-                    disabled
-                  >
-                    <option value="">-- Country --</option>;
-                    {this.state.countryData &&
-                      this.state.countryData?.country_list
-                        ?.filter((country) => country.is_signup_country)
-                        ?.map((e, key) => {
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Business Category</CLabel>
+                      <CSelect
+                        custom
+                        name="business_category_id"
+                        id="select"
+                        onChange={this.handleChange}
+                        value={this.state.fields.business_category_id}
+                      >
+                        <option value="" disabled>
+                          -- Enter Business Category --
+                        </option>
+                        ;
+                        {this.state.category_list?.map((ct, key) => {
                           return (
-                            <option key={key} value={e.iso}>
-                              {e.country_name}
+                            <option key={key} value={ct.id}>
+                              {capitalize(ct.name)}
                             </option>
                           );
                         })}
-                  </CSelect>
-                </CFormGroup>
-
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">City</CLabel>
-                  <CSelect
-                    custom
-                    name="city"
-                    id="select"
-                    onChange={this.handleCityChange}
-                    value={this.state.city}
-                  >
-                    {/* <option value="">-- city --</option>; */}
-                    {this.state.cityData?.map((e, key) => {
-                      return (
-                        <option key={key} value={e.city_name}>
-                          {e.city_name}
-                        </option>
-                      );
-                    })}
-                  </CSelect>
-                </CFormGroup>
-
-                {/* <CCol className="col-md-4 col flex-wrap"> */}
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Merchant Token</CLabel>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ position: "relative", flex: 1 }}>
-                      <CInput
-                        type="text"
-                        id="merchant_token"
-                        name="merchant_token"
-                        placeholder="Enter Merchant Token"
-                        autoComplete="name"
-                        value={this.state.fields.merchant_token}
-                        onChange={this.handleChange}
-                        disabled={true}
-                      />
-
-                      {this.state.fields.merchant_token && (
-                        <CTooltip
-                          content={
-                            this.state.isCopied
-                              ? globalConstants.COPIED_LABEL
-                              : globalConstants.COPY_TO_CLIPBOARD
+                      </CSelect>
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "business_category_id",
+                          this.state.fields.business_category_id,
+                          "required",
+                          {
+                            className: "text-danger",
                           }
-                        >
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "10px",
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => {
-                              const { merchant_token } = this.state.fields;
-
-                              if (!merchant_token) return;
-
-                              if (
-                                navigator.clipboard &&
-                                navigator.clipboard.writeText
-                              ) {
-                                navigator.clipboard
-                                  .writeText(merchant_token)
-                                  .then(() => {
-                                    this.setState({ isCopied: true }, () => {
-                                      setTimeout(
-                                        () =>
-                                          this.setState({ isCopied: false }),
-                                        2000
-                                      );
-                                    });
-                                  })
-                                  .catch(() => {
-                                    this.fallbackCopyText(merchant_token);
-                                  });
-                              } else {
-                                this.fallbackCopyText(merchant_token);
-                              }
-                            }}
-                          >
-                            {this.state.isCopied ? (
-                              <FontAwesomeIcon icon={faCheck} />
-                            ) : (
-                              <IconClipBoard />
-                            )}
-                          </span>
-                        </CTooltip>
-                      )}
-                    </div>
-                    <CTooltip content={globalConstants.REFRESH_TOKEN}>
-                      <button
-                        className="btn btn-dark btn-md ml-3"
-                        onClick={this.handleRefreshMerchantToken}
-                      >
-                        <i class="fa fa-refresh" aria-hidden="true"></i>
-                      </button>
-                    </CTooltip>
-                  </div>
-                  {/* <CFormText className="help-block">
-                    {this.validator.message(
-                      "merchant_token",
-                      this.state.fields.merchant_token,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText> */}
-                </CFormGroup>
-                {/* </CCol> */}
-
-                <CFormGroup row>
-                  <CCol md="1">Profile Image</CCol>
-
-                  <CCol sm="2">
-                    <img
-                      src={
-                        site_logo
-                          ? URL.createObjectURL(site_logo)
-                          : this.state.fields.profile_image ||
-                            "/avatars/default-avatar.png"
-                      }
-                      className=""
-                      width={100}
-                    />
-                  </CCol>
-                  <CCol sm="5">
-                    <CInput
-                      type="file"
-                      id="site_logo"
-                      name="site_logo"
-                      placeholder="Browse Logo "
-                      autoComplete="site_logo "
-                      onChange={this.handleUpload}
-                      style={{ border: "none" }}
-                    />
-                    {this.state.imageTypeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Select valid image. (jpg, jpeg or png)
-                        </div>
-                      </small>
-                    )}
-                    {this.state.imageSizeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Image size is greater than 5MB. Please upload image
-                          below 5MB.
-                        </div>
-                      </small>
-                    )}
-                    {false && (
-                      <CCol>
-                        <CButton
-                          type="button"
-                          size="sm"
-                          color="secondary"
-                          onClick={this.handleClearProfilePic}
-                        >
-                          Clear
-                        </CButton>
-                      </CCol>
-                    )}
-                  </CCol>
-                </CFormGroup>
-
-                <CFormGroup row>
-                  <CCol md="1">QR Code</CCol>
-
-                  <CCol sm="11">
-                    <img
-                      src={this.state.fields.qr_code_image}
-                      className=""
-                      width={100}
-                    />
-                  </CCol>
-                </CFormGroup>
-
-                <CFormGroup row>
-                  <CCol md="2">Status</CCol>
-
-                  <CCol sm="10" style={{ paddingLeft: "10px" }}>
-                    <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.status == 1 && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="status"
-                          name="status"
-                          value={this.state.fields.status}
-                          defaultChecked
-                          onChange={this.handleCheckboxChange}
-                        />
-                      )}
-
-                      {this.state.fields.status == 0 && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="status"
-                          name="status"
-                          value={this.state.fields.status}
-                          onChange={this.handleCheckboxChange}
-                        />
-                      )}
+                        )}
+                      </CFormText>
                     </CFormGroup>
                   </CCol>
-                </CFormGroup>
+                  <CCol className="col-md-8 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Business URL</CLabel>
+                      <CInput
+                        type="text"
+                        id="business_url"
+                        name="business_url"
+                        placeholder="Enter Business URL "
+                        autoComplete="name"
+                        value={this.state.fields.business_url}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Country</CLabel>
+                      <CSelect
+                        custom
+                        name="country"
+                        id="country"
+                        onChange={this.handleCountryChange}
+                        value={this.state.country}
+                        disabled
+                      >
+                        <option value="">-- Country --</option>;
+                        {this.state.countryData &&
+                          this.state.countryData?.country_list
+                            ?.filter((country) => country.is_signup_country)
+                            ?.map((e, key) => {
+                              return (
+                                <option key={key} value={e.iso}>
+                                  {e.country_name}
+                                </option>
+                              );
+                            })}
+                      </CSelect>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-8 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">City</CLabel>
+                      <CSelect
+                        custom
+                        name="city"
+                        id="select"
+                        onChange={this.handleCityChange}
+                        value={this.state.city}
+                      >
+                        {/* <option value="">-- city --</option>; */}
+                        {this.state.cityData?.map((e, key) => {
+                          return (
+                            <option key={key} value={e.city_name}>
+                              {e.city_name}
+                            </option>
+                          );
+                        })}
+                      </CSelect>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup className="d-flex flex-wrap">
+                      <CCol md="6" className="pl-0">
+                        Status
+                      </CCol>
+                      <CCol sm="6" style={{ paddingLeft: "10px" }}>
+                        <CFormGroup variant="custom-checkbox" inline>
+                          {this.state.fields.status == 1 && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="status"
+                              name="status"
+                              value={this.state.fields.status}
+                              defaultChecked
+                              onChange={this.handleCheckboxChange}
+                            />
+                          )}
+
+                          {this.state.fields.status == 0 && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="status"
+                              name="status"
+                              value={this.state.fields.status}
+                              onChange={this.handleCheckboxChange}
+                            />
+                          )}
+                        </CFormGroup>
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup className="d-flex flex-wrap">
+                      <CCol md="6" className="pl-0">
+                        Business User Approval
+                      </CCol>
+
+                      <CCol sm="6" className="pl-0">
+                        <CFormGroup variant="custom-checkbox" inline>
+                          {this.state.fields.admin_approved === true && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="admin_approved"
+                              name="admin_approved"
+                              value={this.state.fields.admin_approved}
+                              defaultChecked
+                              onChange={this.handleCheckboxChangeIsApproved}
+                            />
+                          )}
+
+                          {this.state.fields.admin_approved === false && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="admin_approved"
+                              name="admin_approved"
+                              value={this.state.fields.admin_approved}
+                              onChange={this.handleCheckboxChangeIsApproved}
+                            />
+                          )}
+                        </CFormGroup>
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">QR Code</CLabel>
+
+                      <div>
+                        <img
+                          src={this.state.fields.qr_code_image}
+                          className=""
+                          width={100}
+                        />
+                      </div>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Profile Image</CLabel>
+
+                      <div className="d-flex">
+                        <img
+                          src={
+                            site_logo
+                              ? URL.createObjectURL(site_logo)
+                              : this.state.fields.profile_image ||
+                                "/avatars/default-avatar.png"
+                          }
+                          className=""
+                          width={100}
+                        />
+
+                        <CInput
+                          type="file"
+                          id="site_logo"
+                          name="site_logo"
+                          placeholder="Browse Logo "
+                          autoComplete="site_logo "
+                          onChange={this.handleUpload}
+                          style={{ border: "none" }}
+                        />
+                        {this.state.imageTypeValidation && (
+                          <small className="form-text text-muted help-block">
+                            <div className="text-danger">
+                              Select valid image. (jpg, jpeg or png)
+                            </div>
+                          </small>
+                        )}
+                        {this.state.imageSizeValidation && (
+                          <small className="form-text text-muted help-block">
+                            <div className="text-danger">
+                              Image size is greater than 5MB. Please upload
+                              image below 5MB.
+                            </div>
+                          </small>
+                        )}
+                        {false && (
+                          <CCol>
+                            <CButton
+                              type="button"
+                              size="sm"
+                              color="secondary"
+                              onClick={this.handleClearProfilePic}
+                            >
+                              Clear
+                            </CButton>
+                          </CCol>
+                        )}
+                      </div>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
 
                 {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && ( */}
                 <CFormGroup className="limits-wrap d-flex flex-wrap">
@@ -1528,39 +1602,6 @@ class Business_Customers_Edit extends React.Component {
                       </tbody>
                     </table>
                   )}
-
-                <CFormGroup className="limits-wrap d-flex flex-wrap">
-                  <CCol md="2" className="pl-0">
-                    Business User Approval
-                  </CCol>
-
-                  <CCol sm="10" className="pl-0">
-                    <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.admin_approved === true && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="admin_approved"
-                          name="admin_approved"
-                          value={this.state.fields.admin_approved}
-                          defaultChecked
-                          onChange={this.handleCheckboxChangeIsApproved}
-                        />
-                      )}
-
-                      {this.state.fields.admin_approved === false && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="admin_approved"
-                          name="admin_approved"
-                          value={this.state.fields.admin_approved}
-                          onChange={this.handleCheckboxChangeIsApproved}
-                        />
-                      )}
-                    </CFormGroup>
-                  </CCol>
-                </CFormGroup>
 
                 <CFormGroup className="limits-wrap">
                   <div className="row mb-3 mb-lg-4 limits-heading">
