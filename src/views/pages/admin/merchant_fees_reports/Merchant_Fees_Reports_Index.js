@@ -82,7 +82,7 @@ class Merchant_Fees_Reports_Index extends React.Component {
         });
       } else {
         this.setState({
-          totalRecords: res.data.pagination.total,
+          totalRecords: res.data.pagination?.total,
           fields: {
             ...this.state.fields,
             totalPage: res?.data?.pagination?.last_page,
