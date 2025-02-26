@@ -32,7 +32,6 @@ async function getCustomersList(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -47,17 +46,14 @@ async function customerDetails(postData) {
 
   let response;
   try {
-    setLoading(true);
     response = await fetch(`${API_URL}api/get-customer`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
 
 async function downloadCustomerCSV(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("customer_reports", "view"),
@@ -71,7 +67,6 @@ async function downloadCustomerCSV(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -91,14 +86,12 @@ async function getTransactionList(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
 
   return handleResponse(response);
 }
 
 async function downloadTransactionCSV(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("transaction_reports", "view"),
@@ -112,13 +105,11 @@ async function downloadTransactionCSV(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
 
 async function downloadAgentCSV(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("agent_reports", "view"),
@@ -132,7 +123,6 @@ async function downloadAgentCSV(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -152,14 +142,11 @@ async function getMerchantFeesReport(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
-
   return handleResponse(response);
 }
 
 async function downloadMerchantFeesReportData(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("merchant_fees_reports", "view"),
@@ -173,7 +160,6 @@ async function downloadMerchantFeesReportData(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }

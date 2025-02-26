@@ -76,7 +76,7 @@ class Customer_Reports_Index extends React.Component {
 
   getCountry() {
     customersManagementService.getCountry().then((res) => {
-      if (res.status === false) {
+      if (!res.success) {
         notify.error(res.message);
       } else {
         if (res.data == null) {
@@ -93,15 +93,10 @@ class Customer_Reports_Index extends React.Component {
 
   getCustomersList() {
     reportsService.getCustomersList(this.state.fields).then((res) => {
-      if (res.success === false) {
+      if (!res.success) {
         this.setState({
-          totalRecords: res.data?.pagination?.total,
-          fields: {
-            ...this.state.fields,
-          },
-          customers_list: res.data.customers,
+          customers_list: [],
         });
-        notify.error(res.message);
       } else {
         this.setState({
           totalRecords: res.data?.pagination?.total,

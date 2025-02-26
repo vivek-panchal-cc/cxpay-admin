@@ -74,7 +74,10 @@ class Business_Customers_Edit extends React.Component {
       },
       is_kyc_approved_status: "",
       module_permission: {},
-      countryData: {},
+      countryData: {
+        country_list: [],
+        city_list: {},
+      },
       cityData: [],
       category_list: [],
       imageTypeValidation: false,
@@ -97,79 +100,67 @@ class Business_Customers_Edit extends React.Component {
   }
 
   componentDidMount() {
-    this.getCountry();
-    setTimeout(() => {
-      if (
-        _canAccess(
-          this.props.module_name,
-          this.props.action,
-          "/admin/business_customers"
-        )
-      ) {
-        var postData = {
-          mobile_number: this.state.fields._id,
-        };
+    const fetchCountry = businessCustomersService.getCountry();
+    const fetchCategory = businessCustomersService.businessCategory();
+    const fetchCustomer = businessCustomersService.getCustomer({
+      mobile_number: this.state.fields._id,
+    });
 
-        businessCustomersService.getCustomer(postData).then((res) => {
-          if (!res.success) {
-            notify.error(res.message);
-            history.push("/admin/business_customers");
-          } else {
-            this.setState({ ...this.state.fields, fields: res.data });
-
-            // const country_index = this.state.countryData.country_list.findIndex(
-            //   (e) => e.iso === res.data.country
-            // );
-            const { iso } =
-              this.state.countryData.country_list.find(
-                (e) => e.iso === res.data.country
-              ) || {};
-            const statustmp = res.data.status === 0 ? 0 : 1;
-            // const kyctmp = res.data.is_kyc === false ? false : true;
-            const isApprovedtmp =
-              res.data.admin_approved === false ? false : true;
-            // const isKycApproved =
-            //   res.data.kyc_approved === false ? false : true;
-            this.setState({
-              cityData: [...this.state.countryData.city_list[iso]],
-              city: res.data.city,
-              country: res.data.country,
-              status: statustmp,
-              // is_kyc: kyctmp,
-              admin_approved: isApprovedtmp,
-              kyc_approved_status: res.data.kyc_approved_status,
-              is_kyc_approved_status: res.data.kyc_approved_status,
-            });
-          }
-        });
-
-        businessCustomersService.businessCategory().then((res) => {
-          if (!res.success) {
-            // notify.error(res.message);
-            this.setState({ category_list: [] });
-          } else {
-            this.setState({
-              category_list: res.data?.category,
-            });
-          }
-        });
-      }
-    }, 100);
-  }
-
-  getCountry() {
-    businessCustomersService.getCountry().then((res) => {
-      if (!res.success) {
-        notify.error(res.message);
-      } else {
-        if (res.data == null) {
-          notify.error("Country Not Found");
-          history.push("/admin/business_customers");
+    // Fetch Country & Business Category first
+    Promise.all([fetchCountry, fetchCategory])
+      .then(([countryRes, categoryRes]) => {
+        if (!countryRes.success) {
+          notify.error(countryRes.message);
+          throw new Error("Country API failed");
         }
 
-        this.setState({ countryData: res.data });
-      }
-    });
+        if (!countryRes.data) {
+          history.push("/admin/business_customers");
+          throw new Error("Country data not found");
+        }
+
+        // Set country and category data first
+        this.setState(
+          {
+            countryData: countryRes.data,
+            category_list: categoryRes.success
+              ? categoryRes.data?.category
+              : [],
+          },
+          () => {
+            // After setting country & category, fetch customer data
+            fetchCustomer
+              .then((customerRes) => {
+                if (!customerRes.success) {
+                  history.push("/admin/business_customers");
+                  return;
+                }
+
+                const { iso } =
+                  countryRes.data.country_list.find(
+                    (e) => e.iso === customerRes.data.country
+                  ) || {};
+
+                this.setState({
+                  fields: customerRes.data,
+                  cityData: iso ? [...countryRes.data.city_list[iso]] : [],
+                  city: customerRes.data.city,
+                  country: customerRes.data.country,
+                  status: customerRes.data.status === 0 ? 0 : 1,
+                  admin_approved: customerRes.data.admin_approved !== false,
+                  kyc_approved_status: customerRes.data.kyc_approved_status,
+                  is_kyc_approved_status: customerRes.data.kyc_approved_status,
+                });
+              })
+              .catch((error) => {
+                console.error("Error fetching customer data:", error);
+              });
+          }
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching country or category data:", error);
+      });
   }
 
   handleCountryChange(e) {
@@ -1042,7 +1033,7 @@ class Business_Customers_Edit extends React.Component {
 
                 <CRow>
                   <CCol className="col-md-4 col flex-wrap">
-                    <CFormGroup className="d-flex flex-wrap">
+                    <CFormGroup className="d-flex">
                       <CCol md="6" className="pl-0">
                         Status
                       </CCol>
@@ -1075,7 +1066,7 @@ class Business_Customers_Edit extends React.Component {
                     </CFormGroup>
                   </CCol>
                   <CCol className="col-md-4 col flex-wrap">
-                    <CFormGroup className="d-flex flex-wrap">
+                    <CFormGroup className="d-flex">
                       <CCol md="6" className="pl-0">
                         Business User Approval
                       </CCol>

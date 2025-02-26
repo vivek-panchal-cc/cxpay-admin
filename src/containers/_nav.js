@@ -278,7 +278,7 @@ const _nav = [
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "Customers Reports",
+        name: "Customers Report",
         to: "/admin/customer_reports",
         icon: (
           <FontAwesomeIcon
@@ -291,7 +291,7 @@ const _nav = [
       },
       {
         _tag: "CSidebarNavItem",
-        name: "Transaction Reports",
+        name: "Transactions Report",
         to: "/admin/transaction_reports",
         icon: (
           <FontAwesomeIcon icon={faWallet} className="c-sidebar-nav-icon" />
@@ -301,7 +301,7 @@ const _nav = [
       },
       {
         _tag: "CSidebarNavItem",
-        name: "Merchant Fee Reports",
+        name: "Merchant Fees Report",
         to: "/admin/merchant_fees_reports",
         icon: <IconMerchantReports className="c-sidebar-nav-icon" />,
         module_name: "merchant_fees_reports",

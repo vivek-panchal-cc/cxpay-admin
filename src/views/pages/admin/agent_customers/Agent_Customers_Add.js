@@ -18,6 +18,8 @@ import {
   CCardBody,
   CCardFooter,
   CTooltip,
+  CTextarea,
+  CRow,
   // CRow,
   // CTabPane,
   // CModalBody,
@@ -349,73 +351,82 @@ class Agent_Customers_Add extends Component {
           </div>
         </CCardHeader>
         <CCardBody>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">First Name</CLabel>
-            <CInput
-              type="text"
-              id="first_name"
-              name="first_name"
-              placeholder="Enter First Name"
-              autoComplete="first_name"
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block">
-              {this.validator.message(
-                "first_name",
-                this.state.fields.first_name,
-                "required|alpha_space",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Last Name</CLabel>
-            <CInput
-              type="text"
-              id="last_name"
-              name="last_name"
-              placeholder="Enter Last Name"
-              autoComplete="last_name"
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block">
-              {this.validator.message(
-                "last_name",
-                this.state.fields.last_name,
-                "required|alpha_space",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-email">Email</CLabel>
-            <CInput
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter Email "
-              autoComplete="email"
-              onChange={this.handleChange}
-            />
-            <CFormText className="help-block">
-              {this.validator.message(
-                "email",
-                this.state.fields.email,
-                "required|email",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Mobile Number</CLabel>
-            <div className="phone_with_ccode">
-              <div className="con_selectWrap">
+          <CRow>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">First Name</CLabel>
+                <CInput
+                  type="text"
+                  id="first_name"
+                  name="first_name"
+                  placeholder="Enter First Name"
+                  autoComplete="first_name"
+                  onChange={this.handleChange}
+                />
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "first_name",
+                    this.state.fields.first_name,
+                    "required|alpha_space",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
+            </CCol>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Last Name</CLabel>
+                <CInput
+                  type="text"
+                  id="last_name"
+                  name="last_name"
+                  placeholder="Enter Last Name"
+                  autoComplete="last_name"
+                  onChange={this.handleChange}
+                />
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "last_name",
+                    this.state.fields.last_name,
+                    "required|alpha_space",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
+            </CCol>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-email">Email</CLabel>
+                <CInput
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter Email "
+                  autoComplete="email"
+                  onChange={this.handleChange}
+                />
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "email",
+                    this.state.fields.email,
+                    "required|email",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
+            </CCol>
+          </CRow>
+
+          <CRow>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Country Code</CLabel>
                 <CSelect
                   custom
                   name="country_code"
@@ -441,8 +452,11 @@ class Agent_Customers_Add extends Component {
                     { className: "text-danger" }
                   )}
                 </CFormText>
-              </div>
-              <div className="phone_num_wrap">
+              </CFormGroup>
+            </CCol>
+            <CCol className="col-md-8 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Mobile Number</CLabel>
                 <CInput
                   type="number"
                   id="mobile_number"
@@ -452,82 +466,91 @@ class Agent_Customers_Add extends Component {
                   value={this.state.fields.mobile_number}
                   onChange={this.handleChange}
                   onKeyPress={this.handleKeyPress}
+                  onWheel={(e) => e.target.blur()}
+                  min="0"
                 />
                 <CFormText className="help-block">
                   {this.validator.message(
                     "mobile_number",
                     this.state.fields.mobile_number,
-                    `required|numeric|min:6|max:7|regex:^[0-9]*$`,
+                    `required|numeric|min:6|max:7|regex:^(?!-)[0-9]*$`,
                     { className: "text-danger" }
                   )}
                 </CFormText>
-              </div>
-            </div>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Country</CLabel>
-            <CSelect
-              custom
-              name="country"
-              id="country"
-              // onChange={this.handleCountryChange}
-              value={this.state.fields.country}
-              disabled={true}
-            >
-              <option value="">-- Country --</option>;
-              {this.state?.countryData?.map((e, key) => {
-                return (
-                  <option key={key} value={e.iso}>
-                    {e.country_name}
-                  </option>
-                );
-              })}
-            </CSelect>
-            <CFormText className="help-block">
-              {this.validator.message(
-                "country",
-                this.state.fields.country,
-                "required",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
+              </CFormGroup>
+            </CCol>
+          </CRow>
+
+          <CRow>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Country</CLabel>
+                <CSelect
+                  custom
+                  name="country"
+                  id="country"
+                  // onChange={this.handleCountryChange}
+                  value={this.state.fields.country}
+                  disabled={true}
+                >
+                  <option value="">-- Country --</option>;
+                  {this.state?.countryData?.map((e, key) => {
+                    return (
+                      <option key={key} value={e.iso}>
+                        {e.country_name}
+                      </option>
+                    );
+                  })}
+                </CSelect>
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "country",
+                    this.state.fields.country,
+                    "required",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
+            </CCol>
+            <CCol className="col-md-8 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">City</CLabel>
+                <CSelect
+                  custom
+                  name="city"
+                  id="city"
+                  onChange={this.handleChange}
+                  // onChange={this.handleCityChange}
+                  // value={this.state.fields.city}
+                >
+                  <option value="">-- City --</option>;
+                  {this.state?.cityData?.map((e, key) => {
+                    return (
+                      <option key={key} value={e.city_name}>
+                        {e.city_name}
+                      </option>
+                    );
+                  })}
+                </CSelect>
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "city",
+                    this.state.fields.city,
+                    "required",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
+            </CCol>
+          </CRow>
 
           <CFormGroup>
-            <CLabel htmlFor="nf-name">City</CLabel>
-            <CSelect
-              custom
-              name="city"
-              id="city"
-              onChange={this.handleChange}
-              // onChange={this.handleCityChange}
-              // value={this.state.fields.city}
-            >
-              <option value="">-- City --</option>;
-              {this.state?.cityData?.map((e, key) => {
-                return (
-                  <option key={key} value={e.city_name}>
-                    {e.city_name}
-                  </option>
-                );
-              })}
-            </CSelect>
-            <CFormText className="help-block">
-              {this.validator.message(
-                "city",
-                this.state.fields.city,
-                "required",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
             <CLabel htmlFor="nf-name">Address</CLabel>
-            <CInput
+            <CTextarea
               type="text"
               id="address"
               name="address"
@@ -546,140 +569,158 @@ class Agent_Customers_Add extends Component {
               )}
             </CFormText>
           </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Commission Type</CLabel>
-            <CSelect
-              custom
-              name="commission_type"
-              id="commission_type"
-              onChange={this.handleChange}
-              // value={this.state.fields.city}
-            >
-              <option value={""}>{"Select Commission Type"}</option>
-              <option value={"fixed"}>{"Fixed"}</option>
-              <option value={"percentage"}>{"Percentage"}</option>
-            </CSelect>
-            <CFormText className="help-block">
-              {this.validator.message(
-                "commission_type",
-                this.state.fields.commission_type,
-                "required",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">Commission Amount</CLabel>
-            <CInput
-              type="number"
-              id="commission_amount"
-              name="commission_amount"
-              placeholder="Enter Commission Amount"
-              autoComplete="commission_amount"
-              onChange={this.handleChange}
-              onKeyPress={this.handleKeyPress}
-            />
-            <CFormText className="help-block">
-              {this.validator.message(
-                "commission_amount",
-                this.state.fields.commission_amount,
-                "required|numeric|min:0,num|max:6",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
 
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">System Commission Type</CLabel>
-            <CSelect
-              custom
-              name="system_commission_type"
-              id="system_commission_type"
-              onChange={this.handleChange}
-            >
-              <option value={""}>{"Select Commission Type"}</option>
-              <option value={"fixed"}>{"Fixed"}</option>
-              <option value={"percentage"}>{"Percentage"}</option>
-            </CSelect>
-            <CFormText className="help-block">
-              {this.validator.message(
-                "system_commission_type",
-                this.state.fields.system_commission_type,
-                "required",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup>
-            <CLabel htmlFor="nf-name">System Commission Amount</CLabel>
-            <CInput
-              type="number"
-              id="system_commission_amount"
-              name="system_commission_amount"
-              placeholder="Enter System Commission Amount"
-              autoComplete="system_commission_amount"
-              onChange={this.handleChange}
-              onKeyPress={this.handleKeyPress}
-            />
-            <CFormText className="help-block">
-              {this.validator.message(
-                "system_commission_amount",
-                this.state.fields.system_commission_amount,
-                "required|numeric|min:0,num|max:6",
-                {
-                  className: "text-danger",
-                }
-              )}
-            </CFormText>
-          </CFormGroup>
-          <CFormGroup row>
-            <CCol md="2">Profile Image</CCol>
+          <CRow>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Commission Type</CLabel>
+                <CSelect
+                  custom
+                  name="commission_type"
+                  id="commission_type"
+                  onChange={this.handleChange}
+                  // value={this.state.fields.city}
+                >
+                  <option value={""}>{"Select Commission Type"}</option>
+                  <option value={"fixed"}>{"Fixed"}</option>
+                  <option value={"percentage"}>{"Percentage"}</option>
+                </CSelect>
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "commission_type",
+                    this.state.fields.commission_type,
+                    "required",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
+            </CCol>
+            <CCol className="col-md-8 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Commission Amount</CLabel>
+                <CInput
+                  type="number"
+                  id="commission_amount"
+                  name="commission_amount"
+                  placeholder="Enter Commission Amount"
+                  autoComplete="commission_amount"
+                  onChange={this.handleChange}
+                  onKeyPress={this.handleKeyPress}
+                />
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "commission_amount",
+                    this.state.fields.commission_amount,
+                    "required|numeric|min:0,num|max:6",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
+            </CCol>
+          </CRow>
 
-            <CCol sm="2">
-              <img
-                src={
-                  this.state.fields.profile_image
-                    ? URL.createObjectURL(this.state.fields.profile_image)
-                    : "/avatars/default-avatar.png"
-                }
-                alt="Profile"
-                className=""
-                width={100}
-              />
+          <CRow>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">System Commission Type</CLabel>
+                <CSelect
+                  custom
+                  name="system_commission_type"
+                  id="system_commission_type"
+                  onChange={this.handleChange}
+                >
+                  <option value={""}>{"Select Commission Type"}</option>
+                  <option value={"fixed"}>{"Fixed"}</option>
+                  <option value={"percentage"}>{"Percentage"}</option>
+                </CSelect>
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "system_commission_type",
+                    this.state.fields.system_commission_type,
+                    "required",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
             </CCol>
-            <CCol sm="5">
-              <CInput
-                type="file"
-                id="profile_image"
-                name="profile_image"
-                placeholder="Browse Logo "
-                autoComplete="profile_image "
-                onChange={this.handleUpload}
-                style={{ border: "none" }}
-              />
-              {this.state.imageTypeValidation && (
-                <small className="form-text text-muted help-block">
-                  <div className="text-danger">
-                    Select valid image. (jpg, jpeg or png)
-                  </div>
-                </small>
-              )}
-              {this.state.imageSizeValidation && (
-                <small className="form-text text-muted help-block">
-                  <div className="text-danger">
-                    Image size is greater than 5MB. Please upload image below
-                    5MB.
-                  </div>
-                </small>
-              )}
+            <CCol className="col-md-8 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">System Commission Amount</CLabel>
+                <CInput
+                  type="number"
+                  id="system_commission_amount"
+                  name="system_commission_amount"
+                  placeholder="Enter System Commission Amount"
+                  autoComplete="system_commission_amount"
+                  onChange={this.handleChange}
+                  onKeyPress={this.handleKeyPress}
+                />
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "system_commission_amount",
+                    this.state.fields.system_commission_amount,
+                    "required|numeric|min:0,num|max:6",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
             </CCol>
-          </CFormGroup>
+          </CRow>
+
+          <CRow>
+            <CCol className="col-md-4 col flex-wrap">
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Profile Image</CLabel>
+
+                <div className="d-flex">
+                  <img
+                    src={
+                      this.state.fields.profile_image
+                        ? URL.createObjectURL(this.state.fields.profile_image)
+                        : "/avatars/default-avatar.png"
+                    }
+                    alt="Profile"
+                    className=""
+                    width={100}
+                  />
+
+                  <CInput
+                    type="file"
+                    id="profile_image"
+                    name="profile_image"
+                    placeholder="Browse Logo "
+                    autoComplete="profile_image "
+                    onChange={this.handleUpload}
+                    style={{ border: "none" }}
+                  />
+                  {this.state.imageTypeValidation && (
+                    <small className="form-text text-muted help-block">
+                      <div className="text-danger">
+                        Select valid image. (jpg, jpeg or png)
+                      </div>
+                    </small>
+                  )}
+                  {this.state.imageSizeValidation && (
+                    <small className="form-text text-muted help-block">
+                      <div className="text-danger">
+                        Image size is greater than 5MB. Please upload image
+                        below 5MB.
+                      </div>
+                    </small>
+                  )}
+                </div>
+              </CFormGroup>
+            </CCol>
+          </CRow>
+
           {/* <CFormGroup row>
             <CCol tag="label" md="1">
               KYC Approval

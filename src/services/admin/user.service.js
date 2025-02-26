@@ -30,15 +30,12 @@ function login(email, password) {
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "mode":"no-cors",
+      mode: "no-cors",
     },
     body: JSON.stringify({ email, password }),
   };
 
-  return fetch(
-    `${API_URL}api/auth/signin`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/auth/signin`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -62,10 +59,7 @@ function getUsersList(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/users/index`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/index`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -96,10 +90,7 @@ function getUser(id) {
     headers: authHeader("users", "view"),
   };
 
-  return fetch(
-    `${API_URL}api/users/${id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/${id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -131,10 +122,7 @@ function deleteUser(id) {
     method: "DELETE",
     headers: authHeader("users", "delete"),
   };
-  return fetch(
-    `${API_URL}api/users/${id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/${id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -151,10 +139,7 @@ function forgotPassword(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/forgot_password`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/forgot_password`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -171,10 +156,7 @@ function resetPassword(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/reset_password`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/reset_password`, requestOptions)
     .catch((error) => {
       setLoading(false);
       notify.error("Something went wrong");
@@ -190,10 +172,7 @@ function getUserGroups() {
     headers: authHeader("common", "view"),
   };
 
-  return fetch(
-    `${API_URL}api/user_groups/data/list`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/user_groups/data/list`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -204,25 +183,22 @@ function getUserGroups() {
 
 function getPermission() {
   let user = JSON.parse(localStorage.getItem("user"));
-  setLoading(true);
+  // setLoading(true);
   const requestOptions = {
     method: "GET",
     headers: authHeader("common", "view"),
   };
 
-  return fetch(
-    `${API_URL}api/users/permission/${user.id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/permission/${user.id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
+      // setLoading(false);
       return Promise.reject();
     })
     .then((data) => {
       return data.text().then((text) => {
         const data = text && JSON.parse(text);
-        setLoading(false);
+        // setLoading(false);
         if (
           data.type !== undefined &&
           data.type === "unauthorized" &&
@@ -250,10 +226,7 @@ function changeUserStatus(id, postData) {
     headers: authHeader("users", "edit"),
     body: JSON.stringify(postData),
   };
-  return fetch(
-    `${API_URL}api/users/${id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/${id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -270,10 +243,7 @@ function updateMyProfile(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/update_my_profile`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/update_my_profile`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -289,10 +259,7 @@ function getMyProfile(id) {
     headers: authHeader(),
   };
 
-  return fetch(
-    `${API_URL}api/get_my_profile`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/get_my_profile`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -309,10 +276,7 @@ function deleteMultipleUsers(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/delete_multiple_users`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/delete_multiple_users`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -329,10 +293,7 @@ function changeBulkUsersStatus(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${API_URL}api/users/change_bulk_users_status`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/change_bulk_users_status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);

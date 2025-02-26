@@ -21,6 +21,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CInputGroupPrepend,
+  CTextarea,
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
@@ -88,38 +89,50 @@ class Business_Customer_Add extends Component {
   }
 
   componentDidMount() {
-    this.getCountryCity();
-    this.getCategory();
-  }
+    const fetchCountry = businessCustomersService.getCountry();
+    const fetchCategory = businessCustomersService.businessCategory();
 
-  getCategory() {
-    businessCustomersService.businessCategory().then((res) => {
-      if (!res.success) {
-        // notify.error(res.message);
-        this.setState({ category_list: [] });
-      } else {
-        this.setState({
-          category_list: res.data?.category,
-        });
-      }
-    });
-  }
+    Promise.all([fetchCountry, fetchCategory])
+      .then(([countryRes, categoryRes]) => {
+        if (!countryRes.success) {
+          notify.error(countryRes.message);
+          return;
+        }
 
-  /********** Retrive Data of Country and City  *****************/
-  getCountryCity() {
-    businessCustomersService.getCountry().then((res) => {
-      if (!res.success) {
-        this.setState({ countryCityRes: [] });
-      } else {
-        const countryList = res?.data?.country_list || [];
-        this.setState({
-          countryData: countryList?.filter(
-            (country) => country.is_signup_country
-          ),
-        });
-        this.setState({ countryCityRes: res?.data });
-      }
-    });
+        if (!countryRes.data) {
+          notify.error("Country Not Found");
+          history.push("/admin/business_customers");
+          return;
+        }
+
+        if (!categoryRes.success) {
+          notify.error(categoryRes.message);
+        }
+
+        // Process country data
+        const countryList = countryRes?.data?.country_list || [];
+        const filteredCountries = countryList.filter(
+          (country) => country.is_signup_country
+        );
+
+        this.setState(
+          {
+            countryData: filteredCountries,
+            countryCityRes: countryRes?.data,
+          },
+          () => {
+            // Process category data after setting country
+            this.setState({
+              category_list: categoryRes.success
+                ? categoryRes.data?.category
+                : [],
+            });
+          }
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }
 
   // Method For Form Field
@@ -557,12 +570,14 @@ class Business_Customer_Add extends Component {
                   value={this.state.fields.mobile_number}
                   onChange={this.handleChange}
                   onKeyPress={this.handleKeyPress}
+                  onWheel={(e) => e.target.blur()}
+                  min="0"
                 />
                 <CFormText className="help-block">
                   {this.validator.message(
                     "mobile_number",
                     this.state.fields.mobile_number,
-                    `required|numeric|min:6|max:7|regex:^[0-9]*$`,
+                    `required|numeric|min:6|max:7|regex:^(?!-)[0-9]*$`,
                     { className: "text-danger" }
                   )}
                 </CFormText>
@@ -632,7 +647,7 @@ class Business_Customer_Add extends Component {
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Address</CLabel>
-            <CInput
+            <CTextarea
               type="text"
               id="address"
               name="address"

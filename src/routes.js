@@ -853,7 +853,7 @@ const routes = [
   {
     path: "/admin/customer_reports",
     exact: true,
-    name: "Customer Reports",
+    name: "Customers Report",
     component: Customer_Reports_Index,
     module_name: "customer_reports",
     action: "view",
@@ -869,7 +869,7 @@ const routes = [
   {
     path: "/admin/transaction_reports",
     exact: true,
-    name: "Transaction Reports",
+    name: "Transactions Report",
     component: Transaction_Reports_Index,
     module_name: "transaction_reports",
     action: "view",
@@ -877,7 +877,7 @@ const routes = [
   {
     path: "/admin/merchant_fees_reports",
     exact: true,
-    name: "Merchant Reports",
+    name: "Merchant Fees Report",
     component: Merchant_Fees_Reports_Index,
     module_name: "merchant_fees_reports",
     action: "view",
