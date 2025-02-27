@@ -30,12 +30,15 @@ import {
   faFileCode,
   // faPiggyBank,
   faFileInvoice,
+  faPiggyBank,
+  faIcons,
 } from "@fortawesome/free-solid-svg-icons";
 import IconFlorin from "assets/icons/IconFlorin";
 import IconAdminGear from "assets/icons/IconAdminGear";
 import IconMoneyTransactions from "assets/icons/IconMoneyTransactions";
 import IconBanks from "assets/icons/IconBanks";
 import IconMerchantReports from "assets/icons/IconMerchantReports";
+import IconJarManagement from "assets/icons/IconJarManagement";
 
 const _nav = [
   {
@@ -126,16 +129,6 @@ const _nav = [
         module_name: "system_bank_accounts",
         id: "system_bank_accounts_sidebar_id",
       },
-      // {
-      //   _tag: "CSidebarNavItem",
-      //   name: "Saving Jar Categories",
-      //   to: "/admin/saving_jar",
-      //   icon: (
-      //     <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
-      //   ),
-      //   module_name: "saving_jar",
-      //   id: "saving_jar_sidebar_id",
-      // },
     ],
   },
   {
@@ -306,6 +299,34 @@ const _nav = [
         icon: <IconMerchantReports className="c-sidebar-nav-icon" />,
         module_name: "merchant_fees_reports",
         id: "merchant_fees_reports_sidebar_id",
+      },
+    ],
+  },
+  {
+    _tag: "CSidebarNavDropdown",
+    name: "Saving Jar Management",
+    route: "/admin/saving_jar_icon",
+    icon: <IconJarManagement className="c-sidebar-nav-icon" />,
+    // module_name: "reports_group",
+    id: "saving_jar_icon_group_sidebar_id",
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "Saving Jar Icons",
+        to: "/admin/saving_jar_icon",
+        icon: <FontAwesomeIcon icon={faIcons} className="c-sidebar-nav-icon" />,
+        module_name: "saving_jar",
+        id: "saving_jar_icon_sidebar_id",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Saving Jar Categories",
+        to: "/admin/saving_jar",
+        icon: (
+          <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
+        ),
+        module_name: "saving_jar",
+        id: "saving_jar_sidebar_id",
       },
     ],
   },

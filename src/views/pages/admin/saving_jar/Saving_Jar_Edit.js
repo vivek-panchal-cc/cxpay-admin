@@ -102,18 +102,18 @@ class Saving_Jar_Edit extends Component {
 
   checkValidation(event) {
     event.preventDefault();
-    if (
-      this.state.newJarIcon &&
-      !this.state.newJarIcon.name.match(/\.(icon|svg)$/)
-    ) {
-      this.setState({ imageTypeValidation: true });
-      return false;
-    }
+    // if (
+    //   this.state.newJarIcon &&
+    //   !this.state.newJarIcon.name.match(/\.(icon|svg)$/)
+    // ) {
+    //   this.setState({ imageTypeValidation: true });
+    //   return false;
+    // }
 
-    if (this.state.newJarIcon && this.state.newJarIcon.size > 5000000) {
-      this.setState({ imageSizeValidation: true });
-      return false;
-    }
+    // if (this.state.newJarIcon && this.state.newJarIcon.size > 5000000) {
+    //   this.setState({ imageSizeValidation: true });
+    //   return false;
+    // }
     if (this.validator.allValid()) {
       let formData = new FormData();
       formData.append("id", this.state.fields.id);
@@ -123,9 +123,9 @@ class Saving_Jar_Edit extends Component {
         this.state.fields.jar_category_status
       ); // Convert boolean to string
       formData.append("operation_type", "saving_jar_category_update");
-      if (this.state.newJarIcon) {
-        formData.append("jar_category_icon", this.state.newJarIcon);
-      }
+      // if (this.state.newJarIcon) {
+      //   formData.append("jar_category_icon", this.state.newJarIcon);
+      // }
       savingJarService.savingJarAddOrUpdate(formData).then((res) => {
         if (!res.success) {
           notify.error(res.message);
@@ -173,7 +173,7 @@ class Saving_Jar_Edit extends Component {
                 </CFormText>
               </CFormGroup>
 
-              <CFormGroup row>
+              {/* <CFormGroup row>
                 <CCol md="2">Jar Category Icon</CCol>
 
                 <CCol sm="3">
@@ -216,7 +216,7 @@ class Saving_Jar_Edit extends Component {
                     width={50}
                   />
                 </CCol>
-              </CFormGroup>
+              </CFormGroup> */}
 
               <CFormGroup row>
                 <CCol tag="label" md="1">

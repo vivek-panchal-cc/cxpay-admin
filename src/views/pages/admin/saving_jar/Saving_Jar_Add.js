@@ -56,21 +56,21 @@ class Saving_Jar_Add extends Component {
 
   checkValidation(event) {
     event.preventDefault();
-    if (
-      this.state.fields.jar_category_icon &&
-      !this.state.fields.jar_category_icon.name.match(/\.(icon|svg)$/)
-    ) {
-      this.setState({ imageTypeValidation: true });
-      return false;
-    }
+    // if (
+    //   this.state.fields.jar_category_icon &&
+    //   !this.state.fields.jar_category_icon.name.match(/\.(icon|svg)$/)
+    // ) {
+    //   this.setState({ imageTypeValidation: true });
+    //   return false;
+    // }
 
-    if (
-      this.state.fields.jar_category_icon &&
-      this.state.fields.jar_category_icon.size > 5000000
-    ) {
-      this.setState({ imageSizeValidation: true });
-      return false;
-    }
+    // if (
+    //   this.state.fields.jar_category_icon &&
+    //   this.state.fields.jar_category_icon.size > 5000000
+    // ) {
+    //   this.setState({ imageSizeValidation: true });
+    //   return false;
+    // }
     if (this.validator.allValid()) {
       let formData = new FormData();
       formData.append("jar_category_name", this.state.fields.jar_category_name);
@@ -80,12 +80,12 @@ class Saving_Jar_Add extends Component {
       ); // Convert boolean to string
       formData.append("operation_type", "saving_jar_category_add");
 
-      if (this.state.fields.jar_category_icon) {
-        formData.append(
-          "jar_category_icon",
-          this.state.fields.jar_category_icon
-        );
-      }
+      // if (this.state.fields.jar_category_icon) {
+      //   formData.append(
+      //     "jar_category_icon",
+      //     this.state.fields.jar_category_icon
+      //   );
+      // }
 
       savingJarService.savingJarAddOrUpdate(formData).then((res) => {
         if (!res.success) {
@@ -151,7 +151,7 @@ class Saving_Jar_Add extends Component {
                 </CFormText>
               </CFormGroup>
 
-              <CFormGroup row>
+              {/* <CFormGroup row>
                 <CCol md="2">Jar Category Icon</CCol>
 
                 <CCol sm="3">
@@ -194,7 +194,7 @@ class Saving_Jar_Add extends Component {
                     width={50}
                   />
                 </CCol>
-              </CFormGroup>
+              </CFormGroup> */}
 
               <CFormGroup row>
                 <CCol tag="label" md="1">

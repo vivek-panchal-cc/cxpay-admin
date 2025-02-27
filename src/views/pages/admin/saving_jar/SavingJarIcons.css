@@ -1,0 +1,51 @@
+.saving-jar-icons-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.saving-jar-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 25%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  border: 1px solid gray;
+  padding: 10px;
+}
+
+.saving-jar-icon:hover {
+  transform: scale(1.1);
+}
+
+.saving-jar-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 25%;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: red;
+  background: red;
+  border-radius: 25%;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+}

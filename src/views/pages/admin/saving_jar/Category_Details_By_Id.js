@@ -75,7 +75,7 @@ class CategoryDetailsById extends React.Component {
                     <CRow>
                       <CCol xl={12}>
                         <CFormGroup row>
-                          <CCol xs="6">
+                          {/* <CCol xs="6">
                             <div style={{ paddingRight: "20px" }}>
                               {this.state.categoryDetails.jar_category_icon !==
                                 null &&
@@ -98,7 +98,7 @@ class CategoryDetailsById extends React.Component {
                                   </>
                                 )}
                             </div>
-                          </CCol>
+                          </CCol> */}
                           <CCol xs="6">
                             <p>
                               <b>Jar Category Name: </b>
