@@ -9,9 +9,10 @@ import {
   CFormGroup,
   CLabel,
   CCardFooter,
+  CCardHeader,
 } from "@coreui/react";
 import { ulid } from "ulid";
-import { faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { businessCustomersService } from "services/admin/business_customers.service";
 import { notify } from "_helpers";
@@ -42,6 +43,7 @@ class Business_Webhook_Urls extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.urls.url !== this.props.urls.url) {
       this.setState({
+        account_number: this.props.urls.merchant_account_number,
         webhookUrls: this.props.urls.url?.length
           ? this.props.urls.url.map((item) => ({
               id: item.id,
@@ -102,7 +104,7 @@ class Business_Webhook_Urls extends Component {
         merchant_account_number: this.state.account_number,
         operation_type: "delete_merchant_callback_url",
       };
-      businessCustomersService.webhookOperations(postData).then((res) => {
+      businessCustomersService.webHookOperations(postData).then((res) => {
         if (!res.success) {
           notify.error(res.message);
         } else {
@@ -154,11 +156,16 @@ class Business_Webhook_Urls extends Component {
       operation_type: "update_merchant_callback_url",
     };
 
-    businessCustomersService.webhookOperations(postData).then((res) => {
+    businessCustomersService.webHookOperations(postData).then((res) => {
       if (!res.success) {
         notify.error(res.message);
       } else {
         notify.success(res.message);
+        this.props.webHookOperations({
+          merchant_account_number: this.state.account_number,
+          operation_type: "list_merchant_callback_url",
+        });
+        this.props.handleClose();
       }
     });
   };
@@ -166,10 +173,25 @@ class Business_Webhook_Urls extends Component {
   render() {
     return (
       <CCard className="shadow-lg">
+        <div className="d-flex justify-content-end mt-3 mr-3">
+          <CButton
+            color="primary"
+            onClick={this.handleAdd}
+            className="rounded-pill shadow"
+          >
+            + Webhook
+          </CButton>
+        </div>
         <CCardBody className="webhook-urls">
           <ul>
-            <li>Webhook URL is required and must be a valid HTTPS link.</li>
-            <li>It should not exceed 255 characters or contain spaces.</li>
+            <li>
+              The URL is required and must be a valid HTTPS link (e.g.,
+              https://example.com/callback).
+            </li>
+            <li>
+              It should not exceed 255 characters, contain spaces, or use
+              local/private IPs (http://localhost or http://192.168.x.x).
+            </li>
           </ul>
 
           {this.state.webhookUrls.map((webhook, index) => (
@@ -214,16 +236,6 @@ class Business_Webhook_Urls extends Component {
               </CCol>
             </CRow>
           ))}
-
-          <div className="text-center mt-3">
-            <CButton
-              color="primary"
-              onClick={this.handleAdd}
-              className="px-4 py-2 rounded-pill shadow"
-            >
-              + Add Webhook
-            </CButton>
-          </div>
         </CCardBody>
         <CCardFooter>
           <CButton
@@ -233,6 +245,21 @@ class Business_Webhook_Urls extends Component {
             onClick={this.handleSubmit}
           >
             <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
+          </CButton>
+          &nbsp;
+          <CButton
+            className="btn btn-danger btn-sm"
+            aria-current="page"
+            onClick={() => {
+              this.props.webHookOperations({
+                merchant_account_number: this.state.account_number,
+                operation_type: "list_merchant_callback_url",
+              });
+              this.props.handleClose();
+            }}
+          >
+            <FontAwesomeIcon icon={faBan} className="mr-1" />
+            Cancel
           </CButton>
         </CCardFooter>
       </CCard>

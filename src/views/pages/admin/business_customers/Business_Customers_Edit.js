@@ -104,6 +104,7 @@ class Business_Customers_Edit extends React.Component {
     this.handleCheckboxChangeIsApproved =
       this.handleCheckboxChangeIsApproved.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
+    this.webHookOperations = this.webHookOperations.bind(this);
   }
 
   componentDidMount() {
@@ -161,21 +162,10 @@ class Business_Customers_Edit extends React.Component {
                       customerRes.data.kyc_approved_status,
                   },
                   () => {
-                    businessCustomersService
-                      .webHookOperations({
-                        merchant_account_number:
-                          this.state.fields.account_number,
-                        operation_type: "list_merchant_callback_url",
-                      })
-                      .then((urls) => {
-                        if (!urls.success) {
-                          this.setState({
-                            callback_urls: [],
-                          });
-                        } else {
-                          this.setState({ callback_urls: urls.data || [] });
-                        }
-                      });
+                    this.webHookOperations({
+                      merchant_account_number: this.state.fields.account_number,
+                      operation_type: "list_merchant_callback_url",
+                    });
                   }
                 );
               })
@@ -188,6 +178,18 @@ class Business_Customers_Edit extends React.Component {
       .catch((error) => {
         console.error("Error fetching country or category data:", error);
       });
+  }
+
+  webHookOperations(postData) {
+    businessCustomersService.webHookOperations(postData).then((urls) => {
+      if (!urls.success) {
+        this.setState({
+          callback_urls: [],
+        });
+      } else {
+        this.setState({ callback_urls: urls.data || [] });
+      }
+    });
   }
 
   handleCountryChange(e) {
@@ -663,7 +665,7 @@ class Business_Customers_Edit extends React.Component {
                     style={{ background: "transparent", color: "black" }}
                   >
                     <FontAwesomeIcon icon={faCog} className="mr-1" /> Webhook
-                    Urls
+                    URLs
                   </CLink>
                 </div>
               </CCardHeader>
@@ -2074,30 +2076,18 @@ class Business_Customers_Edit extends React.Component {
           color=""
           className="custom-modal"
         >
-          <CModalHeader closeButton>
-            <CModalTitle>Business Webhook URLs</CModalTitle>
+          <CModalHeader>
+            <CModalTitle>Webhook URLs</CModalTitle>
           </CModalHeader>
           <CModalBody>
             {this.state.callback_urls && (
-              <Business_Webhook_Urls urls={this.state.callback_urls} />
+              <Business_Webhook_Urls
+                urls={this.state.callback_urls}
+                handleClose={() => this.setState({ openWebhookPopup: false })}
+                webHookOperations={this.webHookOperations}
+              />
             )}
           </CModalBody>
-
-          {/* <CModalFooter>
-            <CButton color="primary" onClick={() => this.deleteUser()}>
-              Submit
-            </CButton>
-            <CButton
-              color="secondary"
-              onClick={() => {
-                this.setState({
-                  openWebhookPopup: !this.state.openWebhookPopup,
-                });
-              }}
-            >
-              Cancel
-            </CButton>
-          </CModalFooter> */}
         </CModal>
       </>
     );
