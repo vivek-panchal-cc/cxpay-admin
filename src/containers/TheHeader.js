@@ -86,27 +86,6 @@ const TheHeader = () => {
       </CHeaderBrand>
 
       <CHeaderNav className="d-md-down-none mr-auto">
-        <CSubheader className="px-3 justify-content-between">
-          {paths.length === 0 && (
-            <CBreadcrumbRouter
-              className="border-0 c-subheader-nav m-0 px-0 px-md-3"
-              routes={routes}
-            />
-          )}
-
-          {paths.length > 0 && (
-            <CBreadcrumb className="border-0 c-subheader-nav m-0 px-0 px-md-3">
-              {paths.map((u, index) => (
-                <CBreadcrumbItem key={index}>
-                  <CLink to={u}>{BreadcumbName[index]}</CLink>
-                </CBreadcrumbItem>
-              ))}
-              <CBreadcrumbItem active>
-                {BreadcumbName[paths.length]}
-              </CBreadcrumbItem>
-            </CBreadcrumb>
-          )}
-        </CSubheader>
         <CHeaderNavItem className="px-3"></CHeaderNavItem>
         <CHeaderNavItem className="px-3"></CHeaderNavItem>
         <CHeaderNavItem className="px-3"></CHeaderNavItem>
@@ -116,6 +95,28 @@ const TheHeader = () => {
         <LoginUserName />
         <TheHeaderDropdown />
       </CHeaderNav>
+
+      <CSubheader className="px-3 justify-content-between">
+        {paths.length === 0 && (
+          <CBreadcrumbRouter
+            className="border-0 c-subheader-nav m-0 px-0 px-md-3"
+            routes={routes}
+          />
+        )}
+
+        {paths.length > 0 && (
+          <CBreadcrumb className="border-0 c-subheader-nav m-0 px-0 px-md-3">
+            {paths.map((u, index) => (
+              <CBreadcrumbItem key={index}>
+                <CLink to={u}>{BreadcumbName[index]}</CLink>
+              </CBreadcrumbItem>
+            ))}
+            <CBreadcrumbItem active>
+              {BreadcumbName[paths.length]}
+            </CBreadcrumbItem>
+          </CBreadcrumb>
+        )}
+      </CSubheader>
     </CHeader>
   );
 };

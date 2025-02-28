@@ -10,18 +10,28 @@ import {
   CLabel,
   CCardFooter,
   CCardHeader,
+  CTooltip,
 } from "@coreui/react";
 import { ulid } from "ulid";
-import { faBan, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBan,
+  faCheck,
+  faSave,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { businessCustomersService } from "services/admin/business_customers.service";
 import { notify } from "_helpers";
+import { globalConstants } from "constants/admin/global.constants";
+import IconClipBoard from "assets/icons/IconClipBoard";
 
 class Business_Webhook_Urls extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      account_number: props.urls.merchant_account_number,
+      account_number: props.urls.merchant_account_number || props.acc_num,
+      isCopiedUuid: false,
+      isCopiedUrl: false,
       webhookUrls: props.urls.url?.length
         ? props.urls.url.map((item) => ({
             id: item.id,
@@ -43,7 +53,8 @@ class Business_Webhook_Urls extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.urls.url !== this.props.urls.url) {
       this.setState({
-        account_number: this.props.urls.merchant_account_number,
+        account_number:
+          this.props.urls.merchant_account_number || this.props.acc_num,
         webhookUrls: this.props.urls.url?.length
           ? this.props.urls.url.map((item) => ({
               id: item.id,
@@ -101,7 +112,8 @@ class Business_Webhook_Urls extends Component {
     if (webhook.id) {
       let postData = {
         id: webhook.id,
-        merchant_account_number: this.state.account_number,
+        merchant_account_number:
+          this.state.account_number || this.props.acc_num,
         operation_type: "delete_merchant_callback_url",
       };
       businessCustomersService.webHookOperations(postData).then((res) => {
@@ -152,7 +164,7 @@ class Business_Webhook_Urls extends Component {
 
     const postData = {
       update_data: updateData,
-      merchant_account_number: this.state.account_number, // Pass from props
+      merchant_account_number: this.state.account_number || this.props.acc_num, // Pass from props
       operation_type: "update_merchant_callback_url",
     };
 
@@ -162,12 +174,31 @@ class Business_Webhook_Urls extends Component {
       } else {
         notify.success(res.message);
         this.props.webHookOperations({
-          merchant_account_number: this.state.account_number,
+          merchant_account_number:
+            this.state.account_number || this.props.acc_num,
           operation_type: "list_merchant_callback_url",
         });
         this.props.handleClose();
       }
     });
+  };
+
+  fallbackCopyText = (text, stateKey) => {
+    const tempInput = document.createElement("textarea");
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+
+    try {
+      document.execCommand("copy"); // Fallback for older browsers
+      this.setState({ [stateKey]: true }, () => {
+        setTimeout(() => this.setState({ [stateKey]: false }), 2000);
+      });
+    } catch (err) {
+      console.error("Fallback copy failed:", err);
+    }
+
+    document.body.removeChild(tempInput);
   };
 
   render() {
@@ -199,33 +230,146 @@ class Business_Webhook_Urls extends Component {
               <CCol md={5} sm={12}>
                 <CFormGroup>
                   <CLabel>Webhook Secret</CLabel>
-                  <CInput
-                    type="text"
-                    value={webhook.uuid}
-                    readOnly
-                    className="p-2 rounded shadow-sm border-0 bg-light"
-                  />
+                  <div className="d-flex align-items-center">
+                    <CInput
+                      type="text"
+                      value={webhook.uuid}
+                      readOnly
+                      className="p-2 rounded shadow-sm border-0 bg-light flex-grow-1"
+                    />
+                    <CTooltip
+                      content={
+                        this.state.isCopiedUuid
+                          ? globalConstants.COPIED_LABEL
+                          : globalConstants.COPY_TO_CLIPBOARD
+                      }
+                    >
+                      <span
+                        style={{
+                          marginLeft: "10px",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        onClick={() => {
+                          if (!webhook.uuid) return;
+
+                          if (
+                            navigator.clipboard &&
+                            navigator.clipboard.writeText
+                          ) {
+                            navigator.clipboard
+                              .writeText(webhook.uuid)
+                              .then(() => {
+                                this.setState({ isCopiedUuid: true }, () => {
+                                  setTimeout(
+                                    () =>
+                                      this.setState({
+                                        isCopiedUuid: false,
+                                      }),
+                                    2000
+                                  );
+                                });
+                              })
+                              .catch(() => {
+                                this.fallbackCopyText(
+                                  webhook.uuid,
+                                  "isCopiedUuid"
+                                );
+                              });
+                          } else {
+                            this.fallbackCopyText(webhook.uuid, "isCopiedUuid");
+                          }
+                        }}
+                      >
+                        {this.state.isCopiedUuid ? (
+                          <FontAwesomeIcon icon={faCheck} />
+                        ) : (
+                          <IconClipBoard />
+                        )}
+                      </span>
+                    </CTooltip>{" "}
+                  </div>
                 </CFormGroup>
               </CCol>
               <CCol md={5} sm={12}>
                 <CFormGroup>
                   <CLabel>Your Webhook URL</CLabel>
-                  <CInput
-                    type="text"
-                    value={webhook.callback_url}
-                    onChange={(e) =>
-                      this.handleChange(index, "callback_url", e.target.value)
-                    }
-                    className={`p-2 rounded shadow-sm border ${
-                      webhook.error ? "border-danger" : ""
-                    }`}
-                  />
+                  <div className="d-flex align-items-center">
+                    <CInput
+                      type="text"
+                      value={webhook.callback_url}
+                      onChange={(e) =>
+                        this.handleChange(index, "callback_url", e.target.value)
+                      }
+                      className={`p-2 rounded shadow-sm border flex-grow-1 ${
+                        webhook.error ? "border-danger" : ""
+                      }`}
+                    />
+                    {webhook.callback_url && (
+                      <CTooltip
+                        content={
+                          this.state.isCopiedUrl
+                            ? globalConstants.COPIED_LABEL
+                            : globalConstants.COPY_TO_CLIPBOARD
+                        }
+                      >
+                        <span
+                          style={{
+                            marginLeft: "10px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          onClick={() => {
+                            if (!webhook.callback_url) return;
+
+                            if (
+                              navigator.clipboard &&
+                              navigator.clipboard.writeText
+                            ) {
+                              navigator.clipboard
+                                .writeText(webhook.callback_url)
+                                .then(() => {
+                                  this.setState({ isCopiedUrl: true }, () => {
+                                    setTimeout(
+                                      () =>
+                                        this.setState({
+                                          isCopiedUrl: false,
+                                        }),
+                                      2000
+                                    );
+                                  });
+                                })
+                                .catch(() => {
+                                  this.fallbackCopyText(
+                                    webhook.callback_url,
+                                    "isCopiedUrl"
+                                  );
+                                });
+                            } else {
+                              this.fallbackCopyText(
+                                webhook.callback_url,
+                                "isCopiedUrl"
+                              );
+                            }
+                          }}
+                        >
+                          {this.state.isCopiedUrl ? (
+                            <FontAwesomeIcon icon={faCheck} />
+                          ) : (
+                            <IconClipBoard />
+                          )}
+                        </span>
+                      </CTooltip>
+                    )}
+                  </div>
                   {webhook.error && (
                     <small className="text-danger">{webhook.error}</small>
                   )}
                 </CFormGroup>
               </CCol>
-              <CCol md={2} sm={12} className="text-center">
+              <CCol md="auto" sm={12} className="text-center p-0 pt-2">
                 <CButton
                   color="danger"
                   size="sm"
@@ -238,21 +382,24 @@ class Business_Webhook_Urls extends Component {
           ))}
         </CCardBody>
         <CCardFooter>
-          <CButton
-            type="button"
-            size="sm"
-            color="primary"
-            onClick={this.handleSubmit}
-          >
-            <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
-          </CButton>
+          {this.state.webhookUrls?.length > 0 && (
+            <CButton
+              type="button"
+              size="sm"
+              color="primary"
+              onClick={this.handleSubmit}
+            >
+              <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
+            </CButton>
+          )}
           &nbsp;
           <CButton
             className="btn btn-danger btn-sm"
             aria-current="page"
             onClick={() => {
               this.props.webHookOperations({
-                merchant_account_number: this.state.account_number,
+                merchant_account_number:
+                  this.state.account_number || this.props.acc_num,
                 operation_type: "list_merchant_callback_url",
               });
               this.props.handleClose();

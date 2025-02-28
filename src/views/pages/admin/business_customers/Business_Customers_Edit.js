@@ -2085,6 +2085,7 @@ class Business_Customers_Edit extends React.Component {
                 urls={this.state.callback_urls}
                 handleClose={() => this.setState({ openWebhookPopup: false })}
                 webHookOperations={this.webHookOperations}
+                acc_num={this.state.fields.account_number}
               />
             )}
           </CModalBody>
