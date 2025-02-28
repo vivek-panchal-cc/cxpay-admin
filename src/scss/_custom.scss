@@ -22,3 +22,21 @@ html:not([dir="rtl"]) .c-sidebar-nav-dropdown-toggle::after {
 html:not([dir="rtl"]) .c-sidebar-nav-dropdown-items .c-sidebar-nav-link {
   padding-left: 70px;
 }
+
+.c-header .c-subheader {
+  border-top: none !important;
+}
+
+.custom-modal .modal-dialog {
+  // display: flex;
+  align-items: center;
+  min-height: 80vh;
+  max-width: 700px;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.webhook-urls ul li {
+  font-size: 12px;
+  margin-left: -20px;
+}

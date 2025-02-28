@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   CCard,
   CCardBody,
@@ -17,6 +16,10 @@ import {
   CSwitch,
   CSelect,
   CInputRadio,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import {
@@ -36,6 +39,7 @@ import {
   faArrowLeft,
   faBan,
   faCheck,
+  faCog,
   faSave,
 } from "@fortawesome/free-solid-svg-icons";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
@@ -45,6 +49,7 @@ import "./kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
 import IconClipBoard from "assets/icons/IconClipBoard";
+import Business_Webhook_Urls from "./Business_Webhook_Urls";
 
 class Business_Customers_Edit extends React.Component {
   constructor(props) {
@@ -80,9 +85,11 @@ class Business_Customers_Edit extends React.Component {
       },
       cityData: [],
       category_list: [],
+      callback_urls: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
       site_logo: null,
+      openWebhookPopup: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -141,16 +148,36 @@ class Business_Customers_Edit extends React.Component {
                     (e) => e.iso === customerRes.data.country
                   ) || {};
 
-                this.setState({
-                  fields: customerRes.data,
-                  cityData: iso ? [...countryRes.data.city_list[iso]] : [],
-                  city: customerRes.data.city,
-                  country: customerRes.data.country,
-                  status: customerRes.data.status === 0 ? 0 : 1,
-                  admin_approved: customerRes.data.admin_approved !== false,
-                  kyc_approved_status: customerRes.data.kyc_approved_status,
-                  is_kyc_approved_status: customerRes.data.kyc_approved_status,
-                });
+                this.setState(
+                  {
+                    fields: customerRes.data,
+                    cityData: iso ? [...countryRes.data.city_list[iso]] : [],
+                    city: customerRes.data.city,
+                    country: customerRes.data.country,
+                    status: customerRes.data.status === 0 ? 0 : 1,
+                    admin_approved: customerRes.data.admin_approved !== false,
+                    kyc_approved_status: customerRes.data.kyc_approved_status,
+                    is_kyc_approved_status:
+                      customerRes.data.kyc_approved_status,
+                  },
+                  () => {
+                    businessCustomersService
+                      .webHookOperations({
+                        merchant_account_number:
+                          this.state.fields.account_number,
+                        operation_type: "list_merchant_callback_url",
+                      })
+                      .then((urls) => {
+                        if (!urls.success) {
+                          this.setState({
+                            callback_urls: [],
+                          });
+                        } else {
+                          this.setState({ callback_urls: urls.data || [] });
+                        }
+                      });
+                  }
+                );
               })
               .catch((error) => {
                 console.error("Error fetching customer data:", error);
@@ -624,6 +651,20 @@ class Business_Customers_Edit extends React.Component {
                       Back
                     </CLink>
                   </CTooltip>
+                </div>
+                <div
+                  className="card-header-actions px-4"
+                  onClick={() => {
+                    this.setState({ openWebhookPopup: true });
+                  }}
+                >
+                  <CLink
+                    className="btn btn-dark btn-block btn-sm"
+                    style={{ background: "transparent", color: "black" }}
+                  >
+                    <FontAwesomeIcon icon={faCog} className="mr-1" /> Webhook
+                    Urls
+                  </CLink>
                 </div>
               </CCardHeader>
               <CCardBody>
@@ -2024,6 +2065,40 @@ class Business_Customers_Edit extends React.Component {
             </CCard>
           </CCol>
         </CRow>
+        <CModal
+          show={this.state.openWebhookPopup}
+          onClose={() => {
+            this.setState({ openWebhookPopup: !this.state.openWebhookPopup });
+          }}
+          closeOnBackdrop={false}
+          color=""
+          className="custom-modal"
+        >
+          <CModalHeader closeButton>
+            <CModalTitle>Business Webhook URLs</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {this.state.callback_urls && (
+              <Business_Webhook_Urls urls={this.state.callback_urls} />
+            )}
+          </CModalBody>
+
+          {/* <CModalFooter>
+            <CButton color="primary" onClick={() => this.deleteUser()}>
+              Submit
+            </CButton>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                this.setState({
+                  openWebhookPopup: !this.state.openWebhookPopup,
+                });
+              }}
+            >
+              Cancel
+            </CButton>
+          </CModalFooter> */}
+        </CModal>
       </>
     );
   }

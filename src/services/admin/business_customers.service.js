@@ -27,6 +27,7 @@ export const businessCustomersService = {
   refreshMerchantToken,
   getMerchantFeesReport,
   downloadMerchantFeesReportData,
+  webHookOperations,
 };
 
 async function getCustomerWiseDetails(postData) {
@@ -411,6 +412,26 @@ async function downloadMerchantFeesReportData(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
+  }
+  return handleResponse(response);
+}
+
+async function webHookOperations(postData) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "update"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/merchant-callback-url-operations`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    response = await Promise.reject();
   }
   return handleResponse(response);
 }
