@@ -127,12 +127,13 @@ class Saving_Jar_Icon_Index extends React.Component {
                         }
                       >
                         <img src={icon.url} alt="Saving Jar Icon" />
-                        {this.state.hoveredIconId === icon.id && (
-                          <IconTrash
-                            className="delete-icon"
-                            onClick={() => this.openDeletePopup(icon.id)}
-                          />
-                        )}
+                        {_canAccess("saving_jar", "create") &&
+                          this.state.hoveredIconId === icon.id && (
+                            <IconTrash
+                              className="delete-icon"
+                              onClick={() => this.openDeletePopup(icon.id)}
+                            />
+                          )}
                       </div>
                     ))}
                 </div>
