@@ -30,8 +30,7 @@ class Business_Webhook_Urls extends Component {
     super(props);
     this.state = {
       account_number: props.urls.merchant_account_number || props.acc_num,
-      isCopiedUuid: false,
-      isCopiedUrl: false,
+      copiedItemId: null,
       webhookUrls: props.urls.url?.length
         ? props.urls.url.map((item) => ({
             id: item.id,
@@ -183,22 +182,39 @@ class Business_Webhook_Urls extends Component {
     });
   };
 
-  fallbackCopyText = (text, stateKey) => {
-    const tempInput = document.createElement("textarea");
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-    tempInput.select();
+  handleCopy = (text, id, fieldType) => {
+    if (!text) return;
 
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          this.setState({ copiedItemId: { id, fieldType } }, () => {
+            setTimeout(() => this.setState({ copiedItemId: null }), 2000);
+          });
+        })
+        .catch(() => {
+          this.fallbackCopyText(text, id, fieldType);
+        });
+    } else {
+      this.fallbackCopyText(text, id, fieldType);
+    }
+  };
+
+  fallbackCopyText = (text, id, fieldType) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
     try {
-      document.execCommand("copy"); // Fallback for older browsers
-      this.setState({ [stateKey]: true }, () => {
-        setTimeout(() => this.setState({ [stateKey]: false }), 2000);
+      document.execCommand("copy");
+      this.setState({ copiedItemId: { id, fieldType } }, () => {
+        setTimeout(() => this.setState({ copiedItemId: null }), 2000);
       });
     } catch (err) {
-      console.error("Fallback copy failed:", err);
+      console.error("Copy failed", err);
     }
-
-    document.body.removeChild(tempInput);
+    document.body.removeChild(textArea);
   };
 
   render() {
@@ -239,7 +255,8 @@ class Business_Webhook_Urls extends Component {
                     />
                     <CTooltip
                       content={
-                        this.state.isCopiedUuid
+                        this.state.copiedItemId?.id === webhook.uuid &&
+                        this.state.copiedItemId?.fieldType === "uuid"
                           ? globalConstants.COPIED_LABEL
                           : globalConstants.COPY_TO_CLIPBOARD
                       }
@@ -251,38 +268,12 @@ class Business_Webhook_Urls extends Component {
                           display: "flex",
                           alignItems: "center",
                         }}
-                        onClick={() => {
-                          if (!webhook.uuid) return;
-
-                          if (
-                            navigator.clipboard &&
-                            navigator.clipboard.writeText
-                          ) {
-                            navigator.clipboard
-                              .writeText(webhook.uuid)
-                              .then(() => {
-                                this.setState({ isCopiedUuid: true }, () => {
-                                  setTimeout(
-                                    () =>
-                                      this.setState({
-                                        isCopiedUuid: false,
-                                      }),
-                                    2000
-                                  );
-                                });
-                              })
-                              .catch(() => {
-                                this.fallbackCopyText(
-                                  webhook.uuid,
-                                  "isCopiedUuid"
-                                );
-                              });
-                          } else {
-                            this.fallbackCopyText(webhook.uuid, "isCopiedUuid");
-                          }
-                        }}
+                        onClick={() =>
+                          this.handleCopy(webhook.uuid, webhook.uuid, "uuid")
+                        }
                       >
-                        {this.state.isCopiedUuid ? (
+                        {this.state.copiedItemId?.id === webhook.uuid &&
+                        this.state.copiedItemId?.fieldType === "uuid" ? (
                           <FontAwesomeIcon icon={faCheck} />
                         ) : (
                           <IconClipBoard />
@@ -309,7 +300,8 @@ class Business_Webhook_Urls extends Component {
                     {webhook.callback_url && (
                       <CTooltip
                         content={
-                          this.state.isCopiedUrl
+                          this.state.copiedItemId?.id === webhook.uuid &&
+                          this.state.copiedItemId?.fieldType === "url"
                             ? globalConstants.COPIED_LABEL
                             : globalConstants.COPY_TO_CLIPBOARD
                         }
@@ -321,41 +313,16 @@ class Business_Webhook_Urls extends Component {
                             display: "flex",
                             alignItems: "center",
                           }}
-                          onClick={() => {
-                            if (!webhook.callback_url) return;
-
-                            if (
-                              navigator.clipboard &&
-                              navigator.clipboard.writeText
-                            ) {
-                              navigator.clipboard
-                                .writeText(webhook.callback_url)
-                                .then(() => {
-                                  this.setState({ isCopiedUrl: true }, () => {
-                                    setTimeout(
-                                      () =>
-                                        this.setState({
-                                          isCopiedUrl: false,
-                                        }),
-                                      2000
-                                    );
-                                  });
-                                })
-                                .catch(() => {
-                                  this.fallbackCopyText(
-                                    webhook.callback_url,
-                                    "isCopiedUrl"
-                                  );
-                                });
-                            } else {
-                              this.fallbackCopyText(
-                                webhook.callback_url,
-                                "isCopiedUrl"
-                              );
-                            }
-                          }}
+                          onClick={() =>
+                            this.handleCopy(
+                              webhook.callback_url,
+                              webhook.uuid,
+                              "url"
+                            )
+                          }
                         >
-                          {this.state.isCopiedUrl ? (
+                          {this.state.copiedItemId?.id === webhook.uuid &&
+                          this.state.copiedItemId?.fieldType === "url" ? (
                             <FontAwesomeIcon icon={faCheck} />
                           ) : (
                             <IconClipBoard />
