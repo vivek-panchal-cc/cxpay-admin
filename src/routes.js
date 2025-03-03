@@ -717,7 +717,7 @@ const routes = [
   {
     path: "/admin/saving_jar",
     exact: true,
-    name: "Saving Jar",
+    name: "Saving Jar Categories",
     component: Saving_Jar_Index,
     module_name: "saving_jar",
     action: "view",
@@ -725,7 +725,7 @@ const routes = [
   {
     path: "/admin/saving_jar/add",
     exact: true,
-    name: "Add Saving Jar",
+    name: "Add Saving Jar Category",
     component: Saving_Jar_Add,
     module_name: "saving_jar",
     action: "create",
@@ -733,7 +733,7 @@ const routes = [
   {
     path: "/admin/saving_jar/edit/:id",
     exact: true,
-    name: "Update Saving Jar",
+    name: "Update Saving Jar Category",
     component: Saving_Jar_Edit,
     module_name: "saving_jar",
     action: "update",

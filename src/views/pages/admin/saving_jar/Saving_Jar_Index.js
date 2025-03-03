@@ -313,7 +313,7 @@ class Saving_Jar_Index extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                <strong>Saving Jar</strong>
+                <strong>Saving Jar Categories</strong>
                 <div className="card-header-actions">
                   {_canAccess("saving_jar", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
@@ -339,7 +339,7 @@ class Saving_Jar_Index extends React.Component {
                             <CCol xs="12" className="p-0">
                               <CInput
                                 id="search_name"
-                                placeholder="Search Saving Jar"
+                                placeholder="Search Saving Jar Category"
                                 name="search_name"
                                 value={this.state.fields.search_name}
                                 onChange={this.handleChange}

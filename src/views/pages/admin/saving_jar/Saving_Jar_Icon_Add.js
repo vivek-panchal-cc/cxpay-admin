@@ -87,7 +87,7 @@ class Saving_Jar_Icon_Add extends Component {
         <CCol xs="12">
           <CCard>
             <CCardHeader>
-              <strong>Add Icons</strong>
+              <strong>Add Saving Jar Icons</strong>
             </CCardHeader>
             <CCardBody>
               <CFormGroup>

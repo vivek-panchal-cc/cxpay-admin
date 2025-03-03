@@ -130,12 +130,12 @@ class Saving_Jar_Add extends Component {
             </CCardHeader>
             <CCardBody>
               <CFormGroup>
-                <CLabel htmlFor="nf-name">Jar Category Name</CLabel>
+                <CLabel htmlFor="nf-name">Saving Jar Category Name</CLabel>
                 <CInput
                   type="text"
                   id="jar_category_name"
                   name="jar_category_name"
-                  placeholder="Enter Jar Category"
+                  placeholder="Enter Saving Jar Category"
                   autoComplete="jar_category_name"
                   onChange={this.handleChange}
                 />
