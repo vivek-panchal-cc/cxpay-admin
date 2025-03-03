@@ -302,34 +302,33 @@ const _nav = [
       },
     ],
   },
-  // {
-  //   _tag: "CSidebarNavDropdown",
-  //   name: "Saving Jar Management",
-  //   route: "/admin/saving_jar_icon",
-  //   icon: <IconJarManagement className="c-sidebar-nav-icon" />,
-  //   // module_name: "reports_group",
-  //   id: "saving_jar_icon_group_sidebar_id",
-  //   _children: [
-  //     {
-  //       _tag: "CSidebarNavItem",
-  //       name: "Saving Jar Icons",
-  //       to: "/admin/saving_jar_icon",
-  //       icon: <FontAwesomeIcon icon={faIcons} className="c-sidebar-nav-icon" />,
-  //       module_name: "saving_jar",
-  //       id: "saving_jar_icon_sidebar_id",
-  //     },
-  //     {
-  //       _tag: "CSidebarNavItem",
-  //       name: "Saving Jar Categories",
-  //       to: "/admin/saving_jar",
-  //       icon: (
-  //         <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
-  //       ),
-  //       module_name: "saving_jar",
-  //       id: "saving_jar_sidebar_id",
-  //     },
-  //   ],
-  // },
+  {
+    _tag: "CSidebarNavDropdown",
+    name: "Saving Jar Management",
+    route: "/admin/saving_jar_icon",
+    icon: <IconJarManagement className="c-sidebar-nav-icon" />,
+    id: "saving_jar_icon_group_sidebar_id",
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "Saving Jar Icons",
+        to: "/admin/saving_jar_icon",
+        icon: <FontAwesomeIcon icon={faIcons} className="c-sidebar-nav-icon" />,
+        module_name: "saving_jar",
+        id: "saving_jar_icon_sidebar_id",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Saving Jar Categories",
+        to: "/admin/saving_jar",
+        icon: (
+          <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
+        ),
+        module_name: "saving_jar",
+        id: "saving_jar_sidebar_id",
+      },
+    ],
+  },
   {
     _tag: "CSidebarNavItem",
     name: "FAQs",
