@@ -141,7 +141,6 @@ class Saving_Jar_Edit extends Component {
   }
 
   render() {
-    const { newJarIcon } = this.state;
     return (
       <CRow>
         <CCol xs="12">

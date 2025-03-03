@@ -3,7 +3,6 @@ import Dropzone from "react-dropzone";
 import {
   CButton,
   CFormGroup,
-  CLabel,
   CCardHeader,
   CCard,
   CCardBody,
