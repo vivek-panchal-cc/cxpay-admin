@@ -127,7 +127,7 @@ class Saving_Jar_Icon_Index extends React.Component {
                         }
                       >
                         <img src={icon.url} alt="Saving Jar Icon" />
-                        {_canAccess("saving_jar", "create") &&
+                        {_canAccess("saving_jar", "delete") &&
                           this.state.hoveredIconId === icon.id && (
                             <IconTrash
                               className="delete-icon"
