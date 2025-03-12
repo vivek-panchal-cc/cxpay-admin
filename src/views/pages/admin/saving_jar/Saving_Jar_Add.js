@@ -72,14 +72,11 @@ class Saving_Jar_Add extends Component {
     //   return false;
     // }
     if (this.validator.allValid()) {
-      let formData = new FormData();
-      formData.append("jar_category_name", this.state.fields.jar_category_name);
-      formData.append(
-        "jar_category_status",
-        this.state.fields.jar_category_status
-      ); // Convert boolean to string
-      formData.append("operation_type", "saving_jar_category_add");
-
+      let requestParams = {
+        jar_category_name: this.state.fields.jar_category_name,
+        jar_category_status: this.state.fields.jar_category_status,
+        operation_type: "saving_jar_category_add",
+      };
       // if (this.state.fields.jar_category_icon) {
       //   formData.append(
       //     "jar_category_icon",
@@ -87,7 +84,7 @@ class Saving_Jar_Add extends Component {
       //   );
       // }
 
-      savingJarService.savingJarAddOrUpdate(formData).then((res) => {
+      savingJarService.savingJarAddOrUpdate(requestParams).then((res) => {
         if (!res.success) {
           notify.error(res.message);
         } else {

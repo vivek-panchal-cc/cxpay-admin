@@ -115,18 +115,16 @@ class Saving_Jar_Edit extends Component {
     //   return false;
     // }
     if (this.validator.allValid()) {
-      let formData = new FormData();
-      formData.append("id", this.state.fields.id);
-      formData.append("jar_category_name", this.state.fields.jar_category_name);
-      formData.append(
-        "jar_category_status",
-        this.state.fields.jar_category_status
-      ); // Convert boolean to string
-      formData.append("operation_type", "saving_jar_category_update");
+      let requestParams = {
+        id: this.state.fields.id,
+        jar_category_name: this.state.fields.jar_category_name,
+        jar_category_status: this.state.fields.jar_category_status,
+        operation_type: "saving_jar_category_update",
+      };
       // if (this.state.newJarIcon) {
       //   formData.append("jar_category_icon", this.state.newJarIcon);
       // }
-      savingJarService.savingJarAddOrUpdate(formData).then((res) => {
+      savingJarService.savingJarAddOrUpdate(requestParams).then((res) => {
         if (!res.success) {
           notify.error(res.message);
         } else {

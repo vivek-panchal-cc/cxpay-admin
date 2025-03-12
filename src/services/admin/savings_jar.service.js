@@ -36,8 +36,8 @@ async function savingJarAddOrUpdate(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: authHeaderMutlipart("saving_jar", "view"),
-    body: postData,
+    headers: authHeader("saving_jar", "view"),
+    body: JSON.stringify(postData),
   };
   let response;
   try {
