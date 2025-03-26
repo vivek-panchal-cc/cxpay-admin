@@ -253,6 +253,9 @@ const Merchant_Fees_Reports_Index = React.lazy(() =>
     "./views/pages/admin/merchant_fees_reports/Merchant_Fees_Reports_Index"
   )
 );
+const Savings_Jar_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/savings_jar_reports/Savings_Jar_Reports_Index")
+);
 
 const Schedule_Payments_Index = React.lazy(() =>
   import("./views/pages/admin/schedule_payments/Schedule_Payments_Index")
@@ -904,6 +907,14 @@ const routes = [
     name: "Merchant Fees Report",
     component: Merchant_Fees_Reports_Index,
     module_name: "merchant_fees_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jars_reports",
+    exact: true,
+    name: "Saving Jars Report",
+    component: Savings_Jar_Reports_Index,
+    module_name: "saving_jars_reports",
     action: "view",
   },
   //withdraw requests

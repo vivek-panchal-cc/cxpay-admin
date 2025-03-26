@@ -13,7 +13,12 @@ import {
   CLink,
   CSelect,
 } from "@coreui/react";
-import { notify, _canAccess, history } from "../../../../_helpers/index";
+import {
+  notify,
+  _canAccess,
+  history,
+  capitalize,
+} from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFileExport,
@@ -30,7 +35,7 @@ import "assets/css/responsive.css";
 import { globalConstants } from "constants/admin/global.constants";
 import WrapAmount from "components/wrapper/WrapAmount";
 
-class Merchant_Fees_Reports_Index extends React.Component {
+class Savings_Jar_Reports_Index extends React.Component {
   constructor(props) {
     super(props);
 
@@ -53,13 +58,14 @@ class Merchant_Fees_Reports_Index extends React.Component {
         page: 1,
         direction: "desc",
         sort: "created_at",
-        search: "",
+        search_name: "",
         totalPage: 1,
         from_date: null,
         to_date: null,
         per_page: 10,
+        operation_type: "saving_jar_report",
       },
-      merchant_fees_report: [],
+      savings_jar_report: [],
       _openPopup: false,
       allCheckedbox: false,
     };
@@ -71,14 +77,14 @@ class Merchant_Fees_Reports_Index extends React.Component {
   }
 
   componentDidMount() {
-    this.getMerchantFeesReport();
+    this.getSavingsJarReport();
   }
 
-  getMerchantFeesReport() {
-    reportsService.getMerchantFeesReport(this.state.fields).then((res) => {
+  getSavingsJarReport() {
+    reportsService.getSavingsJarReport(this.state.fields).then((res) => {
       if (!res.success) {
         this.setState({
-          merchant_fees_report: [],
+          savings_jar_report: [],
         });
       } else {
         this.setState({
@@ -88,7 +94,7 @@ class Merchant_Fees_Reports_Index extends React.Component {
             totalPage: res?.data?.pagination?.last_page,
           },
           perPage: res?.data?.pagination?.per_page,
-          merchant_fees_report: res.data.transaction,
+          savings_jar_report: res.data.jars,
         });
       }
     });
@@ -104,7 +110,7 @@ class Merchant_Fees_Reports_Index extends React.Component {
         },
       },
       () => {
-        this.getMerchantFeesReport();
+        this.getSavingsJarReport();
       }
     );
   };
@@ -121,7 +127,7 @@ class Merchant_Fees_Reports_Index extends React.Component {
         },
       },
       () => {
-        this.getMerchantFeesReport();
+        this.getSavingsJarReport();
       }
     );
   }
@@ -159,15 +165,16 @@ class Merchant_Fees_Reports_Index extends React.Component {
             page: 1,
             direction: "desc",
             sort: "created_at",
-            search: "",
+            search_name: "",
             totalPage: 1,
             from_date: null,
             to_date: null,
             per_page: 10,
+            operation_type: "saving_jar_report",
           },
         },
         () => {
-          this.getMerchantFeesReport(this.state.fields);
+          this.getSavingsJarReport(this.state.fields);
         }
       );
     } else {
@@ -179,7 +186,7 @@ class Merchant_Fees_Reports_Index extends React.Component {
           },
         },
         () => {
-          this.getMerchantFeesReport(this.state.fields);
+          this.getSavingsJarReport(this.state.fields);
         }
       );
     }
@@ -206,10 +213,12 @@ class Merchant_Fees_Reports_Index extends React.Component {
   render() {
     const downloadFile = async () => {
       try {
+        const reqParams = {
+          ...this.state.fields,
+          operation_type: "saving_jar_report_export",
+        };
         const { data, message, success } =
-          await reportsService.downloadMerchantFeesReportData(
-            this.state.fields
-          );
+          await reportsService.getSavingsJarReport(reqParams);
         if (!success) throw message;
         if (typeof message === "string") notify.success(message);
         const base64csv = data;
@@ -217,7 +226,7 @@ class Merchant_Fees_Reports_Index extends React.Component {
         const csvContent = atob(base64csv);
         const blob = new Blob([csvContent], { type: "text/csv" });
         const downloadLink = document.createElement("a");
-        const fileName = `MERCHANT_FEES_REPORT_${dtnow}.csv`;
+        const fileName = `SAVINGS_JAR_REPORT_${dtnow}.csv`;
         downloadLink.href = URL.createObjectURL(blob);
         downloadLink.download = fileName;
         downloadLink.click();
@@ -240,12 +249,12 @@ class Merchant_Fees_Reports_Index extends React.Component {
                         <CInput
                           id="search"
                           placeholder="Search"
-                          name="search"
-                          value={this.state.fields.search}
+                          name="search_name"
+                          value={this.state.fields.search_name}
                           onChange={this.handleChange}
                           onKeyPress={(event) => {
                             if (event.key === "Enter") {
-                              this.handleSearch("search");
+                              this.handleSearch("search_name");
                             }
                           }}
                         />
@@ -324,20 +333,20 @@ class Merchant_Fees_Reports_Index extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                <strong>Merchant Fees Report</strong>
+                <strong>Saving Jars Report</strong>
                 <div className="card-header-actions">
-                  {_canAccess("merchant_fees_reports", "view") && (
-                    <CTooltip content={globalConstants.EXPORT_MERCHANT_DATA}>
+                  {_canAccess("saving_jars_reports", "view") && (
+                    <CTooltip content={globalConstants.EXPORT_JARS_DATA}>
                       <CLink
                         className={`btn btn-dark btn-block ${
-                          this.state.merchant_fees_report?.length === 0 ||
-                          this.state.merchant_fees_report?.length === undefined
+                          this.state.savings_jar_report?.length === 0 ||
+                          this.state.savings_jar_report?.length === undefined
                             ? "disabled"
                             : ""
                         }`}
                         aria-current="page"
                         onClick={
-                          this.state.merchant_fees_report?.length > 0
+                          this.state.savings_jar_report?.length > 0
                             ? downloadFile
                             : null
                         }
@@ -355,9 +364,45 @@ class Merchant_Fees_Reports_Index extends React.Component {
                     <thead>
                       <tr>
                         <th>Sr.no</th>
+                        <th onClick={() => this.handleColumnSort("jar_name")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Jar Name
+                            </span>
+                            {this.state.fields.sort !== "jar_name" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.direction === "asc" &&
+                              this.state.fields.sort === "jar_name" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.direction === "desc" &&
+                              this.state.fields.sort === "jar_name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+                        <th onClick={() => this.handleColumnSort("name")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Owner Name
+                            </span>
+                            {this.state.fields.sort !== "name" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.direction === "asc" &&
+                              this.state.fields.sort === "name" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.direction === "desc" &&
+                              this.state.fields.sort === "name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
                         <th
                           onClick={() =>
-                            this.handleColumnSort("receiver_account_number")
+                            this.handleColumnSort("owner_account_number")
                           }
                         >
                           <span className="sortCls">
@@ -365,92 +410,120 @@ class Merchant_Fees_Reports_Index extends React.Component {
                               Account Number
                             </span>
                             {this.state.fields.sort !==
-                              "receiver_account_number" && (
+                              "owner_account_number" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
                               this.state.fields.sort ===
-                                "receiver_account_number" && (
+                                "owner_account_number" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
                               this.state.fields.sort ===
-                                "receiver_account_number" && (
+                                "owner_account_number" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
-                        <th
-                          onClick={() => this.handleColumnSort("merchant_name")}
-                        >
+
+                        <th>Mobile Number</th>
+
+                        <th onClick={() => this.handleColumnSort("user_type")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Merchant Name
+                              User Type
                             </span>
-                            {this.state.fields.sort !== "merchant_name" && (
+                            {this.state.fields.sort !== "user_type" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
-                              this.state.fields.sort === "merchant_name" && (
+                              this.state.fields.sort === "user_type" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
-                              this.state.fields.sort === "merchant_name" && (
+                              this.state.fields.sort === "user_type" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
                         <th
                           onClick={() =>
-                            this.handleColumnSort("merchant_mobile_number")
+                            this.handleColumnSort("jar_category_name")
                           }
                         >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Mobile Number
+                              Jar Category
                             </span>
-                            {this.state.fields.sort !==
-                              "merchant_mobile_number" && (
+                            {this.state.fields.sort !== "jar_category_name" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
                             {this.state.fields.direction === "asc" &&
                               this.state.fields.sort ===
-                                "merchant_mobile_number" && (
+                                "jar_category_name" && (
                                 <FontAwesomeIcon icon={faSortUp} />
                               )}
                             {this.state.fields.direction === "desc" &&
                               this.state.fields.sort ===
-                                "merchant_mobile_number" && (
+                                "jar_category_name" && (
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
                         </th>
-                        <th>Total Received Amount</th>
-                        <th>Total Fees</th>
-                        <th>Total Transaction Cap</th>
+                        <th>Deposite Amount</th>
+                        <th>Target Amount</th>
+                        <th>Target Date</th>
+                        <th onClick={() => this.handleColumnSort("created_at")}>
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Created Date
+                            </span>
+                            {this.state.fields.sort !== "created_at" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.direction === "asc" &&
+                              this.state.fields.sort === "created_at" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.direction === "desc" &&
+                              this.state.fields.sort === "created_at" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state?.merchant_fees_report?.length > 0 ? (
-                        this.state.merchant_fees_report.map((u, index) => (
+                      {this.state?.savings_jar_report?.length > 0 ? (
+                        this.state.savings_jar_report.map((u, index) => (
                           <tr key={index + 1}>
                             <td>
                               {this.state.fields.page >= 2
                                 ? index + 1 + 10 * (this.state.fields.page - 1)
                                 : index + 1}
                             </td>
-                            <td>{u.receiver_account_number}</td>
-                            <td>{u.merchant_name}</td>
-                            <td>{`+${u.merchant_mobile_number}`}</td>
+                            <td>{u.jar_name}</td>
+                            <td>{u.name}</td>
+                            <td>{u.owner_account_number}</td>
+                            <td>{`+${u.mobile_number}`}</td>
+                            <td>{capitalize(u.user_type)}</td>
+                            <td>{capitalize(u.jar_category_name)}</td>
                             <td>
-                              <WrapAmount value={u.total_amount} />
+                              <WrapAmount value={u.deposite_amount} />
                             </td>
                             <td>
-                              <WrapAmount value={u.total_fees} />
+                              <WrapAmount value={u.target_amount} />
                             </td>
                             <td>
-                              <WrapAmount value={u.total_fees_capacity} />
+                              {u.target_date &&
+                                u.target_date.split("-").reverse().join("/")}
                             </td>
+                            <td>
+                              {u.created_at &&
+                                u.created_at.split("-").reverse().join("/")}
+                            </td>
+                            <td>{u.status ? "True" : "False"}</td>
                           </tr>
                         ))
                       ) : (
@@ -460,7 +533,7 @@ class Merchant_Fees_Reports_Index extends React.Component {
                       )}
                     </tbody>
                   </table>
-                  {this.state?.merchant_fees_report?.length > 0 ? (
+                  {this.state?.savings_jar_report?.length > 0 ? (
                     <CPagination
                       activePage={this.state.fields.page}
                       onActivePageChange={this.pageChange}
@@ -479,4 +552,4 @@ class Merchant_Fees_Reports_Index extends React.Component {
   }
 }
 
-export default Merchant_Fees_Reports_Index;
+export default Savings_Jar_Reports_Index;

@@ -39,6 +39,7 @@ import IconMoneyTransactions from "assets/icons/IconMoneyTransactions";
 import IconBanks from "assets/icons/IconBanks";
 import IconMerchantReports from "assets/icons/IconMerchantReports";
 import IconJarManagement from "assets/icons/IconJarManagement";
+import IconSavingsJarReports from "assets/icons/IconSavingsJarReports";
 
 const _nav = [
   {
@@ -261,6 +262,33 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavDropdown",
+    name: "Saving Jar Management",
+    route: "/admin/saving_jar_icon",
+    icon: <IconJarManagement className="c-sidebar-nav-icon" />,
+    id: "saving_jar_icon_group_sidebar_id",
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "Saving Jar Icons",
+        to: "/admin/saving_jar_icon",
+        icon: <FontAwesomeIcon icon={faIcons} className="c-sidebar-nav-icon" />,
+        module_name: "saving_jar",
+        id: "saving_jar_icon_sidebar_id",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Saving Jar Categories",
+        to: "/admin/saving_jar",
+        icon: (
+          <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
+        ),
+        module_name: "saving_jar",
+        id: "saving_jar_sidebar_id",
+      },
+    ],
+  },
+  {
+    _tag: "CSidebarNavDropdown",
     name: "Reports Management",
     route: "/admin/reports",
     icon: (
@@ -300,32 +328,13 @@ const _nav = [
         module_name: "merchant_fees_reports",
         id: "merchant_fees_reports_sidebar_id",
       },
-    ],
-  },
-  {
-    _tag: "CSidebarNavDropdown",
-    name: "Saving Jar Management",
-    route: "/admin/saving_jar_icon",
-    icon: <IconJarManagement className="c-sidebar-nav-icon" />,
-    id: "saving_jar_icon_group_sidebar_id",
-    _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "Saving Jar Icons",
-        to: "/admin/saving_jar_icon",
-        icon: <FontAwesomeIcon icon={faIcons} className="c-sidebar-nav-icon" />,
-        module_name: "saving_jar",
-        id: "saving_jar_icon_sidebar_id",
-      },
-      {
-        _tag: "CSidebarNavItem",
-        name: "Saving Jar Categories",
-        to: "/admin/saving_jar",
-        icon: (
-          <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
-        ),
-        module_name: "saving_jar",
-        id: "saving_jar_sidebar_id",
+        name: "Saving Jars Report",
+        to: "/admin/saving_jars_reports",
+        icon: <IconSavingsJarReports className="c-sidebar-nav-icon" />,
+        module_name: "saving_jars_reports",
+        id: "saving_jars_reports_sidebar_id",
       },
     ],
   },
