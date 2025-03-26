@@ -523,7 +523,7 @@ class Savings_Jar_Reports_Index extends React.Component {
                               {u.created_at &&
                                 u.created_at.split("-").reverse().join("/")}
                             </td>
-                            <td>{u.status ? "True" : "False"}</td>
+                            <td>{u.status ? "Active" : "Inactive"}</td>
                           </tr>
                         ))
                       ) : (
