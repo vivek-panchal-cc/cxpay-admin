@@ -100,6 +100,13 @@ class Category_Wise_Jar_List extends React.Component {
                               ? parseFloat(jar.target_amount).toFixed(2)
                               : jar.target_amount}
                           </p>
+                          <p>
+                            <b>Deposite Amount : </b>
+                            {globalConstants.CURRENCY_SYMBOL}&nbsp;
+                            {typeof parseFloat(jar.deposite_amount) === "number"
+                              ? parseFloat(jar.deposite_amount).toFixed(2)
+                              : jar.deposite_amount}
+                          </p>
                           <h5>Owner Details</h5>
                           <ul>
                             <li>

@@ -63,19 +63,19 @@ class CategoryDetailsById extends React.Component {
   render() {
     return (
       <>
-        <CCard>
-          <CCardBody>
-            <CRow>
-              <CCol xl={12}>
-                <CCard>
-                  <CCardHeader className={"font-weight-bold h5"}>
-                    Category Details
-                  </CCardHeader>
-                  <CCardBody>
-                    <CRow>
-                      <CCol xl={12}>
-                        <CFormGroup row>
-                          {/* <CCol xs="6">
+        {/* <CCard>
+          <CCardBody> */}
+        <CRow>
+          <CCol xl={12}>
+            <CCard>
+              <CCardHeader>
+                <strong>Category Details</strong>
+              </CCardHeader>
+              <CCardBody>
+                <CRow>
+                  <CCol xl={12}>
+                    <CFormGroup row>
+                      {/* <CCol xs="6">
                             <div style={{ paddingRight: "20px" }}>
                               {this.state.categoryDetails.jar_category_icon !==
                                 null &&
@@ -99,37 +99,35 @@ class CategoryDetailsById extends React.Component {
                                 )}
                             </div>
                           </CCol> */}
-                          <CCol xs="6">
-                            <p>
-                              <b>Jar Category Name: </b>
-                              {capitalize(
-                                this.state.categoryDetails.jar_category_name
-                              )}
-                            </p>
-                            <p>
-                              <b>Status: </b>
-                              {this.state.categoryDetails.jar_category_status
-                                ? "True"
-                                : "False"}
-                            </p>
-                            {this.state.categoryDetails.updated_at && (
-                              <p>
-                                <b>Updated At: </b>
-                                {formatDate(
-                                  this.state.categoryDetails.updated_at
-                                )}
-                              </p>
-                            )}
-                          </CCol>
-                        </CFormGroup>
+                      <CCol xs="6">
+                        <p>
+                          <b>Jar Category Name: </b>
+                          {capitalize(
+                            this.state.categoryDetails.jar_category_name
+                          )}
+                        </p>
+                        <p>
+                          <b>Status: </b>
+                          {this.state.categoryDetails.jar_category_status
+                            ? "True"
+                            : "False"}
+                        </p>
+                        {this.state.categoryDetails.updated_at && (
+                          <p>
+                            <b>Updated At: </b>
+                            {formatDate(this.state.categoryDetails.updated_at)}
+                          </p>
+                        )}
                       </CCol>
-                    </CRow>
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            </CRow>
-          </CCardBody>
-        </CCard>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+        {/* </CCardBody>
+        </CCard> */}
       </>
     );
   }
