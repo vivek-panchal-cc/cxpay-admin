@@ -425,6 +425,11 @@ class Saving_Jar_Index extends React.Component {
                               )}
                           </span>
                         </th>
+                        <th>
+                          <div className="d-flex justify-content-center">
+                            Background Color
+                          </div>
+                        </th>
                         <th
                           onClick={() =>
                             this.handleColumnSort("jar_category_status")
@@ -484,7 +489,23 @@ class Saving_Jar_Index extends React.Component {
                                 : index + 1}
                             </td>
                             <td>{capitalize(u.jar_category_name)}</td>
-
+                            <td
+                              className="text-center"
+                              style={{ verticalAlign: "middle" }}
+                            >
+                              <div
+                                style={{
+                                  backgroundColor: u.bg_color || "#a279e4",
+                                  borderRadius: "50%",
+                                  width: "40px", // Adjust the size if needed
+                                  height: "40px",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  margin: "auto",
+                                }}
+                              ></div>
+                            </td>
                             <td>
                               {_canAccess("saving_jar", "update") ? (
                                 <CLink

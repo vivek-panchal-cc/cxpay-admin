@@ -21,7 +21,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-dropzone-uploader/dist/styles.css";
 import { savingJarService } from "services/admin/savings_jar.service";
-
 class Saving_Jar_Add extends Component {
   constructor(props) {
     super(props);
@@ -30,12 +29,37 @@ class Saving_Jar_Add extends Component {
         jar_category_name: "",
         jar_category_status: false,
         jar_category_icon: null,
+        bg_color: "",
       },
+      bgColors: ["#a279e4"],
     };
+    // this.fixedColors = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#00CED1"];
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
+  }
+
+  componentDidMount() {
+    Promise.resolve(
+      savingJarService.savingJarBulkAction({
+        operation_type: "saving_jar_category_color_list",
+      })
+    )
+      .then((response) => {
+        if (response.success && response.data.length > 0) {
+          this.setState((prevState) => ({
+            bgColors: response.data,
+            fields: {
+              ...prevState.fields,
+              bg_color: response.data[0], // Set first API color as default
+            },
+          }));
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching colors:", error);
+      });
   }
 
   handleChange(event) {
@@ -46,6 +70,15 @@ class Saving_Jar_Add extends Component {
       fields: {
         ...prevState.fields,
         [name]: updatedValue,
+      },
+    }));
+  }
+
+  handleColorSelect(color) {
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        bg_color: color,
       },
     }));
   }
@@ -75,6 +108,7 @@ class Saving_Jar_Add extends Component {
       let requestParams = {
         jar_category_name: this.state.fields.jar_category_name,
         jar_category_status: this.state.fields.jar_category_status,
+        bg_color: this.state.fields.bg_color,
         operation_type: "saving_jar_category_add",
       };
       // if (this.state.fields.jar_category_icon) {
@@ -192,6 +226,53 @@ class Saving_Jar_Add extends Component {
                   />
                 </CCol>
               </CFormGroup> */}
+
+              <CFormGroup>
+                <CLabel>Choose Background Color</CLabel>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "10px",
+                    marginTop: "5px",
+                  }}
+                >
+                  {this.state.bgColors.map((color) => (
+                    <div
+                      key={color}
+                      onClick={() => this.handleColorSelect(color)}
+                      style={{
+                        position: "relative",
+                        width: "50px",
+                        height: "50px",
+                        backgroundColor: color,
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border:
+                          this.state.fields.bg_color === color
+                            ? "2px solid black"
+                            : "1px solid transparent",
+                      }}
+                    >
+                      {this.state.fields.bg_color === color && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            color: "white", // Adjust based on background color
+                            fontSize: "24px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          ✔
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CFormGroup>
 
               <CFormGroup row>
                 <CCol tag="label" md="1">

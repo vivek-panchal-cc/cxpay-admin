@@ -29,13 +29,16 @@ class Saving_Jar_Edit extends Component {
         jar_category_name: "",
         jar_category_status: false,
         jar_category_icon: null,
+        bg_color: "",
         _openPopup: false,
       },
+      bgColors: [],
       newJarIcon: null,
     };
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleColorSelect = this.handleColorSelect.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
   }
 
@@ -52,15 +55,42 @@ class Saving_Jar_Edit extends Component {
   }
 
   componentDidMount() {
-    this.fetchCategoryDetails();
+    this.fetchInitialData();
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.id !== this.props.id) {
-  //     this.setState({ fields: { id: this.props.id } });
-  //     this.fetchCategoryDetails();
-  //   }
-  // }
+  fetchInitialData() {
+    Promise.all([
+      savingJarService.savingJarBulkAction({
+        operation_type: "saving_jar_category_color_list",
+      }),
+    ])
+      .then(([colorResponse]) => {
+        let bgColors = [];
+        let defaultBgColor = "#a279e4"; // Default color
+
+        if (colorResponse.success && colorResponse.data.length > 0) {
+          bgColors = colorResponse.data;
+          defaultBgColor = bgColors[0]; // Use the first color from the API
+        }
+
+        this.setState(
+          {
+            bgColors,
+            fields: {
+              ...this.state.fields,
+              bg_color: this.state.fields.bg_color || defaultBgColor,
+            },
+          },
+          () => {
+            this.fetchCategoryDetails();
+          }
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching colors:", error);
+        this.fetchCategoryDetails(); // Proceed with fetching details even if color API fails
+      });
+  }
 
   fetchCategoryDetails() {
     if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
@@ -68,16 +98,29 @@ class Saving_Jar_Edit extends Component {
         id: +this.state.fields.id,
         operation_type: "saving_jar_category_detail",
       };
+
       savingJarService.savingJarBulkAction(postData).then((res) => {
         if (!res.success) {
           notify.error(res.message);
         } else {
-          this.setState({
-            fields: res.data,
-          });
+          this.setState((prevState) => ({
+            fields: {
+              ...res.data,
+              bg_color: res.data.bg_color || prevState.bgColors[0] || "#a279e4",
+            },
+          }));
         }
       });
     }
+  }
+
+  handleColorSelect(color) {
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        bg_color: color,
+      },
+    }));
   }
 
   handleUpload(event) {
@@ -119,6 +162,7 @@ class Saving_Jar_Edit extends Component {
         id: this.state.fields.id,
         jar_category_name: this.state.fields.jar_category_name,
         jar_category_status: this.state.fields.jar_category_status,
+        bg_color: this.state.fields.bg_color,
         operation_type: "saving_jar_category_update",
       };
       // if (this.state.newJarIcon) {
@@ -214,6 +258,46 @@ class Saving_Jar_Edit extends Component {
                   />
                 </CCol>
               </CFormGroup> */}
+
+              <CFormGroup>
+                <CLabel>Choose Background Color</CLabel>
+                <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+                  {this.state.bgColors.map((color) => (
+                    <div
+                      key={color}
+                      onClick={() => this.handleColorSelect(color)}
+                      style={{
+                        position: "relative",
+                        width: "50px",
+                        height: "50px",
+                        backgroundColor: color,
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border:
+                          this.state.fields.bg_color === color
+                            ? "2px solid black"
+                            : "1px solid transparent",
+                      }}
+                    >
+                      {this.state.fields.bg_color === color && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            color: "white", // Adjust based on background color
+                            fontSize: "24px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          ✔
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CFormGroup>
 
               <CFormGroup row>
                 <CCol tag="label" md="1">
