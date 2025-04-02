@@ -313,7 +313,7 @@ class Saving_Jar_Index extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                <strong>Saving Jar Categories</strong>
+                <strong>Sub-account Categories</strong>
                 <div className="card-header-actions">
                   {_canAccess("saving_jar", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
@@ -339,7 +339,7 @@ class Saving_Jar_Index extends React.Component {
                             <CCol xs="12" className="p-0">
                               <CInput
                                 id="search_name"
-                                placeholder="Search Saving Jar Category"
+                                placeholder="Search Sub-account Category"
                                 name="search_name"
                                 value={this.state.fields.search_name}
                                 onChange={this.handleChange}
@@ -620,7 +620,7 @@ class Saving_Jar_Index extends React.Component {
           color="danger"
         >
           <CModalHeader closeButton>
-            <CModalTitle>Delete Saving Jar Category</CModalTitle>
+            <CModalTitle>Delete Sub-account Category</CModalTitle>
           </CModalHeader>
           <CModalBody>Are you sure you want to delete this record?</CModalBody>
           <CModalFooter>

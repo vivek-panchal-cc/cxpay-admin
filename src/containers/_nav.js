@@ -262,14 +262,14 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavDropdown",
-    name: "Saving Jar Management",
+    name: "Sub-account Management",
     route: "/admin/saving_jar_icon",
     icon: <IconJarManagement className="c-sidebar-nav-icon" />,
     id: "saving_jar_icon_group_sidebar_id",
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "Saving Jar Icons",
+        name: "Sub-account Icons",
         to: "/admin/saving_jar_icon",
         icon: <FontAwesomeIcon icon={faIcons} className="c-sidebar-nav-icon" />,
         module_name: "saving_jar",
@@ -277,7 +277,7 @@ const _nav = [
       },
       {
         _tag: "CSidebarNavItem",
-        name: "Saving Jar Categories",
+        name: "Sub-account Categories",
         to: "/admin/saving_jar",
         icon: (
           <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
@@ -330,7 +330,7 @@ const _nav = [
       },
       {
         _tag: "CSidebarNavItem",
-        name: "Saving Jars Report",
+        name: "Sub-accounts Report",
         to: "/admin/saving_jars_reports",
         icon: <IconSavingsJarReports className="c-sidebar-nav-icon" />,
         module_name: "saving_jars_reports",

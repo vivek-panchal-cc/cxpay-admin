@@ -157,16 +157,16 @@ class Saving_Jar_Add extends Component {
         <CCol xs="12">
           <CCard>
             <CCardHeader>
-              <strong>Add Saving Jar Category</strong>
+              <strong>Add Sub-account Category</strong>
             </CCardHeader>
             <CCardBody>
               <CFormGroup>
-                <CLabel htmlFor="nf-name">Saving Jar Category Name</CLabel>
+                <CLabel htmlFor="nf-name">Sub-account Category Name</CLabel>
                 <CInput
                   type="text"
                   id="jar_category_name"
                   name="jar_category_name"
-                  placeholder="Enter Saving Jar Category"
+                  placeholder="Enter Sub-account Category"
                   autoComplete="jar_category_name"
                   onChange={this.handleChange}
                 />
@@ -183,14 +183,14 @@ class Saving_Jar_Add extends Component {
               </CFormGroup>
 
               {/* <CFormGroup row>
-                <CCol md="2">Jar Category Icon</CCol>
+                <CCol md="2">Sub-account Category Icon</CCol>
 
                 <CCol sm="3">
                   <CInput
                     type="file"
                     id="jar_category_icon"
                     name="jar_category_icon"
-                    placeholder="Jar Category Icon"
+                    placeholder="Sub-account Category Icon"
                     autoComplete="jar_category_icon "
                     onChange={this.handleUpload}
                     style={{ border: "none" }}

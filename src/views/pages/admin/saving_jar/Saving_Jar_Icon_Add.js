@@ -86,11 +86,11 @@ class Saving_Jar_Icon_Add extends Component {
         <CCol xs="12">
           <CCard>
             <CCardHeader>
-              <strong>Add Saving Jar Icons</strong>
+              <strong>Add Sub-account Icons</strong>
             </CCardHeader>
             <CCardBody>
               <CFormGroup>
-                {/* <CLabel>Jar Category Icons</CLabel> */}
+                {/* <CLabel>Sub-account Category Icons</CLabel> */}
                 <Dropzone onDrop={this.onDrop} accept={{ image: [".png"] }}>
                   {({ getRootProps, getInputProps, isDragActive }) => (
                     <div

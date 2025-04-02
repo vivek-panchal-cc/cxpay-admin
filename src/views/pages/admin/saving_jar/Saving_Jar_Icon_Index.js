@@ -90,7 +90,7 @@ class Saving_Jar_Icon_Index extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                <strong>Saving Jar Icons</strong>
+                <strong>Sub-account Icons</strong>
                 <div className="card-header-actions">
                   {_canAccess("saving_jar", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
@@ -126,7 +126,7 @@ class Saving_Jar_Icon_Index extends React.Component {
                           this.setState({ hoveredIconId: null })
                         }
                       >
-                        <img src={icon.url} alt="Saving Jar Icon" />
+                        <img src={icon.url} alt="Sub-account Icon" />
                         {_canAccess("saving_jar", "delete") &&
                           this.state.hoveredIconId === icon.id && (
                             <IconTrash
@@ -155,7 +155,7 @@ class Saving_Jar_Icon_Index extends React.Component {
           color="danger"
         >
           <CModalHeader closeButton>
-            <CModalTitle>Delete Saving Jar Icon</CModalTitle>
+            <CModalTitle>Delete Sub-account Icon</CModalTitle>
           </CModalHeader>
           <CModalBody>Are you sure you want to delete this icon?</CModalBody>
           <CModalFooter>

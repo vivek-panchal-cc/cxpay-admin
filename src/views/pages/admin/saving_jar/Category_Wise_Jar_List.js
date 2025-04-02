@@ -62,7 +62,7 @@ class Category_Wise_Jar_List extends React.Component {
         <CCol xl={12}>
           <CCard>
             <CCardHeader>
-              <strong>Categories wise Jar Details</strong>
+              <strong>Categories wise Sub-account Details</strong>
             </CCardHeader>
             <CCardBody>
               <div className="position-relative table-responsive">

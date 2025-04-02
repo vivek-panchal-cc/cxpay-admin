@@ -333,7 +333,7 @@ class Savings_Jar_Reports_Index extends React.Component {
           <CCol xl={12}>
             <CCard>
               <CCardHeader>
-                <strong>Saving Jars Report</strong>
+                <strong>Sub-accounts Report</strong>
                 <div className="card-header-actions">
                   {_canAccess("saving_jars_reports", "view") && (
                     <CTooltip content={globalConstants.EXPORT_JARS_DATA}>
@@ -367,7 +367,7 @@ class Savings_Jar_Reports_Index extends React.Component {
                         <th onClick={() => this.handleColumnSort("jar_name")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Jar Name
+                              Sub-account Name
                             </span>
                             {this.state.fields.sort !== "jar_name" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -453,7 +453,7 @@ class Savings_Jar_Reports_Index extends React.Component {
                         >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Jar Category
+                              Sub-account Category
                             </span>
                             {this.state.fields.sort !== "jar_category_name" && (
                               <FontAwesomeIcon icon={faSort} />

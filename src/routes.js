@@ -716,11 +716,11 @@ const routes = [
     action: "view",
   },
 
-  // Saving Jar
+  // Sub-accountJar
   {
     path: "/admin/saving_jar",
     exact: true,
-    name: "Saving Jar Categories",
+    name: "Sub-account Categories",
     component: Saving_Jar_Index,
     module_name: "saving_jar",
     action: "view",
@@ -728,7 +728,7 @@ const routes = [
   {
     path: "/admin/saving_jar/add",
     exact: true,
-    name: "Add Saving Jar Category",
+    name: "Add Sub-account Category",
     component: Saving_Jar_Add,
     module_name: "saving_jar",
     action: "create",
@@ -736,7 +736,7 @@ const routes = [
   {
     path: "/admin/saving_jar/edit/:id",
     exact: true,
-    name: "Update Saving Jar Category",
+    name: "Update Sub-account Category",
     component: Saving_Jar_Edit,
     module_name: "saving_jar",
     action: "update",
@@ -752,7 +752,7 @@ const routes = [
   {
     path: "/admin/saving_jar_icon",
     exact: true,
-    name: "Saving Jar Icons",
+    name: "Sub-account Icons",
     component: Saving_jar_Icon_Index,
     module_name: "saving_jar",
     action: "view",
@@ -760,7 +760,7 @@ const routes = [
   {
     path: "/admin/saving_jar_icon/add",
     exact: true,
-    name: "Add Saving Jar Icon",
+    name: "Add Sub-account Icon",
     component: Saving_jar_Icon_Add,
     module_name: "saving_jar",
     action: "create",
@@ -912,7 +912,7 @@ const routes = [
   {
     path: "/admin/saving_jars_reports",
     exact: true,
-    name: "Saving Jars Report",
+    name: "Sub-accounts Report",
     component: Savings_Jar_Reports_Index,
     module_name: "saving_jars_reports",
     action: "view",

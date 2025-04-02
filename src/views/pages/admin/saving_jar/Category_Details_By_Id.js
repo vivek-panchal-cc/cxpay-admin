@@ -101,7 +101,7 @@ class CategoryDetailsById extends React.Component {
                           </CCol> */}
                       <CCol xs="6">
                         <p>
-                          <b>Jar Category Name: </b>
+                          <b>Sub-account Category Name: </b>
                           {capitalize(
                             this.state.categoryDetails.jar_category_name
                           )}
