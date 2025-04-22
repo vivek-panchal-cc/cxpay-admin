@@ -158,6 +158,7 @@ class Saving_Jar_Edit extends Component {
     return new Promise((resolve, reject) => {
       if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
         const postData = {
+          id: +this.props.match.params.id,
           operation_type: "saving_jar_parent_category_list",
         };
 
