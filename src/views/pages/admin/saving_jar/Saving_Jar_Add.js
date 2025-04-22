@@ -13,10 +13,11 @@ import {
   CCardFooter,
   CLink,
   CRow,
+  CSelect,
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { history, notify } from "../../../../_helpers/index";
+import { capitalize, history, notify } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-dropzone-uploader/dist/styles.css";
@@ -30,7 +31,10 @@ class Saving_Jar_Add extends Component {
         jar_category_status: false,
         jar_category_icon: null,
         bg_color: "",
+        is_child: false,
+        parent_id: "",
       },
+      parentCategoryList: [],
       bgColors: ["#a279e4"],
     };
     // this.fixedColors = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#00CED1"];
@@ -59,6 +63,22 @@ class Saving_Jar_Add extends Component {
       })
       .catch((error) => {
         console.error("Error fetching colors:", error);
+      });
+
+    Promise.resolve(
+      savingJarService.savingJarBulkAction({
+        operation_type: "saving_jar_parent_category_list",
+      })
+    )
+      .then((response) => {
+        if (response.success && response.data.category.length > 0) {
+          this.setState({
+            parentCategoryList: response.data?.category,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching business categories:", error);
       });
   }
 
@@ -89,35 +109,20 @@ class Saving_Jar_Add extends Component {
 
   checkValidation(event) {
     event.preventDefault();
-    // if (
-    //   this.state.fields.jar_category_icon &&
-    //   !this.state.fields.jar_category_icon.name.match(/\.(icon|svg)$/)
-    // ) {
-    //   this.setState({ imageTypeValidation: true });
-    //   return false;
-    // }
-
-    // if (
-    //   this.state.fields.jar_category_icon &&
-    //   this.state.fields.jar_category_icon.size > 5000000
-    // ) {
-    //   this.setState({ imageSizeValidation: true });
-    //   return false;
-    // }
+    const { is_child, parent_id } = this.state.fields;
+    if (is_child && !parent_id) {
+      notify.error("Please select parent category");
+      return;
+    }
     if (this.validator.allValid()) {
       let requestParams = {
+        is_child: is_child,
+        parent_id: is_child ? parent_id : "",
         jar_category_name: this.state.fields.jar_category_name,
         jar_category_status: this.state.fields.jar_category_status,
         bg_color: this.state.fields.bg_color,
         operation_type: "saving_jar_category_add",
       };
-      // if (this.state.fields.jar_category_icon) {
-      //   formData.append(
-      //     "jar_category_icon",
-      //     this.state.fields.jar_category_icon
-      //   );
-      // }
-
       savingJarService.savingJarAddOrUpdate(requestParams).then((res) => {
         if (!res.success) {
           notify.error(res.message);
@@ -134,8 +139,6 @@ class Saving_Jar_Add extends Component {
 
   handleUpload(event) {
     const file = event.target.files[0];
-    // const filename = event.target.files[0].name;
-
     if (file && file.name.match(/\.(icon|svg)$/)) {
       this.setState({ imageTypeValidation: false });
     }
@@ -182,50 +185,42 @@ class Saving_Jar_Add extends Component {
                 </CFormText>
               </CFormGroup>
 
-              {/* <CFormGroup row>
-                <CCol md="2">Sub-account Category Icon</CCol>
+              <CFormGroup row>
+                <CCol tag="label" md="1">
+                  <CLabel htmlFor="is_child">Is Child?</CLabel>
+                </CCol>
+                <CCol md="11">
+                  <CFormGroup variant="custom-checkbox" inline>
+                    <CSwitch
+                      name="is_child"
+                      color="primary"
+                      checked={this.state.fields.is_child}
+                      onChange={this.handleChange}
+                    />
+                  </CFormGroup>
+                </CCol>
+              </CFormGroup>
 
-                <CCol sm="3">
-                  <CInput
-                    type="file"
-                    id="jar_category_icon"
-                    name="jar_category_icon"
-                    placeholder="Sub-account Category Icon"
-                    autoComplete="jar_category_icon "
-                    onChange={this.handleUpload}
-                    style={{ border: "none" }}
-                  />
-                  {this.state.imageTypeValidation && (
-                    <small className="form-text text-muted help-block">
-                      <div className="text-danger">
-                        Select valid icon. (.ico, .svg)
-                      </div>
-                    </small>
-                  )}
-                  {this.state.imageSizeValidation && (
-                    <small className="form-text text-muted help-block">
-                      <div className="text-danger">
-                        Icon size is greater than 5MB. Please upload icon below
-                        5MB.
-                      </div>
-                    </small>
-                  )}
-                </CCol>
-                <CCol sm="2">
-                  <img
-                    src={
-                      this.state.fields.jar_category_icon
-                        ? URL.createObjectURL(
-                            this.state.fields.jar_category_icon
-                          )
-                        : "/avatars/default-avatar.png"
-                    }
-                    alt="icon"
-                    className=""
-                    width={50}
-                  />
-                </CCol>
-              </CFormGroup> */}
+              {this.state.fields.is_child && (
+                <CFormGroup>
+                  <CLabel htmlFor="nf-name">Parent Category</CLabel>
+                  <CSelect
+                    custom
+                    name="parent_id"
+                    id="select"
+                    onChange={this.handleChange}
+                  >
+                    <option value="">-- Enter Parent Category --</option>;
+                    {this.state.parentCategoryList?.map((ct, key) => {
+                      return (
+                        <option key={key} value={ct.id}>
+                          {capitalize(ct.jar_category_name)}
+                        </option>
+                      );
+                    })}
+                  </CSelect>
+                </CFormGroup>
+              )}
 
               <CFormGroup>
                 <CLabel>Choose Background Color</CLabel>

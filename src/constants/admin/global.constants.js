@@ -46,6 +46,8 @@ export const globalConstants = {
   VIEW_RECHARGE_DETAILS: "View recharge details",
   VIEW_RECURRING_DETAILS: "View recurring details",
   VIEW_JAR_CATEGORY_DETAILS: "View sub-account category details",
+  VIEW_TEMPORARY_JAR_CATEGORY: "Click to view temporary categories",
+  ACTION_TEMPORARY_JAR_CATEGORY: "Click to approve temporary category",
   COPY_TO_CLIPBOARD: "Copy to clipboard",
   COPIED_LABEL: "Copied",
   REFRESH_TOKEN: "Refresh token",

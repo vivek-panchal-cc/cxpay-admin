@@ -13,10 +13,16 @@ import {
   CCardFooter,
   CLink,
   CRow,
+  CSelect,
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { notify, _canAccess, history } from "../../../../_helpers/index";
+import {
+  notify,
+  _canAccess,
+  history,
+  capitalize,
+} from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan } from "@fortawesome/free-solid-svg-icons";
 import { savingJarService } from "services/admin/savings_jar.service";
@@ -31,7 +37,10 @@ class Saving_Jar_Edit extends Component {
         jar_category_icon: null,
         bg_color: "",
         _openPopup: false,
+        is_child: false,
+        parent_id: "",
       },
+      parentCategoryList: [],
       bgColors: [],
       newJarIcon: null,
     };
@@ -60,58 +69,118 @@ class Saving_Jar_Edit extends Component {
 
   fetchInitialData() {
     Promise.all([
-      savingJarService.savingJarBulkAction({
-        operation_type: "saving_jar_category_color_list",
-      }),
+      this.fetchCategoryColors(),
+      this.fetchCategoryDetails(),
+      this.fetchParentCategoryDropdownList(),
     ])
-      .then(([colorResponse]) => {
-        let bgColors = [];
-        let defaultBgColor = "#a279e4"; // Default color
-
-        if (colorResponse.success && colorResponse.data.length > 0) {
-          bgColors = colorResponse.data;
-          defaultBgColor = bgColors[0]; // Use the first color from the API
-        }
-
-        this.setState(
-          {
-            bgColors,
-            fields: {
-              ...this.state.fields,
-              bg_color: this.state.fields.bg_color || defaultBgColor,
-            },
-          },
-          () => {
-            this.fetchCategoryDetails();
-          }
-        );
+      .then(([colorResponse, categoryDetails, parentCategoryList]) => {
+        // handle success, the order of execution is maintained
       })
       .catch((error) => {
-        console.error("Error fetching colors:", error);
-        this.fetchCategoryDetails(); // Proceed with fetching details even if color API fails
+        console.error("Error in fetching data:", error);
+        // handle error, proceed with fallback logic if needed
       });
   }
 
-  fetchCategoryDetails() {
-    if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
-      const postData = {
-        id: +this.state.fields.id,
-        operation_type: "saving_jar_category_detail",
-      };
+  fetchCategoryColors() {
+    return new Promise((resolve, reject) => {
+      savingJarService
+        .savingJarBulkAction({
+          operation_type: "saving_jar_category_color_list",
+        })
+        .then((colorResponse) => {
+          let bgColors = [];
+          let defaultBgColor = "#a279e4"; // Default color
 
-      savingJarService.savingJarBulkAction(postData).then((res) => {
-        if (!res.success) {
-          notify.error(res.message);
-        } else {
-          this.setState((prevState) => ({
-            fields: {
-              ...res.data,
-              bg_color: res.data.bg_color || prevState.bgColors[0] || "#a279e4",
+          if (colorResponse.success && colorResponse.data.length > 0) {
+            bgColors = colorResponse.data;
+            defaultBgColor = bgColors[0]; // Use the first color from the API
+          }
+
+          this.setState(
+            {
+              bgColors,
+              fields: {
+                ...this.state.fields,
+                bg_color: this.state.fields.bg_color || defaultBgColor,
+              },
             },
-          }));
-        }
-      });
-    }
+            () => {
+              resolve(colorResponse);
+            }
+          );
+        })
+        .catch((error) => {
+          reject(error); // Reject if API fails
+        });
+    });
+  }
+
+  fetchCategoryDetails() {
+    return new Promise((resolve, reject) => {
+      if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
+        const postData = {
+          id: +this.state.fields.id,
+          operation_type: "saving_jar_category_detail",
+        };
+
+        savingJarService
+          .savingJarBulkAction(postData)
+          .then((res) => {
+            if (!res.success) {
+              notify.error(res.message);
+              resolve(res); // Resolve with response even if unsuccessful
+            } else {
+              const isChild =
+                res.data.parent_id !== null && res.data.parent_id !== undefined;
+
+              this.setState((prevState) => ({
+                fields: {
+                  ...res.data,
+                  is_child: isChild,
+                  bg_color:
+                    res.data.bg_color || prevState.bgColors[0] || "#a279e4",
+                },
+              }));
+              resolve(res); // Resolve on success
+            }
+          })
+          .catch((error) => {
+            reject(error); // Reject if API fails
+          });
+      } else {
+        resolve(); // Resolve if no access
+      }
+    });
+  }
+
+  fetchParentCategoryDropdownList() {
+    return new Promise((resolve, reject) => {
+      if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
+        const postData = {
+          operation_type: "saving_jar_parent_category_list",
+        };
+
+        savingJarService
+          .savingJarBulkAction(postData)
+          .then((res) => {
+            if (!res.success) {
+              notify.error(res.message);
+              resolve(res); // Resolve with response even if unsuccessful
+            } else {
+              this.setState({
+                parentCategoryList: res.data?.category || [],
+              });
+              resolve(res); // Resolve on success
+            }
+          })
+          .catch((error) => {
+            reject(error); // Reject if API fails
+          });
+      } else {
+        resolve(); // Resolve if no access
+      }
+    });
   }
 
   handleColorSelect(color) {
@@ -145,21 +214,16 @@ class Saving_Jar_Edit extends Component {
 
   checkValidation(event) {
     event.preventDefault();
-    // if (
-    //   this.state.newJarIcon &&
-    //   !this.state.newJarIcon.name.match(/\.(icon|svg)$/)
-    // ) {
-    //   this.setState({ imageTypeValidation: true });
-    //   return false;
-    // }
-
-    // if (this.state.newJarIcon && this.state.newJarIcon.size > 5000000) {
-    //   this.setState({ imageSizeValidation: true });
-    //   return false;
-    // }
+    const { is_child, parent_id } = this.state.fields;
+    if (is_child && !parent_id) {
+      notify.error("Please select parent category");
+      return;
+    }
     if (this.validator.allValid()) {
       let requestParams = {
         id: this.state.fields.id,
+        is_child: is_child,
+        parent_id: is_child ? parent_id : "",
         jar_category_name: this.state.fields.jar_category_name,
         jar_category_status: this.state.fields.jar_category_status,
         bg_color: this.state.fields.bg_color,
@@ -214,50 +278,43 @@ class Saving_Jar_Edit extends Component {
                 </CFormText>
               </CFormGroup>
 
-              {/* <CFormGroup row>
-                <CCol md="2">Sub-account Category Icon</CCol>
+              <CFormGroup row>
+                <CCol tag="label" md="1">
+                  <CLabel htmlFor="is_child">Is Child?</CLabel>
+                </CCol>
+                <CCol md="11">
+                  <CFormGroup variant="custom-checkbox" inline>
+                    <CSwitch
+                      name="is_child"
+                      color="primary"
+                      checked={this.state.fields.is_child}
+                      onChange={this.handleChange}
+                    />
+                  </CFormGroup>
+                </CCol>
+              </CFormGroup>
 
-                <CCol sm="3">
-                  <CInput
-                    type="file"
-                    id="newJarIcon"
-                    name="newJarIcon"
-                    placeholder="Sub-account Category Icon"
-                    autoComplete="newJarIcon "
-                    onChange={this.handleUpload}
-                    style={{ border: "none" }}
-                  />
-                  {this.state.imageTypeValidation && (
-                    <small className="form-text text-muted help-block">
-                      <div className="text-danger">
-                        Select valid icon. (.ico, .svg)
-                      </div>
-                    </small>
-                  )}
-                  {this.state.imageSizeValidation && (
-                    <small className="form-text text-muted help-block">
-                      <div className="text-danger">
-                        Icon size is greater than 5MB. Please upload icon below
-                        5MB.
-                      </div>
-                    </small>
-                  )}
-                </CCol>
-                <CCol sm="2">
-                  <img
-                    src={
-                      newJarIcon
-                        ? URL.createObjectURL(newJarIcon)
-                        : this.state.fields.jar_category_icon
-                        ? this.state.fields.jar_category_icon
-                        : "/avatars/default-avatar.png"
-                    }
-                    alt="icon"
-                    className=""
-                    width={50}
-                  />
-                </CCol>
-              </CFormGroup> */}
+              {this.state.fields.is_child && (
+                <CFormGroup>
+                  <CLabel htmlFor="nf-name">Parent Category</CLabel>
+                  <CSelect
+                    custom
+                    name="parent_id"
+                    id="select"
+                    onChange={this.handleChange}
+                    value={this.state.fields.parent_id}
+                  >
+                    <option value="">-- Enter Parent Category --</option>;
+                    {this.state.parentCategoryList?.map((ct, key) => {
+                      return (
+                        <option key={key} value={ct.id}>
+                          {capitalize(ct.jar_category_name)}
+                        </option>
+                      );
+                    })}
+                  </CSelect>
+                </CFormGroup>
+              )}
 
               <CFormGroup>
                 <CLabel>Choose Background Color</CLabel>

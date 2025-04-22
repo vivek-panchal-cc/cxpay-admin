@@ -208,6 +208,10 @@ const Saving_jar_Icon_Add = React.lazy(() =>
   import("./views/pages/admin/saving_jar/Saving_Jar_Icon_Add")
 );
 
+const Saving_Jar_Temporary_Category = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Temporary_Category")
+);
+
 const System_Bank_Accounts_Index = React.lazy(() =>
   import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Index")
 );
@@ -764,6 +768,14 @@ const routes = [
     component: Saving_jar_Icon_Add,
     module_name: "saving_jar",
     action: "create",
+  },
+  {
+    path: "/admin/saving_jar/temporary_category",
+    exact: true,
+    name: "Temporary Categories List",
+    component: Saving_Jar_Temporary_Category,
+    module_name: "saving_jar",
+    action: "update",
   },
 
   // System Bank Accounts
