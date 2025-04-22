@@ -289,7 +289,8 @@ class Saving_Jar_Edit extends Component {
                       name="is_child"
                       color="primary"
                       checked={this.state.fields.is_child}
-                      onChange={this.handleChange}
+                      // onChange={this.handleChange}
+                      disabled
                     />
                   </CFormGroup>
                 </CCol>
@@ -302,8 +303,9 @@ class Saving_Jar_Edit extends Component {
                     custom
                     name="parent_id"
                     id="select"
-                    onChange={this.handleChange}
+                    // onChange={this.handleChange}
                     value={this.state.fields.parent_id}
+                    disabled
                   >
                     <option value="">-- Enter Parent Category --</option>;
                     {this.state.parentCategoryList?.map((ct, key) => {
