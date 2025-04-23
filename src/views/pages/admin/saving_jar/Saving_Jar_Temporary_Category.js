@@ -292,6 +292,7 @@ class Saving_Jar_Temporary_Category extends React.Component {
                           onClick={() =>
                             this.handleColumnSort("parent_category_name")
                           }
+                          className="text-center"
                         >
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
@@ -366,7 +367,9 @@ class Saving_Jar_Temporary_Category extends React.Component {
                                   : index + 1}
                               </td>
                               <td>{capitalize(u.jar_category_name)}</td>
-                              <td>{capitalize(u.parent_category_name)}</td>
+                              <td className="text-center">
+                                {capitalize(u.parent_category_name || "—")}
+                              </td>
                               <td
                                 className="text-center"
                                 style={{ verticalAlign: "middle" }}
