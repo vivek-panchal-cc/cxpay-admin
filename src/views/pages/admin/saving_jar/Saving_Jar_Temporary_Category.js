@@ -17,15 +17,13 @@ import {
   CFormGroup,
   CInput,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,
   faSortDown,
   faSortUp,
-  faEye,
-  faArrowRight,
   faArrowLeft,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   notify,
@@ -290,6 +288,31 @@ class Saving_Jar_Temporary_Category extends React.Component {
                               )}
                           </span>
                         </th>
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("parent_category_name")
+                          }
+                        >
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Parent Category Name
+                            </span>
+                            {this.state.fields.sort_field !==
+                              "parent_category_name" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field ===
+                                "parent_category_name" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field ===
+                                "parent_category_name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
                         <th>
                           <div className="d-flex justify-content-center">
                             Background Color
@@ -343,6 +366,7 @@ class Saving_Jar_Temporary_Category extends React.Component {
                                   : index + 1}
                               </td>
                               <td>{capitalize(u.jar_category_name)}</td>
+                              <td>{capitalize(u.parent_category_name)}</td>
                               <td
                                 className="text-center"
                                 style={{ verticalAlign: "middle" }}
@@ -382,9 +406,7 @@ class Saving_Jar_Temporary_Category extends React.Component {
                                               )
                                             }
                                           >
-                                            <FontAwesomeIcon
-                                              icon={faArrowRight}
-                                            />
+                                            <FontAwesomeIcon icon={faCheck} />
                                           </button>
                                         </CTooltip>
                                       )}

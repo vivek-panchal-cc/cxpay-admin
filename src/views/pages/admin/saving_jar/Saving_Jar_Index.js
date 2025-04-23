@@ -463,6 +463,31 @@ class Saving_Jar_Index extends React.Component {
                               )}
                           </span>
                         </th>
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("parent_category_name")
+                          }
+                        >
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Parent Category Name
+                            </span>
+                            {this.state.fields.sort_field !==
+                              "parent_category_name" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field ===
+                                "parent_category_name" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field ===
+                                "parent_category_name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
                         <th>
                           <div className="d-flex justify-content-center">
                             Background Color
@@ -527,6 +552,7 @@ class Saving_Jar_Index extends React.Component {
                                 : index + 1}
                             </td>
                             <td>{capitalize(u.jar_category_name)}</td>
+                            <td>{capitalize(u.parent_category_name || "—")}</td>
                             <td
                               className="text-center"
                               style={{ verticalAlign: "middle" }}
