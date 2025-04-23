@@ -171,6 +171,7 @@ class Saving_Jar_Add extends Component {
                   name="jar_category_name"
                   placeholder="Enter Sub-account Category"
                   autoComplete="jar_category_name"
+                  value={capitalize(this.state.fields.jar_category_name)}
                   onChange={this.handleChange}
                 />
                 <CFormText className="help-block">
