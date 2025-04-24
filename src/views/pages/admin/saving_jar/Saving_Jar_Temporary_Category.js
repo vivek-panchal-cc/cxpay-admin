@@ -453,15 +453,15 @@ class Saving_Jar_Temporary_Category extends React.Component {
           color="primary"
         >
           <CModalHeader closeButton>
-            <CModalTitle>Release Temporary Customer</CModalTitle>
+            <CModalTitle>Approve Temporary Category</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            Are you sure you want to release{" "}
+            Are you sure you want to approve{" "}
             <strong>{capitalize(this.state.releaseCategory)}</strong>?
           </CModalBody>
           <CModalFooter>
             <CButton color="primary" onClick={() => this.releaseTempCategory()}>
-              Release
+              Approve
             </CButton>
             <CButton
               color="secondary"
