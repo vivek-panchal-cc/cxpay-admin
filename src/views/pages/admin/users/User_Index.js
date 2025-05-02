@@ -534,13 +534,15 @@ class User_Index extends React.Component {
                       )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={page}
-                    onActivePageChange={this.pageChange}
-                    pages={totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {user_list?.length > 0 && (
+                    <CPagination
+                      activePage={page}
+                      onActivePageChange={this.pageChange}
+                      pages={totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>

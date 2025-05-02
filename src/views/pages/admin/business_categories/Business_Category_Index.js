@@ -88,7 +88,7 @@ class Business_Category_Index extends React.Component {
       .businessCategoryBulkAction(this.state.fields)
       .then((res) => {
         if (!res.success) {
-          notify.error(res.message);
+          // notify.error(res.message);
           this.setState({ category_list: [] });
         } else {
           this.setState({
