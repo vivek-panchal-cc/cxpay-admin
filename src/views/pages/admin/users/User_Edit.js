@@ -184,7 +184,7 @@ class User_Edit extends React.Component {
                     )}
                   </CFormText>
                 </CFormGroup>
-                <CFormGroup>
+                {/* <CFormGroup>
                   <CLabel htmlFor="nf-email">Password</CLabel>
                   <CInput
                     type="password"
@@ -208,7 +208,7 @@ class User_Edit extends React.Component {
                     onChange={this.handleChange}
                   />
                   <CFormText className="help-block confirm_password"></CFormText>
-                </CFormGroup>
+                </CFormGroup> */}
                 <CFormGroup row>
                   <CCol md="1">Status</CCol>
 

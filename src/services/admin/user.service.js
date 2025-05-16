@@ -14,6 +14,7 @@ export const userService = {
   deleteUser,
   forgotPassword,
   resetPassword,
+  resetPasswordLink,
   getUserGroups,
   getPermission,
   changeUserStatus,
@@ -129,6 +130,24 @@ function deleteUser(id) {
       return Promise.reject();
     })
     .then(handleResponse);
+}
+
+async function resetPasswordLink(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("users", "update"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(`${API_URL}api/forgot_password`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
 }
 
 function forgotPassword(postData) {

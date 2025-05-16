@@ -39,15 +39,19 @@ class User_Myprofile extends React.Component {
       fields: {
         name: "",
         email: "",
+        current_password: "",
         password: "",
         confirm_password: "",
       },
+      showCurrentPassword: false,
       showPassword: false,
       showConfirmPassword: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleCurrentPasswordVisibility =
+      this.toggleCurrentPasswordVisibility.bind(this);
     this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
     this.toggleConfirmPasswordVisibility =
       this.toggleConfirmPasswordVisibility.bind(this);
@@ -100,7 +104,7 @@ class User_Myprofile extends React.Component {
       } else {
         $(".confirm_password").html("");
         userService.updateMyProfile(this.state.fields).then((res) => {
-          if (res.status === false) {
+          if (!res.success) {
             notify.error(res.message);
           } else {
             let _user = JSON.parse(localStorage.getItem("user"));
@@ -126,6 +130,9 @@ class User_Myprofile extends React.Component {
     }
   }
 
+  toggleCurrentPasswordVisibility() {
+    this.setState({ showCurrentPassword: !this.state.showCurrentPassword });
+  }
   togglePasswordVisibility() {
     this.setState({ showPassword: !this.state.showPassword });
   }
@@ -174,6 +181,35 @@ class User_Myprofile extends React.Component {
                   />
                 </CFormGroup>
                 <CFormGroup>
+                  <CLabel htmlFor="nf-email">Current Password</CLabel>
+                  <CInputGroup>
+                    <CInput
+                      type={
+                        this.state.showCurrentPassword ? "text" : "password"
+                      }
+                      id="current_password"
+                      name="current_password"
+                      placeholder="Enter Current Password"
+                      autoComplete="new-password"
+                      value={this.state.fields.current_password}
+                      onChange={this.handleChange}
+                    />
+                    <CInputGroupPrepend className="cursor-pointer">
+                      <CInputGroupText
+                        onClick={this.toggleCurrentPasswordVisibility}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            this.state.showCurrentPassword ? faEyeSlash : faEye
+                          }
+                        />
+                      </CInputGroupText>
+                    </CInputGroupPrepend>
+                  </CInputGroup>
+                  <CFormText className="help-block"></CFormText>
+                </CFormGroup>
+
+                <CFormGroup>
                   <CLabel htmlFor="nf-email">Password</CLabel>
                   <CInputGroup>
                     <CInput
@@ -185,7 +221,7 @@ class User_Myprofile extends React.Component {
                       value={this.state.fields.password}
                       onChange={this.handleChange}
                     />
-                    <CInputGroupPrepend>
+                    <CInputGroupPrepend className="cursor-pointer">
                       <CInputGroupText onClick={this.togglePasswordVisibility}>
                         <FontAwesomeIcon
                           icon={this.state.showPassword ? faEyeSlash : faEye}
@@ -210,7 +246,7 @@ class User_Myprofile extends React.Component {
                       value={this.state.fields.confirm_password}
                       onChange={this.handleChange}
                     />
-                    <CInputGroupPrepend>
+                    <CInputGroupPrepend className="cursor-pointer">
                       <CInputGroupText
                         onClick={this.toggleConfirmPasswordVisibility}
                       >

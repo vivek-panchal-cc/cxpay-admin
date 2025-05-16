@@ -7,6 +7,7 @@ export const globalConstants = {
   ADD_BTN: "Click to add new record.",
   ADD_MERCHANT: "Add new merchant.",
   EDIT_BTN: "Click to edit record.",
+  RESET_PASS_BTN: "Click to reset password.",
   DELETE_BTN: "Click to delete record.",
   REPORT_BTN: "Click to view report.",
   RESET_PASS: "Click to reset password.",
