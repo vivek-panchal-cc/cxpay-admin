@@ -529,10 +529,14 @@ class User_Index extends React.Component {
                                             >
                                               <button
                                                 className="btn btn-dark btn-block w-auto pt-0"
-                                                onClick={() =>
-                                                  this.openResetPasswordPopup(
-                                                    u.email
-                                                  )
+                                                disabled={!u.status}
+                                                onClick={
+                                                  u.status
+                                                    ? () =>
+                                                        this.openResetPasswordPopup(
+                                                          u.email
+                                                        )
+                                                    : () => {}
                                                 }
                                               >
                                                 <IconResetPassword />

@@ -85,7 +85,27 @@ class User_Myprofile extends React.Component {
       var fstatus = value === "true" ? false : true;
       this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
     } else {
-      this.setState({ fields: { ...this.state.fields, [name]: value } });
+      this.setState({ fields: { ...this.state.fields, [name]: value } }, () => {
+        // Clear current_password validation error if password is cleared
+        if (name === "password" && value.length === 0) {
+          $(".current_password").html("");
+        }
+        if (
+          (name === "password" && value.length > 0) ||
+          (name === "current_password" && value.length === 0)
+        ) {
+          $(".password").html("");
+        }
+
+        // Also clear confirm_password error if confirm_password no longer matches
+        if (name === "confirm_password" || name === "password") {
+          if (
+            this.state.fields.confirm_password === this.state.fields.password
+          ) {
+            $(".confirm_password").html("");
+          }
+        }
+      });
     }
   }
 
@@ -101,8 +121,24 @@ class User_Myprofile extends React.Component {
         $(".confirm_password").html(
           '<div class="text-danger">Password and confirm password must be same.</div>'
         );
+      } else if (
+        this.state.fields.password &&
+        !this.state.fields.current_password
+      ) {
+        $(".current_password").html(
+          '<div class="text-danger">Current password is required.</div>'
+        );
+      } else if (
+        this.state.fields.current_password &&
+        !this.state.fields.password
+      ) {
+        $(".password").html(
+          '<div class="text-danger">Password is required.</div>'
+        );
       } else {
         $(".confirm_password").html("");
+        $(".current_password").html("");
+        $(".password").html("");
         userService.updateMyProfile(this.state.fields).then((res) => {
           if (!res.success) {
             notify.error(res.message);
@@ -119,9 +155,13 @@ class User_Myprofile extends React.Component {
             history.push("/admin/my-profile");
           }
 
-          this.setState({ fields: { ...this.state.fields, password: "" } });
           this.setState({
-            fields: { ...this.state.fields, confirm_password: "" },
+            fields: {
+              ...this.state.fields,
+              password: "",
+              confirm_password: "",
+              current_password: "",
+            },
           });
         });
       }
@@ -173,11 +213,12 @@ class User_Myprofile extends React.Component {
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Enter Email "
+                    placeholder="Enter Email"
                     autoComplete="email"
                     value={this.state.fields.email}
-                    onChange={this.handleChange}
-                    disabled={true}
+                    // onChange={this.handleChange}
+                    // disabled={true}
+                    readOnly
                   />
                 </CFormGroup>
                 <CFormGroup>
@@ -206,7 +247,7 @@ class User_Myprofile extends React.Component {
                       </CInputGroupText>
                     </CInputGroupPrepend>
                   </CInputGroup>
-                  <CFormText className="help-block"></CFormText>
+                  <CFormText className="help-block current_password"></CFormText>
                 </CFormGroup>
 
                 <CFormGroup>
@@ -229,7 +270,7 @@ class User_Myprofile extends React.Component {
                       </CInputGroupText>
                     </CInputGroupPrepend>
                   </CInputGroup>
-                  <CFormText className="help-block"></CFormText>
+                  <CFormText className="help-block password"></CFormText>
                 </CFormGroup>
 
                 <CFormGroup>
