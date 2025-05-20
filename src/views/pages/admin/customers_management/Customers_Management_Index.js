@@ -578,7 +578,7 @@ class Customers_Management_Index extends React.Component {
                       </CTooltip>
                       <span
                         className={`${
-                          this.state.pendingKycCustomers?.length > 0
+                          this.state.reviewNeededCustomers?.length > 0
                             ? "notification-badge-pending-customers"
                             : ""
                         }`}
