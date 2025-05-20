@@ -404,9 +404,7 @@ class CustomersManagementReviewNeededKycIndex extends React.Component {
                               )}
                           </span>
                         </th>
-                        {(_canAccess("personal_customers", "update") ||
-                          _canAccess("personal_customers", "delete") ||
-                          _canAccess("personal_customers", "view")) && (
+                        {_canAccess("personal_customers", "update") && (
                           <th>Action</th>
                         )}
                       </tr>
@@ -429,9 +427,7 @@ class CustomersManagementReviewNeededKycIndex extends React.Component {
                               <td>{c.kyc_ref_id}</td>
                               <td>{c.kyc_attempt_count || 0}</td>
                               <td>{formatDate(c.date)}</td>
-                              {(_canAccess("personal_customers", "update") ||
-                                _canAccess("personal_customers", "delete") ||
-                                _canAccess("personal_customers", "view")) && (
+                              {_canAccess("personal_customers", "update") && (
                                 <>
                                   <td>
                                     <div className="d-flex">
