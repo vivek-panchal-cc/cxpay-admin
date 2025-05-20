@@ -15,6 +15,8 @@ export const globalConstants = {
   BLOCKED_REQ_BTN: "Click to list blocked requests.",
   ADMIN_APPROVAL: "Pending Merchant Approval List.",
   KYC_PENDING: "Pending KYC List.",
+  IN_PROCESSKYC: "Review needed KYC List.",
+  IN_PROCESSKYC_DONE: "Click to review KYC.",
   APPR_DEL_REQ: "Approve delete request.",
   REJ_DEL_REQ: "Reject delete request.",
   REL_CUST: "Release Customer",

@@ -895,85 +895,91 @@ class Customers_Management_Edit extends React.Component {
                   </CCol>
                 </CRow>
 
-                {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && ( */}
-                <CFormGroup className="limits-wrap d-flex flex-wrap">
-                  <CCol md="2" className="pl-0">
-                    KYC Approval
-                  </CCol>
-                  <CCol sm="10" className="pl-0">
-                    <CFormGroup variant="custom-checkbox" inline>
-                      <CFormGroup
-                        check
-                        className="radio"
-                        style={{ marginLeft: "20px", marginBottom: "10px" }}
-                      >
-                        <CInputRadio
-                          className="form-check-input"
-                          id="approveRadio"
-                          name="kyc_approved_status"
-                          value={"approved"}
-                          checked={
-                            this.state.fields.kyc_approved_status === "approved"
-                          }
-                          onChange={this.handleChange}
-                          // disabled={
-                          //   this.state.fields.kyc_approved_status ===
-                          //     "pending" || this.state.fields.is_apply_for_renew
-                          // }
-                          disabled={
-                            (this.state.fields.kyc_approved_status ===
-                              "pending" ||
-                              this.state.fields.is_apply_for_renew) &&
-                            (!this.state.fields.kyc_document_id ||
-                              !this.state.fields.kyc_transaction_id)
-                          }
-                        />
-                        <CLabel
+                {this.state.fields.kyc_type?.toLowerCase() === "manual" ? (
+                  <CFormGroup className="limits-wrap d-flex flex-wrap">
+                    <CCol md="2" className="pl-0">
+                      KYC Approval
+                    </CCol>
+                    <CCol sm="10" className="pl-0">
+                      <CFormGroup variant="custom-checkbox" inline>
+                        <CFormGroup
                           check
-                          className="form-check-label"
-                          htmlFor="approveRadio"
+                          className="radio"
+                          style={{ marginLeft: "20px", marginBottom: "10px" }}
                         >
-                          Approve
-                        </CLabel>
-                      </CFormGroup>
-                      <CFormGroup
-                        check
-                        className="radio"
-                        style={{ marginLeft: "35px", marginBottom: "10px" }}
-                      >
-                        <CInputRadio
-                          className="form-check-input"
-                          id="rejectRadio"
-                          name="kyc_approved_status"
-                          value={"rejected"}
-                          checked={
-                            this.state.fields.kyc_approved_status === "rejected"
-                          }
-                          onChange={this.handleChange}
-                          // disabled={
-                          //   this.state.fields.kyc_approved_status ===
-                          //     "pending" || this.state.fields.is_apply_for_renew
-                          // }
-                          disabled={
-                            (this.state.fields.kyc_approved_status ===
-                              "pending" ||
-                              this.state.fields.is_apply_for_renew) &&
-                            (!this.state.fields.kyc_document_id ||
-                              !this.state.fields.kyc_transaction_id)
-                          }
-                        />
-                        <CLabel
+                          <CInputRadio
+                            className="form-check-input"
+                            id="approveRadio"
+                            name="kyc_approved_status"
+                            value={"approved"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "approved"
+                            }
+                            onChange={this.handleChange}
+                            // disabled={
+                            //   this.state.fields.kyc_approved_status ===
+                            //     "pending" || this.state.fields.is_apply_for_renew
+                            // }
+                            disabled={
+                              (this.state.fields.kyc_approved_status ===
+                                "pending" ||
+                                this.state.fields.is_apply_for_renew) &&
+                              (!this.state.fields.kyc_document_id ||
+                                !this.state.fields.kyc_transaction_id)
+                            }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="approveRadio"
+                          >
+                            Approve
+                          </CLabel>
+                        </CFormGroup>
+                        <CFormGroup
                           check
-                          className="form-check-label"
-                          htmlFor="rejectRadio"
+                          className="radio"
+                          style={{ marginLeft: "35px", marginBottom: "10px" }}
                         >
-                          Reject
-                        </CLabel>
+                          <CInputRadio
+                            className="form-check-input"
+                            id="rejectRadio"
+                            name="kyc_approved_status"
+                            value={"rejected"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "rejected"
+                            }
+                            onChange={this.handleChange}
+                            // disabled={
+                            //   this.state.fields.kyc_approved_status ===
+                            //     "pending" || this.state.fields.is_apply_for_renew
+                            // }
+                            disabled={
+                              (this.state.fields.kyc_approved_status ===
+                                "pending" ||
+                                this.state.fields.is_apply_for_renew) &&
+                              (!this.state.fields.kyc_document_id ||
+                                !this.state.fields.kyc_transaction_id)
+                            }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="rejectRadio"
+                          >
+                            Reject
+                          </CLabel>
+                        </CFormGroup>
                       </CFormGroup>
-                    </CFormGroup>
-                  </CCol>
-                </CFormGroup>
-                {/* )} */}
+                    </CCol>
+                  </CFormGroup>
+                ) : (
+                  <div className="limits-wrap d-flex flex-wrap">
+                    <p className="text-danger">User is Verified via Metamap.</p>
+                  </div>
+                )}
 
                 {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && */}
                 {this.state.fields.kyc_document_type && (

@@ -19,6 +19,8 @@ export const businessCustomersService = {
   deleteBusinessCustomer,
   rejectDeleteRequest,
   getPendingKycCustomerList,
+  getReviewNeededCustomerList,
+  reviewedKycApprovedOrRejected,
   getAdminApprovalCustomerList,
   getBusinessKycDocument,
   downloadReportData,
@@ -76,6 +78,46 @@ async function getPendingKycCustomerList(postData) {
   try {
     response = await fetch(
       `${API_URL}api/customers/pending-kyc-customer-list`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    // const response = undefined;
+  }
+  return handleResponse(response);
+}
+
+async function getReviewNeededCustomerList(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-kyc-in-review-customers`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    // const response = undefined;
+  }
+  return handleResponse(response);
+}
+
+async function reviewedKycApprovedOrRejected(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/approve-reject-in-review-kyc`,
       requestOptions
     );
   } catch (error) {
