@@ -117,6 +117,17 @@ class User_Myprofile extends React.Component {
 
   handleSubmit() {
     if (this.validator.allValid()) {
+      const strongPasswordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+      if (
+        this.state.fields.password &&
+        !strongPasswordRegex.test(this.state.fields.password)
+      ) {
+        $(".password").html(
+          '<div class="text-danger">Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</div>'
+        );
+        return;
+      }
       if (this.state.fields.password !== this.state.fields.confirm_password) {
         $(".confirm_password").html(
           '<div class="text-danger">Password and confirm password must be same.</div>'

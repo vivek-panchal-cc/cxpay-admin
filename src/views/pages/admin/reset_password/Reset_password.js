@@ -21,6 +21,8 @@ import { notify, history } from "../../../../_helpers/index";
 import { userService } from "../../../../services/admin/user.service";
 import SimpleReactValidator from "simple-react-validator";
 import $ from "jquery";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 const queryString = require("query-string");
 
 class Reset_password extends React.Component {
@@ -30,9 +32,26 @@ class Reset_password extends React.Component {
       submitted: false,
       email: "",
     };
-    this.validator = new SimpleReactValidator({ autoForceUpdate: this });
+    this.validator = new SimpleReactValidator({
+      autoForceUpdate: this,
+      validators: {
+        strongPassword: {
+          message:
+            "Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+          rule: (val) =>
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`]).{8,}$/.test(
+              val
+            ),
+          required: true,
+        },
+      },
+    });
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
+    this.toggleConfirmPasswordVisibility =
+      this.toggleConfirmPasswordVisibility.bind(this);
   }
 
   handleChange(e) {
@@ -59,9 +78,10 @@ class Reset_password extends React.Component {
           .resetPassword({
             token: this.state.token,
             password: this.state.password,
+            confirm_password: this.state.confirm_password,
           })
           .then((res) => {
-            if (res.status === false) {
+            if (!res.success) {
               notify.error(res.message);
             } else {
               notify.success(res.message);
@@ -72,6 +92,13 @@ class Reset_password extends React.Component {
     } else {
       this.validator.showMessages();
     }
+  }
+
+  togglePasswordVisibility() {
+    this.setState({ showPassword: !this.state.showPassword });
+  }
+  toggleConfirmPasswordVisibility() {
+    this.setState({ showConfirmPassword: !this.state.showConfirmPassword });
   }
 
   render() {
@@ -119,19 +146,32 @@ class Reset_password extends React.Component {
                       </CInputGroup>
                       <CFormGroup>
                         <CLabel htmlFor="nf-email">Password</CLabel>
-                        <CInput
-                          type="password"
-                          id="password"
-                          name="password"
-                          placeholder="Enter Password"
-                          autoComplete="false"
-                          onChange={this.handleChange}
-                        />
+                        <CInputGroup>
+                          <CInput
+                            type={this.state.showPassword ? "text" : "password"}
+                            id="password"
+                            name="password"
+                            placeholder="Enter Password"
+                            autoComplete="new-password"
+                            onChange={this.handleChange}
+                          />
+                          <CInputGroupPrepend className="cursor-pointer">
+                            <CInputGroupText
+                              onClick={this.togglePasswordVisibility}
+                            >
+                              <FontAwesomeIcon
+                                icon={
+                                  this.state.showPassword ? faEyeSlash : faEye
+                                }
+                              />
+                            </CInputGroupText>
+                          </CInputGroupPrepend>
+                        </CInputGroup>
                         <CFormText className="help-block">
                           {this.validator.message(
                             "password",
                             this.state.password,
-                            "required",
+                            "strongPassword",
                             { className: "text-danger" }
                           )}
                         </CFormText>
@@ -139,14 +179,33 @@ class Reset_password extends React.Component {
 
                       <CFormGroup>
                         <CLabel htmlFor="nf-email">Confirm Password</CLabel>
-                        <CInput
-                          type="password"
-                          id="confirm_password"
-                          name="confirm_password"
-                          placeholder="Enter Confirm Password"
-                          autoComplete="false"
-                          onChange={this.handleChange}
-                        />
+                        <CInputGroup>
+                          <CInput
+                            type={
+                              this.state.showConfirmPassword
+                                ? "text"
+                                : "password"
+                            }
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Enter Confirm Password"
+                            autoComplete="new-password"
+                            onChange={this.handleChange}
+                          />
+                          <CInputGroupPrepend className="cursor-pointer">
+                            <CInputGroupText
+                              onClick={this.toggleConfirmPasswordVisibility}
+                            >
+                              <FontAwesomeIcon
+                                icon={
+                                  this.state.showConfirmPassword
+                                    ? faEyeSlash
+                                    : faEye
+                                }
+                              />
+                            </CInputGroupText>
+                          </CInputGroupPrepend>
+                        </CInputGroup>
                         <CFormText className="help-block confirm_password"></CFormText>
                       </CFormGroup>
                       <CRow>
