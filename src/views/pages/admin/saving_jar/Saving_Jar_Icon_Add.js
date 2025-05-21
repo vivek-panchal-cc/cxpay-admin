@@ -10,6 +10,9 @@ import {
   CLink,
   CRow,
   CCol,
+  CLabel,
+  CSelect,
+  CFormText,
 } from "@coreui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,14 +22,52 @@ import {
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { savingJarService } from "services/admin/savings_jar.service";
-import { history, notify } from "../../../../_helpers/index";
+import { capitalize, history, notify } from "../../../../_helpers/index";
+import SimpleReactValidator from "simple-react-validator";
 
 class Saving_Jar_Icon_Add extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      jar_category_icons: [],
+      fields: {
+        jar_category_icons: [],
+        category_id: "",
+      },
+      parentCategoryList: [],
     };
+    this.validator = new SimpleReactValidator({ autoForceUpdate: this });
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    Promise.resolve(
+      savingJarService.savingJarBulkAction({
+        operation_type: "saving_jar_parent_category_list",
+      })
+    )
+      .then((response) => {
+        if (response.success && response.data.category.length > 0) {
+          this.setState({
+            parentCategoryList: response.data?.category,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching business categories:", error);
+      });
+  }
+
+  handleChange(event) {
+    const { name, type, value, checked } = event.target;
+    const updatedValue = type === "checkbox" ? checked : value;
+
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [name]: updatedValue,
+      },
+    }));
   }
 
   onDrop = (acceptedFiles) => {
@@ -44,40 +85,65 @@ class Saving_Jar_Icon_Add extends Component {
       return true;
     });
 
+    // this.setState((prevState) => ({
+    //   jar_category_icons: [...prevState.jar_category_icons, ...validFiles],
+    // }));
+
     this.setState((prevState) => ({
-      jar_category_icons: [...prevState.jar_category_icons, ...validFiles],
+      fields: {
+        ...prevState.fields,
+        jar_category_icons: [
+          ...prevState.fields.jar_category_icons,
+          ...validFiles,
+        ],
+      },
     }));
   };
 
+  // handleDelete = (index) => {
+  //   this.setState((prevState) => ({
+  //     jar_category_icons: prevState.jar_category_icons.filter(
+  //       (_, i) => i !== index
+  //     ),
+  //   }));
+  // };
+
   handleDelete = (index) => {
     this.setState((prevState) => ({
-      jar_category_icons: prevState.jar_category_icons.filter(
-        (_, i) => i !== index
-      ),
+      fields: {
+        ...prevState.fields,
+        jar_category_icons: prevState.fields.jar_category_icons.filter(
+          (_, i) => i !== index
+        ),
+      },
     }));
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
-    if (this.state.jar_category_icons.length === 0) {
-      notify.error("Please upload at least one icon.");
-      return;
-    }
-    let formData = new FormData();
-    formData.append("operation_type", "saving_jar_icon_add");
-    this.state.jar_category_icons.forEach((file, index) => {
-      formData.append(`icon[${index}]`, file);
-    });
-
-    savingJarService.savingJarIconAdd(formData).then((res) => {
-      if (!res.success) {
-        notify.error(res.message);
-      } else {
-        notify.success(res.message);
-        this.setState({ jar_category_icons: [] });
-        history.push("/admin/saving_jar_icon");
+    if (this.validator.allValid()) {
+      if (this.state.fields.jar_category_icons.length === 0) {
+        notify.error("Please upload at least one icon.");
+        return;
       }
-    });
+      let formData = new FormData();
+      formData.append("operation_type", "saving_jar_icon_add");
+      formData.append("category_id", this.state.fields.category_id);
+      this.state.fields.jar_category_icons.forEach((file, index) => {
+        formData.append(`icon[${index}]`, file);
+      });
+      savingJarService.savingJarIconAdd(formData).then((res) => {
+        if (!res.success) {
+          notify.error(res.message);
+        } else {
+          notify.success(res.message);
+          this.setState({ jar_category_icons: [] });
+          history.push("/admin/saving_jar_icon");
+        }
+      });
+    } else {
+      this.validator.showMessages();
+    }
   };
 
   render() {
@@ -89,6 +155,34 @@ class Saving_Jar_Icon_Add extends Component {
               <strong>Add Sub-account Icons</strong>
             </CCardHeader>
             <CCardBody>
+              <CFormGroup>
+                <CLabel htmlFor="nf-name">Category</CLabel>
+                <CSelect
+                  custom
+                  name="category_id"
+                  id="select"
+                  onChange={this.handleChange}
+                >
+                  <option value="">-- Choose Category --</option>;
+                  {this.state.parentCategoryList?.map((ct, key) => {
+                    return (
+                      <option key={key} value={ct.id}>
+                        {capitalize(ct.jar_category_name)}
+                      </option>
+                    );
+                  })}
+                </CSelect>
+                <CFormText className="help-block">
+                  {this.validator.message(
+                    "category_id",
+                    this.state.fields.category_id,
+                    "required",
+                    {
+                      className: "text-danger",
+                    }
+                  )}
+                </CFormText>
+              </CFormGroup>
               <CFormGroup>
                 {/* <CLabel>Sub-account Category Icons</CLabel> */}
                 <Dropzone onDrop={this.onDrop} accept={{ image: [".png"] }}>
@@ -133,7 +227,7 @@ class Saving_Jar_Icon_Add extends Component {
                     gap: "10px",
                   }}
                 >
-                  {this.state.jar_category_icons.map((file, index) => (
+                  {this.state.fields.jar_category_icons.map((file, index) => (
                     <div
                       key={index}
                       style={{
