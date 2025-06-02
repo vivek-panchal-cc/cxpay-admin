@@ -42,10 +42,10 @@ class App extends Component {
             <Switch>
               {/* This is a Admin Route Its always start with '/admin' and follow the /admin/{module_name}/{module_action} URL pattern */}{" "}
               <LoginLessRoute path="/admin/login" component={Login} />{" "}
-              <LoginLessRoute
+              {/* <LoginLessRoute
                 path="/admin/two-factor-auth"
                 component={TwoFactorAuth}
-              />{" "}
+              />{" "} */}
               <LoginLessRoute
                 path="/admin/forgot_password"
                 component={Forgot_password}
