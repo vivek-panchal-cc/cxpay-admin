@@ -16,6 +16,7 @@ export const handleResponse = (response) => {
         notify.error(error);
         localStorage.removeItem("user");
         history.push("/admin/login");
+        setLoading(false);
         return Promise.reject(error);
       } else if (
         data.type !== undefined &&
@@ -29,6 +30,7 @@ export const handleResponse = (response) => {
           pathname: "/admin/dashboard",
           state: { access_message: true },
         });
+        setLoading(false);
         return Promise.reject(error);
       }
       setLoading(false);
