@@ -7,15 +7,28 @@ import {
   CImg,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { history } from "../_helpers";
+import { history, notify } from "../_helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs } from "@fortawesome/free-solid-svg-icons";
+import { userService } from "services/admin";
 
 const TheHeaderDropdown = (props) => {
   let user = JSON.parse(localStorage.getItem("user"));
   const _logout = () => {
     localStorage.removeItem("user");
     history.push("/admin/login");
+  };
+
+  const handleLogout = () => {
+    userService.logout().then((res) => {
+      if (!res.success) {
+        notify.error(res.message);
+      } else {
+        notify.success(res.message);
+        localStorage.removeItem("user");
+        history.push("/admin/login");
+      }
+    });
   };
 
   return (
@@ -50,7 +63,7 @@ const TheHeaderDropdown = (props) => {
         )}
 
         <CDropdownItem divider />
-        <CDropdownItem onClick={_logout}>
+        <CDropdownItem onClick={handleLogout}>
           <CIcon name="cil-lock-locked" className="mfe-2" />
           Log out
         </CDropdownItem>

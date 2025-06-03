@@ -1,4 +1,4 @@
-import { authHeader } from "../../_helpers";
+import { authHeader, history } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
 
@@ -47,9 +47,22 @@ function login(email, password) {
     });
 }
 
-function logout() {
-  // remove user from local storage to log user out
-  localStorage.removeItem("user");
+async function logout() {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("users", "view"),
+  };
+
+  let response;
+  try {
+    response = await fetch(`${API_URL}api/logout`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    const response = undefined;
+  }
+  return handleResponse(response);
 }
 
 function getUsersList(postData) {
@@ -218,15 +231,10 @@ function getPermission() {
       return data.text().then((text) => {
         const data = text && JSON.parse(text);
         // setLoading(false);
-        if (
-          data.type !== undefined &&
-          data.type === "unauthorized" &&
-          data.status === false
-        ) {
-          const error = (data && data.message) || data.statusText;
-          notify.error(error);
+        if (data.type === "unauthorized" || !data.status) {
+          if (data.message) notify.error(data.message);
           localStorage.removeItem("user");
-          window.location.reload();
+          history.push("/admin/login");
         } else {
           let update_user = {
             ...user,
