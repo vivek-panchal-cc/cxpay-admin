@@ -1579,6 +1579,12 @@ class Business_Customers_Edit extends React.Component {
                         </tr>
                       </thead>
                       <tbody>
+                        {this.state.fields.verification_id && (
+                          <tr>
+                            <td>Metamap Verification Id</td>
+                            <td>{this.state.fields.verification_id}</td>
+                          </tr>
+                        )}
                         {this.state.fields.kyc_completion_date && (
                           <tr>
                             <td>Completion on</td>

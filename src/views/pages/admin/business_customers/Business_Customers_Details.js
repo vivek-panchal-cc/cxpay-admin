@@ -294,6 +294,18 @@ class Business_Customers_Details extends React.Component {
                               <b>KYC Type: </b>
                               {this.state.customerDetails.kyc_type || "-"}
                             </p>
+                            {this.state.customerDetails.kyc_type?.toLowerCase() ===
+                              "system" &&
+                              this.state.customerDetails
+                                .verification_id && (
+                                <p>
+                                  <b>Metamap Verification Id: </b>
+                                  {
+                                    this.state.customerDetails
+                                      .verification_id
+                                  }
+                                </p>
+                              )}
                             {this.state.customerDetails.updated_at && (
                               <p>
                                 <b>Updated At: </b>
