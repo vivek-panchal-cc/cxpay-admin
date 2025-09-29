@@ -381,7 +381,7 @@ async function createBusinessUser(postData, timeZone) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: { "User-Timezone": timeZone, "Device-Type": "web" },
+    headers: { "User-Timezone": timeZone, "Device-Type": "admin" },
     body: postData,
   };
   let response;
