@@ -91,7 +91,7 @@ class Transaction_Reports_Index extends React.Component {
           },
           transactions_list: res.data?.transaction,
         });
-        notify.error(res.message);
+        // notify.error(res.message);
       } else {
         this.setState({
           totalRecords: res.data.pagination.total,

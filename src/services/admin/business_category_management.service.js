@@ -1,5 +1,5 @@
-import { authHeader } from "../../_helpers";
-import { notify, handleResponse, setLoading } from "../../_helpers";
+import { authHeader, setLoading } from "../../_helpers";
+import { notify, handleResponse } from "../../_helpers";
 require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -25,7 +25,6 @@ async function businessCategoryBulkAction(postData) {
     notify.error("Something went wrong");
     // const response = undefined;
   } finally {
-    setLoading(false);
   }
   return handleResponse(response);
 }

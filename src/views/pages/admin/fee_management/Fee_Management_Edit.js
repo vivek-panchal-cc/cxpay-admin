@@ -57,12 +57,52 @@ class Fee_Management_Edit extends Component {
   };
 
   /************************ Define  Method For Form Field **************************/
+  // handleChange(event) {
+  //   const target = event.target;
+  //   const value = target.type === "checkbox" ? target.checked : target.value;
+  //   const name = target.name;
+  //   this.setState({
+  //     [name]: value,
+  //   });
+  // }
+
   handleChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
-      [name]: value,
+    const { name, type, checked, value } = event.target;
+    const newValue = type === "checkbox" ? checked : value;
+
+    this.setState((prevState) => {
+      // Prevent status change if payment_type is MC
+      if (name === "status" && prevState.payment_type === "MC") {
+        return null; // Ignore the change
+      }
+
+      // Automatically enable status when selecting MC
+      if (name === "payment_type" && newValue === "MC") {
+        return { payment_type: newValue, status: true };
+      }
+
+      if (name === "amount") {
+        // Remove any non-digit characters
+        const sanitizedValue = newValue.replace(/[^0-9.]/g, "");
+
+        // Ensure only one decimal point is allowed
+        const decimalCount = (sanitizedValue.match(/\./g) || [])?.length;
+
+        if (decimalCount > 1) {
+          return; // Prevent multiple decimal points from being entered
+        }
+
+        const [wholeNumber, decimal] = sanitizedValue.split(".");
+
+        // Take value like ######.## (max 6 wholeNumber, max 2 decimal)
+        const value = decimalCount
+          ? `${wholeNumber?.substring(0, 6)}.${decimal?.substring(0, 2)}`
+          : wholeNumber?.substring(0, 6);
+
+        return { amount: value };
+      }
+
+      return { [name]: newValue };
     });
   }
 
@@ -100,7 +140,7 @@ class Fee_Management_Edit extends Component {
               this.setState({
                 payment_type: res.result.payment_type,
                 fee_type: res.result.fee_type,
-                amount: res.result.amount,
+                amount: parseFloat(res.result.amount).toFixed(2),
                 fee_label: res.result.fee_label,
                 status: res.result.status,
               });
@@ -168,7 +208,7 @@ class Fee_Management_Edit extends Component {
               custom
               name="payment_type"
               id="select"
-              onChange={this.handleChange}
+              // onChange={this.handleChange}
             >
               <option key="0" value="">
                 -- Payment Types --{" "}
@@ -186,6 +226,10 @@ class Fee_Management_Edit extends Component {
               </option>
               <option key="MF" value="MF">
                 Bank transfer
+              </option>
+              ;
+              <option key="MC" value="MC">
+                Merchant Commission
               </option>
               ;
             </CSelect>
@@ -229,6 +273,19 @@ class Fee_Management_Edit extends Component {
           <CFormGroup>
             <CLabel htmlFor="nf-name">Amount</CLabel>
             <CInput
+              type="text"
+              id="amount"
+              name="amount"
+              placeholder="Enter Amount"
+              value={this.state.amount}
+              onChange={this.handleChange}
+            />
+            <CFormText className="help-block">
+              {this.validator.message("amount", this.state.amount, "required", {
+                className: "text-danger",
+              })}
+            </CFormText>
+            {/* <CInput
               type="number"
               id="amount"
               name="amount"
@@ -246,7 +303,7 @@ class Fee_Management_Edit extends Component {
                   className: "text-danger",
                 }
               )}
-            </CFormText>
+            </CFormText> */}
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Fee Label</CLabel>
@@ -272,13 +329,13 @@ class Fee_Management_Edit extends Component {
           </CFormGroup>
 
           <CFormGroup row>
-            <CCol tag="label" sm="1" className="col-form-label">
+            <CCol tag="label" md="1">
               Status
             </CCol>
 
             <CCol sm="11">
               <CFormGroup variant="custom-checkbox" inline>
-                {this.state.status && (
+                {/* {this.state.status && (
                   <CSwitch
                     className="mr-1"
                     color="primary"
@@ -286,6 +343,7 @@ class Fee_Management_Edit extends Component {
                     value={this.state.status}
                     defaultChecked
                     onChange={this.handleChange}
+                    disabled={this.state.payment_type === "MC"}
                   />
                 )}
 
@@ -297,7 +355,16 @@ class Fee_Management_Edit extends Component {
                     value={this.state.status}
                     onChange={this.handleChange}
                   />
-                )}
+                )} */}
+                <CSwitch
+                  className="mr-1"
+                  color="primary"
+                  name="status"
+                  value={this.state.status ? 1 : 0}
+                  checked={this.state.status}
+                  onChange={this.handleChange}
+                  disabled={this.state.payment_type === "MC"}
+                />
               </CFormGroup>
             </CCol>
           </CFormGroup>

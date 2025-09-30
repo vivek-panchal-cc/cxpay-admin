@@ -501,7 +501,7 @@ class Push_Notifications_Index extends React.Component {
                               _canAccess("notifications", "delete")) && (
                               <>
                                 <td>
-                                  {_canAccess("notifications", "update") && (
+                                  {/* {_canAccess("notifications", "update") && (
                                     <CTooltip
                                       content={globalConstants.EDIT_BTN}
                                     >
@@ -514,7 +514,7 @@ class Push_Notifications_Index extends React.Component {
                                       </CLink>
                                     </CTooltip>
                                   )}
-                                  &nbsp;
+                                  &nbsp; */}
                                   {_canAccess("notifications", "delete") && (
                                     <CTooltip
                                       content={globalConstants.DELETE_BTN}

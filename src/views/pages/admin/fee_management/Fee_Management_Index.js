@@ -192,7 +192,7 @@ class Fee_Management_Index extends React.Component {
 
   PageStatusChangedHandler(page_id, status) {
     feeManagementService
-      .changeFeeStatus({ id: [page_id], status: status === false ? 1 : 0 })
+      .changeFeeStatus({ id: [page_id], status: status === 0 ? 1 : 0 })
       .then((res) => {
         if (res.status === "error") {
           notify.error(res.message);
@@ -231,7 +231,7 @@ class Fee_Management_Index extends React.Component {
 
   bulkPageStatusChangeHandler(postData) {
     feeManagementService.changeBulkFeeStatus(postData).then((res) => {
-      if (res.status === "error") {
+      if (!res.success) {
         notify.error(res.message);
       } else {
         notify.success(res.message);
@@ -244,9 +244,13 @@ class Fee_Management_Index extends React.Component {
     if (actionValue !== "") {
       let appliedActionId = [];
       let selectedIds = this.state.multiaction;
-      for (var key in selectedIds) {
-        if (selectedIds[key]) {
-          appliedActionId.push(key);
+      for (let page of this.state.page_list) {
+        // Check if the page is selected in selectedIds
+        if (selectedIds[page._id]) {
+          // Exclude pages with payment_type "Merchant Commission"
+          if (page.payment_type !== "Merchant Commission") {
+            appliedActionId.push(page._id);
+          }
         }
       }
 
@@ -497,7 +501,8 @@ class Fee_Management_Index extends React.Component {
                         this.state.page_list?.length > 0 &&
                         this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
-                            {_canAccess("fee_management", "update") && (
+                            {u.payment_type !== "Merchant Commission" &&
+                            _canAccess("fee_management", "update") ? (
                               <td>
                                 <CheckBoxes
                                   handleCheckChieldElement={
@@ -507,37 +512,64 @@ class Fee_Management_Index extends React.Component {
                                   _isChecked={this.state.multiaction[u._id]}
                                 />
                               </td>
+                            ) : !_canAccess(
+                                "fee_management",
+                                "update"
+                              ) ? null : (
+                              <td></td>
                             )}
 
                             <td>{index + 1}</td>
                             <td>{u.payment_type}</td>
                             <td>{u.fee_type}</td>
-                            <td>{u.amount}</td>
+                            <td>{parseFloat(u.amount).toFixed(2)}</td>
                             <td>{u.fee_label}</td>
 
                             <td>
-                              {_canAccess("fee_management", "update") && (
+                              {_canAccess("fee_management", "update") &&
+                              u.payment_type !== "Merchant Commission" ? (
                                 <CLink
-                                  onClick={() =>
-                                    this.PageStatusChangedHandler(
-                                      u._id,
-                                      u.status
-                                    )
-                                  }
+                                  onClick={(e) => {
+                                    if (
+                                      u.payment_type === "Merchant Commission"
+                                    ) {
+                                      e.preventDefault(); // Prevent the handler if payment_type is MC
+                                    } else {
+                                      this.PageStatusChangedHandler(
+                                        u._id,
+                                        u.status
+                                      );
+                                    }
+                                  }}
                                 >
                                   {parseFloat(u.status) === 0
                                     ? "Activate"
                                     : "Deactivate"}
                                 </CLink>
+                              ) : _canAccess("fee_management", "update") &&
+                                u.payment_type === "Merchant Commission" ? (
+                                <span>
+                                  {parseFloat(u.status) === 0
+                                    ? "Deactive"
+                                    : "Active"}
+                                </span>
+                              ) : (
+                                !_canAccess("fee_management", "update") && (
+                                  <>
+                                    {parseFloat(u.status) === 0
+                                      ? "Deactive"
+                                      : "Active"}
+                                  </>
+                                )
                               )}
-                              {_canAccess("fee_management", "update") ===
+                              {/* {_canAccess("fee_management", "update") ===
                                 false && (
                                 <>
                                   {parseFloat(u.status) === 0
                                     ? "Deactive"
                                     : "Active"}
                                 </>
-                              )}
+                              )} */}
                             </td>
                             {(_canAccess("fee_management", "update") ||
                               _canAccess("fee_management", "delete")) && (
@@ -562,21 +594,23 @@ class Fee_Management_Index extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.page_list &&
-                        this.state.page_list?.length === 0 && (
-                          <tr>
-                            <td colSpan="5">No records found</td>
-                          </tr>
-                        )}
+                      {(this.state.page_list?.length === 0 ||
+                        this.state.page_list?.length === undefined) && (
+                        <tr>
+                          <td colSpan="5">No records found</td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={this.state.fields.pageNo}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {this.state.page_list?.length > 0 && (
+                    <CPagination
+                      activePage={this.state.fields.pageNo}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>

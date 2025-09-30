@@ -44,6 +44,7 @@ import "./../agent_customers/notification.css";
 import ResetPassword from "components/admin/Reset_Password";
 import IconMaster from "assets/icons/IconMaster";
 import { agentService } from "services/admin/agent.service";
+import IconInReview from "assets/icons/IconInReview";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
 );
@@ -90,6 +91,7 @@ class Business_Customers_Index extends React.Component {
       deleteBusinessCustomers: [],
       adminApprovalCustomers: [],
       pendingKycCustomers: [],
+      reviewNeededCustomers: [],
       multiaction: [],
       allCheckedbox: false,
     };
@@ -104,6 +106,7 @@ class Business_Customers_Index extends React.Component {
     this.getDeleteRequests();
     this.getAdminApprovalCustomerList();
     this.getPendingKycCustomerList();
+    this.getReviewNeededCustomerList();
     this.getBlockedRequests();
   }
 
@@ -196,6 +199,22 @@ class Business_Customers_Index extends React.Component {
         } else {
           this.setState({
             pendingKycCustomers: res.data.blocked_users,
+          });
+        }
+      });
+  }
+
+  getReviewNeededCustomerList() {
+    businessCustomersService
+      .getReviewNeededCustomerList({ customer_type: "1" })
+      .then((res) => {
+        if (!res.success) {
+          this.setState({
+            reviewNeededCustomers: [],
+          });
+        } else {
+          this.setState({
+            reviewNeededCustomers: res.data.in_review_customers,
           });
         }
       });
@@ -646,6 +665,28 @@ class Business_Customers_Index extends React.Component {
                       <span
                         className={`${
                           this.state.pendingKycCustomers?.length > 0
+                            ? "notification-badge-pending-customers"
+                            : ""
+                        }`}
+                      ></span>
+                    </>
+                  )}
+                </div>
+                <div className="card-header-actions px-2">
+                  {_canAccess("business_customers", "view") && (
+                    <>
+                      <CTooltip content={globalConstants.IN_PROCESSKYC}>
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          to={`/admin/business_customers/review_needed_kyc`}
+                        >
+                          <IconInReview />
+                        </CLink>
+                      </CTooltip>
+                      <span
+                        className={`${
+                          this.state.reviewNeededCustomers?.length > 0
                             ? "notification-badge-pending-customers"
                             : ""
                         }`}

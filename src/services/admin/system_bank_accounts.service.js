@@ -25,7 +25,6 @@ async function systemBankAccountsBulkAction(postData) {
     notify.error("Something went wrong");
     // const response = undefined;
   } finally {
-    setLoading(false);
   }
   return handleResponse(response);
 }

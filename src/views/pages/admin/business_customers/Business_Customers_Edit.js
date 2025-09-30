@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   CCard,
   CCardBody,
@@ -17,6 +16,10 @@ import {
   CSwitch,
   CSelect,
   CInputRadio,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
 import {
@@ -36,6 +39,7 @@ import {
   faArrowLeft,
   faBan,
   faCheck,
+  faCog,
   faSave,
 } from "@fortawesome/free-solid-svg-icons";
 import { businessCustomersService } from "../../../../services/admin/business_customers.service";
@@ -45,6 +49,7 @@ import "./kycTable.css";
 import "assets/css/page.css";
 import "assets/css/responsive.css";
 import IconClipBoard from "assets/icons/IconClipBoard";
+import Business_Webhook_Urls from "./Business_Webhook_Urls";
 
 class Business_Customers_Edit extends React.Component {
   constructor(props) {
@@ -67,15 +72,24 @@ class Business_Customers_Edit extends React.Component {
           renew_kyc_approved_status: "",
         },
         business_category_id: "",
+        merchant_fees: "",
+        merchant_fees_type: "",
+        fees_deduct_account: "",
+        merchant_fees_capacity: "",
       },
       is_kyc_approved_status: "",
       module_permission: {},
-      countryData: {},
+      countryData: {
+        country_list: [],
+        city_list: {},
+      },
       cityData: [],
       category_list: [],
+      callback_urls: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
       site_logo: null,
+      openWebhookPopup: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -90,80 +104,90 @@ class Business_Customers_Edit extends React.Component {
     this.handleCheckboxChangeIsApproved =
       this.handleCheckboxChangeIsApproved.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
+    this.webHookOperations = this.webHookOperations.bind(this);
   }
 
   componentDidMount() {
-    this.getCountry();
-    setTimeout(() => {
-      if (
-        _canAccess(
-          this.props.module_name,
-          this.props.action,
-          "/admin/business_customers"
-        )
-      ) {
-        var postData = {
-          mobile_number: this.state.fields._id,
-        };
+    const fetchCountry = businessCustomersService.getCountry();
+    const fetchCategory = businessCustomersService.businessCategory();
+    const fetchCustomer = businessCustomersService.getCustomer({
+      mobile_number: this.state.fields._id,
+    });
 
-        businessCustomersService.getCustomer(postData).then((res) => {
-          if (!res.success) {
-            notify.error(res.message);
-            history.push("/admin/business_customers");
-          } else {
-            this.setState({ ...this.state.fields, fields: res.data });
-
-            // const country_index = this.state.countryData.country_list.findIndex(
-            //   (e) => e.iso === res.data.country
-            // );
-            const { iso } =
-              this.state.countryData.country_list.find(
-                (e) => e.iso === res.data.country
-              ) || {};
-            const statustmp = res.data.status === 0 ? 0 : 1;
-            // const kyctmp = res.data.is_kyc === false ? false : true;
-            const isApprovedtmp =
-              res.data.admin_approved === false ? false : true;
-            // const isKycApproved =
-            //   res.data.kyc_approved === false ? false : true;
-            this.setState({
-              cityData: [...this.state.countryData.city_list[iso]],
-              city: res.data.city,
-              country: res.data.country,
-              status: statustmp,
-              // is_kyc: kyctmp,
-              admin_approved: isApprovedtmp,
-              kyc_approved_status: res.data.kyc_approved_status,
-              is_kyc_approved_status: res.data.kyc_approved_status,
-            });
-          }
-        });
-
-        businessCustomersService.businessCategory().then((res) => {
-          if (!res.success) {
-            // notify.error(res.message);
-            this.setState({ category_list: [] });
-          } else {
-            this.setState({
-              category_list: res.data?.category,
-            });
-          }
-        });
-      }
-    }, 100);
-  }
-
-  getCountry() {
-    businessCustomersService.getCountry().then((res) => {
-      if (!res.success) {
-        notify.error(res.message);
-      } else {
-        if (res.data == null) {
-          notify.error("Country Not Found");
-          history.push("/admin/business_customers");
+    // Fetch Country & Business Category first
+    Promise.all([fetchCountry, fetchCategory])
+      .then(([countryRes, categoryRes]) => {
+        if (!countryRes.success) {
+          notify.error(countryRes.message);
+          throw new Error("Country API failed");
         }
 
-        this.setState({ countryData: res.data });
+        if (!countryRes.data) {
+          history.push("/admin/business_customers");
+          throw new Error("Country data not found");
+        }
+
+        // Set country and category data first
+        this.setState(
+          {
+            countryData: countryRes.data,
+            category_list: categoryRes.success
+              ? categoryRes.data?.category
+              : [],
+          },
+          () => {
+            // After setting country & category, fetch customer data
+            fetchCustomer
+              .then((customerRes) => {
+                if (!customerRes.success) {
+                  history.push("/admin/business_customers");
+                  return;
+                }
+
+                const { iso } =
+                  countryRes.data.country_list.find(
+                    (e) => e.iso === customerRes.data.country
+                  ) || {};
+
+                this.setState(
+                  {
+                    fields: customerRes.data,
+                    cityData: iso ? [...countryRes.data.city_list[iso]] : [],
+                    city: customerRes.data.city,
+                    country: customerRes.data.country,
+                    status: customerRes.data.status === 0 ? 0 : 1,
+                    admin_approved: customerRes.data.admin_approved !== false,
+                    kyc_approved_status: customerRes.data.kyc_approved_status,
+                    is_kyc_approved_status:
+                      customerRes.data.kyc_approved_status,
+                  },
+                  () => {
+                    this.webHookOperations({
+                      merchant_account_number: this.state.fields.account_number,
+                      operation_type: "list_merchant_callback_url",
+                    });
+                  }
+                );
+              })
+              .catch((error) => {
+                console.error("Error fetching customer data:", error);
+              });
+          }
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching country or category data:", error);
+      });
+  }
+
+  webHookOperations(postData) {
+    businessCustomersService.webHookOperations(postData).then((urls) => {
+      if (!urls.success) {
+        this.setState({
+          callback_urls: [],
+        });
+      } else {
+        this.setState({ callback_urls: urls.data || [] });
       }
     });
   }
@@ -266,6 +290,7 @@ class Business_Customers_Edit extends React.Component {
         fields: { ...this.state.fields, [name]: firstTwoDigits },
       });
     } else if (
+      name === "merchant_fees" ||
       name === "daily_add_fund_limit" ||
       name === "daily_wallet_transfer_limit" ||
       name === "daily_withdraw_limit" ||
@@ -273,7 +298,8 @@ class Business_Customers_Edit extends React.Component {
       name === "monthly_wallet_transfer_limit" ||
       name === "monthly_withdraw_limit" ||
       name === "daily_agent_topup_limit" ||
-      name === "monthly_agent_topup_limit"
+      name === "monthly_agent_topup_limit" ||
+      name === "merchant_fees_capacity"
     ) {
       // Remove any non-digit characters
       const sanitizedValue = value.replace(/[^0-9.]/g, "");
@@ -285,12 +311,25 @@ class Business_Customers_Edit extends React.Component {
         return; // Prevent multiple decimal points from being entered
       }
 
-      // Take only the first two digits
-      const firstSixteenDigits = sanitizedValue.substring(0, 16);
+      if (name === "merchant_fees" || name === "merchant_fees_capacity") {
+        const [wholeNumber, decimal] = sanitizedValue.split(".");
 
-      this.setState({
-        fields: { ...this.state.fields, [name]: firstSixteenDigits },
-      });
+        // Take value like ######.## (max 6 wholeNumber, max 2 decimal)
+        const value = decimalCount
+          ? `${wholeNumber?.substring(0, 6)}.${decimal?.substring(0, 2)}`
+          : wholeNumber?.substring(0, 6);
+
+        this.setState({
+          fields: { ...this.state.fields, [name]: value },
+        });
+      } else {
+        // Take only the first two digits
+        const firstSixteenDigits = sanitizedValue.substring(0, 16);
+
+        this.setState({
+          fields: { ...this.state.fields, [name]: firstSixteenDigits },
+        });
+      }
     } else {
       // For other fields, proceed with the generic handling
       if (name === "status") {
@@ -366,6 +405,7 @@ class Business_Customers_Edit extends React.Component {
 
   handleSubmit() {
     const {
+      merchant_fees,
       daily_add_fund_limit,
       daily_wallet_transfer_limit,
       daily_withdraw_limit,
@@ -374,9 +414,11 @@ class Business_Customers_Edit extends React.Component {
       monthly_withdraw_limit,
       daily_agent_topup_limit,
       monthly_agent_topup_limit,
+      merchant_fees_capacity,
     } = this.state.fields;
 
     const fieldsToValidate = [
+      { name: "Merchant Fees", value: merchant_fees },
       { name: "Daily Add Fund Limit", value: daily_add_fund_limit },
       {
         name: "Daily Wallet Transfer Limit",
@@ -391,6 +433,7 @@ class Business_Customers_Edit extends React.Component {
       { name: "Monthly Withdraw Limit", value: monthly_withdraw_limit },
       { name: "Daily Agent Topup Limit", value: daily_agent_topup_limit },
       { name: "Monthly Agent Topup Limit", value: monthly_agent_topup_limit },
+      { name: "Merchant Fees Capacity", value: merchant_fees_capacity },
     ];
     const invalidFields = fieldsToValidate?.find((field) => {
       return field.value && field.value?.endsWith(".");
@@ -448,6 +491,15 @@ class Business_Customers_Edit extends React.Component {
       formData.append("business_url", this.state.fields.business_url);
       formData.append("country_code", this.state.fields.country_code);
       formData.append("mobile_number", this.state.fields.mobile_number);
+      formData.append("merchant_fees", this.state.fields.merchant_fees);
+      formData.append(
+        "merchant_fees_type",
+        this.state.fields.merchant_fees_type
+      );
+      formData.append(
+        "fees_deduct_account",
+        this.state.fields.fees_deduct_account
+      );
       if (this.state.site_logo) {
         formData.append("profile_image", this.state.site_logo);
       }
@@ -486,6 +538,10 @@ class Business_Customers_Edit extends React.Component {
       formData.append(
         "monthly_agent_topup_limit",
         this.state.fields.monthly_agent_topup_limit
+      );
+      formData.append(
+        "merchant_fees_capacity",
+        this.state.fields.merchant_fees_capacity
       );
 
       // return
@@ -598,6 +654,20 @@ class Business_Customers_Edit extends React.Component {
                     </CLink>
                   </CTooltip>
                 </div>
+                <div
+                  className="card-header-actions px-4"
+                  onClick={() => {
+                    this.setState({ openWebhookPopup: true });
+                  }}
+                >
+                  <CLink
+                    className="btn btn-dark btn-block btn-sm"
+                    style={{ background: "transparent", color: "black" }}
+                  >
+                    <FontAwesomeIcon icon={faCog} className="mr-1" /> Webhook
+                    URLs
+                  </CLink>
+                </div>
               </CCardHeader>
               <CCardBody>
                 <CRow>
@@ -672,68 +742,170 @@ class Business_Customers_Edit extends React.Component {
                   </CCol>
                 </CRow>
 
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Customer ID</CLabel>
-                  <CInput
-                    type="text"
-                    id="cust_id"
-                    name="cust_id"
-                    placeholder="Enter Customer ID "
-                    autoComplete="name"
-                    value={this.state.fields.cust_id}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Customer ID</CLabel>
+                      <CInput
+                        type="text"
+                        id="cust_id"
+                        name="cust_id"
+                        placeholder="Enter Customer ID "
+                        autoComplete="name"
+                        value={this.state.fields.cust_id}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "cust_id",
+                          this.state.fields.cust_id,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Mobile Number</CLabel>
+                      <CInput
+                        type="text"
+                        id="mobile_number"
+                        name="mobile_number"
+                        placeholder="Enter Mobile Number "
+                        autoComplete="name"
+                        value={this.state.fields.mobile_number}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "mobile_number",
+                          this.state.fields.mobile_number,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Merchant Token</CLabel>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <div style={{ position: "relative", flex: 1 }}>
+                          <CInput
+                            type="text"
+                            id="merchant_token"
+                            name="merchant_token"
+                            placeholder="Enter Merchant Token"
+                            autoComplete="name"
+                            value={this.state.fields.merchant_token}
+                            onChange={this.handleChange}
+                            disabled={true}
+                          />
+
+                          {this.state.fields.merchant_token && (
+                            <CTooltip
+                              content={
+                                this.state.isCopied
+                                  ? globalConstants.COPIED_LABEL
+                                  : globalConstants.COPY_TO_CLIPBOARD
+                              }
+                            >
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  right: "10px",
+                                  top: "50%",
+                                  transform: "translateY(-50%)",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                  const { merchant_token } = this.state.fields;
+
+                                  if (!merchant_token) return;
+
+                                  if (
+                                    navigator.clipboard &&
+                                    navigator.clipboard.writeText
+                                  ) {
+                                    navigator.clipboard
+                                      .writeText(merchant_token)
+                                      .then(() => {
+                                        this.setState(
+                                          { isCopied: true },
+                                          () => {
+                                            setTimeout(
+                                              () =>
+                                                this.setState({
+                                                  isCopied: false,
+                                                }),
+                                              2000
+                                            );
+                                          }
+                                        );
+                                      })
+                                      .catch(() => {
+                                        this.fallbackCopyText(merchant_token);
+                                      });
+                                  } else {
+                                    this.fallbackCopyText(merchant_token);
+                                  }
+                                }}
+                              >
+                                {this.state.isCopied ? (
+                                  <FontAwesomeIcon icon={faCheck} />
+                                ) : (
+                                  <IconClipBoard />
+                                )}
+                              </span>
+                            </CTooltip>
+                          )}
+                        </div>
+                        <CTooltip content={globalConstants.REFRESH_TOKEN}>
+                          <button
+                            className="btn btn-dark btn-md ml-3"
+                            onClick={this.handleRefreshMerchantToken}
+                          >
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                          </button>
+                        </CTooltip>
+                      </div>
+                      {/* <CFormText className="help-block">
                     {this.validator.message(
-                      "cust_id",
-                      this.state.fields.cust_id,
+                      "merchant_token",
+                      this.state.fields.merchant_token,
                       "required",
                       { className: "text-danger" }
                     )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Mobile Number</CLabel>
-                  <CInput
-                    type="text"
-                    id="mobile_number"
-                    name="mobile_number"
-                    placeholder="Enter Mobile Number "
-                    autoComplete="name"
-                    value={this.state.fields.mobile_number}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "mobile_number",
-                      this.state.fields.mobile_number,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Company Name</CLabel>
-                  <CInput
-                    type="text"
-                    id="company_name"
-                    name="company_name"
-                    placeholder="Enter Company Name "
-                    autoComplete="name"
-                    value={this.state.fields.company_name}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "company_name",
-                      this.state.fields.company_name,
-                      "required|max:64",
-                      { className: "text-danger" }
-                    )}
-                    {/* {this.validator.message(
+                  </CFormText> */}
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Company Name</CLabel>
+                      <CInput
+                        type="text"
+                        id="company_name"
+                        name="company_name"
+                        placeholder="Enter Company Name "
+                        autoComplete="name"
+                        value={this.state.fields.company_name}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "company_name",
+                          this.state.fields.company_name,
+                          "required|max:64",
+                          { className: "text-danger" }
+                        )}
+                        {/* {this.validator.message(
                       "company_name",
                       this.state.fields.company_name,
                       "required|regex:^[a-zA-Z.\\s]*$",
@@ -745,411 +917,389 @@ class Business_Customers_Edit extends React.Component {
                         },
                       }
                     )} */}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Email</CLabel>
-                  <CInput
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="Enter Email "
-                    autoComplete="name"
-                    value={this.state.fields.email}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "email",
-                      this.state.fields.email,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "email",
-                      this.state.fields.email,
-                      "email",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">
-                    Chamber of Commerce{" "}
-                    <span className="smaller-note">
-                      (not older than 2 months)
-                    </span>
-                  </CLabel>
-                  <CInput
-                    type="text"
-                    id="business_id"
-                    name="business_id"
-                    placeholder="Enter Chamber of Commerce"
-                    autoComplete="name"
-                    value={this.state.fields.business_id}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Business Category</CLabel>
-                  <CSelect
-                    custom
-                    name="business_category_id"
-                    id="select"
-                    onChange={this.handleChange}
-                    value={this.state.fields.business_category_id}
-                  >
-                    <option value="" disabled>
-                      -- Enter Business Category --
-                    </option>
-                    ;
-                    {this.state.category_list?.map((ct, key) => {
-                      return (
-                        <option key={key} value={ct.id}>
-                          {capitalize(ct.name)}
-                        </option>
-                      );
-                    })}
-                  </CSelect>
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "business_category_id",
-                      this.state.fields.business_category_id,
-                      "required",
-                      {
-                        className: "text-danger",
-                      }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Business URL</CLabel>
-                  <CInput
-                    type="text"
-                    id="business_url"
-                    name="business_url"
-                    placeholder="Enter Business URL "
-                    autoComplete="name"
-                    value={this.state.fields.business_url}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                </CFormGroup>
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Email</CLabel>
+                      <CInput
+                        type="text"
+                        id="email"
+                        name="email"
+                        placeholder="Enter Email "
+                        autoComplete="name"
+                        value={this.state.fields.email}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "email",
+                          this.state.fields.email,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "email",
+                          this.state.fields.email,
+                          "email",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">
+                        Chamber of Commerce{" "}
+                        <span className="smaller-note">
+                          (not older than 2 months)
+                        </span>
+                      </CLabel>
+                      <CInput
+                        type="text"
+                        id="business_id"
+                        name="business_id"
+                        placeholder="Enter Chamber of Commerce"
+                        autoComplete="name"
+                        value={this.state.fields.business_id}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
 
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Country</CLabel>
-                  <CSelect
-                    custom
-                    name="country"
-                    id="country"
-                    onChange={this.handleCountryChange}
-                    value={this.state.country}
-                    disabled
-                  >
-                    <option value="">-- Country --</option>;
-                    {this.state.countryData &&
-                      this.state.countryData?.country_list
-                        ?.filter((country) => country.is_signup_country)
-                        ?.map((e, key) => {
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Business Category</CLabel>
+                      <CSelect
+                        custom
+                        name="business_category_id"
+                        id="select"
+                        onChange={this.handleChange}
+                        value={this.state.fields.business_category_id}
+                      >
+                        <option value="" disabled>
+                          -- Enter Business Category --
+                        </option>
+                        ;
+                        {this.state.category_list?.map((ct, key) => {
                           return (
-                            <option key={key} value={e.iso}>
-                              {e.country_name}
+                            <option key={key} value={ct.id}>
+                              {capitalize(ct.name)}
                             </option>
                           );
                         })}
-                  </CSelect>
-                </CFormGroup>
-
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">City</CLabel>
-                  <CSelect
-                    custom
-                    name="city"
-                    id="select"
-                    onChange={this.handleCityChange}
-                    value={this.state.city}
-                  >
-                    {/* <option value="">-- city --</option>; */}
-                    {this.state.cityData?.map((e, key) => {
-                      return (
-                        <option key={key} value={e.city_name}>
-                          {e.city_name}
-                        </option>
-                      );
-                    })}
-                  </CSelect>
-                </CFormGroup>
-
-                {/* <CCol className="col-md-4 col flex-wrap"> */}
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Merchant Token</CLabel>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ position: "relative", flex: 1 }}>
+                      </CSelect>
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "business_category_id",
+                          this.state.fields.business_category_id,
+                          "required",
+                          {
+                            className: "text-danger",
+                          }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-8 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Business URL</CLabel>
                       <CInput
                         type="text"
-                        id="merchant_token"
-                        name="merchant_token"
-                        placeholder="Enter Merchant Token"
+                        id="business_url"
+                        name="business_url"
+                        placeholder="Enter Business URL "
                         autoComplete="name"
-                        value={this.state.fields.merchant_token}
+                        value={this.state.fields.business_url}
                         onChange={this.handleChange}
-                        disabled={true}
+                        disabled={false}
                       />
-
-                      {this.state.fields.merchant_token && (
-                        <CTooltip
-                          content={
-                            this.state.isCopied
-                              ? globalConstants.COPIED_LABEL
-                              : globalConstants.COPY_TO_CLIPBOARD
-                          }
-                        >
-                          <span
-                            style={{
-                              position: "absolute",
-                              right: "10px",
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => {
-                              const { merchant_token } = this.state.fields;
-
-                              if (!merchant_token) return;
-
-                              if (
-                                navigator.clipboard &&
-                                navigator.clipboard.writeText
-                              ) {
-                                navigator.clipboard
-                                  .writeText(merchant_token)
-                                  .then(() => {
-                                    this.setState({ isCopied: true }, () => {
-                                      setTimeout(
-                                        () =>
-                                          this.setState({ isCopied: false }),
-                                        2000
-                                      );
-                                    });
-                                  })
-                                  .catch(() => {
-                                    this.fallbackCopyText(merchant_token);
-                                  });
-                              } else {
-                                this.fallbackCopyText(merchant_token);
-                              }
-                            }}
-                          >
-                            {this.state.isCopied ? (
-                              <FontAwesomeIcon icon={faCheck} />
-                            ) : (
-                              <IconClipBoard />
-                            )}
-                          </span>
-                        </CTooltip>
-                      )}
-                    </div>
-                    <CTooltip content={globalConstants.REFRESH_TOKEN}>
-                      <button
-                        className="btn btn-dark btn-md ml-3"
-                        onClick={this.handleRefreshMerchantToken}
-                      >
-                        <i class="fa fa-refresh" aria-hidden="true"></i>
-                      </button>
-                    </CTooltip>
-                  </div>
-                  {/* <CFormText className="help-block">
-                    {this.validator.message(
-                      "merchant_token",
-                      this.state.fields.merchant_token,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText> */}
-                </CFormGroup>
-                {/* </CCol> */}
-
-                <CFormGroup row>
-                  <CCol md="1">Profile Image</CCol>
-
-                  <CCol sm="2">
-                    <img
-                      src={
-                        site_logo
-                          ? URL.createObjectURL(site_logo)
-                          : this.state.fields.profile_image ||
-                            "/avatars/default-avatar.png"
-                      }
-                      className=""
-                      width={100}
-                    />
+                    </CFormGroup>
                   </CCol>
-                  <CCol sm="5">
-                    <CInput
-                      type="file"
-                      id="site_logo"
-                      name="site_logo"
-                      placeholder="Browse Logo "
-                      autoComplete="site_logo "
-                      onChange={this.handleUpload}
-                      style={{ border: "none" }}
-                    />
-                    {this.state.imageTypeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Select valid image. (jpg, jpeg or png)
-                        </div>
-                      </small>
-                    )}
-                    {this.state.imageSizeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Image size is greater than 5MB. Please upload image
-                          below 5MB.
-                        </div>
-                      </small>
-                    )}
-                    {false && (
-                      <CCol>
-                        <CButton
-                          type="button"
-                          size="sm"
-                          color="secondary"
-                          onClick={this.handleClearProfilePic}
-                        >
-                          Clear
-                        </CButton>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Country</CLabel>
+                      <CSelect
+                        custom
+                        name="country"
+                        id="country"
+                        onChange={this.handleCountryChange}
+                        value={this.state.country}
+                        disabled
+                      >
+                        <option value="">-- Country --</option>;
+                        {this.state.countryData &&
+                          this.state.countryData?.country_list
+                            ?.filter((country) => country.is_signup_country)
+                            ?.map((e, key) => {
+                              return (
+                                <option key={key} value={e.iso}>
+                                  {e.country_name}
+                                </option>
+                              );
+                            })}
+                      </CSelect>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-8 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">City</CLabel>
+                      <CSelect
+                        custom
+                        name="city"
+                        id="select"
+                        onChange={this.handleCityChange}
+                        value={this.state.city}
+                      >
+                        {/* <option value="">-- city --</option>; */}
+                        {this.state.cityData?.map((e, key) => {
+                          return (
+                            <option key={key} value={e.city_name}>
+                              {e.city_name}
+                            </option>
+                          );
+                        })}
+                      </CSelect>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup className="d-flex">
+                      <CCol md="6" className="pl-0">
+                        Status
                       </CCol>
-                    )}
-                  </CCol>
-                </CFormGroup>
+                      <CCol sm="6" style={{ paddingLeft: "10px" }}>
+                        <CFormGroup variant="custom-checkbox" inline>
+                          {this.state.fields.status == 1 && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="status"
+                              name="status"
+                              value={this.state.fields.status}
+                              defaultChecked
+                              onChange={this.handleCheckboxChange}
+                            />
+                          )}
 
-                <CFormGroup row>
-                  <CCol md="1">QR Code</CCol>
-
-                  <CCol sm="11">
-                    <img
-                      src={this.state.fields.qr_code_image}
-                      className=""
-                      width={100}
-                    />
-                  </CCol>
-                </CFormGroup>
-
-                <CFormGroup row>
-                  <CCol md="2">Status</CCol>
-
-                  <CCol sm="10" style={{ paddingLeft: "10px" }}>
-                    <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.status == 1 && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="status"
-                          name="status"
-                          value={this.state.fields.status}
-                          defaultChecked
-                          onChange={this.handleCheckboxChange}
-                        />
-                      )}
-
-                      {this.state.fields.status == 0 && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="status"
-                          name="status"
-                          value={this.state.fields.status}
-                          onChange={this.handleCheckboxChange}
-                        />
-                      )}
+                          {this.state.fields.status == 0 && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="status"
+                              name="status"
+                              value={this.state.fields.status}
+                              onChange={this.handleCheckboxChange}
+                            />
+                          )}
+                        </CFormGroup>
+                      </CCol>
                     </CFormGroup>
                   </CCol>
-                </CFormGroup>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup className="d-flex">
+                      <CCol md="6" className="pl-0">
+                        Business User Approval
+                      </CCol>
 
-                {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && ( */}
-                <CFormGroup className="limits-wrap d-flex flex-wrap">
-                  <CCol md="2" className="pl-0">
-                    KYC Approval
-                  </CCol>
-                  <CCol sm="10" className="pl-0">
-                    <CFormGroup variant="custom-checkbox" inline>
-                      <CFormGroup
-                        check
-                        className="radio"
-                        style={{ marginLeft: "20px", marginBottom: "10px" }}
-                      >
-                        <CInputRadio
-                          className="form-check-input"
-                          id="approveRadio"
-                          name="kyc_approved_status"
-                          value={"approved"}
-                          checked={
-                            this.state.fields.kyc_approved_status === "approved"
-                          }
-                          onChange={this.handleChange}
-                          // disabled={
-                          //   this.state.fields.kyc_approved_status ===
-                          //     "pending" || this.state.fields.is_apply_for_renew
-                          // }
-                          disabled={
-                            (this.state.fields.kyc_approved_status ===
-                              "pending" ||
-                              this.state.fields.is_apply_for_renew) &&
-                            (!this.state.fields.kyc_document_id ||
-                              !this.state.fields.kyc_transaction_id)
-                          }
-                        />
-                        <CLabel
-                          check
-                          className="form-check-label"
-                          htmlFor="approveRadio"
-                        >
-                          Approve
-                        </CLabel>
-                      </CFormGroup>
-                      <CFormGroup
-                        check
-                        className="radio"
-                        style={{ marginLeft: "35px", marginBottom: "10px" }}
-                      >
-                        <CInputRadio
-                          className="form-check-input"
-                          id="rejectRadio"
-                          name="kyc_approved_status"
-                          value={"rejected"}
-                          checked={
-                            this.state.fields.kyc_approved_status === "rejected"
-                          }
-                          onChange={this.handleChange}
-                          // disabled={
-                          //   this.state.fields.kyc_approved_status ===
-                          //     "pending" || this.state.fields.is_apply_for_renew
-                          // }
-                          disabled={
-                            (this.state.fields.kyc_approved_status ===
-                              "pending" ||
-                              this.state.fields.is_apply_for_renew) &&
-                            (!this.state.fields.kyc_document_id ||
-                              !this.state.fields.kyc_transaction_id)
-                          }
-                        />
-                        <CLabel
-                          check
-                          className="form-check-label"
-                          htmlFor="rejectRadio"
-                        >
-                          Reject
-                        </CLabel>
-                      </CFormGroup>
+                      <CCol sm="6" className="pl-0">
+                        <CFormGroup variant="custom-checkbox" inline>
+                          {this.state.fields.admin_approved === true && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="admin_approved"
+                              name="admin_approved"
+                              value={this.state.fields.admin_approved}
+                              defaultChecked
+                              onChange={this.handleCheckboxChangeIsApproved}
+                            />
+                          )}
+
+                          {this.state.fields.admin_approved === false && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="admin_approved"
+                              name="admin_approved"
+                              value={this.state.fields.admin_approved}
+                              onChange={this.handleCheckboxChangeIsApproved}
+                            />
+                          )}
+                        </CFormGroup>
+                      </CCol>
                     </CFormGroup>
                   </CCol>
-                </CFormGroup>
-                {/* )} */}
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">QR Code</CLabel>
+
+                      <div>
+                        <img
+                          src={this.state.fields.qr_code_image}
+                          className=""
+                          width={100}
+                        />
+                      </div>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Profile Image</CLabel>
+
+                      <div className="d-flex">
+                        <img
+                          src={
+                            site_logo
+                              ? URL.createObjectURL(site_logo)
+                              : this.state.fields.profile_image ||
+                                "/avatars/default-avatar.png"
+                          }
+                          className=""
+                          width={100}
+                        />
+
+                        <CInput
+                          type="file"
+                          id="site_logo"
+                          name="site_logo"
+                          placeholder="Browse Logo "
+                          autoComplete="site_logo "
+                          onChange={this.handleUpload}
+                          style={{ border: "none" }}
+                        />
+                        {this.state.imageTypeValidation && (
+                          <small className="form-text text-muted help-block">
+                            <div className="text-danger">
+                              Select valid image. (jpg, jpeg or png)
+                            </div>
+                          </small>
+                        )}
+                        {this.state.imageSizeValidation && (
+                          <small className="form-text text-muted help-block">
+                            <div className="text-danger">
+                              Image size is greater than 5MB. Please upload
+                              image below 5MB.
+                            </div>
+                          </small>
+                        )}
+                        {false && (
+                          <CCol>
+                            <CButton
+                              type="button"
+                              size="sm"
+                              color="secondary"
+                              onClick={this.handleClearProfilePic}
+                            >
+                              Clear
+                            </CButton>
+                          </CCol>
+                        )}
+                      </div>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                {this.state.fields.kyc_type?.toLowerCase() === "manual" ? (
+                  <CFormGroup className="limits-wrap d-flex flex-wrap">
+                    <CCol md="2" className="pl-0">
+                      KYC Approval
+                    </CCol>
+                    <CCol sm="10" className="pl-0">
+                      <CFormGroup variant="custom-checkbox" inline>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "20px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="approveRadio"
+                            name="kyc_approved_status"
+                            value={"approved"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "approved"
+                            }
+                            onChange={this.handleChange}
+                            // disabled={
+                            //   this.state.fields.kyc_approved_status ===
+                            //     "pending" || this.state.fields.is_apply_for_renew
+                            // }
+                            disabled={
+                              (this.state.fields.kyc_approved_status ===
+                                "pending" ||
+                                this.state.fields.is_apply_for_renew) &&
+                              (!this.state.fields.kyc_document_id ||
+                                !this.state.fields.kyc_transaction_id)
+                            }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="approveRadio"
+                          >
+                            Approve
+                          </CLabel>
+                        </CFormGroup>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "35px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="rejectRadio"
+                            name="kyc_approved_status"
+                            value={"rejected"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "rejected"
+                            }
+                            onChange={this.handleChange}
+                            // disabled={
+                            //   this.state.fields.kyc_approved_status ===
+                            //     "pending" || this.state.fields.is_apply_for_renew
+                            // }
+                            disabled={
+                              (this.state.fields.kyc_approved_status ===
+                                "pending" ||
+                                this.state.fields.is_apply_for_renew) &&
+                              (!this.state.fields.kyc_document_id ||
+                                !this.state.fields.kyc_transaction_id)
+                            }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="rejectRadio"
+                          >
+                            Reject
+                          </CLabel>
+                        </CFormGroup>
+                      </CFormGroup>
+                    </CCol>
+                  </CFormGroup>
+                ) : (
+                  <div className="limits-wrap d-flex flex-wrap">
+                    <p className="text-danger">User is Verified via Metamap.</p>
+                  </div>
+                )}
 
                 {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && */}
                 {this.state.fields.kyc_document_type && (
@@ -1429,6 +1579,12 @@ class Business_Customers_Edit extends React.Component {
                         </tr>
                       </thead>
                       <tbody>
+                        {this.state.fields.verification_id && (
+                          <tr>
+                            <td>Metamap Verification Id</td>
+                            <td>{this.state.fields.verification_id}</td>
+                          </tr>
+                        )}
                         {this.state.fields.kyc_completion_date && (
                           <tr>
                             <td>Completion on</td>
@@ -1493,37 +1649,141 @@ class Business_Customers_Edit extends React.Component {
                     </table>
                   )}
 
-                <CFormGroup className="limits-wrap d-flex flex-wrap">
-                  <CCol md="2" className="pl-0">
-                    Business User Approval
-                  </CCol>
+                <CFormGroup className="limits-wrap">
+                  <div className="row mb-3 mb-lg-4 limits-heading">
+                    <div className="col-md-6 col">
+                      <p>Merchant Fee Details</p>
+                    </div>
+                  </div>
+                  <CRow className="mb-3">
+                    <CCol className="col-md-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="merchant_fees"
+                        className="col-form-label"
+                      >
+                        Merchant Fees
+                      </CLabel>
 
-                  <CCol sm="10" className="pl-0">
-                    <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.admin_approved === true && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="admin_approved"
-                          name="admin_approved"
-                          value={this.state.fields.admin_approved}
-                          defaultChecked
-                          onChange={this.handleCheckboxChangeIsApproved}
+                      <CCol className="limit-ip-col">
+                        <CInput
+                          type="text"
+                          id="merchant_fees"
+                          name="merchant_fees"
+                          placeholder="Enter Merchant Fees"
+                          value={this.state.fields.merchant_fees}
+                          onChange={this.handleChange}
                         />
-                      )}
+                      </CCol>
+                    </CCol>
 
-                      {this.state.fields.admin_approved === false && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="admin_approved"
-                          name="admin_approved"
-                          value={this.state.fields.admin_approved}
-                          onChange={this.handleCheckboxChangeIsApproved}
-                        />
-                      )}
-                    </CFormGroup>
-                  </CCol>
+                    <CCol className="col-md-6 col col d-flex flex-wrap">
+                      <CLabel htmlFor="nf-name" className="col-form-label">
+                        Merchant Fees Type
+                      </CLabel>
+                      <CCol className="limit-ip-col">
+                        <CSelect
+                          custom
+                          name="merchant_fees_type"
+                          id="merchant_fees_type"
+                          onChange={this.handleChange}
+                          value={this.state?.fields?.merchant_fees_type}
+                        >
+                          <option value={""}>
+                            {"Select Merchant Fees Type"}
+                          </option>
+                          <option value={"fixed"}>{"Fixed"}</option>
+                          <option value={"percentage"}>{"Percentage"}</option>
+                        </CSelect>
+                      </CCol>
+                    </CCol>
+                  </CRow>
+                  <CRow className="mb-3">
+                    <CCol className="col-sm-6 col d-flex flex-wrap">
+                      <CLabel
+                        htmlFor="daily_wallet_transfer"
+                        className="col-form-label"
+                      >
+                        Fees Deduct Account
+                      </CLabel>
+
+                      <CFormGroup
+                        className="mt-2 pl-3"
+                        variant="custom-checkbox"
+                        inline
+                      >
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "20px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="merchantRadio"
+                            name="fees_deduct_account"
+                            value={"sender"}
+                            checked={
+                              this.state.fields.fees_deduct_account === "sender"
+                            }
+                            onChange={this.handleChange}
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="merchantRadio"
+                          >
+                            Sender
+                          </CLabel>
+                        </CFormGroup>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "35px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="customerRadio"
+                            name="fees_deduct_account"
+                            value={"receiver"}
+                            checked={
+                              this.state.fields.fees_deduct_account ===
+                              "receiver"
+                            }
+                            onChange={this.handleChange}
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="customerRadio"
+                          >
+                            Receiver
+                          </CLabel>
+                        </CFormGroup>
+                      </CFormGroup>
+                    </CCol>
+
+                    {this.state?.fields?.merchant_fees_type ===
+                      "percentage" && (
+                      <CCol className="col-md-6 col d-flex flex-wrap">
+                        <CLabel
+                          htmlFor="merchant_fees_capacity"
+                          className="col-form-label"
+                        >
+                          Merchant Fees Capacity
+                        </CLabel>
+
+                        <CCol className="limit-ip-col">
+                          <CInput
+                            type="text"
+                            id="merchant_fees_capacity"
+                            name="merchant_fees_capacity"
+                            placeholder="Enter Merchant Fees"
+                            value={this.state.fields.merchant_fees_capacity}
+                            onChange={this.handleChange}
+                          />
+                        </CCol>
+                      </CCol>
+                    )}
+                  </CRow>
                 </CFormGroup>
 
                 <CFormGroup className="limits-wrap">
@@ -1819,6 +2079,29 @@ class Business_Customers_Edit extends React.Component {
             </CCard>
           </CCol>
         </CRow>
+        <CModal
+          show={this.state.openWebhookPopup}
+          onClose={() => {
+            this.setState({ openWebhookPopup: !this.state.openWebhookPopup });
+          }}
+          closeOnBackdrop={false}
+          color=""
+          className="custom-modal"
+        >
+          <CModalHeader>
+            <CModalTitle>Webhook URLs</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            {this.state.callback_urls && (
+              <Business_Webhook_Urls
+                urls={this.state.callback_urls}
+                handleClose={() => this.setState({ openWebhookPopup: false })}
+                webHookOperations={this.webHookOperations}
+                acc_num={this.state.fields.account_number}
+              />
+            )}
+          </CModalBody>
+        </CModal>
       </>
     );
   }

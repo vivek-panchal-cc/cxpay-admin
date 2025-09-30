@@ -79,7 +79,7 @@ class SchedulePaymentsIndex extends React.Component {
           },
           schedule_payments_list: res.data?.schedule_payments,
         });
-        notify.error(res.message);
+        // notify.error(res.message);
       } else {
         this.setState({
           totalRecords: res.data.pagination.total,

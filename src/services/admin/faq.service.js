@@ -1,5 +1,5 @@
-import { authHeader } from "../../_helpers";
-import { notify, handleResponse, setLoading } from "../../_helpers/";
+import { authHeader, setLoading } from "../../_helpers";
+import { notify, handleResponse } from "../../_helpers/";
 require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -29,7 +29,6 @@ async function getFaqList(postData) {
     response = await fetch(`${API_URL}api/faq/get-list`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(true);
     // const response = undefined;
   }
   return handleResponse(response);
@@ -48,7 +47,6 @@ async function createFaq(postData) {
     response = await fetch(`${API_URL}api/faq/add`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(true);
     // const response = undefined;
   }
   return handleResponse(response);
@@ -66,7 +64,6 @@ async function deleteFaq(id) {
     response = await fetch(`${API_URL}api/faq/delete`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -85,7 +82,6 @@ async function getFaq(id) {
     response = await fetch(`${API_URL}api/faq/get-detail`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -104,7 +100,6 @@ async function updateFaq(postData) {
     response = await fetch(`${API_URL}api/faq/update`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -122,7 +117,6 @@ async function detailFaqView(id) {
     response = await fetch(`${API_URL}api/faq/${id}`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -140,7 +134,6 @@ async function changeFaqStatus(postData) {
     response = await fetch(`${API_URL}api/faq/change-status`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -159,7 +152,6 @@ async function changeSequenceData(postData) {
     response = await fetch(`${API_URL}api/faq/change-sequence`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -181,7 +173,6 @@ async function changeBulkFaqsStatus(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);

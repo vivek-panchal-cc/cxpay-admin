@@ -86,7 +86,7 @@ class Push_Notification_Add extends React.Component {
         );
       }
       pushNotificationService.createNotification(formData).then((res) => {
-        if (res.status === false) {
+        if (!res.success) {
           notify.error(res.message);
         } else {
           notify.success(res.message);

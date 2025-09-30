@@ -54,6 +54,7 @@
     "env-cmd": "^10.1.0",
     "enzyme": "^3.11.0",
     "file-saver": "^2.0.5",
+    "history": "^4.10.1",
     "html-to-draftjs": "^1.5.0",
     "html-to-json": "^0.6.0",
     "html2pdf.js": "^0.10.2",
@@ -70,6 +71,7 @@
     "react-datepicker": "^4.15.0",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.14.5",
+    "react-dropzone": "^14.3.8",
     "react-dropzone-uploader": "^2.11.0",
     "react-fa-icon": "^0.1.4",
     "react-html-parser": "^2.0.2",
@@ -85,10 +87,13 @@
     "redux-thunk": "^2.3.0",
     "serve": "^11.3.2",
     "simple-react-validator": "^1.6.0",
+    "ulid": "^2.3.0",
     "utf8": "^3.0.0"
   },
   "devDependencies": {
     "auto-changelog": "~2.2.1",
+    "browserslist": "^4.26.2",
+    "eslint-config-react-app": "^7.0.1",
     "react-scripts": "^4.0.3"
   },
   "scripts": {
@@ -96,8 +101,8 @@
     "build": "react-scripts build",
     "build:local": "env-cmd -f .env.local react-scripts build",
     "build:qa": "env-cmd -f .env react-scripts build",
-    "build:staging": "env-cmd -f .env.staging react-scripts build",
-    "build:production": "env-cmd -f .env.production react-scripts build",
+    "build:staging": "env-cmd -f .env.staging cmd /c \"copy public\\robots.staging.txt public\\robots.txt && react-scripts build",
+    "build:production": "env-cmd -f .env.production cmd /c \"copy public\\robots.prod.txt public\\robots.txt && react-scripts build",
     "test": "react-scripts test",
     "prod": "npm run-script build && serve build",
     "test:cov": "npm test -- --coverage --watchAll=false",

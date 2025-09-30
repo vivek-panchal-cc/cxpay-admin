@@ -38,7 +38,12 @@ class System_Bank_Accounts_Add extends Component {
       },
       countryData: [],
     };
-    this.validator = new SimpleReactValidator({ autoForceUpdate: this });
+    this.validator = new SimpleReactValidator({
+      autoForceUpdate: this,
+      messages: {
+        max: "The :attribute may not be greater than :max digits.",
+      },
+    });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }

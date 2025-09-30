@@ -26,15 +26,20 @@ import {
   faSyncAlt,
   faQuestion,
   faStore,
-  faFile,
   // faCashRegister,
   faFileCode,
+  // faPiggyBank,
+  faFileInvoice,
   faPiggyBank,
+  faIcons,
 } from "@fortawesome/free-solid-svg-icons";
 import IconFlorin from "assets/icons/IconFlorin";
 import IconAdminGear from "assets/icons/IconAdminGear";
 import IconMoneyTransactions from "assets/icons/IconMoneyTransactions";
 import IconBanks from "assets/icons/IconBanks";
+import IconMerchantReports from "assets/icons/IconMerchantReports";
+import IconJarManagement from "assets/icons/IconJarManagement";
+import IconSavingsJarReports from "assets/icons/IconSavingsJarReports";
 
 const _nav = [
   {
@@ -125,16 +130,6 @@ const _nav = [
         module_name: "system_bank_accounts",
         id: "system_bank_accounts_sidebar_id",
       },
-      // {
-      //   _tag: "CSidebarNavItem",
-      //   name: "Saving Jar Categories",
-      //   to: "/admin/saving_jar",
-      //   icon: (
-      //     <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
-      //   ),
-      //   module_name: "saving_jar",
-      //   id: "saving_jar_sidebar_id",
-      // },
     ],
   },
   {
@@ -267,15 +262,44 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavDropdown",
+    name: "Sub-account Management",
+    route: "/admin/saving_jar_icon",
+    icon: <IconJarManagement className="c-sidebar-nav-icon" />,
+    id: "saving_jar_icon_group_sidebar_id",
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "Sub-account Icons",
+        to: "/admin/saving_jar_icon",
+        icon: <FontAwesomeIcon icon={faIcons} className="c-sidebar-nav-icon" />,
+        module_name: "saving_jar",
+        id: "saving_jar_icon_sidebar_id",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Sub-account Categories",
+        to: "/admin/saving_jar",
+        icon: (
+          <FontAwesomeIcon icon={faPiggyBank} className="c-sidebar-nav-icon" />
+        ),
+        module_name: "saving_jar",
+        id: "saving_jar_sidebar_id",
+      },
+    ],
+  },
+  {
+    _tag: "CSidebarNavDropdown",
     name: "Reports Management",
     route: "/admin/reports",
-    icon: <FontAwesomeIcon icon={faFile} className="c-sidebar-nav-icon" />,
+    icon: (
+      <FontAwesomeIcon icon={faFileInvoice} className="c-sidebar-nav-icon" />
+    ),
     // module_name: "reports_group",
     id: "reports_group_sidebar_id",
     _children: [
       {
         _tag: "CSidebarNavItem",
-        name: "Customers Reports",
+        name: "Customers Report",
         to: "/admin/customer_reports",
         icon: (
           <FontAwesomeIcon
@@ -288,13 +312,29 @@ const _nav = [
       },
       {
         _tag: "CSidebarNavItem",
-        name: "Transaction Reports",
+        name: "Transactions Report",
         to: "/admin/transaction_reports",
         icon: (
           <FontAwesomeIcon icon={faWallet} className="c-sidebar-nav-icon" />
         ),
         module_name: "transaction_reports",
         id: "transaction_reports_sidebar_id",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Merchant Fees Report",
+        to: "/admin/merchant_fees_reports",
+        icon: <IconMerchantReports className="c-sidebar-nav-icon" />,
+        module_name: "merchant_fees_reports",
+        id: "merchant_fees_reports_sidebar_id",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Sub-accounts Report",
+        to: "/admin/saving_jars_reports",
+        icon: <IconSavingsJarReports className="c-sidebar-nav-icon" />,
+        module_name: "saving_jars_reports",
+        id: "saving_jars_reports_sidebar_id",
       },
     ],
   },

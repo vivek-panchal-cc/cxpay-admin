@@ -13,10 +13,16 @@ import {
   CCardFooter,
   CLink,
   CRow,
+  CSelect,
 } from "@coreui/react";
 
 import SimpleReactValidator from "simple-react-validator";
-import { notify, _canAccess, history } from "../../../../_helpers/index";
+import {
+  notify,
+  _canAccess,
+  history,
+  capitalize,
+} from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan } from "@fortawesome/free-solid-svg-icons";
 import { savingJarService } from "services/admin/savings_jar.service";
@@ -29,13 +35,19 @@ class Saving_Jar_Edit extends Component {
         jar_category_name: "",
         jar_category_status: false,
         jar_category_icon: null,
+        bg_color: "",
         _openPopup: false,
+        is_child: false,
+        parent_id: "",
       },
+      parentCategoryList: [],
+      bgColors: [],
       newJarIcon: null,
     };
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleColorSelect = this.handleColorSelect.bind(this);
     this.handleUpload = this.handleUpload.bind(this);
   }
 
@@ -52,32 +64,133 @@ class Saving_Jar_Edit extends Component {
   }
 
   componentDidMount() {
-    this.fetchCategoryDetails();
+    this.fetchInitialData();
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.id !== this.props.id) {
-  //     this.setState({ fields: { id: this.props.id } });
-  //     this.fetchCategoryDetails();
-  //   }
-  // }
+  fetchInitialData() {
+    Promise.all([
+      this.fetchCategoryColors(),
+      this.fetchCategoryDetails(),
+      this.fetchParentCategoryDropdownList(),
+    ])
+      .then(([colorResponse, categoryDetails, parentCategoryList]) => {
+        // handle success, the order of execution is maintained
+      })
+      .catch((error) => {
+        console.error("Error in fetching data:", error);
+        // handle error, proceed with fallback logic if needed
+      });
+  }
+
+  fetchCategoryColors() {
+    return new Promise((resolve, reject) => {
+      savingJarService
+        .savingJarBulkAction({
+          operation_type: "saving_jar_category_color_list",
+        })
+        .then((colorResponse) => {
+          let bgColors = [];
+          let defaultBgColor = "#a279e4"; // Default color
+
+          if (colorResponse.success && colorResponse.data.length > 0) {
+            bgColors = colorResponse.data;
+            defaultBgColor = bgColors[0]; // Use the first color from the API
+          }
+
+          this.setState(
+            {
+              bgColors,
+              fields: {
+                ...this.state.fields,
+                bg_color: this.state.fields.bg_color || defaultBgColor,
+              },
+            },
+            () => {
+              resolve(colorResponse);
+            }
+          );
+        })
+        .catch((error) => {
+          reject(error); // Reject if API fails
+        });
+    });
+  }
 
   fetchCategoryDetails() {
-    if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
-      const postData = {
-        id: +this.state.fields.id,
-        operation_type: "saving_jar_category_detail",
-      };
-      savingJarService.savingJarBulkAction(postData).then((res) => {
-        if (!res.success) {
-          notify.error(res.message);
-        } else {
-          this.setState({
-            fields: res.data,
+    return new Promise((resolve, reject) => {
+      if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
+        const postData = {
+          id: +this.state.fields.id,
+          operation_type: "saving_jar_category_detail",
+        };
+
+        savingJarService
+          .savingJarBulkAction(postData)
+          .then((res) => {
+            if (!res.success) {
+              notify.error(res.message);
+              resolve(res); // Resolve with response even if unsuccessful
+            } else {
+              const isChild =
+                res.data.parent_id !== null && res.data.parent_id !== undefined;
+
+              this.setState((prevState) => ({
+                fields: {
+                  ...res.data,
+                  is_child: isChild,
+                  bg_color:
+                    res.data.bg_color || prevState.bgColors[0] || "#a279e4",
+                },
+              }));
+              resolve(res); // Resolve on success
+            }
+          })
+          .catch((error) => {
+            reject(error); // Reject if API fails
           });
-        }
-      });
-    }
+      } else {
+        resolve(); // Resolve if no access
+      }
+    });
+  }
+
+  fetchParentCategoryDropdownList() {
+    return new Promise((resolve, reject) => {
+      if (_canAccess("saving_jar", "update", "/admin/saving_jar")) {
+        const postData = {
+          id: +this.props.match.params.id,
+          operation_type: "saving_jar_parent_category_list",
+        };
+
+        savingJarService
+          .savingJarBulkAction(postData)
+          .then((res) => {
+            if (!res.success) {
+              notify.error(res.message);
+              resolve(res); // Resolve with response even if unsuccessful
+            } else {
+              this.setState({
+                parentCategoryList: res.data?.category || [],
+              });
+              resolve(res); // Resolve on success
+            }
+          })
+          .catch((error) => {
+            reject(error); // Reject if API fails
+          });
+      } else {
+        resolve(); // Resolve if no access
+      }
+    });
+  }
+
+  handleColorSelect(color) {
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        bg_color: color,
+      },
+    }));
   }
 
   handleUpload(event) {
@@ -102,31 +215,25 @@ class Saving_Jar_Edit extends Component {
 
   checkValidation(event) {
     event.preventDefault();
-    if (
-      this.state.newJarIcon &&
-      !this.state.newJarIcon.name.match(/\.(icon|svg)$/)
-    ) {
-      this.setState({ imageTypeValidation: true });
-      return false;
-    }
-
-    if (this.state.newJarIcon && this.state.newJarIcon.size > 5000000) {
-      this.setState({ imageSizeValidation: true });
-      return false;
+    const { is_child, parent_id } = this.state.fields;
+    if (is_child && !parent_id) {
+      notify.error("Please select parent category");
+      return;
     }
     if (this.validator.allValid()) {
-      let formData = new FormData();
-      formData.append("id", this.state.fields.id);
-      formData.append("jar_category_name", this.state.fields.jar_category_name);
-      formData.append(
-        "jar_category_status",
-        this.state.fields.jar_category_status
-      ); // Convert boolean to string
-      formData.append("operation_type", "saving_jar_category_update");
-      if (this.state.newJarIcon) {
-        formData.append("jar_category_icon", this.state.newJarIcon);
-      }
-      savingJarService.savingJarAddOrUpdate(formData).then((res) => {
+      let requestParams = {
+        id: this.state.fields.id,
+        is_child: is_child,
+        parent_id: is_child ? parent_id : "",
+        jar_category_name: this.state.fields.jar_category_name,
+        jar_category_status: this.state.fields.jar_category_status,
+        bg_color: this.state.fields.bg_color,
+        operation_type: "saving_jar_category_update",
+      };
+      // if (this.state.newJarIcon) {
+      //   formData.append("jar_category_icon", this.state.newJarIcon);
+      // }
+      savingJarService.savingJarAddOrUpdate(requestParams).then((res) => {
         if (!res.success) {
           notify.error(res.message);
         } else {
@@ -141,24 +248,23 @@ class Saving_Jar_Edit extends Component {
   }
 
   render() {
-    const { newJarIcon } = this.state;
     return (
       <CRow>
         <CCol xs="12">
           <CCard>
             <CCardHeader>
-              <strong>Update Saving Jar Category</strong>
+              <strong>Update Sub-account Category</strong>
             </CCardHeader>
             <CCardBody>
               <CFormGroup>
-                <CLabel htmlFor="nf-name">Jar Category Name</CLabel>
+                <CLabel htmlFor="nf-name">Sub-account Category Name</CLabel>
                 <CInput
                   type="text"
                   id="jar_category_name"
                   name="jar_category_name"
-                  placeholder="Enter Jar Category"
+                  placeholder="Enter Sub-account Category"
                   autoComplete="jar_category_name"
-                  value={this.state.fields.jar_category_name}
+                  value={capitalize(this.state.fields.jar_category_name)}
                   onChange={this.handleChange}
                 />
                 <CFormText className="help-block">
@@ -174,48 +280,83 @@ class Saving_Jar_Edit extends Component {
               </CFormGroup>
 
               <CFormGroup row>
-                <CCol md="2">Jar Category Icon</CCol>
+                <CCol tag="label" md="1">
+                  <CLabel htmlFor="is_child">Is Child?</CLabel>
+                </CCol>
+                <CCol md="11">
+                  <CFormGroup variant="custom-checkbox" inline>
+                    <CSwitch
+                      name="is_child"
+                      color="primary"
+                      checked={this.state.fields.is_child}
+                      // onChange={this.handleChange}
+                      disabled
+                    />
+                  </CFormGroup>
+                </CCol>
+              </CFormGroup>
 
-                <CCol sm="3">
-                  <CInput
-                    type="file"
-                    id="newJarIcon"
-                    name="newJarIcon"
-                    placeholder="Jar Category Icon"
-                    autoComplete="newJarIcon "
-                    onChange={this.handleUpload}
-                    style={{ border: "none" }}
-                  />
-                  {this.state.imageTypeValidation && (
-                    <small className="form-text text-muted help-block">
-                      <div className="text-danger">
-                        Select valid icon. (.ico, .svg)
-                      </div>
-                    </small>
-                  )}
-                  {this.state.imageSizeValidation && (
-                    <small className="form-text text-muted help-block">
-                      <div className="text-danger">
-                        Icon size is greater than 5MB. Please upload icon below
-                        5MB.
-                      </div>
-                    </small>
-                  )}
-                </CCol>
-                <CCol sm="2">
-                  <img
-                    src={
-                      newJarIcon
-                        ? URL.createObjectURL(newJarIcon)
-                        : this.state.fields.jar_category_icon
-                        ? this.state.fields.jar_category_icon
-                        : "/avatars/default-avatar.png"
-                    }
-                    alt="icon"
-                    className=""
-                    width={50}
-                  />
-                </CCol>
+              {this.state.fields.is_child && (
+                <CFormGroup>
+                  <CLabel htmlFor="nf-name">Parent Category</CLabel>
+                  <CSelect
+                    custom
+                    name="parent_id"
+                    id="select"
+                    // onChange={this.handleChange}
+                    value={this.state.fields.parent_id}
+                    disabled
+                  >
+                    <option value="">-- Enter Parent Category --</option>;
+                    {this.state.parentCategoryList?.map((ct, key) => {
+                      return (
+                        <option key={key} value={ct.id}>
+                          {capitalize(ct.jar_category_name)}
+                        </option>
+                      );
+                    })}
+                  </CSelect>
+                </CFormGroup>
+              )}
+
+              <CFormGroup>
+                <CLabel>Choose Background Color</CLabel>
+                <div style={{ display: "flex", gap: "10px", marginTop: "5px" }}>
+                  {this.state.bgColors.map((color) => (
+                    <div
+                      key={color}
+                      onClick={() => this.handleColorSelect(color)}
+                      style={{
+                        position: "relative",
+                        width: "50px",
+                        height: "50px",
+                        backgroundColor: color,
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border:
+                          this.state.fields.bg_color === color
+                            ? "2px solid black"
+                            : "1px solid transparent",
+                      }}
+                    >
+                      {this.state.fields.bg_color === color && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            color: "white", // Adjust based on background color
+                            fontSize: "24px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          ✔
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </CFormGroup>
 
               <CFormGroup row>

@@ -212,6 +212,27 @@ class Business_Customers_Details extends React.Component {
                                 {capitalize(this.state.categoryName)}
                               </p>
                             )}
+                            {this.state.customerDetails.merchant_fees && (
+                              <p>
+                                <b>Merchant Fees: </b>
+                                {globalConstants.CURRENCY_SYMBOL}&nbsp;
+                                {typeof parseFloat(
+                                  this.state.customerDetails.merchant_fees
+                                ) === "number"
+                                  ? parseFloat(
+                                      this.state.customerDetails.merchant_fees
+                                    ).toFixed(2)
+                                  : this.state.customerDetails.merchant_fees}
+                              </p>
+                            )}
+                            {this.state.customerDetails.fees_deduct_account && (
+                              <p>
+                                <b>Fees Deduct Account: </b>
+                                {capitalize(
+                                  this.state.customerDetails.fees_deduct_account
+                                )}
+                              </p>
+                            )}
                           </CCol>
                           <CCol xs="6">
                             <p>
@@ -220,13 +241,25 @@ class Business_Customers_Details extends React.Component {
                             </p>
                             <p>
                               <b>Available Balance: </b>
-                              {this.state.customerDetails.available_balance ||
-                                "-"}
+                              {globalConstants.CURRENCY_SYMBOL}&nbsp;
+                              {typeof parseFloat(
+                                this.state.customerDetails.available_balance
+                              ) === "number"
+                                ? parseFloat(
+                                    this.state.customerDetails.available_balance
+                                  ).toFixed(2)
+                                : this.state.customerDetails.available_balance}
                             </p>
                             <p>
                               <b>Reserved Amount: </b>
-                              {this.state.customerDetails.reserved_amount ||
-                                "-"}
+                              {globalConstants.CURRENCY_SYMBOL}&nbsp;
+                              {typeof parseFloat(
+                                this.state.customerDetails.reserved_amount
+                              ) === "number"
+                                ? parseFloat(
+                                    this.state.customerDetails.reserved_amount
+                                  ).toFixed(2)
+                                : this.state.customerDetails.reserved_amount}
                             </p>
                             {this.state.customerDetails.kyc_approved_status && (
                               <p>
@@ -261,6 +294,18 @@ class Business_Customers_Details extends React.Component {
                               <b>KYC Type: </b>
                               {this.state.customerDetails.kyc_type || "-"}
                             </p>
+                            {this.state.customerDetails.kyc_type?.toLowerCase() ===
+                              "system" &&
+                              this.state.customerDetails
+                                .verification_id && (
+                                <p>
+                                  <b>Metamap Verification Id: </b>
+                                  {
+                                    this.state.customerDetails
+                                      .verification_id
+                                  }
+                                </p>
+                              )}
                             {this.state.customerDetails.updated_at && (
                               <p>
                                 <b>Updated At: </b>
@@ -269,6 +314,26 @@ class Business_Customers_Details extends React.Component {
                                 )}
                               </p>
                             )}
+                            {this.state.customerDetails.merchant_fees_type && (
+                              <p>
+                                <b>Merchant Fees Type: </b>
+                                {capitalize(
+                                  this.state.customerDetails.merchant_fees_type
+                                )}
+                              </p>
+                            )}
+                            {this.state.customerDetails.merchant_fees_type ===
+                              "percentage" &&
+                              this.state.customerDetails
+                                .merchant_fees_capacity && (
+                                <p>
+                                  <b>Merchant Fees Capacity: </b>
+                                  {capitalize(
+                                    this.state.customerDetails
+                                      .merchant_fees_capacity
+                                  )}
+                                </p>
+                              )}
                           </CCol>
                           {this.state.customerDetails.merchant_token && (
                             <CCol>

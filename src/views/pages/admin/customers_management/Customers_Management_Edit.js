@@ -61,7 +61,10 @@ class Customers_Management_Edit extends React.Component {
       },
       is_kyc_approved_status: "",
       module_permission: {},
-      countryData: {},
+      countryData: {
+        country_list: [],
+        city_list: {},
+      },
       cityData: [],
       imageTypeValidation: false,
       imageSizeValidation: false,
@@ -81,91 +84,54 @@ class Customers_Management_Edit extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      if (
-        _canAccess(
-          this.props.module_name,
-          this.props.action,
-          "/admin/personal_customers"
-        )
-      ) {
-        var postData = {
-          mobile_number: this.state.fields._id,
-        };
+    const fetchCountry = customersManagementService.getCountry();
+    const fetchCustomer = customersManagementService.getCustomer({
+      mobile_number: this.state.fields._id,
+    });
 
-        customersManagementService.getCustomer(postData).then((res) => {
-          if (res.status === false) {
-            notify.error(res.message);
-          } else {
-            if (res.data == null) {
-              notify.error("Customer not found");
-              history.push("/admin/personal_customers");
-            }
+    Promise.all([fetchCountry, fetchCustomer])
+      .then(([countryRes, customerRes]) => {
+        if (!countryRes.success) {
+          notify.error(countryRes.message);
+          return;
+        }
 
-            this.setState({ ...this.state.fields, fields: res.data });
-
-            // const country_index = this.state.countryData.country_list.findIndex(
-            //   (e) => e.iso === res.data.country
-            // );
-            const { iso } =
-              this.state.countryData.country_list.find(
-                (e) => e.iso === res.data.country
-              ) || {};
-            const statustmp = res.data.status === 0 ? 0 : 1;
-            // const kyctmp = res.data.is_kyc === false ? false : true;
-            this.setState({
-              cityData: iso ? [...this.state.countryData.city_list[iso]] : [],
-              city: res.data.city,
-              country: res.data.country,
-              status: statustmp,
-              // is_kyc: kyctmp,
-              kyc_approved_status: res.data.kyc_approved_status,
-              is_kyc_approved_status: res.data.kyc_approved_status,
-            });
-          }
-        });
-      }
-    }, 100);
-
-    customersManagementService.getCountry().then((res) => {
-      if (res.status === false) {
-        notify.error(res.message);
-      } else {
-        if (res.data == null) {
+        if (!countryRes.data) {
           notify.error("Country Not Found");
           history.push("/admin/personal_customers");
+          return;
         }
-        this.setState({ countryData: res.data });
-      }
-    });
+
+        if (!customerRes.success) {
+          history.push("/admin/personal_customers");
+          return;
+        }
+
+        // Set country data first
+        this.setState({ countryData: countryRes.data }, () => {
+          // After country data is set, process customer data
+          const { iso } =
+            countryRes.data.country_list.find(
+              (e) => e.iso === customerRes.data.country
+            ) || {};
+
+          const statustmp = customerRes.data.status === 0 ? 0 : 1;
+
+          this.setState({
+            fields: customerRes.data,
+            cityData: iso ? [...countryRes.data.city_list[iso]] : [],
+            city: customerRes.data.city,
+            country: customerRes.data.country,
+            status: statustmp,
+            kyc_approved_status: customerRes.data.kyc_approved_status,
+            is_kyc_approved_status: customerRes.data.kyc_approved_status,
+          });
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }
-
-  /*
-    Get system module actions
-  */
-  // setSystemModules() {
-
-  //   var savedPermission = this.state.fields.permission;
-  //   systemModulesService.getSystemModulesList().then(res => {
-  //     if (res.status === false) {
-  //       notify.error(res.message);
-  //     } else {
-  //       let permissionModel = [];
-  //       res.data.forEach((value, index) => {
-  //         permissionModel[value.module_name] = [];
-  //         value.action.forEach((innerValue, innerIndex) => {
-  //           permissionModel[value.module_name][innerValue] = false;
-  //           if (savedPermission[value.module_name] !== undefined) {
-  //             if (savedPermission[value.module_name].includes(innerValue)) {
-  //               permissionModel[value.module_name][innerValue] = true;
-  //             }
-  //           }
-  //         });
-  //       });
-  //       this.setState({ module_permission: permissionModel });
-  //     }
-  //   });
-  // }
 
   handleCountryChange(e) {
     const cityCode = this.state.countryData.country_list[e.target.value].iso;
@@ -623,355 +589,397 @@ class Customers_Management_Edit extends React.Component {
                     </CFormGroup>
                   </CCol>
                 </CRow>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Customer ID</CLabel>
-                  <CInput
-                    type="text"
-                    id="cust_id"
-                    name="cust_id"
-                    placeholder="Enter Customer ID "
-                    autoComplete="name"
-                    value={this.state.fields.cust_id}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "cust_id",
-                      this.state.fields.cust_id,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Mobile Number</CLabel>
-                  <CInput
-                    type="text"
-                    id="mobile_number"
-                    name="mobile_number"
-                    placeholder="Enter Mobile Number "
-                    autoComplete="name"
-                    value={this.state.fields.mobile_number}
-                    onChange={this.handleChange}
-                    disabled={true}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "mobile_number",
-                      this.state.fields.mobile_number,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">First Name</CLabel>
-                  <CInput
-                    type="text"
-                    id="first_name"
-                    name="first_name"
-                    placeholder="Enter First Name "
-                    autoComplete="name"
-                    value={this.state.fields.first_name}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "first_name",
-                      this.state.fields.first_name,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Last Name</CLabel>
-                  <CInput
-                    type="text"
-                    id="last_name"
-                    name="last_name"
-                    placeholder="Enter Last Name "
-                    autoComplete="name"
-                    value={this.state.fields.last_name}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "name",
-                      this.state.fields.last_name,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Email</CLabel>
-                  <CInput
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="Enter Email "
-                    autoComplete="name"
-                    value={this.state.fields.email}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "email",
-                      this.state.fields.email,
-                      "required",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                  <CFormText className="help-block">
-                    {this.validator.message(
-                      "email",
-                      this.state.fields.email,
-                      "email",
-                      { className: "text-danger" }
-                    )}
-                  </CFormText>
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Personal ID</CLabel>
-                  <CInput
-                    type="text"
-                    id="personal_id"
-                    name="personal_id"
-                    placeholder="Enter Personal Id "
-                    autoComplete="name"
-                    value={this.state.fields.personal_id}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Personal URL</CLabel>
-                  <CInput
-                    type="text"
-                    id="personal_url"
-                    name="personal_url"
-                    placeholder="Enter Personal URL "
-                    autoComplete="name"
-                    value={this.state.fields.personal_url}
-                    onChange={this.handleChange}
-                    disabled={false}
-                  />
-                </CFormGroup>
 
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">Country</CLabel>
-                  <CSelect
-                    custom
-                    name="country"
-                    id="country"
-                    onChange={this.handleCountryChange}
-                    value={this.state.country}
-                    disabled
-                  >
-                    <option value="">-- Country --</option>;
-                    {this.state.countryData &&
-                      this.state.countryData?.country_list
-                        ?.filter((country) => country.is_signup_country)
-                        ?.map((e, key) => {
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Customer ID</CLabel>
+                      <CInput
+                        type="text"
+                        id="cust_id"
+                        name="cust_id"
+                        placeholder="Enter Customer ID "
+                        autoComplete="name"
+                        value={this.state.fields.cust_id}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "cust_id",
+                          this.state.fields.cust_id,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-8 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Mobile Number</CLabel>
+                      <CInput
+                        type="text"
+                        id="mobile_number"
+                        name="mobile_number"
+                        placeholder="Enter Mobile Number "
+                        autoComplete="name"
+                        value={this.state.fields.mobile_number}
+                        onChange={this.handleChange}
+                        disabled={true}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "mobile_number",
+                          this.state.fields.mobile_number,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">First Name</CLabel>
+                      <CInput
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        placeholder="Enter First Name "
+                        autoComplete="name"
+                        value={this.state.fields.first_name}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "first_name",
+                          this.state.fields.first_name,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Last Name</CLabel>
+                      <CInput
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        placeholder="Enter Last Name "
+                        autoComplete="name"
+                        value={this.state.fields.last_name}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "name",
+                          this.state.fields.last_name,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Email</CLabel>
+                      <CInput
+                        type="text"
+                        id="email"
+                        name="email"
+                        placeholder="Enter Email "
+                        autoComplete="name"
+                        value={this.state.fields.email}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "email",
+                          this.state.fields.email,
+                          "required",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                      <CFormText className="help-block">
+                        {this.validator.message(
+                          "email",
+                          this.state.fields.email,
+                          "email",
+                          { className: "text-danger" }
+                        )}
+                      </CFormText>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Personal ID</CLabel>
+                      <CInput
+                        type="text"
+                        id="personal_id"
+                        name="personal_id"
+                        placeholder="Enter Personal Id "
+                        autoComplete="name"
+                        value={this.state.fields.personal_id}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-8 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Personal URL</CLabel>
+                      <CInput
+                        type="text"
+                        id="personal_url"
+                        name="personal_url"
+                        placeholder="Enter Personal URL "
+                        autoComplete="name"
+                        value={this.state.fields.personal_url}
+                        onChange={this.handleChange}
+                        disabled={false}
+                      />
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Country</CLabel>
+                      <CSelect
+                        custom
+                        name="country"
+                        id="country"
+                        onChange={this.handleCountryChange}
+                        value={this.state.country}
+                        disabled
+                      >
+                        <option value="">-- Country --</option>;
+                        {this.state.countryData &&
+                          this.state.countryData?.country_list
+                            ?.filter((country) => country.is_signup_country)
+                            ?.map((e, key) => {
+                              return (
+                                <option key={key} value={e.iso}>
+                                  {e.country_name}
+                                </option>
+                              );
+                            })}
+                      </CSelect>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col-md-8 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">City</CLabel>
+                      <CSelect
+                        custom
+                        name="city"
+                        id="select"
+                        onChange={this.handleCityChange}
+                        value={this.state.city}
+                      >
+                        {/* <option value="">-- city --</option>; */}
+                        {this.state.cityData?.map((e, key) => {
                           return (
-                            <option key={key} value={e.iso}>
-                              {e.country_name}
+                            <option key={key} value={e.city_name}>
+                              {e.city_name}
                             </option>
                           );
                         })}
-                  </CSelect>
-                </CFormGroup>
-
-                <CFormGroup>
-                  <CLabel htmlFor="nf-name">City</CLabel>
-                  <CSelect
-                    custom
-                    name="city"
-                    id="select"
-                    onChange={this.handleCityChange}
-                    value={this.state.city}
-                  >
-                    {/* <option value="">-- city --</option>; */}
-                    {this.state.cityData?.map((e, key) => {
-                      return (
-                        <option key={key} value={e.city_name}>
-                          {e.city_name}
-                        </option>
-                      );
-                    })}
-                  </CSelect>
-                </CFormGroup>
-
-                <CFormGroup row>
-                  <CCol md="1">Profile Image</CCol>
-
-                  <CCol sm="2">
-                    <img
-                      src={
-                        site_logo
-                          ? URL.createObjectURL(site_logo)
-                          : this.state.fields.profile_image ||
-                            "/avatars/default-avatar.png"
-                      }
-                      className=""
-                      width={100}
-                    />
-                  </CCol>
-                  <CCol sm="5">
-                    <CInput
-                      type="file"
-                      id="site_logo"
-                      name="site_logo"
-                      placeholder="Browse Logo "
-                      autoComplete="site_logo "
-                      onChange={this.handleUpload}
-                      style={{ border: "none" }}
-                    />
-                    {this.state.imageTypeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Select valid image. (jpg, jpeg or png)
-                        </div>
-                      </small>
-                    )}
-                    {this.state.imageSizeValidation && (
-                      <small className="form-text text-muted help-block">
-                        <div className="text-danger">
-                          Image size is greater than 5MB. Please upload image
-                          below 5MB.
-                        </div>
-                      </small>
-                    )}
-                  </CCol>
-                </CFormGroup>
-
-                <CFormGroup row>
-                  <CCol md="1">QR Code</CCol>
-
-                  <CCol sm="11">
-                    <img
-                      src={this.state.fields.qr_code_image}
-                      className=""
-                      width={100}
-                    />
-                  </CCol>
-                </CFormGroup>
-
-                <CFormGroup row>
-                  <CCol md="2">Status</CCol>
-
-                  <CCol sm="10" style={{ paddingLeft: "10px" }}>
-                    <CFormGroup variant="custom-checkbox" inline>
-                      {this.state.fields.status == 1 && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="status"
-                          name="status"
-                          value={this.state.fields.status}
-                          defaultChecked
-                          onChange={this.handleCheckboxChange}
-                        />
-                      )}
-
-                      {this.state.fields.status == 0 && (
-                        <CSwitch
-                          className="mr-1"
-                          color="primary"
-                          id="status"
-                          name="status"
-                          value={this.state.fields.status}
-                          onChange={this.handleCheckboxChange}
-                        />
-                      )}
+                      </CSelect>
                     </CFormGroup>
                   </CCol>
-                </CFormGroup>
+                </CRow>
 
-                {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && ( */}
-                <CFormGroup className="limits-wrap d-flex flex-wrap">
-                  <CCol md="2" className="pl-0">
-                    KYC Approval
-                  </CCol>
-                  <CCol sm="10" className="pl-0">
-                    <CFormGroup variant="custom-checkbox" inline>
-                      <CFormGroup
-                        check
-                        className="radio"
-                        style={{ marginLeft: "20px", marginBottom: "10px" }}
-                      >
-                        <CInputRadio
-                          className="form-check-input"
-                          id="approveRadio"
-                          name="kyc_approved_status"
-                          value={"approved"}
-                          checked={
-                            this.state.fields.kyc_approved_status === "approved"
-                          }
-                          onChange={this.handleChange}
-                          // disabled={
-                          //   this.state.fields.kyc_approved_status ===
-                          //     "pending" || this.state.fields.is_apply_for_renew
-                          // }
-                          disabled={
-                            (this.state.fields.kyc_approved_status ===
-                              "pending" ||
-                              this.state.fields.is_apply_for_renew) &&
-                            (!this.state.fields.kyc_document_id ||
-                              !this.state.fields.kyc_transaction_id)
-                          }
-                        />
-                        <CLabel
-                          check
-                          className="form-check-label"
-                          htmlFor="approveRadio"
-                        >
-                          Approve
-                        </CLabel>
-                      </CFormGroup>
-                      <CFormGroup
-                        check
-                        className="radio"
-                        style={{ marginLeft: "35px", marginBottom: "10px" }}
-                      >
-                        <CInputRadio
-                          className="form-check-input"
-                          id="rejectRadio"
-                          name="kyc_approved_status"
-                          value={"rejected"}
-                          checked={
-                            this.state.fields.kyc_approved_status === "rejected"
-                          }
-                          onChange={this.handleChange}
-                          // disabled={
-                          //   this.state.fields.kyc_approved_status ===
-                          //     "pending" || this.state.fields.is_apply_for_renew
-                          // }
-                          disabled={
-                            (this.state.fields.kyc_approved_status ===
-                              "pending" ||
-                              this.state.fields.is_apply_for_renew) &&
-                            (!this.state.fields.kyc_document_id ||
-                              !this.state.fields.kyc_transaction_id)
-                          }
-                        />
-                        <CLabel
-                          check
-                          className="form-check-label"
-                          htmlFor="rejectRadio"
-                        >
-                          Reject
-                        </CLabel>
-                      </CFormGroup>
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup className="d-flex">
+                      <CCol md="6" className="pl-0">
+                        Status
+                      </CCol>
+
+                      <CCol sm="6" style={{ paddingLeft: "10px" }}>
+                        <CFormGroup variant="custom-checkbox" inline>
+                          {this.state.fields.status == 1 && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="status"
+                              name="status"
+                              value={this.state.fields.status}
+                              defaultChecked
+                              onChange={this.handleCheckboxChange}
+                            />
+                          )}
+
+                          {this.state.fields.status == 0 && (
+                            <CSwitch
+                              className="mr-1"
+                              color="primary"
+                              id="status"
+                              name="status"
+                              value={this.state.fields.status}
+                              onChange={this.handleCheckboxChange}
+                            />
+                          )}
+                        </CFormGroup>
+                      </CCol>
                     </CFormGroup>
                   </CCol>
-                </CFormGroup>
-                {/* )} */}
+                </CRow>
+
+                <CRow>
+                  <CCol className="col-md-4 col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">QR Code</CLabel>
+                      <div>
+                        <img
+                          src={this.state.fields.qr_code_image}
+                          className=""
+                          width={100}
+                        />
+                      </div>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol className="col flex-wrap">
+                    <CFormGroup>
+                      <CLabel htmlFor="nf-name">Profile Image</CLabel>
+                      <div className="d-flex">
+                        <img
+                          src={
+                            site_logo
+                              ? URL.createObjectURL(site_logo)
+                              : this.state.fields.profile_image ||
+                                "/avatars/default-avatar.png"
+                          }
+                          className=""
+                          width={100}
+                        />
+
+                        <CInput
+                          type="file"
+                          id="site_logo"
+                          name="site_logo"
+                          placeholder="Browse Logo "
+                          autoComplete="site_logo "
+                          onChange={this.handleUpload}
+                          style={{ border: "none" }}
+                        />
+                        {this.state.imageTypeValidation && (
+                          <small className="form-text text-muted help-block">
+                            <div className="text-danger">
+                              Select valid image. (jpg, jpeg or png)
+                            </div>
+                          </small>
+                        )}
+                        {this.state.imageSizeValidation && (
+                          <small className="form-text text-muted help-block">
+                            <div className="text-danger">
+                              Image size is greater than 5MB. Please upload
+                              image below 5MB.
+                            </div>
+                          </small>
+                        )}
+                      </div>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+
+                {this.state.fields.kyc_type?.toLowerCase() === "manual" ? (
+                  <CFormGroup className="limits-wrap d-flex flex-wrap">
+                    <CCol md="2" className="pl-0">
+                      KYC Approval
+                    </CCol>
+                    <CCol sm="10" className="pl-0">
+                      <CFormGroup variant="custom-checkbox" inline>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "20px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="approveRadio"
+                            name="kyc_approved_status"
+                            value={"approved"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "approved"
+                            }
+                            onChange={this.handleChange}
+                            // disabled={
+                            //   this.state.fields.kyc_approved_status ===
+                            //     "pending" || this.state.fields.is_apply_for_renew
+                            // }
+                            disabled={
+                              (this.state.fields.kyc_approved_status ===
+                                "pending" ||
+                                this.state.fields.is_apply_for_renew) &&
+                              (!this.state.fields.kyc_document_id ||
+                                !this.state.fields.kyc_transaction_id)
+                            }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="approveRadio"
+                          >
+                            Approve
+                          </CLabel>
+                        </CFormGroup>
+                        <CFormGroup
+                          check
+                          className="radio"
+                          style={{ marginLeft: "35px", marginBottom: "10px" }}
+                        >
+                          <CInputRadio
+                            className="form-check-input"
+                            id="rejectRadio"
+                            name="kyc_approved_status"
+                            value={"rejected"}
+                            checked={
+                              this.state.fields.kyc_approved_status ===
+                              "rejected"
+                            }
+                            onChange={this.handleChange}
+                            // disabled={
+                            //   this.state.fields.kyc_approved_status ===
+                            //     "pending" || this.state.fields.is_apply_for_renew
+                            // }
+                            disabled={
+                              (this.state.fields.kyc_approved_status ===
+                                "pending" ||
+                                this.state.fields.is_apply_for_renew) &&
+                              (!this.state.fields.kyc_document_id ||
+                                !this.state.fields.kyc_transaction_id)
+                            }
+                          />
+                          <CLabel
+                            check
+                            className="form-check-label"
+                            htmlFor="rejectRadio"
+                          >
+                            Reject
+                          </CLabel>
+                        </CFormGroup>
+                      </CFormGroup>
+                    </CCol>
+                  </CFormGroup>
+                ) : (
+                  <div className="limits-wrap d-flex flex-wrap">
+                    <p className="text-danger">User is Verified via Metamap.</p>
+                  </div>
+                )}
 
                 {/* {this.state.fields.kyc_type?.toLowerCase() === "manual" && */}
                 {this.state.fields.kyc_document_type && (
@@ -1252,6 +1260,12 @@ class Customers_Management_Edit extends React.Component {
                         </tr>
                       </thead>
                       <tbody>
+                        {this.state.fields.verification_id && (
+                          <tr>
+                            <td>Metamap Verification Id</td>
+                            <td>{this.state.fields.verification_id}</td>
+                          </tr>
+                        )}
                         {this.state.fields.kyc_completion_date && (
                           <tr>
                             <td>Completion on</td>

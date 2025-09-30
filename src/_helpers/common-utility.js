@@ -16,6 +16,7 @@ export const handleResponse = (response) => {
         notify.error(error);
         localStorage.removeItem("user");
         history.push("/admin/login");
+        setLoading(false);
         return Promise.reject(error);
       } else if (
         data.type !== undefined &&
@@ -29,6 +30,7 @@ export const handleResponse = (response) => {
           pathname: "/admin/dashboard",
           state: { access_message: true },
         });
+        setLoading(false);
         return Promise.reject(error);
       }
       setLoading(false);
@@ -73,31 +75,70 @@ export const capitalizeWordByWord = (type) => {
 };
 
 /* Checkiang for menu permission */
+// export const menuPermission = (navigation) => {
+//   let user = JSON.parse(localStorage.getItem("user"));
+//   let permission_nav = [];
+//   if (user.user_group_id === "60227751e2e5152364d34551") {
+//     return navigation;
+//   } else if (user.user_group === "Super Users") {
+//     for (let key in navigation) {
+//       if (navigation[key].module_name !== "system_modules") {
+//         permission_nav.push(navigation[key]);
+//       }
+//     }
+//     return permission_nav;
+//   } else {
+//     for (let key in navigation) {
+//       if (navigation[key].module_name !== "system_modules") {
+//         if (
+//           user.user_permission[navigation[key].module_name] !== undefined ||
+//           navigation[key].module_name === "dashboard" ||
+//           navigation[key].module_name === undefined
+//         ) {
+//           permission_nav.push(navigation[key]);
+//         }
+//       }
+//     }
+//     return permission_nav;
+//   }
+// };
+
 export const menuPermission = (navigation) => {
   let user = JSON.parse(localStorage.getItem("user"));
   let permission_nav = [];
+
   if (user.user_group_id === "60227751e2e5152364d34551") {
     return navigation;
   } else if (user.user_group === "Super Users") {
-    for (let key in navigation) {
-      if (navigation[key].module_name !== "system_modules") {
-        permission_nav.push(navigation[key]);
-      }
-    }
-    return permission_nav;
+    return navigation.filter((item) => item.module_name !== "system_modules");
   } else {
-    for (let key in navigation) {
-      if (navigation[key].module_name !== "system_modules") {
-        if (
-          user.user_permission[navigation[key].module_name] !== undefined ||
-          navigation[key].module_name === "dashboard" ||
-          navigation[key].module_name === undefined
-        ) {
-          permission_nav.push(navigation[key]);
+    return navigation.reduce((acc, item) => {
+      if (item.module_name === "system_modules") return acc;
+
+      // Check if the user has permission for the module or if it's dashboard or undefined
+      const hasPermission =
+        user.user_permission[item.module_name] !== undefined ||
+        item.module_name === "dashboard" ||
+        item.module_name === undefined;
+
+      if (item._children) {
+        // Filter children based on user permissions
+        const filteredChildren = item._children.filter(
+          (child) =>
+            user.user_permission[child.module_name] !== undefined ||
+            child.module_name === "dashboard" ||
+            child.module_name === undefined
+        );
+
+        if (filteredChildren.length > 0) {
+          acc.push({ ...item, _children: filteredChildren });
         }
+      } else if (hasPermission) {
+        acc.push(item);
       }
-    }
-    return permission_nav;
+
+      return acc;
+    }, []);
   }
 };
 

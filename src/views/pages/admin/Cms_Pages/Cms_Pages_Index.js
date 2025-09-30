@@ -84,7 +84,8 @@ class Page_list extends React.Component {
   getCmsPageList() {
     pageService.getPageList(this.state.fields).then((res) => {
       if (res.status === false) {
-        notify.error(res.message);
+        // notify.error(res.message);
+        this.setState({ page_list: [] });
       } else {
         this.setState({
           totalRecords: res.totalRecords,
@@ -96,14 +97,14 @@ class Page_list extends React.Component {
         });
 
         /*multi delete cms pages */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let pages = res.result;
           let multiaction = [];
           for (var key in pages) {
             multiaction[pages[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -440,8 +441,8 @@ class Page_list extends React.Component {
                     </thead>
 
                     <tbody>
-                      {this.state.page_list.length > 0 &&
-                        this.state.page_list.map((u, index) => (
+                      {this.state.page_list?.length > 0 &&
+                        this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
                             {(_canAccess("cms_pages", "update") ||
                               _canAccess("cms_pages", "delete")) && (
@@ -526,20 +527,23 @@ class Page_list extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.page_list.length === 0 && (
+                      {(this.state.page_list?.length === 0 ||
+                        this.state.page_list?.length === undefined) && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
                       )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={this.state.fields.pageNo}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {this.state.page_list?.length > 0 && (
+                    <CPagination
+                      activePage={this.state.fields.pageNo}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>

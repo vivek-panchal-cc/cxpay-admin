@@ -41,6 +41,7 @@ class Login extends React.Component {
     this.setState({ submitted: true });
     const { email, password } = this.state;
     const { dispatch } = this.props;
+    dispatch({ type: "ALERT_CLEAR" });
     if (email && password) {
       dispatch(userActions.login(email, password));
     }

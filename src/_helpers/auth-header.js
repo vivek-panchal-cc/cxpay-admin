@@ -30,20 +30,24 @@ export function authHeaderMutlipartFormData(module_name = "", action = "") {
   }
 }
 
-export function authHeaderTimezoneDevice(module_name = "", action = "", isMultipart=false) {
+export function authHeaderTimezoneDevice(
+  module_name = "",
+  action = "",
+  isMultipart = false
+) {
   let user = JSON.parse(localStorage.getItem("user"));
   if (user?.accessToken) {
-    let multipart = '';
+    let multipart = "";
     if (isMultipart) {
-      multipart = "multipart/form-data"
+      multipart = "multipart/form-data";
     } else {
-      multipart = "application/json"
+      multipart = "application/json";
     }
     return {
       "x-access-token": user.accessToken,
       "Content-Type": multipart,
       "User-Timezone": "asia/kolkata",
-      "Device-Type": "web",
+      "Device-Type": "admin",
       module_name: module_name,
       action: action,
     };
@@ -55,10 +59,10 @@ export function authHeaderTimezoneDevice(module_name = "", action = "", isMultip
 export function authHeaderMutlipartAgent(module_name = "", action = "") {
   let user = JSON.parse(localStorage.getItem("user"));
   if (user?.accessToken) {
-    return { 
+    return {
       "x-access-token": user.accessToken,
       "User-Timezone": "asia/kolkata",
-      "Device-Type": "web",
+      "Device-Type": "admin",
       // "Content-Type": "multipart/form-data"
     };
   } else {

@@ -34,7 +34,8 @@ import {
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { savingJarService } from "services/admin/savings_jar.service";
-
+import IconTempCategory from "assets/icons/IconTempCategory";
+import "./../agent_customers/notification.css";
 const MultiActionBar = React.lazy(() =>
   import("../../../../components/admin/MultiActionBar")
 );
@@ -66,6 +67,7 @@ class Saving_Jar_Index extends React.Component {
       showEditForm: false,
       _openPopup: false,
       saving_jar_category_list: [],
+      tempCategoriesList: [],
       multiaction: [],
       allCheckedbox: false,
     };
@@ -78,12 +80,13 @@ class Saving_Jar_Index extends React.Component {
 
   componentDidMount() {
     this.getSavingJarCategoryList();
+    this.getTempCategoriesList();
   }
 
   getSavingJarCategoryList() {
     savingJarService.savingJarBulkAction(this.state.fields).then((res) => {
       if (!res.success) {
-        notify.error(res.message);
+        // notify.error(res.message);
         this.setState({ saving_jar_category_list: [] });
       } else {
         this.setState({
@@ -107,6 +110,22 @@ class Saving_Jar_Index extends React.Component {
         }
       }
     });
+  }
+
+  getTempCategoriesList() {
+    savingJarService
+      .savingJarBulkAction({ operation_type: "saving_jar_temp_category_list" })
+      .then((res) => {
+        if (!res.success) {
+          this.setState({
+            tempCategoriesList: [],
+          });
+        } else {
+          this.setState({
+            tempCategoriesList: res.data?.category,
+          });
+        }
+      });
   }
 
   pageChange = (newPage) => {
@@ -312,9 +331,55 @@ class Saving_Jar_Index extends React.Component {
         <CRow>
           <CCol xl={12}>
             <CCard>
+              <CCardBody>
+                <CRow>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
+                        <CInput
+                          id="search_name"
+                          placeholder="Search Sub-account Category"
+                          name="search_name"
+                          value={this.state.fields.search_name}
+                          onChange={this.handleChange}
+                          onKeyPress={(event) => {
+                            if (event.key === "Enter") {
+                              this.handleSearch("search_name");
+                            }
+                          }}
+                        />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                  <CCol xl={9}>
+                    <CFormGroup row>
+                      <CCol xs="12">
+                        <button
+                          className="btn btn-dark btn-md mr-2"
+                          onClick={() => this.handleSearch()}
+                        >
+                          Search
+                        </button>
+                        <button
+                          className="btn btn-dark btn-md"
+                          onClick={() => this.handleSearch("reset")}
+                        >
+                          Clear
+                        </button>
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+              </CCardBody>
+            </CCard>
+          </CCol>
+        </CRow>
+        <CRow>
+          <CCol xl={12}>
+            <CCard>
               <CCardHeader>
-                <strong>Saving Jar</strong>
-                <div className="card-header-actions">
+                <strong>Sub-account Categories</strong>
+                <div className="card-header-actions px-2">
                   {_canAccess("saving_jar", "create") && (
                     <CTooltip content={globalConstants.ADD_BTN}>
                       <CLink
@@ -327,57 +392,30 @@ class Saving_Jar_Index extends React.Component {
                     </CTooltip>
                   )}
                 </div>
-                <CRow>
-                  <CCol xl={12} className="p-0">
-                    <CCardBody>
-                      <CRow style={{ flexWrap: "nowrap" }}>
-                        <CCol xl={3}>
-                          <CFormGroup
-                            row
-                            className="flex flex-wrap nowrap mb-0"
-                          >
-                            <CCol xs="12" className="p-0">
-                              <CInput
-                                id="search_name"
-                                placeholder="Search Saving Jar"
-                                name="search_name"
-                                value={this.state.fields.search_name}
-                                onChange={this.handleChange}
-                                onKeyPress={(event) => {
-                                  if (event.key === "Enter") {
-                                    this.handleSearch("search_name");
-                                  }
-                                }}
-                              />
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                        <CCol xl={9}>
-                          <CFormGroup
-                            row
-                            className="flex flex-wrap nowrap mb-0"
-                          >
-                            <CCol xs="12">
-                              <button
-                                className="btn btn-dark btn-md mr-2"
-                                onClick={() => this.handleSearch()}
-                              >
-                                Search
-                              </button>
-                              <button
-                                className="btn btn-dark btn-md"
-                                onClick={() => this.handleSearch("reset")}
-                              >
-                                Clear
-                              </button>
-                            </CCol>
-                          </CFormGroup>
-                        </CCol>
-                      </CRow>
-                      <CRow></CRow>
-                    </CCardBody>
-                  </CCol>
-                </CRow>
+                <div className="card-header-actions px-2">
+                  {_canAccess("saving_jar", "update") && (
+                    <>
+                      <CTooltip
+                        content={globalConstants.VIEW_TEMPORARY_JAR_CATEGORY}
+                      >
+                        <CLink
+                          className="btn btn-dark btn-block"
+                          aria-current="page"
+                          to={`/admin/saving_jar/temporary_category`}
+                        >
+                          <IconTempCategory fill="#ffffff" />
+                        </CLink>
+                      </CTooltip>
+                      <span
+                        className={`${
+                          this.state.tempCategoriesList?.length > 0
+                            ? "notification-badge-pending-customers"
+                            : ""
+                        }`}
+                      ></span>
+                    </>
+                  )}
+                </div>
               </CCardHeader>
               <CCardBody>
                 <div className="position-relative table-responsive">
@@ -424,6 +462,37 @@ class Saving_Jar_Index extends React.Component {
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
+                        </th>
+                        <th
+                          onClick={() =>
+                            this.handleColumnSort("parent_category_name")
+                          }
+                          className="text-center"
+                        >
+                          <span className="sortCls">
+                            <span className="table-header-text-mrg">
+                              Parent Category Name
+                            </span>
+                            {this.state.fields.sort_field !==
+                              "parent_category_name" && (
+                              <FontAwesomeIcon icon={faSort} />
+                            )}
+                            {this.state.fields.sort_dir === "asc" &&
+                              this.state.fields.sort_field ===
+                                "parent_category_name" && (
+                                <FontAwesomeIcon icon={faSortUp} />
+                              )}
+                            {this.state.fields.sort_dir === "desc" &&
+                              this.state.fields.sort_field ===
+                                "parent_category_name" && (
+                                <FontAwesomeIcon icon={faSortDown} />
+                              )}
+                          </span>
+                        </th>
+                        <th>
+                          <div className="d-flex justify-content-center">
+                            Background Color
+                          </div>
                         </th>
                         <th
                           onClick={() =>
@@ -484,7 +553,26 @@ class Saving_Jar_Index extends React.Component {
                                 : index + 1}
                             </td>
                             <td>{capitalize(u.jar_category_name)}</td>
-
+                            <td className="text-center">
+                              {capitalize(u.parent_category_name || "—")}
+                            </td>
+                            <td
+                              className="text-center"
+                              style={{ verticalAlign: "middle" }}
+                            >
+                              <div
+                                style={{
+                                  backgroundColor: u.bg_color || "#a279e4",
+                                  borderRadius: "50%",
+                                  width: "40px", // Adjust the size if needed
+                                  height: "40px",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  margin: "auto",
+                                }}
+                              ></div>
+                            </td>
                             <td>
                               {_canAccess("saving_jar", "update") ? (
                                 <CLink
@@ -599,7 +687,7 @@ class Saving_Jar_Index extends React.Component {
           color="danger"
         >
           <CModalHeader closeButton>
-            <CModalTitle>Delete Saving Jar Category</CModalTitle>
+            <CModalTitle>Delete Sub-account Category</CModalTitle>
           </CModalHeader>
           <CModalBody>Are you sure you want to delete this record?</CModalBody>
           <CModalFooter>

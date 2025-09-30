@@ -87,8 +87,9 @@ class Withdraw_Requests_Index extends React.Component {
     withdrawRequestService
       .getWithdrawRequestData(this.state.fields)
       .then((res) => {
-        if (res.status === false) {
-          notify.error(res.message);
+        if (!res.success) {
+          // notify.error(res.message);
+          this.setState({ withdraw_requests: [] });
         } else {
           this.setState({
             totalRecords: res.data?.pagination?.total || null,
@@ -564,13 +565,15 @@ class Withdraw_Requests_Index extends React.Component {
                       )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={this.state.fields.page}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {this.state.withdraw_requests?.length > 0 && (
+                    <CPagination
+                      activePage={this.state.fields.page}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>

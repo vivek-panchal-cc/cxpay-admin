@@ -161,6 +161,18 @@ class Customers_Management_Details extends React.Component {
                               <b>KYC Type: </b>
                               {this.state.customerDetails.kyc_type || "-"}
                             </p>
+                            {this.state.customerDetails.kyc_type?.toLowerCase() ===
+                              "system" &&
+                              this.state.customerDetails
+                                .verification_id && (
+                                <p>
+                                  <b>Metamap Verification Id: </b>
+                                  {
+                                    this.state.customerDetails
+                                      .verification_id
+                                  }
+                                </p>
+                              )}
                           </CCol>
                           <CCol xs="6">
                             <p>

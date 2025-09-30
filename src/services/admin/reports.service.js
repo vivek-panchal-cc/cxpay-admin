@@ -12,6 +12,9 @@ export const reportsService = {
   getTransactionList,
   downloadTransactionCSV,
   downloadAgentCSV,
+  getMerchantFeesReport,
+  downloadMerchantFeesReportData,
+  getSavingsJarReport,
 };
 
 async function getCustomersList(postData) {
@@ -30,7 +33,6 @@ async function getCustomersList(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -45,17 +47,14 @@ async function customerDetails(postData) {
 
   let response;
   try {
-    setLoading(true);
     response = await fetch(`${API_URL}api/get-customer`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
 
 async function downloadCustomerCSV(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("customer_reports", "view"),
@@ -69,7 +68,6 @@ async function downloadCustomerCSV(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -89,14 +87,12 @@ async function getTransactionList(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
 
   return handleResponse(response);
 }
 
 async function downloadTransactionCSV(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("transaction_reports", "view"),
@@ -110,13 +106,11 @@ async function downloadTransactionCSV(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
 
 async function downloadAgentCSV(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("agent_reports", "view"),
@@ -130,7 +124,62 @@ async function downloadAgentCSV(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
+  }
+  return handleResponse(response);
+}
+
+async function getMerchantFeesReport(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("merchant_fees_reports", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-merchants-general-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+  }
+  return handleResponse(response);
+}
+
+async function downloadMerchantFeesReportData(postData) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("merchant_fees_reports", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/export-merchants-general-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+  }
+  return handleResponse(response);
+}
+
+async function getSavingsJarReport(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("saving_jar", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/saving-jar-report-operations`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
   }
   return handleResponse(response);
 }

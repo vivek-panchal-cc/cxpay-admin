@@ -3,8 +3,9 @@ import {
   // authHeaderTimezoneDevice,
   // authHeaderMutlipart,
   authHeaderMutlipartAgent,
+  setLoading,
 } from "../../_helpers";
-import { notify, handleResponse, setLoading } from "../../_helpers";
+import { notify, handleResponse } from "../../_helpers";
 require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -43,7 +44,6 @@ function getAgentList(postData) {
   return fetch(`${API_URL}api/agent-list`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(true);
     })
     .then(handleResponse);
 }
@@ -52,7 +52,7 @@ function getAgentList(postData) {
 
 // function createPages(postData) {
 
-//     setLoading(true);
+//
 //     const requestOptions = {
 //         method: 'POST',
 //         headers: authHeader('cms_pages', 'create'),
@@ -61,7 +61,7 @@ function getAgentList(postData) {
 
 //     return fetch(`${API_URL}api/cms_pages/add`, requestOptions).catch((error) => {
 //         notify.error('Something went wrong');
-//         setLoading(true);
+//
 //     }).then(handleResponse);
 // }
 function createAgent(postData) {
@@ -75,7 +75,6 @@ function createAgent(postData) {
   return fetch(`${API_URL}api/register-agent`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(true);
     })
     .then(handleResponse);
 }
@@ -91,7 +90,6 @@ function deleteAgent(postData) {
   return fetch(`${API_URL}api/customers/delete-customers`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -100,7 +98,7 @@ function deleteAgent(postData) {
 /****************** Retrieve Single Record From Server ************************/
 
 // function getpage(id) {
-//     setLoading(true);
+//
 //     const requestOptions = {
 //         method: 'GET',
 //         headers: authHeader('cms_pages', 'view')
@@ -108,7 +106,7 @@ function deleteAgent(postData) {
 
 //     return fetch(`${API_URL}api/cms_pages/${id}`, requestOptions).catch((error) => {
 //         notify.error('Something went wrong');
-//         setLoading(false);
+//
 //         return Promise.reject();
 //     }).then(handleResponse);
 // }
@@ -124,7 +122,6 @@ function getAgentDetails(postData) {
   return fetch(`${API_URL}api/agent-details`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -143,7 +140,6 @@ function updateAgent(postData) {
   return fetch(`${API_URL}api/agent-update`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -164,7 +160,6 @@ async function detailview(postData) {
     response = await fetch(`${API_URL}api/agent-wise-recharge`, requestOptions);
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -180,7 +175,6 @@ function changeAgentStatus(postData) {
   return fetch(`${API_URL}api/customers/change-status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -197,7 +191,6 @@ function deleteMultipleAgent(postData) {
   return fetch(`${API_URL}api/delete_multiple_pages`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -214,42 +207,49 @@ function changeBulkCustomerStatus(postData) {
   return fetch(`${API_URL}api/customers/change-status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
 }
 
-function getCountry() {
+async function getCountry() {
   setLoading(true);
   const requestOptions = {
     method: "GET",
-    headers: authHeader("agent_customers", "update"),
+    headers: authHeader("agent_customers", "view"),
   };
 
-  return fetch(`${API_URL}api/customers/get-country`, requestOptions)
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-country`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
 }
 
-function getCollectionType() {
+async function getCollectionType() {
   setLoading(true);
   const requestOptions = {
     method: "GET",
-    headers: authHeader("agent_customers", "update"),
+    headers: authHeader("agent_customers", "view"),
   };
 
-  return fetch(`${API_URL}api/agent-collection-type-list`, requestOptions)
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/agent-collection-type-list`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
 }
 
 function getDeleteRequests(postData) {
@@ -262,7 +262,6 @@ function getDeleteRequests(postData) {
   return fetch(`${API_URL}api/delete-request-agent-list`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -283,7 +282,6 @@ async function getBlockedRequests(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -304,7 +302,6 @@ async function releaseCustomer(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -320,7 +317,6 @@ function rejectDeleteRequest(postData) {
   return fetch(`${API_URL}api/delete-request-status-change`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -341,7 +337,6 @@ async function downloadAgentIndexData(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }

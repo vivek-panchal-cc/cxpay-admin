@@ -82,7 +82,7 @@ class Saving_Jar_Category_Details extends React.Component {
                   active={activeTab === "jar_details"}
                   onClick={() => this.handleTabClick("jar_details")}
                 >
-                  Jar Details
+                  Sub-account Details
                 </CNavLink>
               </CNavItem>
             </CNav>

@@ -22,6 +22,7 @@ import CustomerManagementRecurringPaymentsIndex from "./Customer_Management_Recu
 import CustomerManagementDetails from "./Customer_Management_Details";
 import CustomerManagementWithdrawRequests from "./Customer_Management_Withdraw_Requests";
 import CustomerManagementManualTopupRequests from "./Customer_Management_Manual_Topup_Requests";
+import CustomerManagementMerchantFeesReport from "./Customer_Management_Merchant_Fees_Report";
 
 class Customers_Management_Details_Report extends React.Component {
   constructor(props) {
@@ -131,6 +132,14 @@ class Customers_Management_Details_Report extends React.Component {
                   Manual Topup Request Details
                 </CNavLink>
               </CNavItem>
+              {/* <CNavItem>
+                <CNavLink
+                  active={activeTab === "merchant_fees_report"}
+                  onClick={() => this.handleTabClick("merchant_fees_report")}
+                >
+                  Merchant Fees Report
+                </CNavLink>
+              </CNavItem> */}
             </CNav>
           </CCardHeader>
           <CCardBody>
@@ -184,6 +193,14 @@ class Customers_Management_Details_Report extends React.Component {
                   />
                 )}
               </CTabPane>
+              {/* <CTabPane active={activeTab === "merchant_fees_report"}>
+                {activeTab === "merchant_fees_report" && (
+                  <CustomerManagementMerchantFeesReport
+                    account_number={this.props.match.params.account_number}
+                    activeTab={activeTab}
+                  />
+                )}
+              </CTabPane> */}
             </CTabContent>
           </CCardBody>
           <CCardFooter>

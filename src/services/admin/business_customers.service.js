@@ -1,5 +1,5 @@
-import { authHeader, authHeaderMutlipart } from "../../_helpers";
-import { notify, handleResponse, setLoading } from "../../_helpers/";
+import { authHeader, authHeaderMutlipart, setLoading } from "../../_helpers";
+import { notify, handleResponse } from "../../_helpers/";
 require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -19,12 +19,17 @@ export const businessCustomersService = {
   deleteBusinessCustomer,
   rejectDeleteRequest,
   getPendingKycCustomerList,
+  getReviewNeededCustomerList,
+  reviewedKycApprovedOrRejected,
   getAdminApprovalCustomerList,
   getBusinessKycDocument,
   downloadReportData,
   businessCategory,
   createBusinessUser,
   refreshMerchantToken,
+  getMerchantFeesReport,
+  downloadMerchantFeesReportData,
+  webHookOperations,
 };
 
 async function getCustomerWiseDetails(postData) {
@@ -43,7 +48,6 @@ async function getCustomerWiseDetails(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -59,7 +63,6 @@ function getCustomersManagementList(postData) {
   return fetch(`${API_URL}api/customers/business-customers`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
     })
     .then(handleResponse);
 }
@@ -79,7 +82,46 @@ async function getPendingKycCustomerList(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
+    // const response = undefined;
+  }
+  return handleResponse(response);
+}
+
+async function getReviewNeededCustomerList(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-kyc-in-review-customers`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    // const response = undefined;
+  }
+  return handleResponse(response);
+}
+
+async function reviewedKycApprovedOrRejected(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/approve-reject-in-review-kyc`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
     // const response = undefined;
   }
   return handleResponse(response);
@@ -100,7 +142,6 @@ async function getAdminApprovalCustomerList(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     // const response = undefined;
   }
   return handleResponse(response);
@@ -117,7 +158,6 @@ function getCustomer(postData) {
   return fetch(`${API_URL}api/customers/get-detail`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -137,7 +177,6 @@ function updateCustomer(postData) {
   )
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -153,7 +192,6 @@ function deleteCustomer(postData) {
   return fetch(`${API_URL}api/customers/delete-customers`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -170,7 +208,6 @@ function deleteMultipleCustomer(postData) {
   return fetch(`${API_URL}api/customers/delete-customers`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -187,7 +224,6 @@ function changeCustomerStatus(postData) {
   return fetch(`${API_URL}api/customers/change-status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -204,26 +240,28 @@ function changeBulkCustomerStatus(postData) {
   return fetch(`${API_URL}api/customers/change-status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
 }
 
-function getCountry() {
-  setLoading(true);
+async function getCountry() {
   const requestOptions = {
     method: "GET",
-    headers: authHeader("business_customers", "update"),
+    headers: authHeader("business_customers", "view"),
   };
 
-  return fetch(`${API_URL}api/customers/get-country`, requestOptions)
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-country`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
 }
 
 function getDeleteRequests(postData) {
@@ -236,7 +274,6 @@ function getDeleteRequests(postData) {
   return fetch(`${API_URL}api/delete-request-business-list`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
@@ -257,7 +294,6 @@ async function deleteBusinessCustomer(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -278,7 +314,6 @@ async function rejectDeleteRequest(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
@@ -299,14 +334,12 @@ async function getBusinessKycDocument(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
     response = await Promise.reject();
   }
   return handleResponse(response);
 }
 
 async function downloadReportData(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     headers: authHeader("business_customers", "view"),
@@ -320,13 +353,11 @@ async function downloadReportData(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
   }
   return handleResponse(response);
 }
 
 async function businessCategory(postData) {
-  setLoading(true);
   const requestOptions = {
     method: "POST",
     // headers: authHeader("business_customers", "view"),
@@ -342,7 +373,6 @@ async function businessCategory(postData) {
     notify.error("Something went wrong");
     // const response = undefined;
   } finally {
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -351,7 +381,7 @@ async function createBusinessUser(postData, timeZone) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
-    headers: { "User-Timezone": timeZone, "Device-Type": "web" },
+    headers: { "User-Timezone": timeZone, "Device-Type": "admin" },
     body: postData,
   };
   let response;
@@ -364,7 +394,6 @@ async function createBusinessUser(postData, timeZone) {
     notify.error("Something went wrong");
     // const response = undefined;
   } finally {
-    setLoading(false);
   }
   return handleResponse(response);
 }
@@ -385,7 +414,65 @@ async function refreshMerchantToken(postData) {
     );
   } catch (error) {
     notify.error("Something went wrong");
-    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function getMerchantFeesReport(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/get-merchant-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
+}
+
+async function downloadMerchantFeesReportData(postData) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "view"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/export-merchant-fees-report`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+  }
+  return handleResponse(response);
+}
+
+async function webHookOperations(postData) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("business_customers", "update"),
+    body: JSON.stringify(postData),
+  };
+
+  let response;
+  try {
+    response = await fetch(
+      `${API_URL}api/customers/merchant-callback-url-operations`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
     response = await Promise.reject();
   }
   return handleResponse(response);

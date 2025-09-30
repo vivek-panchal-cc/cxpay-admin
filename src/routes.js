@@ -127,6 +127,11 @@ const Customers_Management_Pending_Kyc_Index = React.lazy(() =>
     "./views/pages/admin/customers_management/Customers_Management_Pending_Kyc_Index"
   )
 );
+const Customers_Management_Review_Needed_Kyc_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/customers_management/Customers_Management_Review_Needed_Kyc_Index"
+  )
+);
 const Customers_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Edit")
 );
@@ -161,6 +166,11 @@ const Business_Customers_Pending_Kyc_Index = React.lazy(() =>
     "./views/pages/admin/business_customers/Business_Customers_Pending_Kyc_Index"
   )
 );
+const Business_Customers_Review_Needed_Kyc_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Review_Needed_Kyc_Index"
+  )
+);
 const Business_Customers_Edit = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Edit")
 );
@@ -184,21 +194,33 @@ const Business_Category_Index = React.lazy(() =>
   import("./views/pages/admin/business_categories/Business_Category_Index")
 );
 
-// const Saving_Jar_Index = React.lazy(() =>
-//   import("./views/pages/admin/saving_jar/Saving_Jar_Index")
-// );
+const Saving_Jar_Index = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Index")
+);
 
-// const Saving_Jar_Add = React.lazy(() =>
-//   import("./views/pages/admin/saving_jar/Saving_Jar_Add")
-// );
+const Saving_Jar_Add = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Add")
+);
 
-// const Saving_Jar_Edit = React.lazy(() =>
-//   import("./views/pages/admin/saving_jar/Saving_Jar_Edit")
-// );
+const Saving_Jar_Edit = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Edit")
+);
 
-// const Saving_Jar_Category_Details = React.lazy(() =>
-//   import("./views/pages/admin/saving_jar/Saving_Jar_Category_Details")
-// );
+const Saving_Jar_Category_Details = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Category_Details")
+);
+
+const Saving_jar_Icon_Index = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Icon_Index")
+);
+
+const Saving_jar_Icon_Add = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Icon_Add")
+);
+
+const Saving_Jar_Temporary_Category = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Temporary_Category")
+);
 
 const System_Bank_Accounts_Index = React.lazy(() =>
   import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Index")
@@ -239,6 +261,14 @@ const Customer_Detail = React.lazy(() =>
 );
 const Transaction_Reports_Index = React.lazy(() =>
   import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
+);
+const Merchant_Fees_Reports_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/merchant_fees_reports/Merchant_Fees_Reports_Index"
+  )
+);
+const Savings_Jar_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/savings_jar_reports/Savings_Jar_Reports_Index")
 );
 
 const Schedule_Payments_Index = React.lazy(() =>
@@ -608,6 +638,14 @@ const routes = [
     action: "view",
   },
   {
+    path: "/admin/personal_customers/review_needed_kyc",
+    exact: true,
+    name: "In Review KYC",
+    component: Customers_Management_Review_Needed_Kyc_Index,
+    module_name: "personal_customers",
+    action: "view",
+  },
+  {
     path: "/admin/personal_customers/edit/:id",
     exact: true,
     name: "Edit",
@@ -674,6 +712,14 @@ const routes = [
     action: "view",
   },
   {
+    path: "/admin/business_customers/review_needed_kyc",
+    exact: true,
+    name: "In Review KYC",
+    component: Business_Customers_Review_Needed_Kyc_Index,
+    module_name: "business_customers",
+    action: "view",
+  },
+  {
     path: "/admin/business_customers/edit/:id",
     exact: true,
     name: "Edit",
@@ -700,39 +746,63 @@ const routes = [
     action: "view",
   },
 
-  // Saving Jar
-  // {
-  //   path: "/admin/saving_jar",
-  //   exact: true,
-  //   name: "Saving Jar",
-  //   component: Saving_Jar_Index,
-  //   module_name: "saving_jar",
-  //   action: "view",
-  // },
-  // {
-  //   path: "/admin/saving_jar/add",
-  //   exact: true,
-  //   name: "Add Saving Jar",
-  //   component: Saving_Jar_Add,
-  //   module_name: "saving_jar",
-  //   action: "create",
-  // },
-  // {
-  //   path: "/admin/saving_jar/edit/:id",
-  //   exact: true,
-  //   name: "Update Saving Jar",
-  //   component: Saving_Jar_Edit,
-  //   module_name: "saving_jar",
-  //   action: "update",
-  // },
-  // {
-  //   path: "/admin/saving_jar/:id/:typeId",
-  //   exact: true,
-  //   name: "Details",
-  //   component: Saving_Jar_Category_Details,
-  //   module_name: "saving_jar",
-  //   action: "view",
-  // },
+  // Sub-accountJar
+  {
+    path: "/admin/saving_jar",
+    exact: true,
+    name: "Sub-account Categories",
+    component: Saving_Jar_Index,
+    module_name: "saving_jar",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jar/add",
+    exact: true,
+    name: "Add Sub-account Category",
+    component: Saving_Jar_Add,
+    module_name: "saving_jar",
+    action: "create",
+  },
+  {
+    path: "/admin/saving_jar/edit/:id",
+    exact: true,
+    name: "Update Sub-account Category",
+    component: Saving_Jar_Edit,
+    module_name: "saving_jar",
+    action: "update",
+  },
+  {
+    path: "/admin/saving_jar/:id/:typeId",
+    exact: true,
+    name: "Details",
+    component: Saving_Jar_Category_Details,
+    module_name: "saving_jar",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jar_icon",
+    exact: true,
+    name: "Sub-account Icons",
+    component: Saving_jar_Icon_Index,
+    module_name: "saving_jar",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jar_icon/add",
+    exact: true,
+    name: "Add Sub-account Icon",
+    component: Saving_jar_Icon_Add,
+    module_name: "saving_jar",
+    action: "create",
+  },
+  {
+    path: "/admin/saving_jar/temporary_category",
+    exact: true,
+    name: "Temporary Categories List",
+    component: Saving_Jar_Temporary_Category,
+    module_name: "saving_jar",
+    action: "update",
+  },
 
   // System Bank Accounts
   {
@@ -848,7 +918,7 @@ const routes = [
   {
     path: "/admin/customer_reports",
     exact: true,
-    name: "Customer Reports",
+    name: "Customers Report",
     component: Customer_Reports_Index,
     module_name: "customer_reports",
     action: "view",
@@ -864,9 +934,25 @@ const routes = [
   {
     path: "/admin/transaction_reports",
     exact: true,
-    name: "Transaction Reports",
+    name: "Transactions Report",
     component: Transaction_Reports_Index,
     module_name: "transaction_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/merchant_fees_reports",
+    exact: true,
+    name: "Merchant Fees Report",
+    component: Merchant_Fees_Reports_Index,
+    module_name: "merchant_fees_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jars_reports",
+    exact: true,
+    name: "Sub-accounts Report",
+    component: Savings_Jar_Reports_Index,
+    module_name: "saving_jars_reports",
     action: "view",
   },
   //withdraw requests
