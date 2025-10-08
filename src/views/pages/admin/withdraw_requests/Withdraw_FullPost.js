@@ -13,6 +13,7 @@ import {
   CLink,
   CTextarea,
 } from "@coreui/react";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
 import { FILE_SIZE } from "constants/frontend/schema.constants";
@@ -53,6 +54,11 @@ const Fullpage = (props) => {
     comment: "",
     reciept: "",
   });
+  const [isFullNumberVisible, setIsFullNumberVisible] = useState(false);
+
+  const toggleBankAccountVisibility = () => {
+    setIsFullNumberVisible(!isFullNumberVisible);
+  };
 
   const isValidComment = () => {
     if (!adminComment) {
@@ -289,7 +295,23 @@ const Fullpage = (props) => {
                           <div className="wcr-info-1 d-flex flex-wrap">
                             <div className="wcr-card-data">
                               <h2>{bank_name}</h2>
-                              <p>xxxx xxxx xxxx {lastFourDigits}</p>
+                              <div>
+                                <p>
+                                  <span className="mr-2">
+                                    Bank Account Number:
+                                  </span>
+                                  {isFullNumberVisible
+                                    ? bank_account_number
+                                    : `xxxx xxxx xxxx ${lastFourDigits}`}
+                                  <FontAwesomeIcon
+                                    icon={
+                                      isFullNumberVisible ? faEyeSlash : faEye
+                                    }
+                                    onClick={toggleBankAccountVisibility}
+                                    className="ml-3 cursor-pointer"
+                                  />
+                                </p>
+                              </div>
                             </div>
                             <div className="wcr-card-amt wbr-card-amt">
                               <p className="green font-bold">{status}</p>
@@ -356,7 +378,18 @@ const Fullpage = (props) => {
                             </tr>
                             <tr>
                               <td>Account Number</td>
-                              <td>xxxx xxxx xxxx {lastFourDigits}</td>
+                              <td>
+                                {isFullNumberVisible
+                                  ? bank_account_number
+                                  : `xxxx xxxx xxxx ${lastFourDigits}`}
+                                <FontAwesomeIcon
+                                  icon={
+                                    isFullNumberVisible ? faEyeSlash : faEye
+                                  }
+                                  onClick={toggleBankAccountVisibility}
+                                  className="ml-3 cursor-pointer"
+                                />
+                              </td>
                             </tr>
                             {/* <tr>
                               <td>Swift Code</td>
