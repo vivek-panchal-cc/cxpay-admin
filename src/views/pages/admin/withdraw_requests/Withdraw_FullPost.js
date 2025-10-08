@@ -54,10 +54,17 @@ const Fullpage = (props) => {
     comment: "",
     reciept: "",
   });
-  const [isFullNumberVisible, setIsFullNumberVisible] = useState(false);
+  const [isFullNumberVisibleFirst, setIsFullNumberVisibleFirst] =
+    useState(false);
+  const [isFullNumberVisibleSecond, setIsFullNumberVisibleSecond] =
+    useState(false);
 
-  const toggleBankAccountVisibility = () => {
-    setIsFullNumberVisible(!isFullNumberVisible);
+  const toggleBankAccountVisibilityFirst = () => {
+    setIsFullNumberVisibleFirst(!isFullNumberVisibleFirst);
+  };
+
+  const toggleBankAccountVisibilitySecond = () => {
+    setIsFullNumberVisibleSecond(!isFullNumberVisibleSecond);
   };
 
   const isValidComment = () => {
@@ -300,14 +307,16 @@ const Fullpage = (props) => {
                                   <span className="mr-2">
                                     Bank Account Number:
                                   </span>
-                                  {isFullNumberVisible
+                                  {isFullNumberVisibleFirst
                                     ? bank_account_number
                                     : `xxxx xxxx xxxx ${lastFourDigits}`}
                                   <FontAwesomeIcon
                                     icon={
-                                      isFullNumberVisible ? faEyeSlash : faEye
+                                      isFullNumberVisibleFirst
+                                        ? faEyeSlash
+                                        : faEye
                                     }
-                                    onClick={toggleBankAccountVisibility}
+                                    onClick={toggleBankAccountVisibilityFirst}
                                     className="ml-3 cursor-pointer"
                                   />
                                 </p>
@@ -379,14 +388,16 @@ const Fullpage = (props) => {
                             <tr>
                               <td>Account Number</td>
                               <td>
-                                {isFullNumberVisible
+                                {isFullNumberVisibleSecond
                                   ? bank_account_number
                                   : `xxxx xxxx xxxx ${lastFourDigits}`}
                                 <FontAwesomeIcon
                                   icon={
-                                    isFullNumberVisible ? faEyeSlash : faEye
+                                    isFullNumberVisibleSecond
+                                      ? faEyeSlash
+                                      : faEye
                                   }
-                                  onClick={toggleBankAccountVisibility}
+                                  onClick={toggleBankAccountVisibilitySecond}
                                   className="ml-3 cursor-pointer"
                                 />
                               </td>
