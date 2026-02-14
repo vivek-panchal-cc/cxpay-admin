@@ -1,0 +1,432 @@
+@media only screen and (max-width: 1350px) {
+  ul.refund-comn-ul .rcard-img-wrap {
+    width: 70px;
+    padding-right: 5px;
+  }
+  .rcard-img-wrap .wr-bank-svg {
+    width: 50px;
+    height: 50px;
+    border-radius: 31px;
+  }
+  ul.refund-comn-ul .rcard-details-wrap {
+    width: calc(100% - 70px);
+  }
+  ul.refund-comn-ul .rcard-info h3 {
+    font-size: 18px;
+    line-height: 18px;
+  }
+  ul.refund-comn-ul .eligible-value-wrap {
+    font-size: 14px;
+    line-height: 18px;
+  }
+}
+@media only screen and (max-width: 1299px) {
+  /* ul.refund-comn-ul .btns-wrap>button:not(:last-child) {
+    margin-right: 8px;
+  } */
+}
+@media only screen and (max-width: 1199px) {
+  ul.refund-comn-ul .total-val-wrap {
+    font-size: 15px;
+    line-height: 20px;
+  }
+  ul.refund-comn-ul .eligible-value-wrap {
+    margin-top: 8px;
+  }
+  ul.refund-comn-ul .card-details {
+    align-items: start !important;
+  }
+  ul.refund-comn-ul.bank-refund-ul .rcard-info {
+    margin-right: 0px;
+    max-width: 100%;
+    min-width: 100%;
+  }
+  ul.refund-comn-ul.bank-refund-ul .card-details > div {
+    width: 100%;
+  }
+  ul.refund-comn-ul .rcard-details-wrap > div {
+    flex-wrap: wrap;
+  }
+  ul.refund-comn-ul .rcard-details-wrap .card-details > div {
+    width: 100% !important;
+  }
+  ul.refund-comn-ul .rcard-details-wrap .rcard-status-wrap {
+    padding-left: 0px;
+  }
+  ul.refund-comn-ul .btns-wrap {
+    flex-wrap: nowrap !important;
+  }
+  ul.refund-comn-ul .status-wrap button.btn {
+    font-size: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 80px;
+  }
+}
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  ul.refund-comn-ul .card-details {
+    flex-direction: column;
+  }
+  ul.refund-comn-ul .rcard-info {
+    margin-bottom: 10px;
+    margin-right: 0px;
+    min-width: 100%;
+  }
+  ul.refund-comn-ul .total-val-wrap {
+    margin-bottom: 10px;
+  }
+  /* ul.card-refund-ul .rcard-status-wrap>div {
+    width: 100% !important;
+  } */
+  .wr-title-wrap h2 {
+    font-size: 28px;
+    line-height: 34px;
+  }
+  ul.refund-comn-ul {
+    padding-top: 35px;
+    padding-bottom: 35px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  ul.refund-comn-ul .card-details,
+  ul.refund-comn-ul .rcard-status-wrap {
+    flex-direction: column;
+  }
+  ul.refund-comn-ul .rcard-status-wrap > div,
+  ul.refund-comn-ul .card-details > div {
+    width: 100%;
+  }
+  ul.refund-comn-ul .rcard-info {
+    margin-bottom: 0px;
+    margin-right: 0px;
+    min-width: 100%;
+  }
+  ul.refund-comn-ul .total-val-wrap {
+    margin-bottom: 10px;
+  }
+}
+@media only screen and (max-width: 640px) {
+  ul.refund-comn-ul .btns-wrap {
+    margin-top: 10px;
+  }
+  ul.refund-comn-ul .rcard-img-wrap {
+    width: 65px;
+  }
+  ul.refund-comn-ul .rcard-details-wrap {
+    width: calc(100% - 65px);
+    align-items: start;
+    flex-wrap: wrap;
+  }
+  ul.refund-comn-ul .eligible-value-wrap,
+  ul.refund-comn-ul .total-val-wrap {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  ul.refund-comn-ul .status-wrap button.btn {
+    font-size: 10px;
+  }
+  ul.refund-comn-ul .rcard-info h3 {
+    font-size: 16px;
+    line-height: 16px;
+  }
+  ul.refund-comn-ul {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+}
+@media only screen and (max-width: 480px) {
+  /* ul.refund-comn-ul .card-details,
+  ul.refund-comn-ul .rcard-status-wrap{
+    width: 100%;
+    text-align: start;
+  }
+  ul.refund-comn-ul .rcard-status-wrap{
+    margin-top: 8px;
+  } */
+  ul.refund-comn-ul .rcard-img-wrap {
+    width: 38px;
+    padding-left: 0px;
+  }
+  ul.refund-comn-ul .rcard-details-wrap {
+    width: calc(100% - 38px);
+  }
+  ul.refund-comn-ul .rcard-info h3 {
+    font-size: 14px;
+    line-height: 14px;
+  }
+}
+@media only screen and (max-width: 400px) {
+  ul.refund-comn-ul .rcard-info p,
+  .wrb-date-wrap p {
+    font-size: 11.5px;
+  }
+  ul.refund-comn-ul .rcard-info h3 {
+    font-size: 14px;
+  }
+  ul.refund-comn-ul .eligible-value-wrap,
+  ul.refund-comn-ul .total-val-wrap {
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
+
+@media only screen and (max-height: 850px) {
+  .wc-details-wrap td {
+    padding: 13px 0px;
+  }
+  .wc-details-wrap td:first-child {
+    padding-right: 5px;
+  }
+  .wc-details-wrap td:last-child {
+    padding-left: 5px;
+  }
+  .wc-details-wrap table {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+}
+@media only screen and (max-width: 1299px) {
+  .wr-withdraw-his-data .wh-status-info {
+    padding-left: 15px;
+  }
+  .wcr-innner-wrap table td {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .kyc-innner-wrap table td {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .wcr-info-1 h2 {
+    font-size: 22px;
+    line-height: 30px;
+  }
+  .wr-dwld-wrap ul li {
+    width: 52px;
+    height: 52px;
+  }
+}
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+  .wr-title-wrap h2 {
+    font-size: 28px;
+    line-height: 34px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .wr-form-wrap .btns-inline .btn-wrap:last-child,
+  .wr-card-form-wrap .btns-inline .btn-wrap:last-child {
+    max-width: 270px;
+    width: 100%;
+  }
+  .wr-form-wrap .btns-inline .btn-wrap:last-child .btn,
+  .wr-card-form-wrap .btns-inline .btn-wrap:last-child .btn {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .wac-details-wrap .wallet-ac-info-wrap {
+    width: 360px;
+  }
+  .wac-details-wrap > div:last-child {
+    width: 260px;
+  }
+  .wallet-ac-info-wrap .wallet-ac-inner {
+    width: 350px;
+  }
+  .wr-details-back-btn {
+    margin-top: 25px;
+  }
+  .wcr-info-1 h2 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .wcr-card-data {
+    padding-bottom: 12px;
+  }
+  .wcr-info-1 > div {
+    width: 50% !important;
+  }
+  .wbr-innner-wrap-4 {
+    margin-bottom: 10px;
+  }
+  .wr-bank-details-wrapper .wcr-innner-wrap-1 {
+    padding-bottom: 20px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .w-50-md {
+    width: 100%;
+  }
+  .wh-status-amt-wrap {
+    flex-direction: column-reverse;
+  }
+  .wh-status-amt-wrap > div {
+    width: 100% !important;
+  }
+  .wh-status-amt-wrap > div:not(:last-child) {
+    margin-bottom: 5px;
+  }
+  .wcr-eligible-msg p span {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .wcr-eligible-msg .font-16-quick {
+    font-size: 14px;
+  }
+  .wcr-eligible-msg .font-14-quick {
+    font-size: 14px;
+  }
+  .wcr-transition-info-2 table td:first-child,
+  .wcr-transition-info-1 table td:first-child {
+    width: 130px;
+  }
+  .wr-bdatail-tbl table td:first-child {
+    width: 140px;
+  }
+  .wcr-info-1 > div {
+    width: 100% !important;
+  }
+  .wcr-info-1 .wcr-card-amt {
+    text-align: left;
+    margin-bottom: 5px;
+  }
+  .wr-withdraw-his-data .wh-status-info {
+    padding-left: 10px;
+  }
+  .wcr-innner-wrap table td:last-child {
+    padding-right: 0px;
+  }
+  .kyc-innner-wrap table td:last-child {
+    padding-right: 15px;
+  }
+  .wr-bdatail-dwld.border-start {
+    border-width: 0px !important;
+  }
+  .wbr-innner-wrap-3 > div {
+    width: 100%;
+  }
+  .kyc-document-innner-wrap-3 > div {
+    width: 50%;
+  }
+  .kyc-innner-wrap-3 > div {
+    width: 100%;
+  }
+  .wbr-innner-wrap-3 > div:not(:last-child) {
+    margin-bottom: 20px;
+  }
+  .kyc-wbr-innner-wrap-3 > div:not(:last-child) {
+    margin-bottom: 20px;
+  }
+  .wr-dwld-wrap ul li {
+    width: 45px;
+    height: 45px;
+  }
+  .wbr-final-amt-wrap td:last-child {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  button.wr-bank-cancel-req {
+    padding: 6px 12px;
+    font-size: 11px;
+    line-height: 13px;
+  }
+}
+@media only screen and (max-width: 575px) {
+  .wcr-innner-wrap-1 .wcr-img-wrap,
+  .wcr-eligible-msg {
+    width: 100%;
+    padding-right: 0px;
+    text-align: center;
+  }
+  .wcr-img-wrap > img {
+    max-width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .wcr-innner-wrap-1 .wcr-info-main {
+    width: 100% !important;
+    text-align: center;
+    margin-top: 15px;
+  }
+  .wcr-info-1 .wcr-card-amt {
+    text-align: center;
+  }
+  .wcr-withdraw-btn {
+    width: 200px;
+    margin: 15px auto 0px;
+  }
+  .wcr-info-1 h2 {
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .wr-bdatail-tbl table td:first-child {
+    width: 135px;
+  }
+  .wcr-innner-wrap table td {
+    font-size: 12px;
+  }
+  .kyc-innner-wrap table td {
+    font-size: 12px;
+  }
+  .wr-details-back-btn .btn {
+    font-size: 15px;
+    line-height: 15px;
+  }
+  .wh-id-date-wrap .div-font-14 {
+    font-size: 11px;
+    line-height: 17px;
+  }
+  ul.bank-refund-ul .rcard-status-wrap {
+    width: 50%;
+  }
+  ul.bank-refund-ul .btns-wrap-bank.btns-wrap {
+    width: 100%;
+  }
+  .wr-bank-details-wrapper .wcr-info-2 {
+    text-align: center;
+  }
+  .wbr-img-wrap span {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .wbr-final-amt-wrap td:first-child {
+    font-size: 15px;
+  }
+  .wbr-final-amt-wrap {
+    padding-top: 20px;
+  }
+  .wbr-final-amt-wrap table td {
+    padding-bottom: 20px;
+  }
+  .wr-card-form-wrap .wbr-final-amt-wrap {
+    padding: 20px 20px 0px;
+  }
+}
+@media only screen and (max-width: 480px) {
+  .wrb-date-wrap p {
+    font-size: 12px;
+  }
+  .wr-form-wrap .btns-inline,
+  .wr-card-form-wrap .btns-inline {
+    flex-wrap: wrap;
+  }
+  .wr-form-wrap .wallet-acc-fund-btns,
+  .wr-card-form-wrap .wallet-acc-fund-btns {
+    margin-top: 0px;
+  }
+  .wr-form-wrap .btns-inline .btn-wrap,
+  .wr-card-form-wrap .btns-inline .btn-wrap {
+    margin-top: 10px;
+  }
+  .wr-form-wrap .btns-inline .btn,
+  .wr-card-form-wrap .btns-inline .btn {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .wr-form-wrap .btns-inline .btn,
+  .wr-card-form-wrap .btns-inline .btn {
+    height: 54px;
+  }
+}

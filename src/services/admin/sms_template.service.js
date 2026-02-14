@@ -2,6 +2,8 @@ import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 /*************** Export Functions Defined For Services ******************************/
 
 export const smsTemplateService = {
@@ -32,7 +34,7 @@ function getPageList(postData) {
   // sort_field
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/index`,
+    `${API_URL}api/sms_templates/index`,
     requestOptions
   )
     .catch((error) => {
@@ -59,7 +61,7 @@ function createPages(postData) {
   // status: 1
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/add`,
+    `${API_URL}api/sms_templates/add`,
     requestOptions
   )
     .catch((error) => {
@@ -83,7 +85,7 @@ function deletepage(postData) {
   // status:true
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/delete`,
+    `${API_URL}api/sms_templates/delete`,
     requestOptions
   )
     .catch((error) => {
@@ -108,7 +110,7 @@ function getpage(postData) {
   // id: 3
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/detail`,
+    `${API_URL}api/sms_templates/detail`,
     requestOptions
   )
     .catch((error) => {
@@ -137,7 +139,7 @@ function updatepage(postData) {
   // id: 6
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/update`,
+    `${API_URL}api/sms_templates/update`,
     requestOptions
   )
     .catch((error) => {
@@ -151,7 +153,6 @@ function updatepage(postData) {
 /********************** Retrieve Api for Detail view of Post from server   *****************************/
 
 function changePageStatus(postData) {
-  //console.log(postData);
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -164,7 +165,7 @@ function changePageStatus(postData) {
   // status:true
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/change-status`,
+    `${API_URL}api/sms_templates/change-status`,
     requestOptions
   )
     .catch((error) => {
@@ -188,7 +189,7 @@ function deleteMultiplePages(postData) {
   // status: true
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/delete`,
+    `${API_URL}api/sms_templates/delete`,
     requestOptions
   )
     .catch((error) => {
@@ -212,7 +213,7 @@ function changeBulkPageStatus(postData) {
   // status:true
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/sms_templates/change-status`,
+    `${API_URL}api/sms_templates/change-status`,
     requestOptions
   )
     .catch((error) => {

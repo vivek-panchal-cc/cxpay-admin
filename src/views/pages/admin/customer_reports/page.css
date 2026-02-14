@@ -1,6 +1,14 @@
-.title{
-    padding: 15px;
+.title {
+  padding: 15px;
   font-size: 30px;
   text-align: center;
   background: white;
+}
+
+.export-graph {
+  cursor: pointer;
+}
+
+.export-graph svg:focus {
+  outline: none;
 }

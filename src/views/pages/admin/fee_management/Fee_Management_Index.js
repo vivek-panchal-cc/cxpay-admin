@@ -28,12 +28,7 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { feeManagementService } from "../../../../services/admin/fee_management.service";
-import {
-  notify,
-  history,
-  _canAccess,
-  _loginUsersDetails,
-} from "../../../../_helpers/index";
+import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 const CheckBoxes = React.lazy(() =>
   import("../../../../components/admin/Checkboxes")
@@ -102,14 +97,14 @@ class Fee_Management_Index extends React.Component {
         });
 
         /*multi delete cms pages */
-        if (res.result && res.result.length > 0) {
+        if (res.result && res.result?.length > 0) {
           let pages = res.result;
           let multiaction = [];
           for (var key in pages) {
             multiaction[pages[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result && res.result.length === 0) {
+        } else if (res.result && res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -197,7 +192,7 @@ class Fee_Management_Index extends React.Component {
 
   PageStatusChangedHandler(page_id, status) {
     feeManagementService
-      .changeFeeStatus({ id: [page_id], status: status == false ? 1 : 0 })
+      .changeFeeStatus({ id: [page_id], status: status === 0 ? 1 : 0 })
       .then((res) => {
         if (res.status === "error") {
           notify.error(res.message);
@@ -210,7 +205,6 @@ class Fee_Management_Index extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    //console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }
@@ -224,6 +218,11 @@ class Fee_Management_Index extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction?.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   resetCheckedBox() {
@@ -232,7 +231,7 @@ class Fee_Management_Index extends React.Component {
 
   bulkPageStatusChangeHandler(postData) {
     feeManagementService.changeBulkFeeStatus(postData).then((res) => {
-      if (res.status === "error") {
+      if (!res.success) {
         notify.error(res.message);
       } else {
         notify.success(res.message);
@@ -245,9 +244,13 @@ class Fee_Management_Index extends React.Component {
     if (actionValue !== "") {
       let appliedActionId = [];
       let selectedIds = this.state.multiaction;
-      for (var key in selectedIds) {
-        if (selectedIds[key]) {
-          appliedActionId.push(key);
+      for (let page of this.state.page_list) {
+        // Check if the page is selected in selectedIds
+        if (selectedIds[page._id]) {
+          // Exclude pages with payment_type "Merchant Commission"
+          if (page.payment_type !== "Merchant Commission") {
+            appliedActionId.push(page._id);
+          }
         }
       }
 
@@ -276,7 +279,6 @@ class Fee_Management_Index extends React.Component {
   /****************** * Render Data To Dom ************************/
 
   render() {
-    const current_user = _loginUsersDetails();
     return (
       <>
         <CRow>
@@ -378,16 +380,18 @@ class Fee_Management_Index extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
-                        {/* <th>#</th> */}
+                        {_canAccess("fee_management", "update") && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
+                        <th>#</th>
                         <th
                           onClick={() => this.handleColumnSort("payment_type")}
                         >
@@ -494,50 +498,78 @@ class Fee_Management_Index extends React.Component {
 
                     <tbody>
                       {this.state.page_list &&
-                        this.state.page_list.length > 0 &&
-                        this.state.page_list.map((u, index) => (
+                        this.state.page_list?.length > 0 &&
+                        this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
-                            <td>
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u._id}
-                                _isChecked={this.state.multiaction[u._id]}
-                              />
-                            </td>
+                            {u.payment_type !== "Merchant Commission" &&
+                            _canAccess("fee_management", "update") ? (
+                              <td>
+                                <CheckBoxes
+                                  handleCheckChieldElement={
+                                    this.handleCheckChieldElement
+                                  }
+                                  _id={u._id}
+                                  _isChecked={this.state.multiaction[u._id]}
+                                />
+                              </td>
+                            ) : !_canAccess(
+                                "fee_management",
+                                "update"
+                              ) ? null : (
+                              <td></td>
+                            )}
 
-                            {/* <td>{index + 1}</td> */}
+                            <td>{index + 1}</td>
                             <td>{u.payment_type}</td>
                             <td>{u.fee_type}</td>
-                            <td>{u.amount}</td>
+                            <td>{parseFloat(u.amount).toFixed(2)}</td>
                             <td>{u.fee_label}</td>
 
                             <td>
-                              {current_user.id !== u._id &&
-                                _canAccess("fee_management", "update") && (
-                                  <CLink
-                                    onClick={() =>
+                              {_canAccess("fee_management", "update") &&
+                              u.payment_type !== "Merchant Commission" ? (
+                                <CLink
+                                  onClick={(e) => {
+                                    if (
+                                      u.payment_type === "Merchant Commission"
+                                    ) {
+                                      e.preventDefault(); // Prevent the handler if payment_type is MC
+                                    } else {
                                       this.PageStatusChangedHandler(
                                         u._id,
                                         u.status
-                                      )
+                                      );
                                     }
-                                  >
-                                    {u.status == false
-                                      ? "Activate"
-                                      : "Deactivate"}
-                                  </CLink>
-                                )}
-                              {current_user.id !== u._id &&
-                                _canAccess("fee_management", "update") ===
-                                  false && (
+                                  }}
+                                >
+                                  {parseFloat(u.status) === 0
+                                    ? "Activate"
+                                    : "Deactivate"}
+                                </CLink>
+                              ) : _canAccess("fee_management", "update") &&
+                                u.payment_type === "Merchant Commission" ? (
+                                <span>
+                                  {parseFloat(u.status) === 0
+                                    ? "Deactive"
+                                    : "Active"}
+                                </span>
+                              ) : (
+                                !_canAccess("fee_management", "update") && (
                                   <>
-                                    {u.status == true
-                                      ? "Activate"
-                                      : "Deactivate"}
+                                    {parseFloat(u.status) === 0
+                                      ? "Deactive"
+                                      : "Active"}
                                   </>
-                                )}
+                                )
+                              )}
+                              {/* {_canAccess("fee_management", "update") ===
+                                false && (
+                                <>
+                                  {parseFloat(u.status) === 0
+                                    ? "Deactive"
+                                    : "Active"}
+                                </>
+                              )} */}
                             </td>
                             {(_canAccess("fee_management", "update") ||
                               _canAccess("fee_management", "delete")) && (
@@ -562,21 +594,23 @@ class Fee_Management_Index extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.page_list &&
-                        this.state.page_list.length === 0 && (
-                          <tr>
-                            <td colSpan="5">No records found</td>
-                          </tr>
-                        )}
+                      {(this.state.page_list?.length === 0 ||
+                        this.state.page_list?.length === undefined) && (
+                        <tr>
+                          <td colSpan="5">No records found</td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={this.state.fields.pageNo}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {this.state.page_list?.length > 0 && (
+                    <CPagination
+                      activePage={this.state.fields.pageNo}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>

@@ -11,30 +11,13 @@ import {
   CFormGroup,
   CInput,
   CLabel,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CButton,
   CTooltip,
   CSelect,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import {
-  faEye,
-  faFileDownload,
-  faFileExport,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFileExport } from "@fortawesome/free-solid-svg-icons";
 // import { agentService } from "../../../../services/admin/agent.service";
 import { reportsService } from "../../../../services/admin/reports.service";
-import {
-  notify,
-  _canAccess,
-  history,
-  _loginUsersDetails,
-} from "../../../../_helpers/index";
+import { notify, _canAccess, history } from "../../../../_helpers/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSort,
@@ -43,8 +26,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import moment from "moment";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import InputDateRange from "components/admin/InputDateRange";
 
 class Transaction_Reports_Index extends React.Component {
   constructor(props) {
@@ -56,10 +39,21 @@ class Transaction_Reports_Index extends React.Component {
     this.openDeletePopup = this.openDeletePopup.bind(this);
 
     this.state = {
+      filters: {
+        fromDate: "",
+        toDate: "",
+      },
+      showDateFilter: false,
+      filtersChanged: false,
+      allFilters: {
+        from_date: "",
+        to_date: "",
+        status: "",
+      },
       fields: {
         page: 1,
         direction: "desc",
-        sort: "ref_id",
+        sort: "created_at",
         name: "",
         txn_type: "",
         type: "",
@@ -69,7 +63,9 @@ class Transaction_Reports_Index extends React.Component {
         from_date1: null,
         to_date1: null,
         status: "",
+        per_page: 10,
       },
+      perPage: 0,
       transactions_list: [],
       _openPopup: false,
       allCheckedbox: false,
@@ -95,7 +91,7 @@ class Transaction_Reports_Index extends React.Component {
           },
           transactions_list: res.data?.transaction,
         });
-        notify.error(res.message);
+        // notify.error(res.message);
       } else {
         this.setState({
           totalRecords: res.data.pagination.total,
@@ -103,6 +99,7 @@ class Transaction_Reports_Index extends React.Component {
             ...this.state.fields,
             totalPage: res?.data?.pagination?.last_page,
           },
+          perPage: res?.data?.pagination?.per_page,
           transactions_list: res.data.transaction,
         });
       }
@@ -141,19 +138,40 @@ class Transaction_Reports_Index extends React.Component {
     );
   }
 
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ fields: { ...this.state.fields, [name]: value } });
-  }
+  // handleChange(e) {
+  //   const { name, value } = e.target;
+  //   this.setState({ fields: { ...this.state.fields, [name]: value } });
+  // }
+
+  handleChange = (event) => {
+    const { name, value } = event.target;
+
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [name]: name === "per_page" ? parseInt(value, 10) : value, // Convert 'per_page' to an integer
+      },
+    }));
+  };
 
   handleSearch(type) {
     if (type === "reset") {
       this.setState(
         {
+          allFilters: {
+            from_date: "",
+            to_date: "",
+            status: "",
+          },
+          filters: {
+            fromDate: "",
+            toDate: "",
+          },
+          filtersChanged: false,
           fields: {
             page: 1,
             direction: "desc",
-            sort: "ref_id",
+            sort: "created_at",
             search: "",
             txn_type: "",
             type: "",
@@ -163,6 +181,7 @@ class Transaction_Reports_Index extends React.Component {
             to_date: null,
             from_date1: null,
             to_date1: null,
+            per_page: 10,
           },
         },
         () => {
@@ -170,7 +189,17 @@ class Transaction_Reports_Index extends React.Component {
         }
       );
     } else {
-      this.getTransactionList(this.state.fields);
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            page: 1,
+          },
+        },
+        () => {
+          this.getTransactionList(this.state.fields);
+        }
+      );
     }
   }
 
@@ -194,16 +223,17 @@ class Transaction_Reports_Index extends React.Component {
   };
 
   downloadFile = async () => {
-    reportsService.downloadTransactionCSV().then((res) => {
-      console.log(res);
-      //if (res.success) {
-      notify.success("Successfully send report logged in user mail");
-      //}
-    });
+    const { search, txn_type, status, from_date, to_date } = this.state.fields;
+    reportsService
+      .downloadTransactionCSV({ search, txn_type, status, from_date, to_date })
+      .then(() => {
+        //if (res.success) {
+        notify.success("Successfully send report logged in user mail");
+        //}
+      });
   };
 
   handledateChange = (date) => {
-    console.log(date);
     this.setState({
       fields: {
         ...this.state.fields,
@@ -223,9 +253,25 @@ class Transaction_Reports_Index extends React.Component {
     });
   };
 
-  render() {
-    const current_user = _loginUsersDetails();
+  handleChangeDateFilter = (params) => {
+    const [fromDate, toDate] = params;
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        from_date: fromDate?.toLocaleDateString("en-US"),
+        to_date: toDate?.toLocaleDateString("en-US"),
+      },
+      filters: {
+        fromDate: fromDate,
+        toDate: toDate,
+      },
+      page: 1,
+      showDateFilter: false,
+      filtersChanged: true,
+    });
+  };
 
+  render() {
     return (
       <>
         <CRow>
@@ -270,9 +316,11 @@ class Transaction_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Type --</option>
+                          <option value="PL">Deposit</option>
                           <option value="REQ">Request</option>
-                          <option value="PL">Deposite</option>
                           <option value="WW">Wallet to Wallet</option>
+                          <option value="AGENT TOPUP">Agent Top Up</option>
+                          <option value="MF">Manual Add Fund</option>
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -295,29 +343,79 @@ class Transaction_Reports_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Status --</option>
-                          {(this.state.fields.txn_type == "PL" ||
-                            this.state.fields.txn_type == "WW") && (
+                          {(this.state.fields.txn_type === "PL" ||
+                            this.state.fields.txn_type === "WW" ||
+                            this.state.fields.txn_type === "AGENT TOPUP") && (
                             <>
-                              <option value="PENDING">Pending</option>
-                              <option value="PAID">Paid</option>
                               <option value="FAILED">Failed</option>
+                              <option value="PAID">Paid</option>
+                              <option value="PENDING">Pending</option>
                             </>
                           )}
-                          {this.state.fields.txn_type == "REQ" && (
+                          {this.state.fields.txn_type === "REQ" && (
                             <>
-                              <option value="PENDING">Pending</option>
                               <option value="CANCELLED">Cancelled</option>
                               <option value="DECLINED">Declined</option>
-                              <option value="PAID">Paid</option>
                               <option value="FAILED">Failed</option>
+                              <option value="PAID">Paid</option>
+                              <option value="PENDING">Pending</option>
+                            </>
+                          )}
+                          {this.state.fields.txn_type === "MF" && (
+                            <>
+                              <option value="APPROVED">Approved</option>
+                              <option value="PENDING">Pending</option>
+                              <option value="REJECTED">Rejected</option>
                             </>
                           )}
                         </CSelect>
                       </CCol>
                     </CFormGroup>
                   </CCol>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
+                        <CLabel htmlFor="name">Per Page</CLabel>
+                        <CSelect
+                          id="per_page"
+                          className={""}
+                          placeholder="Per Page"
+                          name="per_page"
+                          value={this.state.fields.per_page}
+                          onChange={this.handleChange}
+                          style={{ cursor: "pointer" }}
+                          onKeyPress={(event) => {
+                            if (event.key === "Enter") {
+                              this.handleSearch("search");
+                            }
+                          }}
+                        >
+                          {/* <option value="">-- Select Type --</option> */}
+                          <option value={10}>10</option>
+                          <option value={50}>50</option>
+                          <option value={100}>100</option>
+                          <option value={200}>200</option>
+                        </CSelect>
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
                 </CRow>
                 <CRow>
+                  <CCol xl={3}>
+                    <CFormGroup row>
+                      <CCol xs="12">
+                        <CLabel htmlFor="name">Date</CLabel>
+                        <InputDateRange
+                          className=""
+                          startDate={this.state.filters.fromDate}
+                          endDate={this.state.filters.toDate}
+                          onChange={this.handleChangeDateFilter}
+                        />
+                      </CCol>
+                    </CFormGroup>
+                  </CCol>
+                </CRow>
+                {/* <CRow>
                   <CCol xl={3}>
                     <CFormGroup row>
                       <CCol xs="12">
@@ -358,7 +456,8 @@ class Transaction_Reports_Index extends React.Component {
                       </CCol>
                     </CFormGroup>
                   </CCol>
-                </CRow>
+                </CRow> */}
+
                 <CRow>
                   <CCol xl={12}>
                     <CFormGroup row>
@@ -430,7 +529,7 @@ class Transaction_Reports_Index extends React.Component {
                           </span>
                         </th>
 
-                        <th
+                        {/* <th
                           onClick={() =>
                             this.handleColumnSort("receiver_account_number")
                           }
@@ -454,7 +553,7 @@ class Transaction_Reports_Index extends React.Component {
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
-                        </th>
+                        </th> */}
 
                         <th onClick={() => this.handleColumnSort("rname")}>
                           <span className="sortCls">
@@ -475,7 +574,7 @@ class Transaction_Reports_Index extends React.Component {
                           </span>
                         </th>
 
-                        <th
+                        {/* <th
                           onClick={() =>
                             this.handleColumnSort("sender_account_number")
                           }
@@ -499,7 +598,7 @@ class Transaction_Reports_Index extends React.Component {
                                 <FontAwesomeIcon icon={faSortDown} />
                               )}
                           </span>
-                        </th>
+                        </th> */}
 
                         <th onClick={() => this.handleColumnSort("sname")}>
                           <span className="sortCls">
@@ -523,7 +622,7 @@ class Transaction_Reports_Index extends React.Component {
                         <th onClick={() => this.handleColumnSort("amount")}>
                           <span className="sortCls">
                             <span className="table-header-text-mrg">
-                              Amount
+                              Amount {`(${globalConstants.CURRENCY_SYMBOL})`}
                             </span>
                             {this.state.fields.sort !== "amount" && (
                               <FontAwesomeIcon icon={faSort} />
@@ -540,7 +639,9 @@ class Transaction_Reports_Index extends React.Component {
                         </th>
                         <th onClick={() => this.handleColumnSort("fees")}>
                           <span className="sortCls">
-                            <span className="table-header-text-mrg">Fees</span>
+                            <span className="table-header-text-mrg">
+                              Fees {`(${globalConstants.CURRENCY_SYMBOL})`}
+                            </span>
                             {this.state.fields.sort !== "fees" && (
                               <FontAwesomeIcon icon={faSort} />
                             )}
@@ -652,16 +753,25 @@ class Transaction_Reports_Index extends React.Component {
                           <tr key={index + 1}>
                             <td>
                               {this.state.fields.page >= 2
-                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                ? index +
+                                  1 +
+                                  this.state.perPage *
+                                    (this.state.fields.page - 1)
                                 : index + 1}
                             </td>
                             <td>{u.ref_id}</td>
-                            <td>{u.receiver_account_number}</td>
+                            {/* <td>{u.receiver_account_number}</td> */}
                             <td>{u.rname}</td>
-                            <td>{u.sender_account_number}</td>
+                            {/* <td>{u.sender_account_number}</td> */}
                             <td>{u.sname}</td>
-                            <td>{u.amount}</td>
-                            <td>{u.fees}</td>
+                            <td>
+                              {/* {globalConstants.CURRENCY_SYMBOL}&nbsp; */}
+                              {parseFloat(u.amount).toFixed(2)}
+                            </td>
+                            <td>
+                              {/* {globalConstants.CURRENCY_SYMBOL}&nbsp; */}
+                              {parseFloat(u.fees).toFixed(2)}
+                            </td>
                             <td>{u.type}</td>
                             <td>{u.narration}</td>
                             <td>{u.status}</td>

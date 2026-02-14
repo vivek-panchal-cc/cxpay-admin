@@ -41,6 +41,16 @@ const CMS_Page_Edit = React.lazy(() =>
 const CMS_Page_Detail = React.lazy(() =>
   import("./views/pages/admin/Cms_Pages/Cms_Pages_Detail")
 );
+const CMS_Change_Sequence = React.lazy(() =>
+  import("./views/pages/admin/Cms_Pages/Cms_Change_Sequence")
+);
+
+const Faq_Add = React.lazy(() => import("./views/pages/admin/faq/Faq_Add"));
+const Faq_Index = React.lazy(() => import("./views/pages/admin/faq/Faq_Index"));
+const Faq_Edit = React.lazy(() => import("./views/pages/admin/faq/Faq_Edit"));
+const Faq_Detail = React.lazy(() =>
+  import("./views/pages/admin/faq/Faq_Detail")
+);
 
 //Import file for Menu Management
 
@@ -105,6 +115,23 @@ const User_Myprofile = React.lazy(() =>
 const Customers_Management_Index = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Index")
 );
+
+const Customers_Management_Details_Report = React.lazy(() =>
+  import(
+    "./views/pages/admin/customers_management/Customers_Management_Details_Report"
+  )
+);
+
+const Customers_Management_Pending_Kyc_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/customers_management/Customers_Management_Pending_Kyc_Index"
+  )
+);
+const Customers_Management_Review_Needed_Kyc_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/customers_management/Customers_Management_Review_Needed_Kyc_Index"
+  )
+);
 const Customers_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/customers_management/Customers_Management_Edit")
 );
@@ -118,11 +145,37 @@ const SMS_Template_Add = React.lazy(() =>
 const SMS_Template_Edit = React.lazy(() =>
   import("./views/pages/admin/SMS_Template/SMS_Template_Edit")
 );
+const Business_Customers_Add = React.lazy(() =>
+  import("./views/pages/admin/business_customers/Business_Customer_Add")
+);
 const Business_Customers_Index = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Index")
 );
+const Business_Management_Details_Report = React.lazy(() =>
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Details_Report"
+  )
+);
+const Business_Customers_Admin_Approval_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Admin_Approval_Index"
+  )
+);
+const Business_Customers_Pending_Kyc_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Pending_Kyc_Index"
+  )
+);
+const Business_Customers_Review_Needed_Kyc_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/business_customers/Business_Customers_Review_Needed_Kyc_Index"
+  )
+);
 const Business_Customers_Edit = React.lazy(() =>
   import("./views/pages/admin/business_customers/Business_Customers_Edit")
+);
+const Business_Delete_Requests = React.lazy(() =>
+  import("./views/pages/admin/business_customers/Business_Delete_Requests")
 );
 
 // Import File Fee Management
@@ -135,6 +188,50 @@ const Fee_Management_Index = React.lazy(() =>
 );
 const Fee_Management_Edit = React.lazy(() =>
   import("./views/pages/admin/fee_management/Fee_Management_Edit")
+);
+
+const Business_Category_Index = React.lazy(() =>
+  import("./views/pages/admin/business_categories/Business_Category_Index")
+);
+
+const Saving_Jar_Index = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Index")
+);
+
+const Saving_Jar_Add = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Add")
+);
+
+const Saving_Jar_Edit = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Edit")
+);
+
+const Saving_Jar_Category_Details = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Category_Details")
+);
+
+const Saving_jar_Icon_Index = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Icon_Index")
+);
+
+const Saving_jar_Icon_Add = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Icon_Add")
+);
+
+const Saving_Jar_Temporary_Category = React.lazy(() =>
+  import("./views/pages/admin/saving_jar/Saving_Jar_Temporary_Category")
+);
+
+const System_Bank_Accounts_Index = React.lazy(() =>
+  import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Index")
+);
+
+const System_Bank_Accounts_Add = React.lazy(() =>
+  import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Add")
+);
+
+const System_Bank_Accounts_Edit = React.lazy(() =>
+  import("./views/pages/admin/system_bank_accounts/System_Bank_Accounts_Edit")
 );
 
 //Import File Settings (system options)
@@ -165,10 +262,87 @@ const Customer_Detail = React.lazy(() =>
 const Transaction_Reports_Index = React.lazy(() =>
   import("./views/pages/admin/transaction_reports/Transaction_Reports_Index")
 );
+const Merchant_Fees_Reports_Index = React.lazy(() =>
+  import(
+    "./views/pages/admin/merchant_fees_reports/Merchant_Fees_Reports_Index"
+  )
+);
+const Savings_Jar_Reports_Index = React.lazy(() =>
+  import("./views/pages/admin/savings_jar_reports/Savings_Jar_Reports_Index")
+);
+
+const Schedule_Payments_Index = React.lazy(() =>
+  import("./views/pages/admin/schedule_payments/Schedule_Payments_Index")
+);
+
+const Recurring_Payments_Index = React.lazy(() =>
+  import("./views/pages/admin/recurring_payments/Recurring_Payments_Index")
+);
+
+const Recurring_Detail = React.lazy(() =>
+  import("./views/pages/admin/recurring_payments/Recurring_Detail")
+);
+
+const Withdraw_Requests_Index = React.lazy(() =>
+  import("./views/pages/admin/withdraw_requests/Withdraw_Requests_Index")
+);
+
+const Withdraw_Detail = React.lazy(() =>
+  import("./views/pages/admin/withdraw_requests/Withdraw_Detail")
+);
+
+const Manual_Topup_Requests = React.lazy(() =>
+  import("./views/pages/admin/manual_topup_requests/Manual_Topup_Requests")
+);
+
+const Manual_Topup_Detail = React.lazy(() =>
+  import("./views/pages/admin/manual_topup_requests/Manual_Topup_Detail")
+);
+
+// Import Agent Customer
+const Agent_Customers_Index = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Customers_Index")
+);
+
+const Agent_Customers_Edit = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Customers_Edit")
+);
+
+const Agent_Customers_Add = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Customers_Add")
+);
+
+const Agent_Detail = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Detail")
+);
+
+const Agent_Delete_Requests = React.lazy(() =>
+  import("./views/pages/admin/agent_customers/Agent_Delete_Requests")
+);
+
+const Blocked_Requests = React.lazy(() =>
+  import("./components/admin/Blocked_Requests")
+);
+
+function generateRouteForModule(module_name) {
+  return {
+    path: `/admin/${module_name}/blocked_requests/:value`,
+    exact: true,
+    name: "Blocked Requests",
+    component: Blocked_Requests,
+    module_name: module_name,
+    action: "view",
+  };
+}
 
 const routes = [
   { path: "/admin", exact: true, name: "Home" },
-  { path: "/admin/dashboard", name: "Dashboard", component: Dashboard },
+  {
+    path: "/admin/dashboard",
+    exact: true,
+    name: "Dashboard",
+    component: Dashboard,
+  },
 
   // module_name and action parameter used for ACL mechanisam its required column
   {
@@ -182,7 +356,7 @@ const routes = [
   {
     path: "/admin/users/add",
     exact: true,
-    name: "Add",
+    name: "Add User",
     component: User_Add,
     module_name: "users",
     action: "create",
@@ -214,7 +388,7 @@ const routes = [
   {
     path: "/admin/user_groups/add",
     exact: true,
-    name: "Add",
+    name: "Add User Group",
     component: User_Groups_Add,
     module_name: "user_groups",
     action: "create",
@@ -240,7 +414,7 @@ const routes = [
   {
     path: "/admin/system_modules/add",
     exact: true,
-    name: "Add",
+    name: "Add System Module",
     component: System_Modules_Add,
     module_name: "system_modules",
     action: "view",
@@ -258,7 +432,7 @@ const routes = [
   {
     path: "/admin/cms_pages",
     exact: true,
-    name: "Pages ",
+    name: "CMS Pages ",
     component: CMS_Page_Index,
     module_name: "cms_pages",
     action: "view",
@@ -266,7 +440,7 @@ const routes = [
   {
     path: "/admin/cms_pages/add",
     exact: true,
-    name: "Add ",
+    name: "Add CMS Page",
     component: CMS_Page_Add,
     module_name: "cms_pages",
     action: "create",
@@ -287,6 +461,47 @@ const routes = [
     module_name: "cms_pages",
     action: "view",
   },
+  {
+    path: "/admin/cms_pages/change-sequence",
+    exact: true,
+    name: "Change Sequence",
+    component: CMS_Change_Sequence,
+    module_name: "cms_pages",
+    action: "update",
+  },
+
+  {
+    path: "/admin/faq",
+    exact: true,
+    name: "Faq",
+    component: Faq_Index,
+    module_name: "faqs",
+    action: "view",
+  },
+  {
+    path: "/admin/faq/add",
+    exact: true,
+    name: "Add Faq",
+    component: Faq_Add,
+    module_name: "faqs",
+    action: "create",
+  },
+  {
+    path: "/admin/faq/edit/:id",
+    exact: true,
+    name: "Edit",
+    component: Faq_Edit,
+    module_name: "faqs",
+    action: "update",
+  },
+  {
+    path: "/admin/faq/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Faq_Detail,
+    module_name: "faqs",
+    action: "view",
+  },
 
   //  module_name and action parameter used for ACL mechanisam its required column menu management
   {
@@ -300,7 +515,7 @@ const routes = [
   {
     path: "/admin/menu_management/add",
     exact: true,
-    name: "Add",
+    name: "Add Menu",
     component: Menu_Management_Add,
     module_name: "menu_management",
     action: "create",
@@ -352,7 +567,7 @@ const routes = [
   {
     path: "/admin/banner_management/add",
     exact: true,
-    name: "Add",
+    name: "Add Banner",
     component: Banner_Management_Add,
     module_name: "banner_management",
     action: "create",
@@ -391,7 +606,7 @@ const routes = [
   {
     path: "/admin/email_templates/add",
     exact: true,
-    name: "Add ",
+    name: "Add Email Template",
     component: Email_Template_Add,
     module_name: "email_templates",
     action: "create",
@@ -411,7 +626,23 @@ const routes = [
     exact: true,
     name: "Personal Customers",
     component: Customers_Management_Index,
-    module_name: "customers",
+    module_name: "personal_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/personal_customers/pending_kyc",
+    exact: true,
+    name: "Pending KYC",
+    component: Customers_Management_Pending_Kyc_Index,
+    module_name: "personal_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/personal_customers/review_needed_kyc",
+    exact: true,
+    name: "In Review KYC",
+    component: Customers_Management_Review_Needed_Kyc_Index,
+    module_name: "personal_customers",
     action: "view",
   },
   {
@@ -419,7 +650,7 @@ const routes = [
     exact: true,
     name: "Edit",
     component: Customers_Management_Edit,
-    module_name: "customers",
+    module_name: "personal_customers",
     action: "update",
   },
 
@@ -435,7 +666,7 @@ const routes = [
   {
     path: "/admin/sms_templates/add",
     exact: true,
-    name: "Add ",
+    name: "Add SMS Template",
     component: SMS_Template_Add,
     module_name: "sms_templates",
     action: "create",
@@ -449,6 +680,14 @@ const routes = [
     action: "update",
   },
   {
+    path: "/admin/business_customers/add",
+    exact: true,
+    name: "Add Business Customer",
+    component: Business_Customers_Add,
+    module_name: "business_customers",
+    action: "create",
+  },
+  {
     path: "/admin/business_customers",
     exact: true,
     name: "Business Customers",
@@ -457,11 +696,137 @@ const routes = [
     action: "view",
   },
   {
+    path: "/admin/business_customers/admin_approval",
+    exact: true,
+    name: "Pending Merchant",
+    component: Business_Customers_Admin_Approval_Index,
+    module_name: "business_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/business_customers/pending_kyc",
+    exact: true,
+    name: "Pending KYC",
+    component: Business_Customers_Pending_Kyc_Index,
+    module_name: "business_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/business_customers/review_needed_kyc",
+    exact: true,
+    name: "In Review KYC",
+    component: Business_Customers_Review_Needed_Kyc_Index,
+    module_name: "business_customers",
+    action: "view",
+  },
+  {
     path: "/admin/business_customers/edit/:id",
     exact: true,
     name: "Edit",
     component: Business_Customers_Edit,
-    module_name: "customers",
+    module_name: "business_customers",
+    action: "update",
+  },
+  {
+    path: "/admin/business_customers/delete_requests",
+    exact: true,
+    name: "Delete Requests",
+    component: Business_Delete_Requests,
+    module_name: "business_customers",
+    action: "view",
+  },
+
+  // Business Category
+  {
+    path: "/admin/business_category",
+    exact: true,
+    name: "Business Categories",
+    component: Business_Category_Index,
+    module_name: "business_category",
+    action: "view",
+  },
+
+  // Sub-accountJar
+  {
+    path: "/admin/saving_jar",
+    exact: true,
+    name: "Sub-account Categories",
+    component: Saving_Jar_Index,
+    module_name: "saving_jar",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jar/add",
+    exact: true,
+    name: "Add Sub-account Category",
+    component: Saving_Jar_Add,
+    module_name: "saving_jar",
+    action: "create",
+  },
+  {
+    path: "/admin/saving_jar/edit/:id",
+    exact: true,
+    name: "Update Sub-account Category",
+    component: Saving_Jar_Edit,
+    module_name: "saving_jar",
+    action: "update",
+  },
+  {
+    path: "/admin/saving_jar/:id/:typeId",
+    exact: true,
+    name: "Details",
+    component: Saving_Jar_Category_Details,
+    module_name: "saving_jar",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jar_icon",
+    exact: true,
+    name: "Sub-account Icons",
+    component: Saving_jar_Icon_Index,
+    module_name: "saving_jar",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jar_icon/add",
+    exact: true,
+    name: "Add Sub-account Icon",
+    component: Saving_jar_Icon_Add,
+    module_name: "saving_jar",
+    action: "create",
+  },
+  {
+    path: "/admin/saving_jar/temporary_category",
+    exact: true,
+    name: "Temporary Categories List",
+    component: Saving_Jar_Temporary_Category,
+    module_name: "saving_jar",
+    action: "update",
+  },
+
+  // System Bank Accounts
+  {
+    path: "/admin/system_bank_accounts",
+    exact: true,
+    name: "System Bank Accounts",
+    component: System_Bank_Accounts_Index,
+    module_name: "system_bank_accounts",
+    action: "view",
+  },
+  {
+    path: "/admin/system_bank_accounts/add",
+    exact: true,
+    name: "Add System Bank Account",
+    component: System_Bank_Accounts_Add,
+    module_name: "system_bank_accounts",
+    action: "create",
+  },
+  {
+    path: "/admin/system_bank_accounts/edit/:id",
+    exact: true,
+    name: "Update System Bank Account",
+    component: System_Bank_Accounts_Edit,
+    module_name: "system_bank_accounts",
     action: "update",
   },
 
@@ -477,7 +842,7 @@ const routes = [
   {
     path: "/admin/fee_management/add",
     exact: true,
-    name: "Add",
+    name: "Add Fee",
     component: Fee_Management_Add,
     module_name: "fee_management",
     action: "create",
@@ -512,7 +877,7 @@ const routes = [
   {
     path: "/admin/notifications/add",
     exact: true,
-    name: "Add",
+    name: "Add Push Notification",
     component: Push_Notification_Add,
     module_name: "notifications",
     action: "create",
@@ -525,11 +890,35 @@ const routes = [
     module_name: "notifications",
     action: "update",
   },
+  {
+    path: "/admin/schedule_payments",
+    exact: true,
+    name: "Schedule Payments",
+    component: Schedule_Payments_Index,
+    module_name: "schedule_payments",
+    action: "view",
+  },
+  {
+    path: "/admin/recurring_payments",
+    exact: true,
+    name: "Recurring Payments",
+    component: Recurring_Payments_Index,
+    module_name: "recurring_payments",
+    action: "view",
+  },
+  {
+    path: "/admin/recurring_payments/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Recurring_Detail,
+    module_name: "recurring_payments",
+    action: "view",
+  },
   // report
   {
     path: "/admin/customer_reports",
     exact: true,
-    name: "Customer Reports",
+    name: "Customers Report",
     component: Customer_Reports_Index,
     module_name: "customer_reports",
     action: "view",
@@ -545,9 +934,127 @@ const routes = [
   {
     path: "/admin/transaction_reports",
     exact: true,
-    name: "Transaction Reports",
+    name: "Transactions Report",
     component: Transaction_Reports_Index,
     module_name: "transaction_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/merchant_fees_reports",
+    exact: true,
+    name: "Merchant Fees Report",
+    component: Merchant_Fees_Reports_Index,
+    module_name: "merchant_fees_reports",
+    action: "view",
+  },
+  {
+    path: "/admin/saving_jars_reports",
+    exact: true,
+    name: "Sub-accounts Report",
+    component: Savings_Jar_Reports_Index,
+    module_name: "saving_jars_reports",
+    action: "view",
+  },
+  //withdraw requests
+  {
+    path: "/admin/withdraw_requests",
+    exact: true,
+    name: "Withdraw Requests",
+    component: Withdraw_Requests_Index,
+    module_name: "withdraw_requests",
+    action: "view",
+  },
+  {
+    path: "/admin/withdraw_requests/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Withdraw_Detail,
+    module_name: "withdraw_requests",
+    action: "view",
+  },
+  // Manual Top Up Requests
+  {
+    path: "/admin/manual_requests",
+    exact: true,
+    name: "Manual Top Up Requests",
+    component: Manual_Topup_Requests,
+    module_name: "manual_requests",
+    action: "view",
+  },
+  {
+    path: "/admin/manual_requests/detailview/:id",
+    exact: true,
+    name: "DetailView",
+    component: Manual_Topup_Detail,
+    module_name: "manual_requests",
+    action: "view",
+  },
+  // module_name and action parameter used for ACL mechanisam its required column
+  {
+    path: "/admin/agent_customers",
+    exact: true,
+    name: "Agent Customers",
+    component: Agent_Customers_Index,
+    module_name: "agent_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/agent_customers/edit/:id",
+    exact: true,
+    name: "  Edit",
+    component: Agent_Customers_Edit,
+    module_name: "agent_customers",
+    action: "update",
+  },
+  {
+    path: "/admin/agent_customers/add",
+    exact: true,
+    name: "Add Agent",
+    component: Agent_Customers_Add,
+    module_name: "agent_customers",
+    action: "create",
+  },
+  {
+    path: "/admin/agent_customers/detailview/:id",
+    exact: true,
+    name: "Detail View",
+    component: Agent_Detail,
+    module_name: "agent_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/agent_customers/delete_requests",
+    exact: true,
+    name: "Delete Requests",
+    component: Agent_Delete_Requests,
+    module_name: "agent_customers",
+    action: "view",
+  },
+  // {
+  //   path: "/admin/blocked_requests/:module/:value",
+  //   exact: true,
+  //   name: "Blocked Requests",
+  //   component: Blocked_Requests,
+  //   action: "view",
+  // },
+  generateRouteForModule("agent_customers"),
+  generateRouteForModule("business_customers"),
+  generateRouteForModule("personal_customers"),
+
+  {
+    path: "/admin/personal_customers/:account_number/:typeId",
+    exact: true,
+    name: "Reports",
+    component: Customers_Management_Details_Report,
+    module_name: "personal_customers",
+    action: "view",
+  },
+  {
+    path: "/admin/business_customers/:account_number/:typeId",
+    exact: true,
+    name: "Reports",
+    component: Business_Management_Details_Report,
+    module_name: "business_customers",
     action: "view",
   },
 ];

@@ -2,6 +2,8 @@ import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 /*************** Export Functions Defined For Services ******************************/
 
 export const feeManagementService = {
@@ -16,7 +18,7 @@ export const feeManagementService = {
 
 /*********************  Get List of All Pages from Database By - vivek bisht  *****************************/
 
-function getFeeStructures(postData) {
+async function getFeeStructures(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -24,17 +26,25 @@ function getFeeStructures(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/fees/index`, requestOptions)
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(true);
-    })
-    .then(handleResponse);
+  let /*************** Export Functions Defined For Services ******************************/
+    response;
+  try {
+    /*************** Export Functions Defined For Services ******************************/
+    response = await fetch(`${API_URL}api/fees/index`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    const /*************** Export Functions Defined For Services ******************************/
+      response = undefined;
+  }
+  return handleResponse(
+    /*************** Export Functions Defined For Services ******************************/
+    response
+  );
 }
 
 /**************************  For creating Page Transfer Data to backend By -Vivek Bisht *********************/
 
-function createFeeStructure(postData) {
+async function createFeeStructure(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -49,17 +59,25 @@ function createFeeStructure(postData) {
   // fee_label:Personal fee
   // status:0
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/fees/add`, requestOptions)
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(true);
-    })
-    .then(handleResponse);
+  let /*************** Export Functions Defined For Services ******************************/
+    response;
+  try {
+    /*************** Export Functions Defined For Services ******************************/
+    response = await fetch(`${API_URL}api/fees/add`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    const /*************** Export Functions Defined For Services ******************************/
+      response = undefined;
+  }
+  return handleResponse(
+    /*************** Export Functions Defined For Services ******************************/
+    response
+  );
 }
 
 /****************** Retrieve Single Record From Server ************************/
 
-function getFeeDetail(postData) {
+async function getFeeDetail(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -70,21 +88,25 @@ function getFeeDetail(postData) {
   // http://localhost/cxpay-admin-api/public/api/fees/detail
   // id: 3
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/detail`,
-    requestOptions
-  )
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let /*************** Export Functions Defined For Services ******************************/
+    response;
+  try {
+    /*************** Export Functions Defined For Services ******************************/
+    response = await fetch(`${API_URL}api/fees/detail`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    /*************** Export Functions Defined For Services ******************************/
+    response = await Promise.reject();
+  }
+  return handleResponse(
+    /*************** Export Functions Defined For Services ******************************/
+    response
+  );
 }
 
 /***********************  Retrive Api For Update from server  *****************************/
 
-function updateFeeStructure(postData) {
+async function updateFeeStructure(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -100,22 +122,25 @@ function updateFeeStructure(postData) {
   // status:0
   // id: 6
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/update`,
-    requestOptions
-  )
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let /*************** Export Functions Defined For Services ******************************/
+    response;
+  try {
+    /*************** Export Functions Defined For Services ******************************/
+    response = await fetch(`${API_URL}api/fees/update`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    /*************** Export Functions Defined For Services ******************************/
+    response = await Promise.reject();
+  }
+  return handleResponse(
+    /*************** Export Functions Defined For Services ******************************/
+    response
+  );
 }
 
 /********************** Retrieve Api for Detail view of Post from server   *****************************/
 
-function changeFeeStatus(postData) {
-  //console.log(postData);
+async function changeFeeStatus(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -127,19 +152,23 @@ function changeFeeStatus(postData) {
   // id[0]:3
   // status:true
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/change-status`,
-    requestOptions
-  )
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let /*************** Export Functions Defined For Services ******************************/
+    response;
+  try {
+    /*************** Export Functions Defined For Services ******************************/
+    response = await fetch(`${API_URL}api/fees/change-status`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    /*************** Export Functions Defined For Services ******************************/
+    response = await Promise.reject();
+  }
+  return handleResponse(
+    /*************** Export Functions Defined For Services ******************************/
+    response
+  );
 }
 
-function deleteMultiplePages(postData) {
+async function deleteMultiplePages(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -151,19 +180,26 @@ function deleteMultiplePages(postData) {
   // id[0]: 5
   // status: true
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/fee_management/delete`,
-    requestOptions
-  )
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let /*************** Export Functions Defined For Services ******************************/
+    response;
+  try {
+    /*************** Export Functions Defined For Services ******************************/
+    response = await fetch(
+      `${API_URL}api/fee_management/delete`,
+      requestOptions
+    );
+  } catch (error) {
+    notify.error("Something went wrong");
+    /*************** Export Functions Defined For Services ******************************/
+    response = await Promise.reject();
+  }
+  return handleResponse(
+    /*************** Export Functions Defined For Services ******************************/
+    response
+  );
 }
 
-function changeBulkFeeStatus(postData) {
+async function changeBulkFeeStatus(postData) {
   setLoading(true);
   const requestOptions = {
     method: "POST",
@@ -175,14 +211,18 @@ function changeBulkFeeStatus(postData) {
   // id[0]:3
   // status:true
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/fees/change-status`,
-    requestOptions
-  )
-    .catch((error) => {
-      notify.error("Something went wrong");
-      setLoading(false);
-      return Promise.reject();
-    })
-    .then(handleResponse);
+  let /*************** Export Functions Defined For Services ******************************/
+    response;
+  try {
+    /*************** Export Functions Defined For Services ******************************/
+    response = await fetch(`${API_URL}api/fees/change-status`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    /*************** Export Functions Defined For Services ******************************/
+    response = await Promise.reject();
+  }
+  return handleResponse(
+    /*************** Export Functions Defined For Services ******************************/
+    response
+  );
 }

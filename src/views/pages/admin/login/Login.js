@@ -41,6 +41,7 @@ class Login extends React.Component {
     this.setState({ submitted: true });
     const { email, password } = this.state;
     const { dispatch } = this.props;
+    dispatch({ type: "ALERT_CLEAR" });
     if (email && password) {
       dispatch(userActions.login(email, password));
     }
@@ -66,7 +67,7 @@ class Login extends React.Component {
                         </div>
                       )}
                       <CInputGroup
-                        className="mb-3"
+                        // className="mb-3"
                         className={
                           "form-group" +
                           (submitted && !email ? " has-error" : "")
@@ -92,7 +93,7 @@ class Login extends React.Component {
                         </div>
                       )}
                       <CInputGroup
-                        className="mb-4"
+                        // className="mb-4"
                         className={
                           "form-group" +
                           (submitted && !password ? " has-error" : "")
@@ -123,6 +124,10 @@ class Login extends React.Component {
                             color="primary"
                             className="px-4"
                             type="submit"
+                            style={{
+                              backgroundColor: "#2a81c5",
+                              borderColor: "#2a81c5",
+                            }}
                           >
                             Login
                           </CButton>
@@ -143,8 +148,8 @@ class Login extends React.Component {
                   </CCardBody>
                 </CCard>
                 <CCard
-                  className="text-white bg-primary py-5 d-md-down-none"
-                  style={{ width: "44%" }}
+                  className="text-white py-5 d-md-down-none"
+                  style={{ width: "44%", backgroundColor: "#616666" }}
                 >
                   <CCardBody className="text-center">
                     <div>
@@ -156,6 +161,7 @@ class Login extends React.Component {
                           }
                           alt="Logo"
                           className="cc-logo-styles-mobile"
+                          style={{ maxWidth: "70%" }}
                         />
                       </p>
                     </div>

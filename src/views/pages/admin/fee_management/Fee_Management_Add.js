@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import slugify from "react-slugify";
 import { _canAccess } from "../../../../_helpers/index";
 
 import {
@@ -27,9 +26,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faBan, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import "react-dropzone-uploader/dist/styles.css";
-
 import "./Draft.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
 class Fee_Management_Add extends Component {
   constructor(props) {
     super(props);
@@ -72,14 +71,66 @@ class Fee_Management_Add extends Component {
     });
   };
 
-  preventMinusVal(e) {}
+  preventMinusVal(e) {
+    // Check if the pressed key is the minus key (key code 45)
+    if (e.keyCode === 45 || e.which === 45) {
+      e.preventDefault(); // Prevent the minus key from being entered
+    }
+  }
   // Method For Form Field
+  // handleChange(event) {
+  //   const target = event.target;
+  //   const value = target.type === "checkbox" ? target.checked : target.value;
+  //   const name = target.name;
+  //   this.setState(
+  //     {
+  //       [name]: value,
+  //     },
+  //     () => {
+  //       if (name === "payment_type" && value === "MC") {
+  //         this.setState({ status: true });
+  //       }
+  //     }
+  //   );
+  // }
+
   handleChange(event) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
-      [name]: value,
+    const { name, type, checked, value } = event.target;
+    const newValue = type === "checkbox" ? checked : value;
+
+    this.setState((prevState) => {
+      // Prevent status change if payment_type is MC
+      if (name === "status" && prevState.payment_type === "MC") {
+        return null; // Ignore the change
+      }
+
+      // Automatically enable status when selecting MC
+      if (name === "payment_type" && newValue === "MC") {
+        return { payment_type: newValue, status: true };
+      }
+
+      if (name === "amount") {
+        // Remove any non-digit characters
+        const sanitizedValue = newValue.replace(/[^0-9.]/g, "");
+
+        // Ensure only one decimal point is allowed
+        const decimalCount = (sanitizedValue.match(/\./g) || [])?.length;
+
+        if (decimalCount > 1) {
+          return; // Prevent multiple decimal points from being entered
+        }
+
+        const [wholeNumber, decimal] = sanitizedValue.split(".");
+
+        // Take value like ######.## (max 6 wholeNumber, max 2 decimal)
+        const value = decimalCount
+          ? `${wholeNumber?.substring(0, 6)}.${decimal?.substring(0, 2)}`
+          : wholeNumber?.substring(0, 6);
+
+        return { amount: value };
+      }
+
+      return { [name]: newValue };
     });
   }
 
@@ -100,7 +151,7 @@ class Fee_Management_Add extends Component {
 
   checkValidation(event) {
     if (this.validator.allValid()) {
-      const slug = slugify(this.state.payment_type, { delimiter: "-" });
+      // const slug = slugify(this.state.payment_type, { delimiter: "-" });
 
       feeManagementService
         .createFeeStructure({
@@ -108,7 +159,7 @@ class Fee_Management_Add extends Component {
           fee_type: this.state.fee_type,
           amount: this.state.amount,
           fee_label: this.state.fee_label,
-          status: this.state.status == false ? 0 : 1,
+          status: this.state.status === false ? 0 : 1,
         })
         .then((res) => {
           if (res.status === "error") {
@@ -124,7 +175,7 @@ class Fee_Management_Add extends Component {
     }
   }
   addDefaultSrc(ev) {
-    ev.target.src = `${process.env.REACT_APP_API_URL + "uploads/default.jpg"}`;
+    ev.target.src = `${API_URL + "uploads/default.jpg"}`;
   }
   // Rendering Html To Dom
   render() {
@@ -159,7 +210,7 @@ class Fee_Management_Add extends Component {
                 -- Payment Types --{" "}
               </option>
               <option key="PL" value="PL">
-                Deposit
+                Top Up with card
               </option>
               ;
               <option key="WW" value="WW">
@@ -167,8 +218,15 @@ class Fee_Management_Add extends Component {
               </option>
               ;
               <option key="WD" value="WD">
-                Withdrawal
+                Refund to card
               </option>
+              <option key="MF" value="MF">
+                Bank transfer
+              </option>
+              ;
+              {/* <option key="MC" value="MC">
+                Merchant Commission
+              </option> */}
               ;
             </CSelect>
             <CFormText className="help-block">
@@ -211,6 +269,24 @@ class Fee_Management_Add extends Component {
           <CFormGroup>
             <CLabel htmlFor="nf-name">Amount</CLabel>
             <CInput
+              type="text"
+              id="amount"
+              name="amount"
+              placeholder="Enter Amount"
+              value={this.state.amount}
+              onChange={this.handleChange}
+            />
+            <CFormText className="help-block">
+              {this.validator.message(
+                "amount",
+                this.state.amount,
+                "required",
+                {
+                  className: "text-danger", 
+                }
+              )}
+            </CFormText>
+            {/* <CInput
               type="number"
               min="0"
               id="amount"
@@ -229,7 +305,7 @@ class Fee_Management_Add extends Component {
                   className: "text-danger",
                 }
               )}
-            </CFormText>
+            </CFormText> */}
           </CFormGroup>
           <CFormGroup>
             <CLabel htmlFor="nf-name">Fee Label</CLabel>
@@ -254,7 +330,7 @@ class Fee_Management_Add extends Component {
           </CFormGroup>
 
           <CFormGroup row>
-            <CCol tag="label" sm="1" className="col-form-label">
+            <CCol tag="label" md="1">
               Status
             </CCol>
             <CCol sm="11">
@@ -263,8 +339,9 @@ class Fee_Management_Add extends Component {
                   name="status"
                   className="mr-1"
                   color="primary"
-                  defaultChecked={this.state.status}
-                  onClick={this.handleChange}
+                  checked={this.state.status}
+                  onChange={this.handleChange}
+                  disabled={this.state.payment_type === "MC"}
                 />
               </CFormGroup>
             </CCol>

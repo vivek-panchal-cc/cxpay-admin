@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 import {
   CCard,
@@ -12,94 +12,168 @@ import {
   CFormText,
   CCardFooter,
   CButton,
-  CLink
-} from '@coreui/react'
-import SimpleReactValidator from 'simple-react-validator';
-import { userService } from '../../../../services/admin/user.service'
-import { notify, history } from '../../../../_helpers/index';
-import $ from 'jquery';
-import { connect } from 'react-redux';
-import { userConstants } from '../../../../constants/admin';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBan,faSave } from '@fortawesome/free-solid-svg-icons'
-
+  CLink,
+  CInputGroup,
+  CInputGroupPrepend,
+  CInputGroupText,
+} from "@coreui/react";
+import SimpleReactValidator from "simple-react-validator";
+import { userService } from "../../../../services/admin/user.service";
+import { notify, history } from "../../../../_helpers/index";
+import $ from "jquery";
+import { connect } from "react-redux";
+import { userConstants } from "../../../../constants/admin";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBan,
+  faSave,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 
 class User_Myprofile extends React.Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
       fields: {
-        name: '',
-        email:'',
-        password:'',
-        confirm_password:''
-      }
-    }
+        name: "",
+        email: "",
+        current_password: "",
+        password: "",
+        confirm_password: "",
+      },
+      showCurrentPassword: false,
+      showPassword: false,
+      showConfirmPassword: false,
+    };
     this.handleChange = this.handleChange.bind(this);
     this.validator = new SimpleReactValidator({ autoForceUpdate: this });
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleCurrentPasswordVisibility =
+      this.toggleCurrentPasswordVisibility.bind(this);
+    this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
+    this.toggleConfirmPasswordVisibility =
+      this.toggleConfirmPasswordVisibility.bind(this);
   }
 
-  componentDidMount() {    
-     
-    userService.getMyProfile().then(res => {
+  componentDidMount() {
+    userService.getMyProfile().then((res) => {
       if (res.status === false) {
         notify.error(res.message);
-        history.push('/admin/my-profile');
+        history.push("/admin/my-profile");
       } else {
         if (res.data == null) {
-          notify.error('Something Went Wrong!');
-          history.push('/admin/my-profile');
+          notify.error("Something Went Wrong!");
+          history.push("/admin/my-profile");
         } else {
-          this.setState({  fields: {...this.state.fields, name: res.data.name } });
-          this.setState({  fields: {...this.state.fields, email: res.data.email } });
+          this.setState({
+            fields: {
+              ...this.state.fields,
+              name: res.data.name,
+              email: res.data.email,
+            },
+          });
         }
       }
-    }); 
+    });
   }
 
   handleChange(e) {
     const { name, value } = e.target;
-    if (name === 'status') {
-      var fstatus = (value === 'true') ? false : true;
+    if (name === "status") {
+      var fstatus = value === "true" ? false : true;
       this.setState({ fields: { ...this.state.fields, [name]: fstatus } });
     } else {
-      this.setState({ fields: { ...this.state.fields, [name]: value } });
+      this.setState({ fields: { ...this.state.fields, [name]: value } }, () => {
+        // Clear current_password validation error if password is cleared
+        if (name === "password" && value.length === 0) {
+          $(".current_password").html("");
+        }
+        if (
+          (name === "password" && value.length > 0) ||
+          (name === "current_password" && value.length === 0)
+        ) {
+          $(".password").html("");
+        }
+
+        // Also clear confirm_password error if confirm_password no longer matches
+        if (name === "confirm_password" || name === "password") {
+          if (
+            this.state.fields.confirm_password === this.state.fields.password
+          ) {
+            $(".confirm_password").html("");
+          }
+        }
+      });
     }
   }
 
   handleFieldChange = (inputFieldId, inputFieldValue) => {
-    this.setState({ fields: { ...this.state.fields, [inputFieldId]: inputFieldValue } });
-  }
+    this.setState({
+      fields: { ...this.state.fields, [inputFieldId]: inputFieldValue },
+    });
+  };
 
   handleSubmit() {
     if (this.validator.allValid()) {
+      const strongPasswordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+      if (
+        this.state.fields.password &&
+        !strongPasswordRegex.test(this.state.fields.password)
+      ) {
+        $(".password").html(
+          '<div class="text-danger">Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</div>'
+        );
+        return;
+      }
       if (this.state.fields.password !== this.state.fields.confirm_password) {
-        $('.confirm_password').html('<div class="text-danger">Password and confirm password must be same.</div>');
+        $(".confirm_password").html(
+          '<div class="text-danger">Password and confirm password must be same.</div>'
+        );
+      } else if (
+        this.state.fields.password &&
+        !this.state.fields.current_password
+      ) {
+        $(".current_password").html(
+          '<div class="text-danger">Current password is required.</div>'
+        );
+      } else if (
+        this.state.fields.current_password &&
+        !this.state.fields.password
+      ) {
+        $(".password").html(
+          '<div class="text-danger">Password is required.</div>'
+        );
       } else {
-        $('.confirm_password').html('');
-        userService.updateMyProfile(this.state.fields).then(res => {
-          
-          if (res.status === false) {
+        $(".confirm_password").html("");
+        $(".current_password").html("");
+        $(".password").html("");
+        userService.updateMyProfile(this.state.fields).then((res) => {
+          if (!res.success) {
             notify.error(res.message);
           } else {
-            let _user = JSON.parse(localStorage.getItem('user'));
+            let _user = JSON.parse(localStorage.getItem("user"));
             _user.name = this.state.fields.name;
-            localStorage.setItem('user', JSON.stringify(_user));
-            
+            localStorage.setItem("user", JSON.stringify(_user));
+
             let user = this.props.user;
             const { dispatch } = this.props;
             user.name = this.state.fields.name;
-            dispatch({ type: userConstants.MYPROFILE_CHANGE,user });
+            dispatch({ type: userConstants.MYPROFILE_CHANGE, user });
             notify.success(res.message);
-            history.push('/admin/my-profile');
+            history.push("/admin/my-profile");
           }
 
-          this.setState({ fields: { ...this.state.fields, ['password']: '' } });
-          this.setState({ fields: { ...this.state.fields, ['confirm_password']: '' } });
-
+          this.setState({
+            fields: {
+              ...this.state.fields,
+              password: "",
+              confirm_password: "",
+              current_password: "",
+            },
+          });
         });
       }
     } else {
@@ -107,61 +181,171 @@ class User_Myprofile extends React.Component {
     }
   }
 
-  render() {
-
-    return (<>
-      <CRow>
-        <CCol xs="12">
-          <CCard>
-            <CCardHeader>
-              My Profile
-            </CCardHeader>
-            <CCardBody>
-              <CFormGroup>
-                <CLabel htmlFor="nf-name">Name</CLabel>
-                <CInput type="text" id="name" name="name" placeholder="Enter Name " autoComplete="name" value={this.state.fields.name} onChange={this.handleChange} />
-                <CFormText className="help-block">{this.validator.message('name', this.state.fields.name, 'required', { className: 'text-danger' })}</CFormText>
-              </CFormGroup>
-              <CFormGroup>
-                <CLabel htmlFor="nf-email">Email</CLabel>
-                <CInput type="email" id="email" name="email" placeholder="Enter Email " autoComplete="email" value={this.state.fields.email} onChange={this.handleChange} disabled={true}/>
-              </CFormGroup>
-              <CFormGroup>
-                <CLabel htmlFor="nf-email">Password</CLabel>
-                <CInput type="password" id="password" name="password" placeholder="Enter Password " autoComplete="false" value={this.state.fields.password} onChange={this.handleChange} />
-                <CFormText className="help-block"></CFormText>
-              </CFormGroup>
-
-              <CFormGroup>
-                <CLabel htmlFor="nf-email">Confirm Password</CLabel>
-                <CInput type="password" id="confirm_password" name="confirm_password" placeholder="Enter Confirm Password " autoComplete="false" value={this.state.fields.confirm_password} onChange={this.handleChange} />
-                <CFormText className="help-block confirm_password"></CFormText>
-              </CFormGroup>
-            </CCardBody>
-            <CCardFooter>
-              <CButton type="button" size="sm" color="primary" onClick={this.handleSubmit}><FontAwesomeIcon icon={faSave} className='mr-1'/> Submit</CButton>
-              &nbsp;
-              <CLink
-                className="btn btn-danger btn-sm"
-                aria-current="page"
-                to="/admin/dashboard"
-              ><FontAwesomeIcon icon={faBan} className='mr-1'/>Cancel
-              </CLink>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-      </CRow>
-    </>);
+  toggleCurrentPasswordVisibility() {
+    this.setState({ showCurrentPassword: !this.state.showCurrentPassword });
   }
+  togglePasswordVisibility() {
+    this.setState({ showPassword: !this.state.showPassword });
+  }
+  toggleConfirmPasswordVisibility() {
+    this.setState({ showConfirmPassword: !this.state.showConfirmPassword });
+  }
+  render() {
+    return (
+      <>
+        <CRow>
+          <CCol xs="12">
+            <CCard>
+              <CCardHeader>My Profile</CCardHeader>
+              <CCardBody>
+                <CFormGroup>
+                  <CLabel htmlFor="nf-name">Name</CLabel>
+                  <CInput
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter Name "
+                    autoComplete="name"
+                    value={this.state.fields.name}
+                    onChange={this.handleChange}
+                  />
+                  <CFormText className="help-block">
+                    {this.validator.message(
+                      "name",
+                      this.state.fields.name,
+                      "required",
+                      { className: "text-danger" }
+                    )}
+                  </CFormText>
+                </CFormGroup>
+                <CFormGroup>
+                  <CLabel htmlFor="nf-email">Email</CLabel>
+                  <CInput
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Email"
+                    autoComplete="email"
+                    value={this.state.fields.email}
+                    // onChange={this.handleChange}
+                    // disabled={true}
+                    readOnly
+                  />
+                </CFormGroup>
+                <CFormGroup>
+                  <CLabel htmlFor="nf-email">Current Password</CLabel>
+                  <CInputGroup>
+                    <CInput
+                      type={
+                        this.state.showCurrentPassword ? "text" : "password"
+                      }
+                      id="current_password"
+                      name="current_password"
+                      placeholder="Enter Current Password"
+                      autoComplete="new-password"
+                      value={this.state.fields.current_password}
+                      onChange={this.handleChange}
+                    />
+                    <CInputGroupPrepend className="cursor-pointer">
+                      <CInputGroupText
+                        onClick={this.toggleCurrentPasswordVisibility}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            this.state.showCurrentPassword ? faEyeSlash : faEye
+                          }
+                        />
+                      </CInputGroupText>
+                    </CInputGroupPrepend>
+                  </CInputGroup>
+                  <CFormText className="help-block current_password"></CFormText>
+                </CFormGroup>
 
+                <CFormGroup>
+                  <CLabel htmlFor="nf-email">Password</CLabel>
+                  <CInputGroup>
+                    <CInput
+                      type={this.state.showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      placeholder="Enter Password "
+                      autoComplete="new-password"
+                      value={this.state.fields.password}
+                      onChange={this.handleChange}
+                    />
+                    <CInputGroupPrepend className="cursor-pointer">
+                      <CInputGroupText onClick={this.togglePasswordVisibility}>
+                        <FontAwesomeIcon
+                          icon={this.state.showPassword ? faEyeSlash : faEye}
+                        />
+                      </CInputGroupText>
+                    </CInputGroupPrepend>
+                  </CInputGroup>
+                  <CFormText className="help-block password"></CFormText>
+                </CFormGroup>
+
+                <CFormGroup>
+                  <CLabel htmlFor="nf-email">Confirm Password</CLabel>
+                  <CInputGroup>
+                    <CInput
+                      type={
+                        this.state.showConfirmPassword ? "text" : "password"
+                      }
+                      id="confirm_password"
+                      name="confirm_password"
+                      placeholder="Enter Confirm Password "
+                      autoComplete="false"
+                      value={this.state.fields.confirm_password}
+                      onChange={this.handleChange}
+                    />
+                    <CInputGroupPrepend className="cursor-pointer">
+                      <CInputGroupText
+                        onClick={this.toggleConfirmPasswordVisibility}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            this.state.showConfirmPassword ? faEyeSlash : faEye
+                          }
+                        />
+                      </CInputGroupText>
+                    </CInputGroupPrepend>
+                  </CInputGroup>
+                  <CFormText className="help-block confirm_password"></CFormText>
+                </CFormGroup>
+              </CCardBody>
+              <CCardFooter>
+                <CButton
+                  type="button"
+                  size="sm"
+                  color="primary"
+                  onClick={this.handleSubmit}
+                >
+                  <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
+                </CButton>
+                &nbsp;
+                <CLink
+                  className="btn btn-danger btn-sm"
+                  aria-current="page"
+                  to="/admin/dashboard"
+                >
+                  <FontAwesomeIcon icon={faBan} className="mr-1" />
+                  Cancel
+                </CLink>
+              </CCardFooter>
+            </CCard>
+          </CCol>
+        </CRow>
+      </>
+    );
+  }
 }
 
 function mapStateToProps(state) {
   let user = state.authentication.user;
   return {
-      user:user
+    user: user,
   };
 }
 
 // export default User_Myprofile;
-export  default connect(mapStateToProps)(User_Myprofile);
+export default connect(mapStateToProps)(User_Myprofile);

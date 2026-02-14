@@ -37,6 +37,7 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { globalConstants } from "../../../../constants/admin/global.constants";
+import IconResetPassword from "assets/icons/IconResetPassword";
 const UserGroups = React.lazy(() =>
   import("../../../../components/admin/UserGroups")
 );
@@ -67,6 +68,7 @@ class User_Index extends React.Component {
       _openPopup: false,
       multiaction: [],
       allCheckedbox: false,
+      _openResetPasswordPopup: false,
     };
 
     if (this.props._renderAccess === false) {
@@ -132,8 +134,39 @@ class User_Index extends React.Component {
         }
       );
     } else {
-      this.props.getUsersList(this.state);
+      this.setState(
+        {
+          pageNo: 1,
+        },
+        () => {
+          this.props.getUsersList(this.state);
+        }
+      );
     }
+  }
+
+  openResetPasswordPopup(email) {
+    this.setState({
+      _openResetPasswordPopup: true,
+      resetPasswordUserEmail: email,
+    });
+  }
+  resetPasswordLink() {
+    this.setState({
+      _openResetPasswordPopup: false,
+      resetPasswordUserEmail: undefined,
+    });
+    const params = {
+      email: this.state.resetPasswordUserEmail,
+    };
+    userService.resetPasswordLink(params).then((res) => {
+      if (!res.status === "success") {
+        notify.error(res.message);
+      } else {
+        notify.success(res.message);
+        this.props.getUsersList(this.state);
+      }
+    });
   }
 
   openDeletePopup(id) {
@@ -142,7 +175,7 @@ class User_Index extends React.Component {
   deleteUser() {
     this.setState({ _openPopup: false, deleteId: undefined });
     userService.deleteUser(this.state.deleteId).then((res) => {
-      if (res.status === "error") {
+      if (!res.success) {
         notify.error(res.message);
       } else {
         notify.success(res.message);
@@ -181,11 +214,16 @@ class User_Index extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction?.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   componentWillReceiveProps(nextProps) {
     const current_user = _loginUsersDetails();
-    if (nextProps.users.user_list.length > 0) {
+    if (nextProps.users.user_list?.length > 0) {
       let users = nextProps.users.user_list;
       let multiaction = [];
       for (var key in users) {
@@ -194,7 +232,7 @@ class User_Index extends React.Component {
         }
       }
       this.setState({ multiaction: multiaction });
-    } else if (nextProps.users.user_list.length === 0) {
+    } else if (nextProps.users.user_list?.length === 0) {
       this.setState({ multiaction: [] });
     }
   }
@@ -427,8 +465,8 @@ class User_Index extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {user_list.length > 0 &&
-                        user_list.map((u, index) => (
+                      {user_list?.length > 0 &&
+                        user_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               {" "}
@@ -442,7 +480,11 @@ class User_Index extends React.Component {
                                 />
                               )}{" "}
                             </td>
-                            <td>{index + 1}</td>
+                            <td>
+                              {this.state.pageNo >= 2
+                                ? index + 1 + 10 * (this.state.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.name}</td>
                             <td>{u.email}</td>
                             <td>
@@ -462,7 +504,7 @@ class User_Index extends React.Component {
                                       )
                                     }
                                   >
-                                    {u.status ? "Active" : "Deactive"}
+                                    {u.status ? "Deactivate" : "Activate"}
                                   </CLink>
                                 )}
                               {current_user.id !== u._id &&
@@ -474,57 +516,86 @@ class User_Index extends React.Component {
                               _canAccess("users", "delete")) && (
                               <>
                                 <td>
-                                  {current_user.id !== u._id && (
-                                    <>
-                                      {_canAccess("users", "update") && (
-                                        <CTooltip
-                                          content={globalConstants.EDIT_BTN}
-                                        >
-                                          <CLink
-                                            className="btn  btn-md btn-primary"
-                                            aria-current="page"
-                                            to={`/admin/users/edit/${u._id}`}
+                                  <div className="d-flex">
+                                    {current_user.id !== u._id && (
+                                      <>
+                                        {_canAccess("users", "update") &&
+                                          current_user.user_group ===
+                                            "Super Users" && (
+                                            <CTooltip
+                                              content={
+                                                globalConstants.RESET_PASS_BTN
+                                              }
+                                            >
+                                              <button
+                                                className="btn btn-dark btn-block w-auto pt-0"
+                                                disabled={!u.status}
+                                                onClick={
+                                                  u.status
+                                                    ? () =>
+                                                        this.openResetPasswordPopup(
+                                                          u.email
+                                                        )
+                                                    : () => {}
+                                                }
+                                              >
+                                                <IconResetPassword />
+                                              </button>
+                                            </CTooltip>
+                                          )}
+                                        &nbsp;
+                                        {_canAccess("users", "update") && (
+                                          <CTooltip
+                                            content={globalConstants.EDIT_BTN}
                                           >
-                                            <CIcon name="cil-pencil"></CIcon>{" "}
-                                          </CLink>
-                                        </CTooltip>
-                                      )}
-                                      &nbsp;
-                                      {_canAccess("users", "delete") && (
-                                        <CTooltip
-                                          content={globalConstants.DELETE_BTN}
-                                        >
-                                          <button
-                                            className="btn  btn-md btn-danger "
-                                            onClick={() =>
-                                              this.openDeletePopup(u._id)
-                                            }
+                                            <CLink
+                                              className="btn  btn-md btn-primary"
+                                              aria-current="page"
+                                              to={`/admin/users/edit/${u._id}`}
+                                            >
+                                              <CIcon name="cil-pencil"></CIcon>{" "}
+                                            </CLink>
+                                          </CTooltip>
+                                        )}
+                                        &nbsp;
+                                        {_canAccess("users", "delete") && (
+                                          <CTooltip
+                                            content={globalConstants.DELETE_BTN}
                                           >
-                                            <CIcon name="cil-trash"></CIcon>
-                                          </button>
-                                        </CTooltip>
-                                      )}
-                                    </>
-                                  )}
+                                            <button
+                                              className="btn  btn-md btn-danger "
+                                              onClick={() =>
+                                                this.openDeletePopup(u._id)
+                                              }
+                                            >
+                                              <CIcon name="cil-trash"></CIcon>
+                                            </button>
+                                          </CTooltip>
+                                        )}
+                                      </>
+                                    )}
+                                  </div>
                                 </td>
                               </>
                             )}
                           </tr>
                         ))}
-                      {user_list.length === 0 && (
+                      {user_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
                       )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={page}
-                    onActivePageChange={this.pageChange}
-                    pages={totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {user_list?.length > 0 && (
+                    <CPagination
+                      activePage={page}
+                      onActivePageChange={this.pageChange}
+                      pages={totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>
@@ -541,7 +612,7 @@ class User_Index extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete User</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>Are you sure you want to delete this user?</CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete
@@ -550,6 +621,39 @@ class User_Index extends React.Component {
               color="secondary"
               onClick={() => {
                 this.setState({ _openPopup: !this.state._openPopup });
+              }}
+            >
+              Cancel
+            </CButton>
+          </CModalFooter>
+        </CModal>
+
+        <CModal
+          show={this.state._openResetPasswordPopup}
+          onClose={() => {
+            this.setState({
+              _openResetPasswordPopup: !this.state._openResetPasswordPopup,
+            });
+          }}
+          color="primary"
+        >
+          <CModalHeader closeButton>
+            <CModalTitle>Reset Password</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            Are you sure you want to change password? By confirming, reset
+            password link will be sent to this user.
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="primary" onClick={() => this.resetPasswordLink()}>
+              Confirm
+            </CButton>
+            <CButton
+              color="secondary"
+              onClick={() => {
+                this.setState({
+                  _openResetPasswordPopup: !this.state._openResetPasswordPopup,
+                });
               }}
             >
               Cancel

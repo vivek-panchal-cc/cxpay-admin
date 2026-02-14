@@ -2,7 +2,7 @@ import { authHeader } from '../../_helpers';
 import { notify, handleResponse, setLoading } from '../../_helpers/';
 require('dotenv').config();
 
-
+const API_URL = process.env.REACT_APP_API_URL;
 /*************** Export Functions Defined For Services ******************************/
 
 export const dashboardService = {
@@ -20,16 +20,19 @@ export const dashboardService = {
  * that resolves to the response from the server. The response is then passed to the `handleResponse`
  * function for further processing.
  */
-function getDetails(postData) {
+async function getDetails(postData) {
     setLoading(true);
     const requestOptions = {
         method: 'GET',
         headers: authHeader('dashboard', 'view'),
-        body: JSON.stringify(postData)
+        // body: JSON.stringify(postData)
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/dashboard`, requestOptions).catch((error) => {
+    try {
+        const response = await fetch(`${API_URL}api/dashboard`, requestOptions);
+        return handleResponse(response);
+    } catch (error) {
         notify.error('Something went wrong');
-        setLoading(true);
-    }).then(handleResponse);
+        setLoading(false);
+    }
 }

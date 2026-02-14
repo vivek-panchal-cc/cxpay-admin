@@ -2,6 +2,8 @@ import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 /*************** Export Functions Defined For Services ******************************/
 
 export const emailTemplateService = {
@@ -26,7 +28,7 @@ function getPageList(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/index`,
+    `${API_URL}api/email_templates/index`,
     requestOptions
   )
     .catch((error) => {
@@ -47,7 +49,7 @@ function createPages(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/add`,
+    `${API_URL}api/email_templates/add`,
     requestOptions
   )
     .catch((error) => {
@@ -66,7 +68,7 @@ function deletepage(id, postData) {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/${id}`,
+    `${API_URL}api/email_templates/${id}`,
     requestOptions
   )
     .catch((error) => {
@@ -88,7 +90,7 @@ function getpage(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/detail`,
+    `${API_URL}api/email_templates/detail`,
     requestOptions
   )
     .catch((error) => {
@@ -110,7 +112,7 @@ function updatepage(id, postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/${id}`,
+    `${API_URL}api/email_templates/${id}`,
     requestOptions
   )
     .catch((error) => {
@@ -131,7 +133,7 @@ function changePageStatus(postData) {
     body: JSON.stringify(postData),
   };
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/change-status`,
+    `${API_URL}api/email_templates/change-status`,
     requestOptions
   )
     .catch((error) => {
@@ -151,7 +153,7 @@ function deleteMultiplePages(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/delete_bulk`,
+    `${API_URL}api/email_templates/delete_bulk`,
     requestOptions
   )
     .catch((error) => {
@@ -171,7 +173,7 @@ function changeBulkPageStatus(postData) {
   };
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/email_templates/change_bulk_status`,
+    `${API_URL}api/email_templates/change_bulk_status`,
     requestOptions
   )
     .catch((error) => {

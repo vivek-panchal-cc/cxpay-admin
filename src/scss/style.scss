@@ -1,3 +1,23 @@
+body {
+  > iframe {
+    display: none;
+  }
+}
+
+.btn-primary {
+  background-color: #2981c4 !important;
+  border-color: #2981c4 !important;
+}
+
+.modal-primary .modal-header {
+  background-color: #2981c4 !important;
+}
+
+.modal-primary .modal-content {
+//   border: none !important;
+  border-color: #2981c4 !important;
+}
+
 // If you want to override variables do it here
 @import "variables";
 

@@ -89,7 +89,7 @@ class User_Groups_Index extends React.Component {
           user_list: res.result,
         });
         /* Multi delete checkbox code */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let users = res.result;
           let multiaction = [];
           const current_user = _loginUsersDetails();
@@ -108,7 +108,7 @@ class User_Groups_Index extends React.Component {
           }
 
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -257,6 +257,11 @@ class User_Groups_Index extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction?.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   UserGroupStatusChangedHandler(user_group_id, status) {
@@ -422,8 +427,8 @@ class User_Groups_Index extends React.Component {
                               )}
                           </span>
                         </th>
-                        {(_canAccess("user_groups", "update") ||
-                          _canAccess("user_groups", "delete")) && (
+                        {_canAccess("user_groups", "update") && (
+                          // || _canAccess("user_groups", "delete")
                           <>
                             <th>Action</th>
                           </>
@@ -431,8 +436,8 @@ class User_Groups_Index extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.user_list.length > 0 &&
-                        this.state.user_list.map((u, index) => (
+                      {this.state.user_list?.length > 0 &&
+                        this.state.user_list?.map((u, index) => (
                           <tr key={u._id}>
                             <td>
                               {this.state.multiaction[u._id] !== undefined && (
@@ -445,7 +450,13 @@ class User_Groups_Index extends React.Component {
                                 />
                               )}
                             </td>
-                            <td>{index + 1}</td>
+                            <td>
+                              {this.state.fields.pageNo >= 2
+                                ? index +
+                                  1 +
+                                  10 * (this.state.fields.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.user_group_name}</td>
                             <td>
                               {globalConstants.DEVELOPER_PERMISSION_USER_ID.indexOf(
@@ -462,7 +473,7 @@ class User_Groups_Index extends React.Component {
                                           )
                                         }
                                       >
-                                        {u.status ? "Active" : "Deactive"}
+                                        {u.status ? "Deactivate" : "Activate"}
                                       </CLink>
                                     )}
                                   {current_user.user_group_id !== u._id &&
@@ -496,7 +507,7 @@ class User_Groups_Index extends React.Component {
                                           </CTooltip>
                                         )}
                                       &nbsp;
-                                      {current_user.user_group_id !== u._id &&
+                                      {/* {current_user.user_group_id !== u._id &&
                                         _canAccess("user_groups", "delete") && (
                                           <CTooltip
                                             content={globalConstants.DELETE_BTN}
@@ -510,7 +521,7 @@ class User_Groups_Index extends React.Component {
                                               <CIcon name="cil-trash"></CIcon>
                                             </button>
                                           </CTooltip>
-                                        )}
+                                        )} */}
                                     </>
                                   )}
                                 </td>
@@ -518,20 +529,23 @@ class User_Groups_Index extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.user_list.length === 0 && (
+                      {(this.state.user_list?.length === 0 ||
+                        this.state.user_list?.length === undefined) && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
                       )}
                     </tbody>
                   </table>
-                  <CPagination
-                    activePage={this.state.fields.pageNo}
-                    onActivePageChange={this.pageChange}
-                    pages={this.state.fields.totalPage}
-                    doubleArrows={true}
-                    align="end"
-                  />
+                  {this.state.user_list?.length > 0 && (
+                    <CPagination
+                      activePage={this.state.fields.pageNo}
+                      onActivePageChange={this.pageChange}
+                      pages={this.state.fields.totalPage}
+                      doubleArrows={true}
+                      align="end"
+                    />
+                  )}
                 </div>
               </CCardBody>
             </CCard>

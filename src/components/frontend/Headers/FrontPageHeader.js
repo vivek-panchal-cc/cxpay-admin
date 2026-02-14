@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom'
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function FrontPageHeader() {
   let pageHeader = React.createRef();
   const banners = useSelector(state => state.banners.banners);
@@ -39,7 +41,7 @@ function FrontPageHeader() {
         className={banner_class}
         style={{
           backgroundImage:
-            "url(" + process.env.REACT_APP_API_URL + 'uploads/' + banner_image + ")",
+            "url(" + API_URL + 'uploads/' + banner_image + ")",
         }}
       >
         <div className="filter" />

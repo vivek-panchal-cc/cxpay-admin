@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Switch, Router, Redirect, Route } from "react-router-dom";
+import { Switch, Router, Redirect } from "react-router-dom";
 import { history } from "./_helpers";
 import "./scss/style.scss";
 import "./assets/admin/css/custom.css";
 import { PrivateRoute, LoginLessRoute } from "./components/PrivateRoute";
 import { ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -18,15 +19,18 @@ const loading = (
 
 // Pages
 const Login = React.lazy(() => import("./views/pages/admin/login/Login"));
+// const TwoFactorAuth = React.lazy(() =>
+//   import("./views/pages/admin/auth/TwoFactorAuth")
+// );
 const Forgot_password = React.lazy(() =>
   import("./views/pages/admin/forgot_password/Forgot_password")
 );
 const Reset_password = React.lazy(() =>
   import("./views/pages/admin/reset_password/Reset_password")
 );
-const TheFrontLayout = React.lazy(() =>
-  import("./views/pages/frontend/TheFrontLayout")
-);
+// const TheFrontLayout = React.lazy(() =>
+//   import("./views/pages/frontend/TheFrontLayout")
+// );
 
 class App extends Component {
   render() {
@@ -38,6 +42,10 @@ class App extends Component {
             <Switch>
               {/* This is a Admin Route Its always start with '/admin' and follow the /admin/{module_name}/{module_action} URL pattern */}{" "}
               <LoginLessRoute path="/admin/login" component={Login} />{" "}
+              {/* <LoginLessRoute
+                path="/admin/two-factor-auth"
+                component={TwoFactorAuth}
+              />{" "} */}
               <LoginLessRoute
                 path="/admin/forgot_password"
                 component={Forgot_password}

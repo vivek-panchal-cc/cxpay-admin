@@ -1,4 +1,4 @@
-import { Store, store } from 'react-notifications-component';
+import { Store } from 'react-notifications-component';
 export class notify {
   static restConfig = {
       insert: "top",

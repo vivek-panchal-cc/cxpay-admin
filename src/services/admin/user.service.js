@@ -1,6 +1,8 @@
-import { authHeader } from "../../_helpers";
+import { authHeader, history } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers/";
 require("dotenv").config();
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const userService = {
   login,
@@ -12,6 +14,7 @@ export const userService = {
   deleteUser,
   forgotPassword,
   resetPassword,
+  resetPasswordLink,
   getUserGroups,
   getPermission,
   changeUserStatus,
@@ -28,15 +31,12 @@ function login(email, password) {
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "mode":"no-cors",
+      mode: "no-cors",
     },
     body: JSON.stringify({ email, password }),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/auth/signin`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/auth/signin`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -47,9 +47,22 @@ function login(email, password) {
     });
 }
 
-function logout() {
-  // remove user from local storage to log user out
-  localStorage.removeItem("user");
+async function logout() {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("users", "view"),
+  };
+
+  let response;
+  try {
+    response = await fetch(`${API_URL}api/logout`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    const response = undefined;
+  }
+  return handleResponse(response);
 }
 
 function getUsersList(postData) {
@@ -60,10 +73,7 @@ function getUsersList(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/index`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/index`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -79,7 +89,7 @@ function createUsers(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/users/add`, requestOptions)
+  return fetch(`${API_URL}api/users/add`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -94,10 +104,7 @@ function getUser(id) {
     headers: authHeader("users", "view"),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/${id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/${id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -114,7 +121,7 @@ function updateUser(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(`${process.env.REACT_APP_API_URL}api/users/edit`, requestOptions)
+  return fetch(`${API_URL}api/users/edit`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -129,16 +136,31 @@ function deleteUser(id) {
     method: "DELETE",
     headers: authHeader("users", "delete"),
   };
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/${id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/${id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
       return Promise.reject();
     })
     .then(handleResponse);
+}
+
+async function resetPasswordLink(postData) {
+  setLoading(true);
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader("users", "update"),
+    body: JSON.stringify(postData),
+  };
+  let response;
+  try {
+    response = await fetch(`${API_URL}api/forgot_password`, requestOptions);
+  } catch (error) {
+    notify.error("Something went wrong");
+    setLoading(false);
+    response = await Promise.reject();
+  }
+  return handleResponse(response);
 }
 
 function forgotPassword(postData) {
@@ -149,10 +171,7 @@ function forgotPassword(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/forgot_password`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/forgot_password`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -169,10 +188,7 @@ function resetPassword(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/reset_password`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/reset_password`, requestOptions)
     .catch((error) => {
       setLoading(false);
       notify.error("Something went wrong");
@@ -188,10 +204,7 @@ function getUserGroups() {
     headers: authHeader("common", "view"),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/user_groups/data/list`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/user_groups/data/list`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -202,34 +215,26 @@ function getUserGroups() {
 
 function getPermission() {
   let user = JSON.parse(localStorage.getItem("user"));
-  setLoading(true);
+  // setLoading(true);
   const requestOptions = {
     method: "GET",
     headers: authHeader("common", "view"),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/permission/${user.id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/permission/${user.id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
-      setLoading(false);
+      // setLoading(false);
       return Promise.reject();
     })
     .then((data) => {
       return data.text().then((text) => {
         const data = text && JSON.parse(text);
-        setLoading(false);
-        if (
-          data.type !== undefined &&
-          data.type === "unauthorized" &&
-          data.status === false
-        ) {
-          const error = (data && data.message) || data.statusText;
-          notify.error(error);
+        // setLoading(false);
+        if (data.type === "unauthorized" || !data.status) {
+          if (data.message) notify.error(data.message);
           localStorage.removeItem("user");
-          window.location.reload();
+          history.push("/admin/login");
         } else {
           let update_user = {
             ...user,
@@ -248,10 +253,7 @@ function changeUserStatus(id, postData) {
     headers: authHeader("users", "edit"),
     body: JSON.stringify(postData),
   };
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/${id}`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/${id}`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -268,10 +270,7 @@ function updateMyProfile(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/update_my_profile`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/update_my_profile`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -287,10 +286,7 @@ function getMyProfile(id) {
     headers: authHeader(),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/get_my_profile`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/get_my_profile`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -307,10 +303,7 @@ function deleteMultipleUsers(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/delete_multiple_users`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/delete_multiple_users`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);
@@ -327,10 +320,7 @@ function changeBulkUsersStatus(postData) {
     body: JSON.stringify(postData),
   };
 
-  return fetch(
-    `${process.env.REACT_APP_API_URL}api/users/change_bulk_users_status`,
-    requestOptions
-  )
+  return fetch(`${API_URL}api/users/change_bulk_users_status`, requestOptions)
     .catch((error) => {
       notify.error("Something went wrong");
       setLoading(false);

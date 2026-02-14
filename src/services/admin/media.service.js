@@ -3,6 +3,7 @@ import { notify, handleResponse, setLoading, authHeader,authHeaderMutlipart } fr
 
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const mediaService = {
     createMedia,
@@ -21,7 +22,7 @@ function createMedia(postData) {
          body: postData
     };
 
-    return fetch(`${process.env.REACT_APP_API_URL}api/media/upload`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/media/upload`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -36,7 +37,7 @@ function getMedia(postData) {
         headers: authHeader(),
         body: JSON.stringify(postData),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/media/get`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/media/get`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);
@@ -50,7 +51,7 @@ function deleteMedia(postData) {
         headers: authHeader(),
         body: JSON.stringify(postData),
     };
-    return fetch(`${process.env.REACT_APP_API_URL}api/media/delete`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/media/delete`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         setLoading(false);
     }).then(handleResponse);

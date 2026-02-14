@@ -2,6 +2,8 @@ import { authHeader } from "../../_helpers";
 import { notify, handleResponse, setLoading } from "../../_helpers";
 require("dotenv").config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 /*************** Export Functions Defined For Services ******************************/
 
 export const settingsService = {
@@ -22,7 +24,7 @@ function getSettings() {
   // http://localhost/cxpay-admin-api/public/api/system_modules/index
 
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/system_modules/index`,
+    `${API_URL}api/system_modules/index`,
     requestOptions
   )
     .catch((error) => {
@@ -46,7 +48,7 @@ function updateSettings(postData) {
   // http://localhost/cxpay-admin-api/public/api/system_modules/update
   //system_option_name
   return fetch(
-    `${process.env.REACT_APP_API_URL}api/system_modules/update`,
+    `${API_URL}api/system_modules/update`,
     requestOptions
   )
     .catch((error) => {

@@ -1,6 +1,8 @@
 import { authHeader, notify,handleResponse } from '../../_helpers/';
 require('dotenv').config();
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export const layoutService = {
     getMenus,
     getBanners,
@@ -12,7 +14,7 @@ export const layoutService = {
         method: 'GET',
         headers: authHeader()
     };   
-    return fetch(`${process.env.REACT_APP_API_URL}api/frontend/menu/get_menu_list`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/frontend/menu/get_menu_list`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         return Promise.reject();
     }).then(handleResponse);
@@ -24,7 +26,7 @@ export const layoutService = {
         headers: authHeader()
     };
    
-    return fetch(`${process.env.REACT_APP_API_URL}api/frontend/banners/get_banners`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/frontend/banners/get_banners`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         return Promise.reject();
     }).then(handleResponse);
@@ -37,7 +39,7 @@ export const layoutService = {
         headers: authHeader()
     };
    
-    return fetch(`${process.env.REACT_APP_API_URL}api/frontend/site/get_site`, requestOptions).catch((error) => {
+    return fetch(`${API_URL}api/frontend/site/get_site`, requestOptions).catch((error) => {
         notify.error('Something went wrong');
         return Promise.reject();
     }).then(handleResponse);

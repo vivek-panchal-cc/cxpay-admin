@@ -64,7 +64,7 @@ class Forgot_password extends React.Component {
                     <CForm onSubmit={this.handleSubmit}>
                       <h1>Forgot Password</h1>
                       <p className="text-muted">Enter your email to reset your password</p>
-                      <CInputGroup className="mb-3" className={'form-group' + (submitted && !email ? ' has-error' : '')}>
+                      <CInputGroup className={'form-group' + (submitted && !email ? ' has-error' : '')}>
                         <CInputGroupPrepend>
                           <CInputGroupText>
                             <CIcon name="cil-user" />
@@ -79,7 +79,7 @@ class Forgot_password extends React.Component {
                         <CCol xs="6">
                           <CButton color="primary" className="px-4" type='submit'>Request</CButton>
                           &nbsp;
-                          <CButton color="primary" className="px-4" type='button' onClick={() => { history.push('/admin/login'); }}>Cancel</CButton>
+                          <CButton color="danger" className="px-4" type='button' onClick={() => { history.push('/admin/login'); }}>Cancel</CButton>
                         </CCol>
                       </CRow>
                     </CForm>

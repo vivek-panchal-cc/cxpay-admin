@@ -56,79 +56,81 @@ class ActionBar extends React.Component {
         }
         this.setState({ _openPopup: true, _popupMessage: modelPoupMessage });
       } else {
-        notify.error("Select bulk action");
+        notify.error("Please select any option for bulk action");
       }
     } else {
-      notify.error("Not found any selected records for bulk action");
+      notify.error("Please select any record");
     }
   };
 
   render() {
     return (
-      <>
-        <CFormGroup row className="mr-0 ">
-          <CCol xs="2">
-            <CSelect
-              id="action_name"
-              name="action_name"
-              onChange={this.handleChange}
-            >
-              <option key="0" value="">
-                -- Bulk Action --
-              </option>
-              ;
-              {this.props.module_name !== "system_modules" &&
-                _canAccess(this.props.module_name, "update") && (
-                  <option key="2" value="active">
-                    Activate
-                  </option>
-                )}
-              {this.props.module_name !== "system_modules" &&
-                _canAccess(this.props.module_name, "update") && (
-                  <option key="3" value="deactive">
-                    Deactivate
-                  </option>
-                )}
-            </CSelect>
-          </CCol>
-          <CCol xs="2" className="pl-0">
-            <CTooltip content={globalConstants.BULK_APPLY_BTN}>
-              <button
-                className="btn btn-dark"
-                onClick={this.handleApplyButtonClick}
+      _canAccess(this.props.module_name, "update") && (
+        <>
+          <CFormGroup row className="mr-0 ">
+            <CCol xs="2">
+              <CSelect
+                id="action_name"
+                name="action_name"
+                onChange={this.handleChange}
               >
+                <option key="0" value="">
+                  -- Bulk Action --
+                </option>
+                ;
+                {this.props.module_name !== "system_modules" &&
+                  _canAccess(this.props.module_name, "update") && (
+                    <option key="2" value="active">
+                      Activate
+                    </option>
+                  )}
+                {this.props.module_name !== "system_modules" &&
+                  _canAccess(this.props.module_name, "update") && (
+                    <option key="3" value="deactive">
+                      Deactivate
+                    </option>
+                  )}
+              </CSelect>
+            </CCol>
+            <CCol xs="2" className="pl-0">
+              <CTooltip content={globalConstants.BULK_APPLY_BTN}>
+                <button
+                  className="btn btn-dark"
+                  onClick={this.handleApplyButtonClick}
+                >
+                  Apply
+                </button>
+              </CTooltip>
+            </CCol>
+            <CCol xs="8"></CCol>
+          </CFormGroup>
+          <CModal
+            show={this.state._openPopup}
+            onClose={() => {
+              this.setState({ _openPopup: !this.state._openPopup });
+            }}
+            color="danger"
+          >
+            <CModalHeader closeButton>
+              <CModalTitle>Bulk Action</CModalTitle>
+            </CModalHeader>
+            <CModalBody>{this.state._popupMessage}</CModalBody>
+            <CModalFooter>
+              <CButton color="danger" onClick={this._handleApplyAction}>
                 Apply
-              </button>
-            </CTooltip>
-          </CCol>
-          <CCol xs="8"></CCol>
-        </CFormGroup>
-        <CModal
-          show={this.state._openPopup}
-          onClose={() => {
-            this.setState({ _openPopup: !this.state._openPopup });
-          }}
-          color="danger"
-        >
-          <CModalHeader closeButton>
-            <CModalTitle>Bulk Action</CModalTitle>
-          </CModalHeader>
-          <CModalBody>{this.state._popupMessage}</CModalBody>
-          <CModalFooter>
-            <CButton color="danger" onClick={this._handleApplyAction}>
-              Apply
-            </CButton>
-            <CButton
-              color="secondary"
-              onClick={() => {
-                this.setState({ _openPopup: !this.state._openPopup });
-              }}
-            >
-              Cancel
-            </CButton>
-          </CModalFooter>
-        </CModal>
-      </>
+              </CButton>
+              <CButton
+                color="secondary"
+                onClick={() => {
+                  this.setState({ _openPopup: !this.state._openPopup });
+                }}
+              >
+                Cancel
+              </CButton>
+            </CModalFooter>
+          </CModal>
+        </>
+      )
     );
   }
 }

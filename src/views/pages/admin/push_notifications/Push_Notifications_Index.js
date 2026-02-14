@@ -91,7 +91,6 @@ class Push_Notifications_Index extends React.Component {
           });
           notify.error(res.message);
         } else {
-          console.log('res.data',res.data)
           this.setState({
             totalRecords: res.data.total,
             fields: {
@@ -186,7 +185,17 @@ class Push_Notifications_Index extends React.Component {
         }
       );
     } else {
-      this.getPushNotificationLists(this.state.fields);
+      this.setState(
+        {
+          fields: {
+            ...this.state.fields,
+            page: 1,
+          },
+        },
+        () => {
+          this.getPushNotificationLists(this.state.fields);
+        }
+      );
     }
   }
 
@@ -214,7 +223,6 @@ class Push_Notifications_Index extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }
@@ -245,8 +253,6 @@ class Push_Notifications_Index extends React.Component {
   // }
 
   render() {
-    const current_user = _loginUsersDetails();
-
     return (
       <>
         <CRow>
@@ -291,8 +297,8 @@ class Push_Notifications_Index extends React.Component {
                           }}
                         >
                           <option value="">-- Select Status --</option>
-                          <option value="schedule">Schedule</option>
                           <option value="instant">Instant</option>
+                          {/* <option value="schedule">Schedule</option> */}
                         </CSelect>
                       </CCol>
                     </CFormGroup>
@@ -460,14 +466,18 @@ class Push_Notifications_Index extends React.Component {
                       {this.state?.notification_list?.length > 0 ? (
                         this.state.notification_list.map((u, index) => (
                           <tr key={u.id}>
-                            <td>{index + 1}</td>
+                            <td>
+                              {this.state.fields.page >= 2
+                                ? index + 1 + 10 * (this.state.fields.page - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.title}</td>
                             <td>
                               <MessagePopup message={u.description} />
                             </td>
                             <td>
-                              {u.customer_type.charAt(0).toUpperCase() +
-                                u.customer_type.slice(1)}
+                              {u.customer_type?.charAt(0).toUpperCase() +
+                                u.customer_type?.slice(1)}
                             </td>
                             {/* <td>
                               {(() => {
@@ -484,13 +494,14 @@ class Push_Notifications_Index extends React.Component {
                               })()}
                             </td> */}
                             <td>
-                              {u.type.charAt(0).toUpperCase() + u.type.slice(1)}
+                              {u.type?.charAt(0).toUpperCase() +
+                                u.type?.slice(1)}
                             </td>
                             {(_canAccess("notifications", "update") ||
                               _canAccess("notifications", "delete")) && (
                               <>
                                 <td>
-                                  {_canAccess("notifications", "update") && (
+                                  {/* {_canAccess("notifications", "update") && (
                                     <CTooltip
                                       content={globalConstants.EDIT_BTN}
                                     >
@@ -503,7 +514,7 @@ class Push_Notifications_Index extends React.Component {
                                       </CLink>
                                     </CTooltip>
                                   )}
-                                  &nbsp;
+                                  &nbsp; */}
                                   {_canAccess("notifications", "delete") && (
                                     <CTooltip
                                       content={globalConstants.DELETE_BTN}
@@ -555,7 +566,9 @@ class Push_Notifications_Index extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Notification</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>
+            Are you sure you want to delete this notification?
+          </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteNotification()}>
               Delete

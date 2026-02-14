@@ -32,7 +32,7 @@ import {
   notify,
   history,
   _canAccess,
-  _loginUsersDetails,
+  // _loginUsersDetails,
 } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 const CheckBoxes = React.lazy(() =>
@@ -95,14 +95,14 @@ class Email_list extends React.Component {
         });
 
         /*multi delete cms pages */
-        if (res.result.length > 0) {
+        if (res.result?.length > 0) {
           let pages = res.result;
           let multiaction = [];
           for (var key in pages) {
             multiaction[pages[key]._id] = false;
           }
           this.setState({ multiaction: multiaction });
-        } else if (res.result.length === 0) {
+        } else if (res.result?.length === 0) {
           this.setState({ multiaction: [] });
         }
       }
@@ -195,7 +195,7 @@ class Email_list extends React.Component {
 
   PageStatusChangedHandler(page_id, status) {
     emailTemplateService
-      .changePageStatus({ id: page_id, status: status == false ? 1 : 0 })
+      .changePageStatus({ id: page_id, status: status === false ? 1 : 0 })
       .then((res) => {
         if (res.status === "error") {
           notify.error(res.message);
@@ -208,7 +208,6 @@ class Email_list extends React.Component {
 
   handleAllChecked = (event) => {
     let multiactions = this.state.multiaction;
-    console.log(multiactions);
     for (var key in multiactions) {
       multiactions[key] = event.target.checked;
     }
@@ -222,6 +221,11 @@ class Email_list extends React.Component {
     let multiactions = this.state.multiaction;
     multiactions[event.target.value] = event.target.checked;
     this.setState({ multiaction: multiactions });
+    let allTrue = false;
+    if (this.state.multiaction?.length > 0) {
+      allTrue = this.state.multiaction.every((element) => element === true);
+    }
+    this.setState({ allCheckedbox: allTrue });
   };
 
   resetCheckedBox() {
@@ -286,7 +290,7 @@ class Email_list extends React.Component {
   /****************** * Render Data To Dom ************************/
 
   render() {
-    const current_user = _loginUsersDetails();
+    // const current_user = _loginUsersDetails();
     return (
       <>
         <CRow>
@@ -373,15 +377,18 @@ class Email_list extends React.Component {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>
-                          <input
-                            type="checkbox"
-                            onClick={this.handleAllChecked}
-                            value="checkedall"
-                            onChange={(e) => {}}
-                            checked={this.state.allCheckedbox}
-                          />
-                        </th>
+                        {(_canAccess("email_templates", "update") ||
+                          _canAccess("email_templates", "delete")) && (
+                          <th>
+                            <input
+                              type="checkbox"
+                              onClick={this.handleAllChecked}
+                              value="checkedall"
+                              onChange={(e) => {}}
+                              checked={this.state.allCheckedbox}
+                            />
+                          </th>
+                        )}
                         <th>#</th>
                         <th onClick={() => this.handleColumnSort("name")}>
                           <span className="sortCls">
@@ -445,20 +452,29 @@ class Email_list extends React.Component {
                     </thead>
 
                     <tbody>
-                      {this.state.page_list.length > 0 &&
-                        this.state.page_list.map((u, index) => (
+                      {this.state.page_list?.length > 0 &&
+                        this.state.page_list?.map((u, index) => (
                           <tr key={u._id}>
-                            <td>
-                              <CheckBoxes
-                                handleCheckChieldElement={
-                                  this.handleCheckChieldElement
-                                }
-                                _id={u._id}
-                                _isChecked={this.state.multiaction[u._id]}
-                              />
-                            </td>
+                            {(_canAccess("email_templates", "update") ||
+                              _canAccess("email_templates", "delete")) && (
+                              <td>
+                                <CheckBoxes
+                                  handleCheckChieldElement={
+                                    this.handleCheckChieldElement
+                                  }
+                                  _id={u._id}
+                                  _isChecked={this.state.multiaction[u._id]}
+                                />
+                              </td>
+                            )}
 
-                            <td>{index + 1}</td>
+                            <td>
+                              {this.state.fields.pageNo >= 2
+                                ? index +
+                                  1 +
+                                  15 * (this.state.fields.pageNo - 1)
+                                : index + 1}
+                            </td>
                             <td>{u.name}</td>
                             <td>{u.subject}</td>
                             <td>
@@ -471,16 +487,14 @@ class Email_list extends React.Component {
                                     )
                                   }
                                 >
-                                  {u.status == false
+                                  {u.status === false
                                     ? "Activate"
                                     : "Deactivate"}
                                 </CLink>
                               )}
                               {_canAccess("email_templates", "update") ===
                                 false && (
-                                <>
-                                  {u.status == true ? "Activate" : "Deactivate"}
-                                </>
+                                <>{u.status === true ? "Active" : "Deactive"}</>
                               )}
                             </td>
                             {(_canAccess("email_templates", "update") ||
@@ -520,7 +534,7 @@ class Email_list extends React.Component {
                             )}
                           </tr>
                         ))}
-                      {this.state.page_list.length === 0 && (
+                      {this.state.page_list?.length === 0 && (
                         <tr>
                           <td colSpan="5">No records found</td>
                         </tr>
@@ -550,7 +564,9 @@ class Email_list extends React.Component {
           <CModalHeader closeButton>
             <CModalTitle>Delete Page</CModalTitle>
           </CModalHeader>
-          <CModalBody>Are you sure you want to delete this record?</CModalBody>
+          <CModalBody>
+            Are you sure you want to delete this template?
+          </CModalBody>
           <CModalFooter>
             <CButton color="danger" onClick={() => this.deleteUser()}>
               Delete

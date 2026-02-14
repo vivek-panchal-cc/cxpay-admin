@@ -14,22 +14,19 @@ import {
   CButton,
   CLink,
   CTooltip,
-  CSwitch,
   CTextarea,
   CSelect,
 } from "@coreui/react";
 import SimpleReactValidator from "simple-react-validator";
-import { agentService } from "../../../../services/admin";
 import { pushNotificationService } from "../../../../services/admin/push_notification.service";
 import { notify, history, _canAccess } from "../../../../_helpers/index";
 import { globalConstants } from "../../../../constants/admin/global.constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CIcon from "@coreui/icons-react";
 import { faArrowLeft, faBan, faSave } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
-import moment from "moment";
+import "./../recurring_payments/page.css";
 
 class PushNotificationEdit extends React.Component {
   constructor(props) {
@@ -82,7 +79,7 @@ class PushNotificationEdit extends React.Component {
                   fields: res.data,
                 });
 
-                if (res.data.customer_notifications.length > 0) {
+                if (res.data.customer_notifications?.length > 0) {
                   let userData = [];
 
                   res.data.customer_notifications.forEach((element) => {
@@ -90,16 +87,18 @@ class PushNotificationEdit extends React.Component {
                   });
 
                   let selectedCustomer = [];
-                  this.state.options.filter((x) => {
+                  this.state.options?.filter((x) => {
                     if (userData.includes(x.value)) {
-                      return selectedCustomer.push(x);
+                      selectedCustomer.push(x);
+                      return true;
                     }
+                    return false;
                   });
 
                   this.setState({ selectedCustomer: selectedCustomer });
                 } else if (
-                  res.data.customer_notifications.length == 0 &&
-                  res.data.customer_type == "all"
+                  res.data.customer_notifications?.length === 0 &&
+                  res.data.customer_type === "all"
                 ) {
                   this.setState({
                     selectedCustomer: { value: "all", label: "All" },
@@ -127,13 +126,34 @@ class PushNotificationEdit extends React.Component {
     });
   }
 
+  // handleChange(e) {
+  //   const { name, value } = e.target;
+  //   this.setState({ fields: { ...this.state.fields, [name]: value } });
+  // }
+
   handleChange(e) {
     const { name, value } = e.target;
-    this.setState({ fields: { ...this.state.fields, [name]: value } });
+    this.setState({ fields: { ...this.state.fields, [name]: value } }, () => {
+      if (name === "type" && value === "schedule") {
+        this.setDefaultScheduleTime();
+      }
+    });
+  }
+
+  setDefaultScheduleTime() {
+    const currentDateTime = new Date();
+    const roundedMinutes = Math.ceil(currentDateTime.getMinutes() / 15) * 15;
+    currentDateTime.setMinutes(roundedMinutes % 60);
+    if (roundedMinutes >= 60) {
+      currentDateTime.setHours(currentDateTime.getHours() + 1);
+    }
+    this.setState({
+      fields: { ...this.state.fields, schedule_time: currentDateTime },
+    });
   }
 
   selectedCustomerData(customer) {
-    if (customer.filter((x) => x.value == "all").length > 0) {
+    if (customer?.filter((x) => x.value === "all")?.length > 0) {
       this.setState({ selectedCustomer: [{ value: "all", label: "All" }] });
     } else {
       let selectedCustomer = [];
@@ -171,7 +191,7 @@ class PushNotificationEdit extends React.Component {
   }
 
   convertDatePickerTime(str) {
-    var month, day, year, hours, minutes, seconds;
+    var hours, minutes, seconds;
     var date = new Date(str),
       month = ("0" + (date.getMonth() + 1)).slice(-2),
       day = ("0" + date.getDate()).slice(-2);
@@ -184,11 +204,81 @@ class PushNotificationEdit extends React.Component {
     return [mySQLDate, mySQLTime].join(" ");
   }
 
-  handledateChange = (date) => {
+  // handleDateChange = (date) => {
+  //   this.setState({ fields: { ...this.state.fields, schedule_time: date } });
+  // };
+
+  handleDateChange = (date) => {
+    const now = new Date();
+    if (date?.toDateString() === now?.toDateString()) {
+      if (date <= now) {
+        const currentMinutes = now?.getMinutes();
+        const remainder = 15 - (currentMinutes % 15);
+        const roundedMinutes = currentMinutes + remainder;
+        now?.setMinutes(roundedMinutes);
+        now?.setSeconds(0); // Reset seconds to 0
+        date = new Date(now); // Update the date object to ensure it has the updated time.
+      }
+    }
     this.setState({ fields: { ...this.state.fields, schedule_time: date } });
   };
 
+  getExcludedTimes() {
+    let times = [];
+    const now = new Date();
+    const schedule_time = this.state.fields.schedule_time;
+
+    for (let i = 0; i < 24; i++) {
+      times?.push(new Date().setHours(i, 0, 0, 0));
+      times?.push(new Date().setHours(i, 15, 0, 0));
+      times?.push(new Date().setHours(i, 30, 0, 0));
+      times?.push(new Date().setHours(i, 45, 0, 0));
+    }
+
+    if (schedule_time && schedule_time instanceof Date) {
+      if (schedule_time?.toDateString() === now?.toDateString()) {
+        times = times?.filter((time) => {
+          const timeDate = new Date(time);
+          return (
+            timeDate?.getHours() < now?.getHours() ||
+            (timeDate?.getHours() === now?.getHours() &&
+              timeDate?.getMinutes() <= now?.getMinutes())
+          );
+        });
+      } else if (schedule_time > now) {
+        times.length = 0;
+      }
+    }
+    return times;
+  }
+
+  // getExcludedTimes() {
+  //   const times = [];
+  //   const now = new Date();
+  //   const schedule_time = this.state.fields.schedule_time;
+
+  //   // Check if the selected date is today
+  //   if (
+  //     schedule_time &&
+  //     schedule_time instanceof Date &&
+  //     schedule_time?.toDateString() === now?.toDateString()
+  //   ) {
+  //     for (let i = 0; i < now.getHours(); i++) {
+  //       times?.push(new Date().setHours(i, 0, 0, 0));
+  //       times?.push(new Date().setHours(i, 15, 0, 0));
+  //       times?.push(new Date().setHours(i, 30, 0, 0));
+  //       times?.push(new Date().setHours(i, 45, 0, 0));
+  //     }
+  //     for (let i = 0; i <= now?.getMinutes(); i += 15) {
+  //       times?.push(new Date().setHours(now?.getHours(), i, 0, 0));
+  //     }
+  //   }
+  //   return times;
+  // }
+
   render() {
+    const { type } = this.state.fields;
+    const submitButton = type === "schedule" ? "Schedule" : "Send";
     return (
       <>
         <CRow>
@@ -312,7 +402,7 @@ class PushNotificationEdit extends React.Component {
                   >
                     <option value="">-- Select Type --</option>
                     <option value="instant">Instant</option>
-                    <option value="schedule">Schedule</option>
+                    {/* <option value="schedule">Schedule</option> */}
                   </CSelect>
                   <CFormText className="help-block">
                     {this.validator.message(
@@ -325,28 +415,43 @@ class PushNotificationEdit extends React.Component {
                 </CFormGroup>
                 {this.state.fields.type === "schedule" && (
                   <>
-                    <CFormGroup>
-                      <CLabel htmlFor="name">Schedule Time</CLabel>
-                      <DatePicker
-                        selected={new Date(this.state.fields.schedule_time)}
-                        onChange={(date) => this.handledateChange(date)}
-                        showTimeSelect
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        dateCaption=""
-                        timeCaption="Time"
-                        dateFormat="dd/MM/yyyy HH:mm"
-                        className="form-control"
-                      />
-                      <CFormText className="help-block">
-                        {this.validator.message(
-                          "schedule_time",
-                          this.state.fields.schedule_time,
-                          "required",
-                          { className: "text-danger" }
-                        )}
-                      </CFormText>
-                    </CFormGroup>
+                    <CCol
+                      xl={6}
+                      style={{ paddingLeft: "0px", paddingRight: "0px" }}
+                    >
+                      <CFormGroup>
+                        <CLabel htmlFor="name">Schedule Time</CLabel>
+                        <div className="datepicker-container">
+                          <DatePicker
+                            // selected={new Date(this.state.fields.schedule_time)}
+                            selected={
+                              this.state.fields.schedule_time
+                                ? new Date(this.state.fields.schedule_time)
+                                : new Date()
+                            }
+                            onChange={(date) => this.handleDateChange(date)}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            dateCaption=""
+                            timeCaption="Time"
+                            dateFormat="dd/MM/yyyy HH:mm"
+                            popperClassName="my-custom-datepicker-popper"
+                            className="form-control"
+                            minDate={new Date()}
+                            excludeTimes={this.getExcludedTimes()}
+                          />
+                        </div>
+                        <CFormText className="help-block">
+                          {this.validator.message(
+                            "schedule_time",
+                            this.state.fields.schedule_time,
+                            "required",
+                            { className: "text-danger" }
+                          )}
+                        </CFormText>
+                      </CFormGroup>
+                    </CCol>
                   </>
                 )}
               </CCardBody>
@@ -357,7 +462,8 @@ class PushNotificationEdit extends React.Component {
                   color="primary"
                   onClick={this.handleSubmit}
                 >
-                  <FontAwesomeIcon icon={faSave} className="mr-1" /> Submit
+                  <FontAwesomeIcon icon={faSave} className="mr-1" />{" "}
+                  {submitButton}
                 </CButton>
                 &nbsp;
                 <CLink

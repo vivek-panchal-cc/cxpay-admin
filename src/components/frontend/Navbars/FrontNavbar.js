@@ -15,6 +15,8 @@ import {
   Container,
 } from "reactstrap";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function FrontNavbar() {
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [navbarCollapse, setNavbarCollapse] = React.useState(false);
@@ -71,7 +73,7 @@ function FrontNavbar() {
            
           >
 
-         <img src={`${ process.env.REACT_APP_API_URL+'uploads/'+Site_Logo}`} style={styles} alt='Logo'/>
+         <img src={`${ API_URL+'uploads/'+Site_Logo}`} style={styles} alt='Logo'/>
           
           </NavbarBrand>
           <button
